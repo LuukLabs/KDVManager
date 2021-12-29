@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres:latest
+
+  kdvmanager.services.groupmanagement.api:
+    image: ${DOCKER_REGISTRY-}kdvmanagerservicesgroupmanagement
+    build:
+      context: .
+      dockerfile: Services/GroupManagement/KDVManager.Services.GroupManagement.Api/Dockerfile
+    depends_on:
+      - postgres

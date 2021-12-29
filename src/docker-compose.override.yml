@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  postgres:
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=sammy
+      - POSTGRES_PASSWORD=shark
+    volumes:
+      - kdvmanager-data:/var/lib/postgresql/data/
+    ports:
+      - "5433:5432"
+
+  kdvmanager.services.groupmanagement.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+
+volumes:
+  kdvmanager-data:

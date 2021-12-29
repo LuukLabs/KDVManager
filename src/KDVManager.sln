@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.GroupMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.GroupManagement.Persistence", "Services\GroupManagement\KDVManager.Services.GroupManagement.Persistence\KDVManager.Services.GroupManagement.Persistence.csproj", "{8D2D19B8-13BB-426B-A775-E56D1F2770B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.GroupManagement.Api", "Services\GroupManagement\KDVManager.Services.GroupManagement.Api\KDVManager.Services.GroupManagement.Api.csproj", "{0A96BABF-8CB4-4E95-BDDC-1860D820DE78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{8D2D19B8-13BB-426B-A775-E56D1F2770B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2D19B8-13BB-426B-A775-E56D1F2770B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2D19B8-13BB-426B-A775-E56D1F2770B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,5 +49,6 @@ Global
 		{5D72406D-30EC-478B-9340-4DAA6C47D442} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
 		{B4149BC9-BAB1-405E-B6C1-56D2AD64490F} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
 		{8D2D19B8-13BB-426B-A775-E56D1F2770B6} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
+		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
 	EndGlobalSection
 EndGlobal

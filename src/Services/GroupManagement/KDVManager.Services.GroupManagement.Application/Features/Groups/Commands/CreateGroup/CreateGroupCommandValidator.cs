@@ -17,15 +17,13 @@ namespace KDVManager.Services.GroupManagement.Application.Features.Groups.Comman
             RuleFor(p => p.Name)
                 .NotEmpty()
                 .NotNull()
-                .MaximumLength(25);
-
-            RuleFor(e => e)
-                .MustAsync(GroupNameUnique);
+                .MaximumLength(25)
+                .MustAsync(GroupNameUnique).WithErrorCode("Not unique");
         }
 
-        private async Task<bool> GroupNameUnique(CreateGroupCommand e, CancellationToken token)
+        private async Task<bool> GroupNameUnique(string name, CancellationToken token)
         {
-            return !(await _groupRepository.IsNameUnique(e.Name));
+            return !(await _groupRepository.IsNameUnique(name));
         }
     }
 }

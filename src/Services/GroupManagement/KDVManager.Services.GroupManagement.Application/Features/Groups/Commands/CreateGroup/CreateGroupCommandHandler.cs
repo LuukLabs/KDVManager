@@ -24,7 +24,7 @@ namespace KDVManager.Services.GroupManagement.Application.Features.Groups.Comman
             var validator = new CreateGroupCommandValidator(_groupRepository);
             var validationResult = await validator.ValidateAsync(request);
 
-            if (validationResult.Errors.Count > 0)
+            if (!validationResult.IsValid)
                 throw new Exceptions.ValidationException(validationResult);
 
             var group = _mapper.Map<Group>(request);

@@ -3,7 +3,7 @@ using AutoMapper;
 using KDVManager.Services.GroupManagement.Application.Features.Groups.Commands.CreateGroup;
 using KDVManager.Services.GroupManagement.Application.Features.Groups.Queries.GetGroupDetail;
 using KDVManager.Services.GroupManagement.Application.Features.Groups.Queries.GetGroupList;
-using KDVManager.Services.GroupManagement.Domain;
+using KDVManager.Services.GroupManagement.Domain.Entities;
 
 namespace KDVManager.Services.GroupManagement.Application.Profiles
 {

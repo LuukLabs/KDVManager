@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using KDVManager.Services.GroupManagement.Application.Contracts.Persistence;
-using KDVManager.Services.GroupManagement.Domain;
+using KDVManager.Services.GroupManagement.Domain.Entities;
 using MediatR;
 
 namespace KDVManager.Services.GroupManagement.Application.Features.Groups.Queries.GetGroupList

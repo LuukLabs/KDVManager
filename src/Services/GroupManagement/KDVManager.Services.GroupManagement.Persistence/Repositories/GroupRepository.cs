@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.GroupManagement.Application.Contracts.Persistence;
-using KDVManager.Services.GroupManagement.Domain;
+using KDVManager.Services.GroupManagement.Domain.Entities;
 
 namespace KDVManager.Services.GroupManagement.Persistence.Repositories
 {

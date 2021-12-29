@@ -1,5 +1,5 @@
 ﻿using System;
-using KDVManager.Services.GroupManagement.Domain;
+using KDVManager.Services.GroupManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.GroupManagement.Persistence

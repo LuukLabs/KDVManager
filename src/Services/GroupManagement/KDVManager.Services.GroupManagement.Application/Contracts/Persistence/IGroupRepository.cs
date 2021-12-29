@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using KDVManager.Services.GroupManagement.Domain;
+using KDVManager.Services.GroupManagement.Domain.Entities;
 
 namespace KDVManager.Services.GroupManagement.Application.Contracts.Persistence
 {

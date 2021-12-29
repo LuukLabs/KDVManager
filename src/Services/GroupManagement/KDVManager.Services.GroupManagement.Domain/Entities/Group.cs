@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KDVManager.Services.GroupManagement.Domain
+namespace KDVManager.Services.GroupManagement.Domain.Entities
 {
     public class Group
     {

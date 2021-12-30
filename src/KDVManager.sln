@@ -17,6 +17,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.GroupMa
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BEC69C9E-47BC-4DE1-91AD-446716147D19}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChildManagement", "ChildManagement", "{AD0249E9-391D-49A4-8443-8E15C48A1579}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Domain", "Services\ChildManagement\KDVManager.Services.ChildManagement.Domain\KDVManager.Services.ChildManagement.Domain.csproj", "{71D6616C-104A-465C-B56D-431803743FB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Application", "Services\ChildManagement\KDVManager.Services.ChildManagement.Application\KDVManager.Services.ChildManagement.Application.csproj", "{D8165272-5FCB-4238-B898-83471F311687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Persistence", "Services\ChildManagement\KDVManager.Services.ChildManagement.Persistence\KDVManager.Services.ChildManagement.Persistence.csproj", "{EB587E32-89B8-44EB-8C84-ED51A5154A88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Api", "Services\ChildManagement\KDVManager.Services.ChildManagement.Api\KDVManager.Services.ChildManagement.Api.csproj", "{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +53,22 @@ Global
 		{BEC69C9E-47BC-4DE1-91AD-446716147D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC69C9E-47BC-4DE1-91AD-446716147D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEC69C9E-47BC-4DE1-91AD-446716147D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D6616C-104A-465C-B56D-431803743FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D6616C-104A-465C-B56D-431803743FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D6616C-104A-465C-B56D-431803743FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D6616C-104A-465C-B56D-431803743FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8165272-5FCB-4238-B898-83471F311687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8165272-5FCB-4238-B898-83471F311687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8165272-5FCB-4238-B898-83471F311687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8165272-5FCB-4238-B898-83471F311687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB587E32-89B8-44EB-8C84-ED51A5154A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB587E32-89B8-44EB-8C84-ED51A5154A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB587E32-89B8-44EB-8C84-ED51A5154A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB587E32-89B8-44EB-8C84-ED51A5154A88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +82,10 @@ Global
 		{B4149BC9-BAB1-405E-B6C1-56D2AD64490F} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
 		{8D2D19B8-13BB-426B-A775-E56D1F2770B6} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
 		{0A96BABF-8CB4-4E95-BDDC-1860D820DE78} = {B1A47A6A-E8D9-4983-A8AB-96EC3A23461D}
+		{AD0249E9-391D-49A4-8443-8E15C48A1579} = {A3E31BC9-6D03-49FF-BE91-7C8E204273B1}
+		{71D6616C-104A-465C-B56D-431803743FB2} = {AD0249E9-391D-49A4-8443-8E15C48A1579}
+		{D8165272-5FCB-4238-B898-83471F311687} = {AD0249E9-391D-49A4-8443-8E15C48A1579}
+		{EB587E32-89B8-44EB-8C84-ED51A5154A88} = {AD0249E9-391D-49A4-8443-8E15C48A1579}
+		{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12} = {AD0249E9-391D-49A4-8443-8E15C48A1579}
 	EndGlobalSection
 EndGlobal

@@ -11,3 +11,11 @@ services:
       dockerfile: Services/GroupManagement/KDVManager.Services.GroupManagement.Api/Dockerfile
     depends_on:
       - postgres
+
+  childmanagement.api:
+    image: ${DOCKER_REGISTRY-}kdvmanagerserviceschildmanagement
+    build:
+      context: .
+      dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Api/Dockerfile
+    depends_on:
+      - postgres

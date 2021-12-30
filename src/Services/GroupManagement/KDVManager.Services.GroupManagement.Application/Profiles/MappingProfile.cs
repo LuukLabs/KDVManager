@@ -11,7 +11,7 @@ namespace KDVManager.Services.GroupManagement.Application.Profiles
     {
         public MappingProfile()
         {
-            _ = CreateMap<Group, GroupListVM>().ReverseMap();
+            CreateMap<Group, GroupListVM>().ReverseMap();
             CreateMap<Group, GroupDetailVM>().ReverseMap();
             CreateMap<Group, CreateGroupCommand>().ReverseMap();
         }

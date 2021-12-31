@@ -8,13 +8,9 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Comm
 {
     public class CreateChildCommandValidator : AbstractValidator<CreateChildCommand>
     {
-        private readonly IChildRepository _childRepository;
-
-        public CreateChildCommandValidator(IChildRepository childRepository)
+        public CreateChildCommandValidator()
         {
-            _childRepository = childRepository;
-
-            RuleFor(p => p.Name)
+            RuleFor(p => p.GivenName)
                 .NotEmpty()
                 .NotNull()
                 .MaximumLength(25);

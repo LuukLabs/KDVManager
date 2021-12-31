@@ -21,7 +21,7 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Comm
 
         public async Task<Guid> Handle(CreateChildCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateChildCommandValidator(_childRepository);
+            var validator = new CreateChildCommandValidator();
             var validationResult = await validator.ValidateAsync(request);
 
             if (!validationResult.IsValid)

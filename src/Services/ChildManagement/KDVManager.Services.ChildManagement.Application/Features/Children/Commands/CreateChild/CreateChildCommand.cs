@@ -5,7 +5,9 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Comm
 {
     public class CreateChildCommand : IRequest<Guid>
     {
-        public string Name { get; set; }
+        public string GivenName { get; set; }
+
+        public string FamilyName { get; set; }
 
     }
 }

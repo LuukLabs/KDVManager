@@ -15,7 +15,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__KDVManagerConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__KDVManagerConnectionString=Server=postgres;
+        port=5432; database=KDVManagerGroupManagementDB; User ID=sammy;
+        password=shark; pooling=true
     ports:
       - "80"
       - "443"
@@ -26,8 +28,10 @@ services:
   childmanagement.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres;
+        port=5432; database=KDVManagerGroupManagementDB; User ID=sammy;
+        password=shark; pooling=true
     ports:
       - "80"
       - "443"
@@ -36,4 +40,4 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
 
 volumes:
-  kdvmanager-data:
+  kdvmanager-data: null

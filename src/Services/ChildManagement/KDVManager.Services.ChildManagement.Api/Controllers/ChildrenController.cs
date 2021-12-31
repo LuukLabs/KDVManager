@@ -30,7 +30,7 @@ namespace KDVManager.Services.ChildManagement.Api.Controllers
             return Ok(dtos);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateChild")]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateChildCommand createChildCommand)
         {
             var id = await _mediator.Send(createChildCommand);

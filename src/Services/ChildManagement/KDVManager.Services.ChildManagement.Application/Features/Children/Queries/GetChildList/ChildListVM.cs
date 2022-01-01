@@ -4,7 +4,7 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
     public class ChildListVM
     {
         public Guid Id { get; set; }
-        public string GivenName { get; set; }
-        public string FamilyName { get; set; }
+        public string FullName { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

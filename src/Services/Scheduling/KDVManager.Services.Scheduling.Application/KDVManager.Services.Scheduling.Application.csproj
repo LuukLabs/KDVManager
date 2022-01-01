@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Contracts\" />
+    <None Remove="Contracts\Persistence\" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="AutoMapper" />
+    <None Remove="Features\" />
+    <None Remove="Features\Groups\" />
+    <None Remove="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="Profiles\" />
+    <None Remove="Features\Groups\Queries\" />
+    <None Remove="Features\Groups\Queries\GetGroupDetail\" />
+    <None Remove="Features\Groups\Queries\GetGroupsList\" />
+    <None Remove="Features\Groups\Commands\" />
+    <None Remove="Features\Groups\Commands\CreateGroup\" />
+    <None Remove="Features\Groups\Commands\DeleteGroup\" />
+    <None Remove="FluentValidation" />
+    <None Remove="Exceptions\" />
+    <None Remove="Contracts\Validation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+    <Folder Include="Contracts\Persistence\" />
+    <Folder Include="Features\" />
+    <Folder Include="Features\Groups\" />
+    <Folder Include="Profiles\" />
+    <Folder Include="Features\Groups\Queries\" />
+    <Folder Include="Features\Groups\Queries\GetGroupDetail\" />
+    <Folder Include="Features\Groups\Queries\GetGroupsList\" />
+    <Folder Include="Features\Groups\Commands\" />
+    <Folder Include="Features\Groups\Commands\CreateGroup\" />
+    <Folder Include="Features\Groups\Commands\DeleteGroup\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Contracts\Validation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KDVManager.Services.Scheduling.Domain\KDVManager.Services.Scheduling.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -80,18 +80,10 @@ export const ChildCreateDrawer = ({ visible, changeVisibility }: Props) => {
       }
     >
       <Form form={form} onFinish={onFinishHandler} layout="vertical">
-        <Form.Item
-          name="givenName"
-          label="Voornaam"
-          rules={[{ required: true, message: "Please enter user name" }]}
-        >
+        <Form.Item name="givenName" label="Voornaam">
           <Input placeholder="Please enter user name" />
         </Form.Item>
-        <Form.Item
-          name="familyName"
-          label="Achternaam"
-          rules={[{ required: true, message: "Please enter user name" }]}
-        >
+        <Form.Item name="familyName" label="Achternaam">
           <Input placeholder="Please enter user name" />
         </Form.Item>
         <Button onClick={onSubmitHandler} type="primary">

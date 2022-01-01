@@ -24,10 +24,10 @@ type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
   : any;
 
 export const getAllChildren = () => {
-  return executeAxios<ChildListVM[]>({ url: `/api/Children`, method: "get" });
+  return executeAxios<ChildListVM[]>({ url: `/v1/children`, method: "get" });
 };
 
-export const getGetAllChildrenQueryKey = () => [`/api/Children`];
+export const getGetAllChildrenQueryKey = () => [`/v1/children`];
 
 export const useGetAllChildren = <
   TData = AsyncReturnType<typeof getAllChildren>,
@@ -60,7 +60,7 @@ export const useGetAllChildren = <
 
 export const createChild = (createChildCommand: CreateChildCommand) => {
   return executeAxios<string>({
-    url: `/api/Children`,
+    url: `/v1/children`,
     method: "post",
     data: createChildCommand,
   });

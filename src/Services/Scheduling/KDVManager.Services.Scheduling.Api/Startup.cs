@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KDVManager.Services.ChildManagement.Api.Middleware;
-using KDVManager.Services.ChildManagement.Application;
-using KDVManager.Services.ChildManagement.Persistence;
+using KDVManager.Services.Scheduling.Api.Middleware;
+using KDVManager.Services.Scheduling.Application;
+using KDVManager.Services.Scheduling.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace KDVManager.Services.ChildManagement.Api
+namespace KDVManager.Services.Scheduling.Api
 {
     public class Startup
     {
@@ -31,12 +31,7 @@ namespace KDVManager.Services.ChildManagement.Api
             services.AddApplicationServices();
             services.AddPersistenceServices(Configuration);
 
-            services.AddCors();
-
             services.AddControllers();
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,20 +40,11 @@ namespace KDVManager.Services.ChildManagement.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            // global cors policy
-            app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()); // allow credentials
 
             app.UseCustomExceptionHandler();
 

@@ -7,5 +7,5 @@
 
 export interface ChildListVM {
   id?: string;
-  name?: string | null;
+  fullName?: string | null;
 }

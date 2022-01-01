@@ -1,18 +1,22 @@
 version: '3.4'
 
 services:
+  envoy:
+    image: envoyproxy/envoy:v1.18.2
+    restart: always
+
   postgres:
     image: postgres:latest
 
-  groupmanagement.api:
-    image: ${DOCKER_REGISTRY-}kdvmanagerservicesgroupmanagement
+  scheduling-api:
+    image: ${DOCKER_REGISTRY-}kdvmanagerservicesscheduling
     build:
       context: .
-      dockerfile: Services/GroupManagement/KDVManager.Services.GroupManagement.Api/Dockerfile
+      dockerfile: Services/Scheduling/KDVManager.Services.Scheduling.Api/Dockerfile
     depends_on:
       - postgres
 
-  childmanagement.api:
+  childmanagement-api:
     image: ${DOCKER_REGISTRY-}kdvmanagerserviceschildmanagement
     build:
       context: .

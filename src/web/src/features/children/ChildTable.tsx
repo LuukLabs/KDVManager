@@ -3,25 +3,24 @@ import { ColumnType } from "antd/es/table";
 import { Table } from "antd";
 import { ChildListVM } from "../../api/models";
 import { useGetAllChildren } from "../../api/endpoints/children/children";
+import { Link } from "react-router-dom";
 
 const columns: ColumnType<ChildListVM>[] = [
   {
-    title: "Uuid",
-    dataIndex: "id",
+    title: "Full name",
+    render: (child: ChildListVM) => (
+      <Link to={`/children/${child.id}`}>{child.fullName}</Link>
+    ),
   },
   {
-    title: "Firstname",
-    dataIndex: "givenName",
-  },
-  {
-    title: "Lastname",
-    dataIndex: "familyName",
+    title: "DateOfBirth",
+    dataIndex: "dateOfBirth",
   },
 ];
 
 const ChildTable = () => {
   const [pagination, setPagination] = useState({ pageSize: 5, page: 1 });
-  const { data: children, isLoading, isPreviousData } = useGetAllChildren();
+  const { data: children, isLoading } = useGetAllChildren();
 
   return (
     <Table<ChildListVM>

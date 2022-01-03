@@ -9,7 +9,7 @@ services:
     image: postgres:latest
 
   scheduling-api:
-    image: ${DOCKER_REGISTRY-}kdvmanagerservicesscheduling
+    image: ${REGISTRY:-kdvmanager}/scheduling.api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Scheduling/KDVManager.Services.Scheduling.Api/Dockerfile
@@ -17,7 +17,7 @@ services:
       - postgres
 
   childmanagement-api:
-    image: ${DOCKER_REGISTRY-}kdvmanagerserviceschildmanagement
+    image: ${REGISTRY:-kdvmanager}/childmanagement.api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Api/Dockerfile

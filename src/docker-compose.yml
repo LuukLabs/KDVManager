@@ -23,3 +23,11 @@ services:
       dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Api/Dockerfile
     depends_on:
       - postgres
+
+  childmanagement-migrator:
+    image: ${REGISTRY:-kdvmanager}/childmanagement.migrator:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/Dockerfile
+    depends_on:
+      - postgres

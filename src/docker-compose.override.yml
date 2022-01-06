@@ -36,9 +36,6 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
 
   childmanagement-migrator:
-    build:
-      context: .
-      dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres;

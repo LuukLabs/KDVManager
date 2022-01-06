@@ -21,4 +21,3 @@ WORKDIR /migrator
 COPY --from=build /src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/efbundle .
 
 ENTRYPOINT [ "/bin/bash", "-c", "./efbundle --verbose --connection \"${ConnectionStrings__KDVManagerChildManagementConnectionString}\" " ]
-

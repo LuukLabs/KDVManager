@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.ChildManagement.Application.Contracts.Persistence;
 using KDVManager.Services.ChildManagement.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.ChildManagement.Persistence.Repositories
 {
@@ -10,6 +12,11 @@ namespace KDVManager.Services.ChildManagement.Persistence.Repositories
     {
         public ChildRepository(ChildManagementDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public async Task<IReadOnlyList<Child>> GetPagedChildren(int page, int size)
+        {
+            return await _dbContext.Set<Child>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
         }
     }
 }

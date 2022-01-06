@@ -11,10 +11,10 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
 {
     public class GetChildListQueryHandler : IRequestHandler<GetChildListQuery, List<ChildListVM>>
     {
-        private readonly IAsyncRepository<Child> _childRepository;
+        private readonly IChildRepository _childRepository;
         private readonly IMapper _mapper;
 
-        public GetChildListQueryHandler(IMapper mapper, IAsyncRepository<Child> childRepository)
+        public GetChildListQueryHandler(IMapper mapper, IChildRepository childRepository)
         {
             _childRepository = childRepository;
             _mapper = mapper;
@@ -22,7 +22,7 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
 
         public async Task<List<ChildListVM>> Handle(GetChildListQuery request, CancellationToken cancellationToken)
         {
-            var children = await _childRepository.ListAllAsync();
+            var children = await _childRepository.GetPagedChildren(request.Page, request.Size);
             return _mapper.Map<List<ChildListVM>>(children);
         }
     }

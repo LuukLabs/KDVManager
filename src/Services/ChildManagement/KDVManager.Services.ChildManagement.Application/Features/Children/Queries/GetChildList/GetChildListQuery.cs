@@ -7,6 +7,7 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
 {
     public class GetChildListQuery : IRequest<List<ChildListVM>>
     {
-       
+        public int Page { get; set; }
+        public int Size { get; set; }
     }
 }

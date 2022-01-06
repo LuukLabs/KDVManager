@@ -15,7 +15,7 @@ RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project 
 
 FROM ubuntu:latest AS migrator
 
-RUN apt-get update && apt-get install -qqq libicu-dev
+RUN apt-get update && apt-get install -qqq libicu-dev libssl-dev
 
 WORKDIR /migrator
 COPY --from=build /src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/efbundle .

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: childmanagment-api
+  namespace: kdvmanager
+  labels:
+    app: childmanagement-api
+    release: production
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0 
+  selector:
+    matchLabels:
+      app: childmanagement-api
+      release: production
+  template:
+    metadata:
+      labels:
+        app: childmanagement-api
+        release: production
+    spec:
+      imagePullSecrets:
+        - name: kdvmanager-registery-github
+      containers:
+      - name: childmanagment-pod
+        image: ghcr.io/luukvh/openkdvmanager/childmanagement.api:linux-master
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 500m
+        env:
+          - name: POSTGRES_SERVER
+            value: "postgres"
+          - name: POSTGRES_USER
+            value: "postgres"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                  name: kdvmanager-postgres-secret
+                  key: superUserPassword        
+          - name: ConnectionStrings__KDVManagerChildManagementConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=${POSTGRES_USER}; password=${POSTGRES_PASSWORD}; pooling = true"
+      initContainers:
+      - name: childmanagment-migration
+        image: ghcr.io/luukvh/openkdvmanager/childmanagement.migrator:linux-master
+        env:
+          - name: POSTGRES_SERVER
+            value: "postgres"
+          - name: POSTGRES_USER
+            value: "postgres"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                  name: kdvmanager-postgres-secret
+                  key: superUserPassword        
+          - name: ConnectionStrings__KDVManagerChildManagementConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=${POSTGRES_USER}; password=${POSTGRES_PASSWORD}; pooling = true"
+        

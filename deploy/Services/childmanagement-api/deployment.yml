@@ -7,11 +7,11 @@ metadata:
     app: childmanagement-api
     release: production
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 2
+      maxSurge: 1
       maxUnavailable: 0 
   selector:
     matchLabels:
@@ -48,10 +48,11 @@ spec:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
           - name: ConnectionStrings__KDVManagerChildManagementConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=${POSTGRES_USER}; password=${POSTGRES_PASSWORD}; pooling = true"
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
       - name: childmanagment-migration
         image: ghcr.io/luukvh/openkdvmanager/childmanagement.migrator:linux-master
+        imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER
             value: "postgres"
@@ -63,5 +64,5 @@ spec:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
           - name: ConnectionStrings__KDVManagerChildManagementConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=${POSTGRES_USER}; password=${POSTGRES_PASSWORD}; pooling = true"
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
         

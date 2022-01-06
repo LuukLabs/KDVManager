@@ -22,7 +22,7 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
 
         public async Task<List<ChildListVM>> Handle(GetChildListQuery request, CancellationToken cancellationToken)
         {
-            var children = await _childRepository.GetPagedChildren(request.Page, request.Size);
+            var children = await _childRepository.ListAllAsync();
             return _mapper.Map<List<ChildListVM>>(children);
         }
     }

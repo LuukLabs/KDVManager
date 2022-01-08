@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.ChildManagement.Persistence.Migrations
 {
-    [DbContext(typeof(ChildManagementDbContext))]
+    [DbContext(typeof(MigrationDbContext))]
     [Migration("20211230170517_InitialCreate")]
     partial class InitialCreate
     {

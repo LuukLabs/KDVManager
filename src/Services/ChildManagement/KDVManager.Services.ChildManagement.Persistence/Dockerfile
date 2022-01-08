@@ -11,7 +11,7 @@ WORKDIR "/src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persi
 
 RUN dotnet tool install -g dotnet-ef --version 6.0.1
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../KDVManager.Services.ChildManagement.Api"
+RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../KDVManager.Services.ChildManagement.Api"  --context MigrationDbContext
 
 FROM ubuntu:latest AS migrator
 

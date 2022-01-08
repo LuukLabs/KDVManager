@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.ChildManagement.Persistence.Migrations
 {
-    [DbContext(typeof(ChildManagementDbContext))]
+    [DbContext(typeof(MigrationDbContext))]
     [Migration("20220107142912_AddTenantIdToChild")]
     partial class AddTenantIdToChild
     {

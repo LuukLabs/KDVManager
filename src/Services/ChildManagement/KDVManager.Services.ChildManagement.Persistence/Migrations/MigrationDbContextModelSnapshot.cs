@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.ChildManagement.Persistence.Migrations
 {
-    [DbContext(typeof(ChildManagementDbContext))]
-    partial class ChildManagementDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MigrationDbContext))]
+    partial class MigrationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace KDVManager.Services.ChildManagement.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Children");
+                    b.ToTable("Children", (string)null);
                 });
 #pragma warning restore 612, 618
         }

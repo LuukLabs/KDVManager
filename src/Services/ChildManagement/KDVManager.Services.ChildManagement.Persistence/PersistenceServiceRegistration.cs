@@ -14,6 +14,9 @@ namespace KDVManager.Services.ChildManagement.Persistence
             services.AddDbContext<ChildManagementDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("KDVManagerChildManagementConnectionString")));
 
+            services.AddDbContext<MigrationDbContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("KDVManagerChildManagementConnectionString")));
+
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
             services.AddScoped<IChildRepository, ChildRepository>();

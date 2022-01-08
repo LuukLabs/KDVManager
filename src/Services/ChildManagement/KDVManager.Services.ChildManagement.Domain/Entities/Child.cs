@@ -1,10 +1,13 @@
 ﻿using System;
+using KDVManager.Services.ChildManagement.Domain.Interfaces;
 
 namespace KDVManager.Services.ChildManagement.Domain.Entities
 {
-    public class Child
+    public class Child : IMustHaveTenant
     {
         public Guid Id { get; set; }
+
+        public Guid TenantId { get; set; }
 
         public string GivenName { get; set; }
 

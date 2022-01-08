@@ -16,7 +16,6 @@ namespace KDVManager.Services.Scheduling.Persistence
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
-
             services.AddScoped<IGroupRepository, GroupRepository>();
 
             return services;

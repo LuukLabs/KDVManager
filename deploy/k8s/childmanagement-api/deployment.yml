@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: childmanagment-api
-  namespace: kdvmanager
   labels:
     app: childmanagement-api
     release: production
@@ -28,7 +27,7 @@ spec:
       containers:
       - name: childmanagment-pod
         image: ghcr.io/luukvh/openkdvmanager/childmanagement.api:linux-master
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
           - name: http
             containerPort: 80
@@ -52,7 +51,7 @@ spec:
       initContainers:
       - name: childmanagment-migration
         image: ghcr.io/luukvh/openkdvmanager/childmanagement.migrator:linux-master
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER
             value: "postgres"

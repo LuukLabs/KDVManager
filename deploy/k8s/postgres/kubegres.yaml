@@ -2,7 +2,6 @@ apiVersion: kubegres.reactive-tech.io/v1
 kind: Kubegres
 metadata:
   name: postgres
-  namespace: kdvmanager
 spec:
    replicas: 3
    image: postgres:14.1

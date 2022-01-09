@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: childmanagment-api
+  labels:
+    app: childmanagement-api
+    release: production
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: childmanagement-api
+    release: production
+
+
+    kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.yaml && \
+kubectl wait --timeout=90s --for=condition=available deployment emissary-apiext -n emissary-system
+kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes.yaml && \
+kubectl wait --for condition=available --timeout=90s deploy -lproduct=aes
+
+kubectl apply -f - <<EOF
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Listener
+metadata:
+  name: edge-stack-listener-8080
+  namespace: ambassador
+spec:
+  port: 8080
+  protocol: HTTP
+  securityModel: XFP
+  hostBinding:
+    namespace:
+      from: ALL
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Listener
+metadata:
+  name: edge-stack-listener-8443
+  namespace: ambassador
+spec:
+  port: 8443
+  protocol: HTTPS
+  securityModel: XFP
+  hostBinding:
+    namespace:
+      from: ALL
+EOF

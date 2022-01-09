@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigw
+  labels:
+    app: apigw
+    release: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigw
+      release: production
+  template:
+    metadata:
+      labels:
+        app: apigw
+        release: production
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: envoy
+          items:
+          - key: envoy.yaml
+            path: envoy.yaml
+      containers:
+        - name: apigw
+          livenessProbe:
+            httpGet:
+              port: 8001
+              path: "/ready"
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              port: 8001
+              path: "/ready"
+            initialDelaySeconds: 5
+            periodSeconds: 60
+            timeoutSeconds: 120
+          image: "envoyproxy/envoy:v1.20.1"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: config
+            mountPath: /etc/envoy
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: admin
+              containerPort: 8001
+              protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 500m

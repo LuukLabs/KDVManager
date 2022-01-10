@@ -1,34 +1,8 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-apigw
-  labels:
-    app: apigw
-    release: production
-spec:
-  rules:
-    - host: "lvh.me"
-      http:
-        paths:
-          - path: "/"
-            pathType: Prefix
-            backend:
-              service:
-                name: "childmanagment-api"
-                port:
-                  number: 80
-
-
-kubectl apply -f - <<EOF
----
 apiVersion: getambassador.io/v3alpha1
 kind: Mapping
 metadata:
   name: quote-backend
 spec:
-  hostname: "*"
-  prefix: /backend/
+  hostname: "api.*"
+  prefix: /v1/children
   service: childmanagment-api
-  docs:
-    path: "/.ambassador-internal/openapi-docs"
-EOF

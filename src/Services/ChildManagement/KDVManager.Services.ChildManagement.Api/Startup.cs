@@ -58,7 +58,7 @@ namespace KDVManager.Services.ChildManagement.Api
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -1,0 +1,21 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Mapping
+metadata:
+  name: childmanagment-api
+spec:
+  hostname: "api.*"
+  prefix: /v1/children
+  rewrite: /api/children
+  service: childmanagment-api
+  docs:
+    path: "/swagger/v1/swagger.json"
+  cors:
+    origins: 
+    - '*'
+    methods: 
+    - POST
+    - GET
+    - OPTIONS
+    headers: 
+    - Content-Type
+    max_age: "86400"

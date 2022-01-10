@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: childmanagment-api
+  name: childmanagement-api
   labels:
     app: childmanagement-api
     release: production
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -32,11 +32,16 @@ spec:
           - name: http
             containerPort: 80
             protocol: TCP
+          - name: https
+            containerPort: 443
+            protocol: TCP
         resources:
           limits:
             memory: 512Mi
             cpu: 500m
         env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:80"
           - name: POSTGRES_SERVER
             value: "postgres"
           - name: POSTGRES_USER

@@ -42,7 +42,9 @@ namespace KDVManager.Services.ChildManagement.Api
             services.AddControllers();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+                options.DescribeAllParametersInCamelCase()
+            );
 
             services.AddScoped<ITenantService, TenantService>();
         }

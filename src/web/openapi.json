@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Children": {
+    "/v1/Children": {
       "get": {
         "tags": ["Children"],
         "operationId": "GetAllChildren",
@@ -100,9 +100,13 @@
             "type": "string",
             "format": "uuid"
           },
-          "name": {
+          "fullName": {
             "type": "string",
             "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -110,7 +114,11 @@
       "CreateChildCommand": {
         "type": "object",
         "properties": {
-          "name": {
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
             "type": "string",
             "nullable": true
           }

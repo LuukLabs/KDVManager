@@ -8,4 +8,5 @@
 export interface ChildListVM {
   id?: string;
   fullName?: string | null;
+  dateOfBirth?: string;
 }

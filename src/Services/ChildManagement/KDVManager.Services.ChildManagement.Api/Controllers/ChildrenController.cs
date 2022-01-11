@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.ChildManagement.Application.Features.Children.Commands.CreateChild;
+using KDVManager.Services.ChildManagement.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.ChildManagement.Application.Features.Children.Queries.GetChildList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,10 +32,17 @@ namespace KDVManager.Services.ChildManagement.Api.Controllers
         }
 
         [HttpPost(Name = "CreateChild")]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateChildCommand createChildCommand)
+        public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
         {
             var id = await _mediator.Send(createChildCommand);
             return Ok(id);
+        }
+
+        [HttpDelete("{id}", Name = "DeleteChild")]
+        public async Task<ActionResult<Guid>> DeleteChild([FromRoute] DeleteChildCommand deleteChildCommand)
+        {
+            var id = await _mediator.Send(deleteChildCommand);
+            return NoContent();
         }
     }
 }

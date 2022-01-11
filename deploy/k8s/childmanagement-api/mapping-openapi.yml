@@ -3,9 +3,9 @@ kind: Mapping
 metadata:
   name: childmanagment-api
 spec:
-  hostname: "api.*"
-  prefix: /v1/children
-  rewrite: /v1/children
+  hostname: "docs.*"
+  prefix: /services/childmanagment/
+  rewrite: /
   service: childmanagment-api
   docs:
     path: "/swagger/v1/swagger.json"

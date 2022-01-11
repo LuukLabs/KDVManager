@@ -6,5 +6,6 @@
  */
 
 export interface CreateChildCommand {
-  name?: string | null;
+  givenName?: string | null;
+  familyName?: string | null;
 }

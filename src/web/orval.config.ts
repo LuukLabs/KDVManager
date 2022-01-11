@@ -18,7 +18,7 @@ const config: ReturnType<typeof defineConfig> = {
       },
     },
     input: {
-      target: "./openapi.json",
+      target: "http://docs.lvh.me/services/childmanagment/swagger/v1/swagger.json",
     },
   },
 };

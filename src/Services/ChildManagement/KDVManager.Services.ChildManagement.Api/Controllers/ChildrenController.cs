@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace KDVManager.Services.ChildManagement.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     public class ChildrenController : ControllerBase
     {
         private readonly IMediator _mediator;

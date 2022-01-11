@@ -14,6 +14,11 @@ namespace KDVManager.Services.ChildManagement.Persistence.Repositories
         {
         }
 
+        public new async Task<IReadOnlyList<Child>> ListAllAsync()
+        {
+            return await _dbContext.Set<Child>().OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName).ToListAsync();
+        }
+
         public async Task<IReadOnlyList<Child>> GetPagedChildren(int page, int size)
         {
             return await _dbContext.Set<Child>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();

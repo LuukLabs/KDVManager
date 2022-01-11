@@ -65,8 +65,7 @@ export const ChildCreateDrawer = ({ visible, changeVisibility }: Props) => {
 
   return (
     <Drawer
-      title="Create a new account"
-      width={720}
+      title="Create a new child"
       onClose={onCloseHandler}
       visible={visible}
       bodyStyle={{ paddingBottom: 80 }}

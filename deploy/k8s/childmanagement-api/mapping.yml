@@ -11,11 +11,11 @@ spec:
     path: "/swagger/v1/swagger.json"
   cors:
     origins: 
-    - '*'
+    - "*"
     methods: 
     - POST
     - GET
     - OPTIONS
     headers: 
-    - Content-Type
+    - "Content-Type"
     max_age: "86400"

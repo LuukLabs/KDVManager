@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import React, { useCallback, useState } from "react";
 import { ChildCreateDrawer } from "../../features/children/ChildCreateDrawer";
+import { TableHeader } from "../../components/TableHeader";
 import ChildTable from "../../features/children/ChildTable";
 
 export const IndexChildPage = () => {
@@ -15,9 +16,15 @@ export const IndexChildPage = () => {
 
   return (
     <>
-      <Button type="primary" onClick={onAddChildClickHandler}>
-        Add child
-      </Button>
+      <TableHeader>
+        <Button type="primary" onClick={onAddChildClickHandler}>
+          Add child
+        </Button>
+        <Button type="primary" onClick={onAddChildClickHandler}>
+          sdff child
+        </Button>
+      </TableHeader>
+
       <ChildTable />
       <ChildCreateDrawer
         visible={addUserDrawerVisible}

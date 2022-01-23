@@ -14,7 +14,11 @@ import {
   UseQueryResult,
   QueryKey,
 } from "react-query";
-import type { ChildListVM, CreateChildCommand } from "../../models";
+import type {
+  ChildListVM,
+  GetAllChildrenParams,
+  CreateChildCommand,
+} from "../../models";
 import { executeAxios } from "../../mutator/executeAxios";
 
 type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
@@ -23,28 +27,38 @@ type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
   ? R
   : any;
 
-export const getAllChildren = () => {
-  return executeAxios<ChildListVM[]>({ url: `/v1/Children`, method: "get" });
+export const getAllChildren = (params?: GetAllChildrenParams) => {
+  return executeAxios<ChildListVM[]>({
+    url: `/v1/children`,
+    method: "get",
+    params,
+  });
 };
 
-export const getGetAllChildrenQueryKey = () => [`/v1/Children`];
+export const getGetAllChildrenQueryKey = (params?: GetAllChildrenParams) => [
+  `/v1/children`,
+  ...(params ? [params] : []),
+];
 
 export const useGetAllChildren = <
   TData = AsyncReturnType<typeof getAllChildren>,
   TError = unknown
->(options?: {
-  query?: UseQueryOptions<
-    AsyncReturnType<typeof getAllChildren>,
-    TError,
-    TData
-  >;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+>(
+  params?: GetAllChildrenParams,
+  options?: {
+    query?: UseQueryOptions<
+      AsyncReturnType<typeof getAllChildren>,
+      TError,
+      TData
+    >;
+  }
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const { query: queryOptions } = options || {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetAllChildrenQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetAllChildrenQueryKey(params);
 
   const queryFn: QueryFunction<AsyncReturnType<typeof getAllChildren>> = () =>
-    getAllChildren();
+    getAllChildren(params);
 
   const query = useQuery<AsyncReturnType<typeof getAllChildren>, TError, TData>(
     queryKey,
@@ -60,7 +74,7 @@ export const useGetAllChildren = <
 
 export const createChild = (createChildCommand: CreateChildCommand) => {
   return executeAxios<string>({
-    url: `/v1/Children`,
+    url: `/v1/children`,
     method: "post",
     data: createChildCommand,
   });
@@ -89,6 +103,36 @@ export const useCreateChild = <TError = unknown, TContext = unknown>(options?: {
     AsyncReturnType<typeof createChild>,
     TError,
     { data: CreateChildCommand },
+    TContext
+  >(mutationFn, mutationOptions);
+};
+export const deleteChild = (id: string) => {
+  return executeAxios<string>({ url: `/v1/children/${id}`, method: "delete" });
+};
+
+export const useDeleteChild = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    AsyncReturnType<typeof deleteChild>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}) => {
+  const { mutation: mutationOptions } = options || {};
+
+  const mutationFn: MutationFunction<
+    AsyncReturnType<typeof deleteChild>,
+    { id: string }
+  > = (props) => {
+    const { id } = props || {};
+
+    return deleteChild(id);
+  };
+
+  return useMutation<
+    AsyncReturnType<typeof deleteChild>,
+    TError,
+    { id: string },
     TContext
   >(mutationFn, mutationOptions);
 };

@@ -21,20 +21,6 @@ services:
     ports:
       - "5433:5432"
 
-  scheduling-api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__KDVManagerConnectionString=Server=postgres;
-        port=5432; database=KDVManagerGroupManagementDB; User ID=sammy;
-        password=shark; pooling=true
-    ports:
-      - "80"
-      - "443"
-    volumes:
-      - ~/.aspnet/https:/root/.aspnet/https:ro
-      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
-
   childmanagement-migrator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production

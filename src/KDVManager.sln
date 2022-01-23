@@ -11,21 +11,13 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChildManagement", "ChildManagement", "{AD0249E9-391D-49A4-8443-8E15C48A1579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Domain", "Services\ChildManagement\KDVManager.Services.ChildManagement.Domain\KDVManager.Services.ChildManagement.Domain.csproj", "{71D6616C-104A-465C-B56D-431803743FB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Domain", "Services\ChildManagement\Domain\KDVManager.Services.ChildManagement.Domain.csproj", "{71D6616C-104A-465C-B56D-431803743FB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Application", "Services\ChildManagement\KDVManager.Services.ChildManagement.Application\KDVManager.Services.ChildManagement.Application.csproj", "{D8165272-5FCB-4238-B898-83471F311687}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Application", "Services\ChildManagement\Application\KDVManager.Services.ChildManagement.Application.csproj", "{D8165272-5FCB-4238-B898-83471F311687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Persistence", "Services\ChildManagement\KDVManager.Services.ChildManagement.Persistence\KDVManager.Services.ChildManagement.Persistence.csproj", "{EB587E32-89B8-44EB-8C84-ED51A5154A88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Persistence", "Services\ChildManagement\Infrastructure\KDVManager.Services.ChildManagement.Persistence.csproj", "{EB587E32-89B8-44EB-8C84-ED51A5154A88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Api", "Services\ChildManagement\KDVManager.Services.ChildManagement.Api\KDVManager.Services.ChildManagement.Api.csproj", "{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.Scheduling.Api", "Services\Scheduling\KDVManager.Services.Scheduling.Api\KDVManager.Services.Scheduling.Api.csproj", "{B62FAA68-FECA-49BA-B3CF-BEC5737931A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.Scheduling.Application", "Services\Scheduling\KDVManager.Services.Scheduling.Application\KDVManager.Services.Scheduling.Application.csproj", "{E3EC4ECF-40EE-4F1C-B391-F8994FED6971}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.Scheduling.Domain", "Services\Scheduling\KDVManager.Services.Scheduling.Domain\KDVManager.Services.Scheduling.Domain.csproj", "{5ADD2EBC-01D2-463B-A291-16A9FB6F801E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.Scheduling.Persistence", "Services\Scheduling\KDVManager.Services.Scheduling.Persistence\KDVManager.Services.Scheduling.Persistence.csproj", "{9BC8D5D8-A225-4434-BFD4-6FC09414E528}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDVManager.Services.ChildManagement.Api", "Services\ChildManagement\Api\KDVManager.Services.ChildManagement.Api.csproj", "{6A36FD1B-C4C3-4CC1-89DB-E1593CE86D12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,19 +8,11 @@ services:
   postgres:
     image: postgres:latest
 
-  scheduling-api:
-    image: ${REGISTRY:-kdvmanager}/scheduling.api:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Scheduling/KDVManager.Services.Scheduling.Api/Dockerfile
-    depends_on:
-      - postgres
-
   childmanagement-api:
     image: ${REGISTRY:-kdvmanager}/childmanagement.api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Api/Dockerfile
+      dockerfile: Services/ChildManagement/Api/Dockerfile
     depends_on:
       - postgres
 
@@ -28,6 +20,6 @@ services:
     image: ${REGISTRY:-kdvmanager}/childmanagement.migrator:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/Dockerfile
+      dockerfile: Services/ChildManagement/Infrastructure/Dockerfile
     depends_on:
       - postgres

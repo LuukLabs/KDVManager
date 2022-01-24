@@ -9,6 +9,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using KDVManager.Services.ChildManagement.Application.Contracts.Pagination;
+using System.Net;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace KDVManager.Services.ChildManagement.Api.Controllers
 {
@@ -26,10 +29,12 @@ namespace KDVManager.Services.ChildManagement.Api.Controllers
         }
 
         [Authorize("read:children")]
+        [SwaggerResponseHeader(((int)HttpStatusCode.OK), "x-Total", "integer", "Total number of records.", "int32")]
         [HttpGet("", Name = "GetAllChildren")]
-        public async Task<ActionResult<List<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
+        public async Task<ActionResult<PagedList<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
         {
             var dtos = await _mediator.Send(getChildListQuery);
+            Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
             return Ok(dtos);
         }
 

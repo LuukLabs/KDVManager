@@ -21,6 +21,7 @@ using Unchase.Swashbuckle.AspNetCore.Extensions.Filters;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace KDVManager.Services.ChildManagement.Api
 {
@@ -98,6 +99,9 @@ namespace KDVManager.Services.ChildManagement.Api
                 configure.AddSecurityDefinition("jwt_auth", securityDefinition);
                 // // Make sure swagger UI requires a Bearer token to be specified
                 configure.AddSecurityRequirement(securityRequirements);
+
+                // configure.OperationFilter<SecurityRequirementsOperationFilter>();
+                //configure.OperationFilter<AddResponseHeadersFilter>();
             });
 
             services.AddAuthentication(options =>
@@ -106,13 +110,13 @@ namespace KDVManager.Services.ChildManagement.Api
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://kdvmanager.eu.auth0.com/";
-                options.Audience = "https://api.kdvmanager.nl";
+                options.Authority = Configuration["Auth0:Domain"];
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
             });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:children", policy => policy.Requirements.Add(new HasScopeRequirement("read:children", "https://kdvmanager.eu.auth0.com/")));
+                options.AddPolicy("read:children", policy => policy.Requirements.Add(new HasScopeRequirement("read:children", Configuration["Auth0:Domain"])));
             });
 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
@@ -132,7 +136,6 @@ namespace KDVManager.Services.ChildManagement.Api
             {
                 options.OAuthClientId("ITepsevBBZNElNNrVmZjgkwaVCsmmKWc");
                 options.OAuthClientSecret("D6E4HJv2QZXAiXG9Rh8a1z6po3AHlfhvu3MQ_SvG2ghB0pTF6Ju8O5Y75H02rt85");
-                // options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
                 options.OAuthAdditionalQueryStringParams(new Dictionary<string, string>()
                 {
                     {"audience", "https://api.kdvmanager.nl/"}

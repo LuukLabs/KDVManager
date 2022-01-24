@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.ChildManagement.Application.Contracts.Infrastructure;
 using KDVManager.Services.ChildManagement.Domain.Entities;
+using KDVManager.Services.ChildManagement.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using KDVManager.Services.ChildManagement.Domain.ValueObjects;
 
 namespace KDVManager.Services.ChildManagement.Infrastructure.Repositories
 {
@@ -15,7 +15,7 @@ namespace KDVManager.Services.ChildManagement.Infrastructure.Repositories
         {
         }
 
-        public async Task<IReadOnlyList<Child>> ListAllAsync(PaginationFilter paginationFilter)
+        public async Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter)
         {
             int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
@@ -23,6 +23,11 @@ namespace KDVManager.Services.ChildManagement.Infrastructure.Repositories
             .OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName)
             .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize)
             .ToListAsync();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _dbContext.Set<Child>().CountAsync();
         }
     }
 }

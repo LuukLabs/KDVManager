@@ -9,10 +9,10 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Quer
 {
     public class GetChildDetailQueryHandler : IRequestHandler<GetChildDetailQuery, ChildDetailVM>
     {
-        private readonly IAsyncRepository<Child> _childRepository;
+        private readonly IChildRepository _childRepository;
         private readonly IMapper _mapper;
 
-        public GetChildDetailQueryHandler(IAsyncRepository<Child> childRepository, IMapper mapper)
+        public GetChildDetailQueryHandler(IChildRepository childRepository, IMapper mapper)
         {
             _childRepository = childRepository;
             _mapper = mapper;

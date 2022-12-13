@@ -1,5 +1,5 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Services/ChildManagement/Api/KDVManager.Services.ChildManagement.Api.csproj", "Services/ChildManagement/Api/"]
 COPY ["Services/ChildManagement/Application/KDVManager.Services.ChildManagement.Application.csproj", "Services/ChildManagement/Application/"]
@@ -9,7 +9,7 @@ RUN dotnet restore "Services/ChildManagement/Api/KDVManager.Services.ChildManage
 COPY . .
 WORKDIR "/src/Services/ChildManagement/KDVManager.Services.ChildManagement.Infrastructure"
 
-RUN dotnet tool install -g dotnet-ef --version 6.0.1
+RUN dotnet tool install -g dotnet-ef --version 7.0.0
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context MigrationDbContext
 

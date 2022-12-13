@@ -11,45 +11,42 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using KDVManager.Services.ChildManagement.Application.Contracts.Pagination;
 using System.Net;
-using Swashbuckle.AspNetCore.Filters;
+using KDVManager.Services.ChildManagement.Application.Contracts.Infrastructure;
 
-namespace KDVManager.Services.ChildManagement.Api.Controllers
+namespace KDVManager.Services.ChildManagement.Api.Controllers;
+
+[ApiController]
+[Route("v1/[controller]")]
+public class ChildrenController : ControllerBase
 {
-    [ApiController]
-    [Route("v1/[controller]")]
-    public class ChildrenController : ControllerBase
+    private readonly IMediator _mediator;
+    private readonly ILogger<ChildrenController> _logger;
+
+    public ChildrenController(IMediator mediator, ILogger<ChildrenController> logger)
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<ChildrenController> _logger;
+        _logger = logger;
+        _mediator = mediator;
+    }
 
-        public ChildrenController(IMediator mediator, ILogger<ChildrenController> logger)
-        {
-            _logger = logger;
-            _mediator = mediator;
-        }
+    [HttpGet("", Name = "GetAllChildren")]
+    public async Task<ActionResult<PagedList<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
+    {
+        var dtos = await _mediator.Send(getChildListQuery);
+        Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
+        return Ok(dtos);
+    }
 
-        [Authorize("read:children")]
-        [SwaggerResponseHeader(((int)HttpStatusCode.OK), "x-Total", "integer", "Total number of records.", "int32")]
-        [HttpGet("", Name = "GetAllChildren")]
-        public async Task<ActionResult<PagedList<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
-        {
-            var dtos = await _mediator.Send(getChildListQuery);
-            Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
-            return Ok(dtos);
-        }
+    [HttpPost(Name = "CreateChild")]
+    public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
+    {
+        var id = await _mediator.Send(createChildCommand);
+        return Ok(id);
+    }
 
-        [HttpPost(Name = "CreateChild")]
-        public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
-        {
-            var id = await _mediator.Send(createChildCommand);
-            return Ok(id);
-        }
-
-        [HttpDelete("{Id:guid}", Name = "DeleteChild")]
-        public async Task<ActionResult<Guid>> DeleteChild([FromRoute] DeleteChildCommand deleteChildCommand)
-        {
-            var id = await _mediator.Send(deleteChildCommand);
-            return NoContent();
-        }
+    [HttpDelete("{Id:guid}", Name = "DeleteChild")]
+    public async Task<ActionResult<Guid>> DeleteChild([FromRoute] DeleteChildCommand deleteChildCommand)
+    {
+        await _mediator.Send(deleteChildCommand);
+        return NoContent();
     }
 }

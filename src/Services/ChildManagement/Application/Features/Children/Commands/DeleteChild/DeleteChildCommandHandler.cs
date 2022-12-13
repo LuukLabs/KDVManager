@@ -11,10 +11,10 @@ namespace KDVManager.Services.ChildManagement.Application.Features.Children.Comm
 {
     public class DeleteChildCommandHandler : IRequestHandler<DeleteChildCommand>
     {
-        private readonly IAsyncRepository<Child> _childRepository;
+        private readonly IChildRepository _childRepository;
         private readonly IMapper _mapper;
 
-        public DeleteChildCommandHandler(IAsyncRepository<Child> childRepository, IMapper mapper)
+        public DeleteChildCommandHandler(IChildRepository childRepository, IMapper mapper)
         {
             _childRepository = childRepository;
             _mapper = mapper;

@@ -29,7 +29,7 @@ namespace KDVManager.Services.ChildManagement.Api.Middleware
             }
         }
 
-        private Task ConvertException(HttpContext context,  Exception exception)
+        private Task ConvertException(HttpContext context, Exception exception)
         {
             HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
 
@@ -45,7 +45,8 @@ namespace KDVManager.Services.ChildManagement.Api.Middleware
             {
                 case ValidationException validationException:
                     httpStatusCode = HttpStatusCode.UnprocessableEntity;
-                    result = JsonSerializer.Serialize(new {
+                    result = JsonSerializer.Serialize(new
+                    {
                         status = (int)httpStatusCode,
                         errors = validationException.ValidationErrors
                     }, jsonSerializerOptions);
@@ -63,7 +64,7 @@ namespace KDVManager.Services.ChildManagement.Api.Middleware
 
             context.Response.StatusCode = (int)httpStatusCode;
 
-            
+
             if (result == string.Empty)
             {
                 result = JsonSerializer.Serialize(new { error = exception.Message, status = (int)httpStatusCode }, jsonSerializerOptions);

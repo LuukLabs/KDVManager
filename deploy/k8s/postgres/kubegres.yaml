@@ -6,7 +6,7 @@ spec:
    replicas: 3
    image: postgres:14.1
    database:
-      size: 2Gi
+      size: 200Mi
    env:
       - name: POSTGRES_PASSWORD
         valueFrom:

@@ -25,12 +25,13 @@ static_resources:
             virtual_hosts:
             - name: kdvmanager_backend
               domains:
-                - "api.*"
+              - "api.*"
               cors:
                 allow_origin_string_match:
-                  - prefix: "*"
+                - prefix: "*"
                 allow_methods: GET, POST, PUT, HEAD, OPTIONS, DELETE
-                allow_headers: Authorization,Content-Type,Link,Total,Per-Page
+                allow_headers: Authorization,Content-Type
+                expose_headers: x-Total
               routes:
               - name: "children"
                 match:

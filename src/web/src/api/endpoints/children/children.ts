@@ -19,6 +19,7 @@ import type {
   GetAllChildrenParams,
   CreateChildCommand,
 } from "../../models";
+import { executeAxiosPaginated } from "../../mutator/executeAxiosPaginated";
 import { executeAxios } from "../../mutator/executeAxios";
 
 type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
@@ -28,7 +29,7 @@ type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
   : any;
 
 export const getAllChildren = (params?: GetAllChildrenParams) => {
-  return executeAxios<ChildListVM[]>({
+  return executeAxiosPaginated<ChildListVM[]>({
     url: `/v1/children`,
     method: "get",
     params,

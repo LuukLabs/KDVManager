@@ -5,6 +5,18 @@ const mutatorAxios = {
   name: "executeAxios",
 };
 
+const mutatorAxiosPaginated = {
+  path: "src/api/mutator/executeAxiosPaginated.ts",
+  name: "executeAxiosPaginated",
+};
+
+const queryPaginated = {
+  mutator: mutatorAxiosPaginated,
+  query: {
+    useQuery: true,
+  },
+};
+
 const config: ReturnType<typeof defineConfig> = {
   portal: {
     output: {
@@ -15,6 +27,9 @@ const config: ReturnType<typeof defineConfig> = {
       prettier: true,
       override: {
         mutator: mutatorAxios,
+        operations: {
+          GetAllChildren: queryPaginated,
+        },
       },
     },
     input: {

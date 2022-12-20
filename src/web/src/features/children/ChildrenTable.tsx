@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { ChildListVM } from "../../api/models";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetAllChildren } from "../../api/endpoints/children/children";
+import { GridColDef } from "@mui/x-data-grid/models/colDef";
+import { DataGrid } from "@mui/x-data-grid/DataGrid";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -11,14 +12,13 @@ const columns: GridColDef[] = [
 const ChildrenTable = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const { data, isLoading, isRefetching, isFetching, isPreviousData } =
-    useGetAllChildren(
-      {
-        pageNumber: page,
-        pageSize: pageSize,
-      },
-      { query: { keepPreviousData: true } }
-    );
+  const { data, isLoading, isFetching } = useGetAllChildren(
+    {
+      pageNumber: page,
+      pageSize: pageSize,
+    },
+    { query: { keepPreviousData: true } }
+  );
 
   const changePage = useCallback((newPage) => setPage(newPage + 1), []);
 

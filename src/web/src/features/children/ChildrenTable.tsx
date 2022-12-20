@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from "react";
-
 import { ChildListVM } from "../../api/models";
-
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
 import { useGetAllChildren } from "../../api/endpoints/children/children";
 
 const columns: GridColDef[] = [
@@ -14,13 +11,14 @@ const columns: GridColDef[] = [
 const ChildrenTable = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const { data, isLoading, isPreviousData } = useGetAllChildren(
-    {
-      pageNumber: page,
-      pageSize: pageSize,
-    },
-    { query: { keepPreviousData: true } }
-  );
+  const { data, isLoading, isRefetching, isFetching, isPreviousData } =
+    useGetAllChildren(
+      {
+        pageNumber: page,
+        pageSize: pageSize,
+      },
+      { query: { keepPreviousData: true } }
+    );
 
   const changePage = useCallback((newPage) => setPage(newPage + 1), []);
 
@@ -36,7 +34,7 @@ const ChildrenTable = () => {
       paginationMode="server"
       pageSize={pageSize}
       rowCount={data?.meta?.total || 0}
-      loading={isLoading || isPreviousData}
+      loading={isLoading || isFetching}
       columns={columns}
       rows={data?.value || []}
       onPageChange={changePage}

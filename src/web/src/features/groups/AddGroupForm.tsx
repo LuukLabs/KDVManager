@@ -19,7 +19,7 @@ import {
   useAddGroup,
 } from "../../api/endpoints/groups/groups";
 
-export const AddGroupPage = () => {
+export const AddGroupForm = () => {
   const queryClient = useQueryClient();
   const { mutate } = useAddGroup();
   const navigate = useNavigate();
@@ -38,25 +38,18 @@ export const AddGroupPage = () => {
   };
 
   return (
-    <>
-      <MainNavbar />
-      <Container>
-        <div className="t1">Group toevoegen</div>
-        <CssBaseline />
-        <FormContainer
-          formContext={formContext}
-          handleSubmit={handleSubmit(onSubmit)}
-        >
-          <Paper style={{ padding: 16 }}>
-            <Grid container alignItems="flex-start" spacing={2}>
-              <Grid item xs={12}>
-                <TextFieldElement name="name" label="Naam" required fullWidth />
-              </Grid>
-            </Grid>
-          </Paper>
-          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-        </FormContainer>
-      </Container>
-    </>
+    <FormContainer
+      formContext={formContext}
+      handleSubmit={handleSubmit(onSubmit)}
+    >
+      <Paper style={{ padding: 16 }}>
+        <Grid container alignItems="flex-start" spacing={2}>
+          <Grid item xs={12}>
+            <TextFieldElement name="name" label="Naam" required fullWidth />
+          </Grid>
+        </Grid>
+      </Paper>
+      <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+    </FormContainer>
   );
 };

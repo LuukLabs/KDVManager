@@ -29,6 +29,7 @@ const config: ReturnType<typeof defineConfig> = {
         mutator: mutatorAxios,
         operations: {
           GetAllChildren: queryPaginated,
+          ListGroups: queryPaginated,
         },
       },
     },

@@ -23,3 +23,19 @@ services:
       dockerfile: Services/ChildManagement/Infrastructure/Dockerfile
     depends_on:
       - postgres
+
+  scheduling-api:
+    image: ${REGISTRY:-kdvmanager}/scheduling.api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Scheduling/Api/Dockerfile
+    depends_on:
+      - postgres
+
+  scheduling-migrator:
+    image: ${REGISTRY:-kdvmanager}/scheduling.migrator:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Scheduling/Infrastructure/Dockerfile
+    depends_on:
+      - postgres

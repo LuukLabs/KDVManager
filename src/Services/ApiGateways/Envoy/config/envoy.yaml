@@ -39,6 +39,13 @@ static_resources:
                 route:
                   auto_host_rewrite: true
                   cluster: childmanagement-api
+              - name: "scheduling"
+                match:
+                  prefix: "/v1/scheduling"
+                route:
+                  auto_host_rewrite: true
+                  prefix_rewrite: "/v1"
+                  cluster: scheduling-api
             - name: kdvmanager_web
               domains:
               - "*"
@@ -79,6 +86,19 @@ static_resources:
             address:
               socket_address:
                 address: childmanagement-api
+                port_value: 80
+  - name: scheduling-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: scheduling-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: scheduling-api
                 port_value: 80
   - name: docs
     connect_timeout: 0.25s

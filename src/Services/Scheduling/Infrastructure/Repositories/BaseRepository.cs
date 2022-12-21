@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;

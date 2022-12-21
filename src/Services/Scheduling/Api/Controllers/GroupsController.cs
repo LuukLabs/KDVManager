@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 

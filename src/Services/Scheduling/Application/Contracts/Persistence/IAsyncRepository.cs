@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 
 public interface IAsyncRepository<T> where T : class
 {

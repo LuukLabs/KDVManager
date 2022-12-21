@@ -1,5 +1,5 @@
 ﻿using System;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Services.Scheduling.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -28,5 +28,11 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
     public async Task<int> CountAsync()
     {
         return await _dbContext.Set<Group>().CountAsync();
+    }
+
+    public async Task<bool> IsGroupNameUnique(string name)
+    {
+        var matches = _dbContext.Groups.Any(e => e.Name.Equals(name));
+        return await Task.FromResult(matches);
     }
 }

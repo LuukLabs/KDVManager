@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using MediatR;

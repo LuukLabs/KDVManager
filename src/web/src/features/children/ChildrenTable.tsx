@@ -11,7 +11,7 @@ const columns: GridColDef[] = [
 
 const ChildrenTable = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const { data, isLoading, isFetching } = useGetAllChildren(
     {
       pageNumber: page,

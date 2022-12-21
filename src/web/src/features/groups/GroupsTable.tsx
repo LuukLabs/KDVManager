@@ -8,7 +8,7 @@ const columns: GridColDef[] = [{ field: "name", headerName: "Groep", flex: 1 }];
 
 const GroupsTable = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const { data, isLoading, isFetching } = useListGroups(
     {
       pageNumber: page,

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using KDVManager.Services.Scheduling.Application.Contracts.Infrastructure;
+using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using MediatR;
 
@@ -21,7 +21,7 @@ public class AddGroupCommandHandler : IRequestHandler<AddGroupCommand, Guid>
 
     public async Task<Guid> Handle(AddGroupCommand request, CancellationToken cancellationToken)
     {
-        var validator = new AddGroupCommandValidator();
+        var validator = new AddGroupCommandValidator(_groupRepository);
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)

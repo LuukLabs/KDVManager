@@ -15,12 +15,13 @@ import AdbIcon from "@mui/icons-material/Adb";
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  useNavigate,
 } from "react-router-dom";
 
-const pages = ["Children"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function MainNavbar() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -95,11 +96,11 @@ function MainNavbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {/* {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -122,16 +123,18 @@ function MainNavbar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                href="/children"
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            <Button
+              sx={{ my: 2, color: "white", display: "block" }}
+              onClick={() => navigate("/children")}
+            >
+              Kinderen
+            </Button>
+            <Button
+              sx={{ my: 2, color: "white", display: "block" }}
+              onClick={() => navigate("/groups")}
+            >
+              Groepen
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

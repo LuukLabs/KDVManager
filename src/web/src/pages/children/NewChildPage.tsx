@@ -13,6 +13,7 @@ import {
 } from "../../api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
+import MainNavbar from "../../components/MainNavbar";
 
 export const NewChildPage = () => {
   const queryClient = useQueryClient();
@@ -37,35 +38,38 @@ export const NewChildPage = () => {
   };
 
   return (
-    <Container>
-      <div className="t1">Single user Creation</div>
-      <CssBaseline />
-      <FormContainer
-        formContext={formContext}
-        handleSubmit={handleSubmit(onSubmit)}
-      >
-        <Paper style={{ padding: 16 }}>
-          <Grid container alignItems="flex-start" spacing={2}>
-            <Grid item xs={12}>
-              <TextFieldElement
-                name="givenName"
-                label="Voornaam"
-                required
-                fullWidth
-              />
+    <>
+      <MainNavbar />
+      <Container>
+        <div className="t1">Single user Creation</div>
+        <CssBaseline />
+        <FormContainer
+          formContext={formContext}
+          handleSubmit={handleSubmit(onSubmit)}
+        >
+          <Paper style={{ padding: 16 }}>
+            <Grid container alignItems="flex-start" spacing={2}>
+              <Grid item xs={12}>
+                <TextFieldElement
+                  name="givenName"
+                  label="Voornaam"
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextFieldElement
+                  name="familyName"
+                  label="Achternaam"
+                  required
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextFieldElement
-                name="familyName"
-                label="Achternaam"
-                required
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Paper>
-        <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-      </FormContainer>
-    </Container>
+          </Paper>
+          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+        </FormContainer>
+      </Container>
+    </>
   );
 };

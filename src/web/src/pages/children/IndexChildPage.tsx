@@ -7,6 +7,7 @@ import ChildrenTable from "../../features/children/ChildrenTable";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import makeStyles from "@mui/styles/makeStyles";
+import MainNavbar from "../../components/MainNavbar";
 
 const useStyles = makeStyles({
   // This group of buttons will be aligned to the right
@@ -22,21 +23,24 @@ export const IndexChildPage = () => {
   const onAddChildClickHandler = () => navigate("/children/new");
 
   return (
-    <Container>
-      <Toolbar>
-        <section className={classes.rightToolbar}>
-          <Button
-            variant="contained"
-            onClick={onAddChildClickHandler}
-            startIcon={<AddIcon />}
-          >
-            Kind
-          </Button>
-        </section>
-      </Toolbar>
-      <Paper>
-        <ChildrenTable />
-      </Paper>
-    </Container>
+    <>
+      <MainNavbar />
+      <Container>
+        <Toolbar>
+          <section className={classes.rightToolbar}>
+            <Button
+              variant="contained"
+              onClick={onAddChildClickHandler}
+              startIcon={<AddIcon />}
+            >
+              Kind
+            </Button>
+          </section>
+        </Toolbar>
+        <Paper>
+          <ChildrenTable />
+        </Paper>
+      </Container>
+    </>
   );
 };

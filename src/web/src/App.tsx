@@ -5,6 +5,7 @@ import ErrorPage from "./components/ErrorPage";
 import MainNavbar from "./components/MainNavbar";
 import { IndexChildPage } from "./pages/children/IndexChildPage";
 import { NewChildPage } from "./pages/children/NewChildPage";
+import { AddGroupPage } from "./pages/groups/AddGroupPage";
 import { ListGroupsPage } from "./pages/groups/ListGroupsPage";
 
 const router = createBrowserRouter([
@@ -19,13 +20,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/children/new",
+    element: <NewChildPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/groups/",
     element: <ListGroupsPage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/children/new",
-    element: <NewChildPage />,
+    path: "/groups/new",
+    element: <AddGroupPage />,
     errorElement: <ErrorPage />,
   },
 ]);

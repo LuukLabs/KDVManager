@@ -48,7 +48,12 @@ public class ExceptionHandlerMiddleware
                 result = JsonSerializer.Serialize(new
                 {
                     status = (int)httpStatusCode,
-                    errors = validationException.ValidationErrors
+                    errors = validationException.ValidationErrors.Select(e => new
+                    {
+                        property = System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(e.Property),
+                        code = e.Code,
+                        title = e.Title
+                    })
                 }, jsonSerializerOptions);
                 break;
             case BadRequestException badRequestException:

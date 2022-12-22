@@ -17,8 +17,11 @@ public class AddGroupCommandValidator : AbstractValidator<AddGroupCommand>
         RuleFor(addGroupCommand => addGroupCommand.Name)
             .NotEmpty()
             .NotNull()
-            .MaximumLength(25)
+            .MaximumLength(25);
+
+        RuleFor(addGroupCommand => addGroupCommand.Name)
             .MustAsync(GroupNameUnique)
+            .WithErrorCode("GNU001")
             .WithMessage("An group with the same name already exists.");
     }
 

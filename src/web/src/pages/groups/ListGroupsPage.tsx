@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
 import GroupsTable from "../../features/groups/GroupsTable";
 import MainNavbar from "../../components/MainNavbar";
-import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Dialog from "@mui/material/Dialog";
@@ -13,7 +12,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import TextField from "@mui/material/TextField";
 import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import {
   getListGroupsQueryKey,
@@ -33,28 +31,38 @@ const useStyles = makeStyles({
 export const ListGroupsPage = () => {
   const classes = useStyles();
   const queryClient = useQueryClient();
-  const { mutate } = useAddGroup();
+  const { mutate, isLoading } = useAddGroup();
 
   const [open, setOpen] = React.useState(false);
 
   const onAddGroupClickHandler = () => setOpen(true);
 
   const handleClose = () => {
+    reset();
     setOpen(false);
   };
 
   const formContext = useForm<AddGroupCommand>();
 
-  const { handleSubmit, reset } = formContext;
+  const { setError, handleSubmit, reset } = formContext;
 
   const onSubmit = (data: AddGroupCommand) => {
-    mutate({ data: data }, { onSuccess: onSuccess });
+    mutate({ data: data }, { onSuccess: onSuccess, onError: onError });
   };
 
   const onSuccess = () => {
     queryClient.invalidateQueries(getListGroupsQueryKey());
     reset();
     setOpen(false);
+  };
+
+  const onError = (error: any) => {
+    error.response.data.errors.forEach((propertyError: any) => {
+      setError(propertyError.property, {
+        type: "server",
+        message: propertyError.title,
+      });
+    });
   };
 
   return (
@@ -92,14 +100,15 @@ export const ListGroupsPage = () => {
               label="Naam"
               margin="dense"
               variant="standard"
-              required
               fullWidth
             />
           </FormContainer>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit(onSubmit)}>Toevoegen</Button>
+          <Button onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+            Toevoegen
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -58,9 +58,53 @@ static_resources:
                   prefix_rewrite: "/"
                   cluster: web
           http_filters:
+          - name: envoy.filters.http.jwt_authn
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
+              providers:
+                auth0:
+                  issuer: https://kdvmanager.eu.auth0.com/
+                  audiences:
+                    - https://api.kdvmanager.nl/
+                  remote_jwks:
+                    http_uri:
+                      uri: https://kdvmanager.eu.auth0.com/.well-known/jwks.json
+                      cluster: kdvmanager.eu.auth0.com|443
+                      timeout: 5s
+                    cache_duration:
+                      seconds: 300
+                  from_headers:
+                  - name: Authorization
+                    value_prefix: "Bearer "
+                  forward: "true"
+              rules:
+                - match:
+                    prefix: /
+                  requires:
+                    provider_name: auth0
+              bypass_cors_preflight: 'true'
           - name: envoy.filters.http.cors
           - name: envoy.filters.http.router
   clusters:
+  - name: kdvmanager.eu.auth0.com|443
+    connect_timeout: 0.25s
+    type: logical_dns
+    lb_policy: round_robin
+    dns_lookup_family: V4_ONLY
+    load_assignment:
+      cluster_name: kdvmanager.eu.auth0.com|443
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: kdvmanager.eu.auth0.com
+                port_value: 443
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        sni: kdvmanager.eu.auth0.com
   - name: web
     connect_timeout: 0.25s
     type: strict_dns

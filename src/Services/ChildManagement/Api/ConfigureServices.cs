@@ -14,15 +14,14 @@ public static class ConfigureServices
 
         services.AddControllers();
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            options.Authority = configuration["Auth0:Domain"];
-            options.Audience = configuration["Auth0:ApiIdentifier"];
-        });
+        string domain = $"https://{configuration["Auth0:Domain"]}/";
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = configuration["Auth0:Audience"];
+            });
 
         services.AddSingleton<ITenantService, TenantService>();
 

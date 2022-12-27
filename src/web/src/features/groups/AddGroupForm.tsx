@@ -28,7 +28,6 @@ export const AddGroupForm = () => {
   const handleSubmit = formContext.handleSubmit;
 
   const onSubmit = (data: AddGroupCommand) => {
-    console.log(JSON.stringify(data, null, 2));
     mutate({ data: data }, { onSuccess: onSuccess });
   };
 

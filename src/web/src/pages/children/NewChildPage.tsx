@@ -28,7 +28,6 @@ export const NewChildPage = () => {
   const handleSubmit = formContext.handleSubmit;
 
   const onSubmit = (data: CreateChildCommand) => {
-    console.log(JSON.stringify(data, null, 2));
     mutate({ data: data }, { onSuccess: onSuccess });
   };
 
@@ -39,7 +38,6 @@ export const NewChildPage = () => {
 
   return (
     <>
-      <MainNavbar />
       <Container>
         <div className="t1">Single user Creation</div>
         <CssBaseline />

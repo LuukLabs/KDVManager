@@ -4,19 +4,26 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./components/ErrorPage";
-import { IndexChildPage } from "./pages/children/IndexChildPage";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const queryClient = new QueryClient();
+const domain = process.env.REACT_APP_AUTH0_DOMAIN || "";
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID || "";
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <Auth0Provider
+      domain={domain}
+      clientId={clientId}
+      audience="https://api.kdvmanager.nl/"
+      redirectUri={window.location.origin}
+    >
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

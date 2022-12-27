@@ -67,7 +67,6 @@ export const ListGroupsPage = () => {
 
   return (
     <>
-      <MainNavbar />
       <Container>
         <Toolbar>
           <section className={classes.rightToolbar}>

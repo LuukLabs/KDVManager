@@ -1,17 +1,17 @@
 import { defineConfig } from "orval";
 
-const mutatorAxios = {
-  path: "src/api/mutator/executeAxios.ts",
-  name: "executeAxios",
+const useMutatorAxios = {
+  path: "src/api/mutator/useExecuteAxios.ts",
+  name: "useExecuteAxios",
 };
 
-const mutatorAxiosPaginated = {
-  path: "src/api/mutator/executeAxiosPaginated.ts",
-  name: "executeAxiosPaginated",
+const useMutatorAxiosPaginated = {
+  path: "src/api/mutator/useExecuteAxiosPaginated.ts",
+  name: "useExecuteAxiosPaginated",
 };
 
 const queryPaginated = {
-  mutator: mutatorAxiosPaginated,
+  mutator: useMutatorAxiosPaginated,
   query: {
     useQuery: true,
   },
@@ -26,7 +26,7 @@ const config: ReturnType<typeof defineConfig> = {
       client: "react-query",
       prettier: true,
       override: {
-        mutator: mutatorAxios,
+        mutator: useMutatorAxios,
         operations: {
           GetAllChildren: queryPaginated,
           ListGroups: queryPaginated,

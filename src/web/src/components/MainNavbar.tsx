@@ -12,21 +12,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function MainNavbar() {
   const navigate = useNavigate();
-  const { loginWithRedirect, logout, getAccessTokenSilently, isAuthenticated } =
-    useAuth0();
+  const { loginWithRedirect, logout } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );

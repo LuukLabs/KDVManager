@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
 import GroupsTable from "../../features/groups/GroupsTable";
-import MainNavbar from "../../components/MainNavbar";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Dialog from "@mui/material/Dialog";

@@ -1,4 +1,3 @@
-import React from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -7,7 +6,6 @@ import { ChildrenTable } from "../../features/children/ChildrenTable";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import makeStyles from "@mui/styles/makeStyles";
-import MainNavbar from "../../components/MainNavbar";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 
 const useStyles = makeStyles({

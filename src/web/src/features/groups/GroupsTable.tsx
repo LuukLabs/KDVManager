@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { GroupListVM } from "../../api/models";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
@@ -7,8 +7,8 @@ import { useListGroups } from "../../api/endpoints/groups/groups";
 const columns: GridColDef[] = [{ field: "name", headerName: "Groep", flex: 1 }];
 
 const GroupsTable = () => {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
   const { data, isLoading, isFetching } = useListGroups(
     {
       pageNumber: page,
@@ -17,10 +17,10 @@ const GroupsTable = () => {
     { query: { keepPreviousData: true } }
   );
 
-  const changePage = useCallback((newPage) => setPage(newPage + 1), []);
+  const changePage = useCallback((newPage: number) => setPage(newPage + 1), []);
 
   const changePageSize = useCallback(
-    (newPageSize) => setPageSize(newPageSize),
+    (newPageSize: number) => setPageSize(newPageSize),
     []
   );
 

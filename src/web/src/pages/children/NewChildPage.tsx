@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "@mui/material/Container";
 import { CreateChildCommand } from "../../api/models";
 import { useForm } from "react-hook-form";
@@ -13,7 +12,6 @@ import {
 } from "../../api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import MainNavbar from "../../components/MainNavbar";
 
 export const NewChildPage = () => {
   const queryClient = useQueryClient();

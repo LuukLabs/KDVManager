@@ -2,30 +2,46 @@ using System;
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using KDVManager.Services.Scheduling.Application.Exceptions;
 
 namespace KDVManager.Services.Scheduling.Api.Services;
 
+
 public class TenantService : ITenantService
 {
+    private IHttpContextAccessor _httpContextAccessor;
+
     public TenantService(IHttpContextAccessor httpContextAccessor)
     {
-        if (TryGetTenantHeader(httpContextAccessor.HttpContext.Request.Headers, out Guid tenantId))
-        {
-            TenantId = tenantId;
-        }
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    private bool TryGetTenantHeader(IHeaderDictionary headers, out Guid tenantId)
+    private bool TryGetTenantFromClaims(IEnumerable<System.Security.Claims.Claim> claims, out Guid tenant)
     {
-        tenantId = Guid.Empty;
+        tenant = Guid.Empty;
 
-        if (headers.TryGetValue("x-tenant-id", out var tenantIdHeader))
-        {
-            return Guid.TryParse(tenantIdHeader, out tenantId);
-        }
+        var tenantClaim = claims.Where(c => c.Type == "https://kdvmanager.nl/tenant").FirstOrDefault();
+
+        if (tenantClaim != null)
+            return Guid.TryParse(tenantClaim.Value, out tenant);
 
         return false;
     }
 
-    public Guid TenantId { get; private set; }
+    public Guid Tenant
+    {
+        get
+        {
+            var tenant = Guid.Empty;
+
+            if (_httpContextAccessor.HttpContext != null && TryGetTenantFromClaims(_httpContextAccessor.HttpContext.User.Claims, out tenant))
+            {
+                return tenant;
+            }
+            else
+            {
+                throw new TenantRequiredException();
+            }
+        }
+    }
 }

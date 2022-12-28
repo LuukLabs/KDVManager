@@ -2,8 +2,7 @@ version: '3.4'
 
 services:
   envoy:
-    image: envoyproxy/envoy:v1.18.2
-    restart: always
+    image: envoyproxy/envoy:v1.24.1
 
   postgres:
     image: postgres:latest

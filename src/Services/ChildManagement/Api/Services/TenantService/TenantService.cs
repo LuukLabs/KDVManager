@@ -2,31 +2,45 @@ using System;
 using KDVManager.Services.ChildManagement.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using KDVManager.Services.ChildManagement.Application.Exceptions;
 
-namespace KDVManager.Services.ChildManagement.Api.Services
+namespace KDVManager.Services.ChildManagement.Api.Services;
+
+public class TenantService : ITenantService
 {
-    public class TenantService : ITenantService
+    private IHttpContextAccessor _httpContextAccessor;
+
+    public TenantService(IHttpContextAccessor httpContextAccessor)
     {
-        public TenantService(IHttpContextAccessor httpContextAccessor)
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    private bool TryGetTenantFromClaims(IEnumerable<System.Security.Claims.Claim> claims, out Guid tenant)
+    {
+        tenant = Guid.Empty;
+
+        var tenantClaim = claims.Where(c => c.Type == "https://kdvmanager.nl/tenant").FirstOrDefault();
+
+        if (tenantClaim != null)
+            return Guid.TryParse(tenantClaim.Value, out tenant);
+
+        return false;
+    }
+
+    public Guid Tenant
+    {
+        get
         {
-            if (TryGetTenantHeader(httpContextAccessor.HttpContext.Request.Headers, out Guid tenantId))
+            var tenant = Guid.Empty;
+
+            if (_httpContextAccessor.HttpContext != null && TryGetTenantFromClaims(_httpContextAccessor.HttpContext.User.Claims, out tenant))
             {
-                TenantId = tenantId;
+                return tenant;
+            }
+            else
+            {
+                throw new TenantRequiredException();
             }
         }
-
-        private bool TryGetTenantHeader(IHeaderDictionary headers, out Guid tenantId)
-        {
-            tenantId = Guid.Empty;
-
-            if (headers.TryGetValue("x-tenant-id", out var tenantIdHeader))
-            {
-                return Guid.TryParse(tenantIdHeader, out tenantId);
-            }
-
-            return false;
-        }
-
-        public Guid TenantId { get; private set; }
     }
 }

@@ -84,7 +84,11 @@ static_resources:
                     provider_name: auth0
               bypass_cors_preflight: 'true'
           - name: envoy.filters.http.cors
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
           - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
   - name: kdvmanager.eu.auth0.com|443
     connect_timeout: 0.25s

@@ -21,7 +21,7 @@ namespace KDVManager.Services.ChildManagement.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.TenantId);
+            modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -32,7 +32,7 @@ namespace KDVManager.Services.ChildManagement.Infrastructure
                 {
                     case EntityState.Added:
                     case EntityState.Modified:
-                        entry.Entity.TenantId = _tenantService.TenantId;
+                        entry.Entity.TenantId = _tenantService.Tenant;
                         break;
                 }
             }

@@ -2,7 +2,6 @@ version: '3.4'
 
 services:
   envoy:
-    restart: always
     volumes:
       - ./Services/ApiGateways/Envoy/config:/etc/envoy
       - ./Services/ApiGateways/Envoy/logs:/var/log
@@ -24,7 +23,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
-    restart: always
     ports:
       - "5050:80"
     environment:

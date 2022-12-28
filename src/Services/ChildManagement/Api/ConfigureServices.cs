@@ -23,7 +23,7 @@ public static class ConfigureServices
                 options.Audience = configuration["Auth0:Audience"];
             });
 
-        services.AddSingleton<ITenantService, TenantService>();
+        services.AddScoped<ITenantService, TenantService>();
 
         return services;
     }

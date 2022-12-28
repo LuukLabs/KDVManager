@@ -22,7 +22,7 @@ public class SchedulingDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.TenantId);
+        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
@@ -34,7 +34,7 @@ public class SchedulingDbContext : DbContext
             {
                 case EntityState.Added:
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _tenantService.TenantId;
+                    entry.Entity.TenantId = _tenantService.Tenant;
                     break;
             }
         }

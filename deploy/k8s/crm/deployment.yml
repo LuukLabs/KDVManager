@@ -39,7 +39,23 @@ spec:
           - name: POSTGRES_SERVER
             value: "postgres"
           - name: POSTGRES_USER
+            value: "admin"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                  name: kdvmanager-postgres-secret
+                  key: superUserPassword        
+          - name: ConnectionStrings__KDVManagerChildManagementConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+      initContainers:
+      - name: crm-migration
+        image: ghcr.io/luukvh/kdvmanager/crm.migrator:linux-master
+        imagePullPolicy: Always
+        env:
+          - name: POSTGRES_SERVER
             value: "postgres"
+          - name: POSTGRES_USER
+            value: "admin"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:

@@ -1,13 +1,16 @@
 # Build stage
-FROM node:15-alpine as build
+FROM node:18-alpine as build
+
+RUN corepack enable
+RUN corepack prepare pnpm@latest --activate
 
 RUN mkdir /app
 
 WORKDIR /app
 
-COPY package.json /app
+COPY package.json pnpm-lock.yaml .npmrc /app/
 
-RUN yarn install
+RUN pnpm install
 
 COPY . /app
 

@@ -9,6 +9,11 @@ services:
   postgres:
     image: postgres:latest
 
+  web:
+    image: ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: ./web
+
   crm-api:
     image: ${REGISTRY:-kdvmanager}/crm.api:${PLATFORM:-linux}-${TAG:-latest}
     build:

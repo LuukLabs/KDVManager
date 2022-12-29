@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Axios, { AxiosRequestConfig } from "axios";
 import { BASE_URL } from "../constants";
 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: BASE_URL });
+const AXIOS_INSTANCE = Axios.create({ baseURL: BASE_URL });
 
 export const useExecuteAxios = <T>(): ((
   config: AxiosRequestConfig

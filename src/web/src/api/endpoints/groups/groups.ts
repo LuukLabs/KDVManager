@@ -21,10 +21,6 @@ import type {
 import { useExecuteAxiosPaginated } from "../../mutator/useExecuteAxiosPaginated";
 import { useExecuteAxios } from "../../mutator/useExecuteAxios";
 
-type AwaitedInput<T> = PromiseLike<T> | T;
-
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
-
 export const useListGroupsHook = () => {
   const listGroups = useExecuteAxiosPaginated<GroupListVM[]>();
 

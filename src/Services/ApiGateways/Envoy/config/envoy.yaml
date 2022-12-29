@@ -148,16 +148,3 @@ static_resources:
               socket_address:
                 address: scheduling-api
                 port_value: 80
-  - name: docs
-    connect_timeout: 0.25s
-    type: strict_dns
-    lb_policy: round_robin
-    load_assignment:
-      cluster_name: docs
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: documentation.api
-                port_value: 80

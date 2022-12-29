@@ -26,3 +26,7 @@ spec:
                     key: superUserPassword
             - name: POSTGRES_USER
               value: admin
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim

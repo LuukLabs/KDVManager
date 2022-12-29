@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: childmanagment-pod
-        image: ghcr.io/luukvh/kdvmanager/childmanagement.api:linux-master
+        image: ghcr.io/luukvh/kdvmanager/crm.api:linux-master
         imagePullPolicy: Always
         ports:
           - name: http

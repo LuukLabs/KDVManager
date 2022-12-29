@@ -11,7 +11,7 @@ services:
     image: ${REGISTRY:-kdvmanager}/crm.api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/ChildManagement/Api/Dockerfile
+      dockerfile: Services/CRM/Api/Dockerfile
     depends_on:
       - postgres
 
@@ -19,7 +19,7 @@ services:
     image: ${REGISTRY:-kdvmanager}/crm.migrator:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/ChildManagement/Infrastructure/Dockerfile
+      dockerfile: Services/CRM/Infrastructure/Dockerfile
     depends_on:
       - postgres
 

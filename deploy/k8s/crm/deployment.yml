@@ -45,8 +45,8 @@ spec:
               secretKeyRef:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
-          - name: ConnectionStrings__KDVManagerChildManagementConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+          - name: ConnectionStrings__KDVManagerCRMConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerCRMDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
       - name: crm-migration
         image: ghcr.io/luukvh/kdvmanager/crm.migrator:linux-master
@@ -61,5 +61,5 @@ spec:
               secretKeyRef:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
-          - name: ConnectionStrings__KDVManagerChildManagementConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+          - name: ConnectionStrings__KDVManagerCRMConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerCRMDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"

@@ -38,7 +38,7 @@ static_resources:
                   prefix: "/v1/children"
                 route:
                   auto_host_rewrite: true
-                  cluster: childmanagement-api
+                  cluster: crm-api
               - name: "scheduling"
                 match:
                   prefix: "/v1/scheduling"
@@ -122,18 +122,18 @@ static_resources:
               socket_address:
                 address: web
                 port_value: 80
-  - name: childmanagement-api
+  - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     load_assignment:
-      cluster_name: childmanagement-api
+      cluster_name: crm-api
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: childmanagement-api
+                address: crm-api
                 port_value: 80
   - name: scheduling-api
     connect_timeout: 0.25s

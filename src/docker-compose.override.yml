@@ -32,7 +32,7 @@ services:
   crm-migrator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
     depends_on:
       - postgres
 
@@ -40,7 +40,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
     ports:
       - "80"
       - "443"

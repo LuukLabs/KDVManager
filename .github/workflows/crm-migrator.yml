@@ -7,7 +7,7 @@ on:
     - master
 
     paths:
-    - src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/**
+    - src/Services/CRM/Persistence/**
     - .github/workflows/crm-migrator.yml
   
   pull_request:
@@ -15,11 +15,11 @@ on:
     - master
 
     paths:
-    - src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/**
+    - src/Services/CRM/Persistence/**
     - .github/workflows/crm-migrator.yml
 env:
   SERVICE: crm-migrator
-  IMAGE: childmanagement-migrator
+  IMAGE: crm-migrator
 
 jobs:
 

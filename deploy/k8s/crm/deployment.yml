@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: childmanagement-api
+  name: crm-api
   labels:
-    app: childmanagement-api
+    app: crm-api
     release: production
 spec:
   replicas: 1
@@ -14,12 +14,12 @@ spec:
       maxUnavailable: 0 
   selector:
     matchLabels:
-      app: childmanagement-api
+      app: crm-api
       release: production
   template:
     metadata:
       labels:
-        app: childmanagement-api
+        app: crm-api
         release: production
     spec:
       imagePullSecrets:
@@ -54,7 +54,7 @@ spec:
           - name: ConnectionStrings__KDVManagerChildManagementConnectionString
             value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
-      - name: childmanagment-migration
+      - name: crm-migration
         image: ghcr.io/luukvh/kdvmanager/childmanagement.migrator:linux-master
         imagePullPolicy: Always
         env:

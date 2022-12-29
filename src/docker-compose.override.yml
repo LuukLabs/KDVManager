@@ -29,14 +29,14 @@ services:
       PGADMIN_DEFAULT_EMAIL: raj@nola.com
       PGADMIN_DEFAULT_PASSWORD: admin
 
-  childmanagement-migrator:
+  crm-migrator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__KDVManagerChildManagementConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
     depends_on:
       - postgres
 
-  childmanagement-api:
+  crm-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80

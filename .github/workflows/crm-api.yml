@@ -1,4 +1,4 @@
-name: childmanagement-api
+name: crm-api
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
     paths:
     - src/Services/ChildManagement/**
-    - .github/workflows/childmanagement-api.yml
+    - .github/workflows/crm-api.yml
   
   pull_request:
     branches:
@@ -16,10 +16,10 @@ on:
 
     paths:
     - src/Services/ChildManagement/**
-    - .github/workflows/childmanagement-api.yml
+    - .github/workflows/crm-api.yml
 env:
-  SERVICE: childmanagement-api
-  IMAGE: childmanagement-api
+  SERVICE: crm-api
+  IMAGE: crm-api
 
 jobs:
 

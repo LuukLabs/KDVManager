@@ -1,4 +1,4 @@
-name: childmanagement-migrator
+name: crm-migrator
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
     paths:
     - src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/**
-    - .github/workflows/childmanagement-migrator.yml
+    - .github/workflows/crm-migrator.yml
   
   pull_request:
     branches:
@@ -16,9 +16,9 @@ on:
 
     paths:
     - src/Services/ChildManagement/KDVManager.Services.ChildManagement.Persistence/**
-    - .github/workflows/childmanagement-migrator.yml
+    - .github/workflows/crm-migrator.yml
 env:
-  SERVICE: childmanagement-migrator
+  SERVICE: crm-migrator
   IMAGE: childmanagement-migrator
 
 jobs:

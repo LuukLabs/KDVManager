@@ -1,8 +1,0 @@
-apiVersion: getambassador.io/v3alpha1
-kind: Mapping
-metadata:
-  name: quote-backend
-spec:
-  hostname: "api.*"
-  prefix: /v1/children
-  service: childmanagment-api

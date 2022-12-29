@@ -5,7 +5,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: pgadmin
+    app: envoy
   ports:
     - protocol: TCP
       port: 80

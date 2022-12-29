@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy
+  labels:
+    app: envoy
+    release: production
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 
+  selector:
+    matchLabels:
+      app: envoy
+      release: production
+  template:
+    metadata:
+      labels:
+        app: envoy
+        release: production
+    spec:
+      containers:
+      - name: envoy
+        image: ghcr.io/luukvh/kdvmanager/envoy:linux-master
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+          - name: https
+            containerPort: 443
+            protocol: TCP
+        env:
+          - name: ENVOY_UID
+            value: "0"
+          - name: ENVOY_GID
+            value: "0"

@@ -33,9 +33,9 @@ static_resources:
                 allow_headers: Authorization,Content-Type
                 expose_headers: x-Total
               routes:
-              - name: "children"
+              - name: "crm"
                 match:
-                  prefix: "/v1/children"
+                  prefix: "/v1/crm"
                 route:
                   auto_host_rewrite: true
                   cluster: crm-api
@@ -79,7 +79,7 @@ static_resources:
                   forward: "true"
               rules:
                 - match:
-                    prefix: /
+                    prefix: /v1
                   requires:
                     provider_name: auth0
               bypass_cors_preflight: 'true'

@@ -2,7 +2,9 @@ version: '3.4'
 
 services:
   envoy:
-    image: envoyproxy/envoy:v1.24.1
+    image: ${REGISTRY:-kdvmanager}/envoy:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: ./Services/ApiGateways/Envoy
 
   postgres:
     image: postgres:latest

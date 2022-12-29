@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: childmanagment-api
+  name: crm-api
   labels:
-    app: childmanagement-api
+    app: crm-api
     release: production
 spec:
   ports:
@@ -16,5 +16,5 @@ spec:
       protocol: TCP
       name: https
   selector:
-    app: childmanagement-api
+    app: crm-api
     release: production

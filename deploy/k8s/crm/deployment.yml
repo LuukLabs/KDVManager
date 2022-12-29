@@ -26,7 +26,7 @@ spec:
         - name: kdvmanager-registery-github
       containers:
       - name: childmanagment-pod
-        image: ghcr.io/luukvh/openkdvmanager/childmanagement.api:linux-master
+        image: ghcr.io/luukvh/kdvmanager/childmanagement.api:linux-master
         imagePullPolicy: Always
         ports:
           - name: http
@@ -55,7 +55,7 @@ spec:
             value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerGroupManagementDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
       - name: childmanagment-migration
-        image: ghcr.io/luukvh/openkdvmanager/childmanagement.migrator:linux-master
+        image: ghcr.io/luukvh/kdvmanager/childmanagement.migrator:linux-master
         imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER

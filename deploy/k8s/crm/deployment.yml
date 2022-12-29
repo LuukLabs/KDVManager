@@ -33,10 +33,6 @@ spec:
           - name: https
             containerPort: 443
             protocol: TCP
-        resources:
-          limits:
-            memory: 512Mi
-            cpu: 100m
         env:
           - name: ASPNETCORE_URLS
             value: "http://+:80"

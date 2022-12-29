@@ -22,8 +22,6 @@ spec:
         app: crm-api
         release: production
     spec:
-      imagePullSecrets:
-        - name: kdvmanager-registery-github
       containers:
       - name: childmanagment-pod
         image: ghcr.io/luukvh/kdvmanager/childmanagement.api:linux-master

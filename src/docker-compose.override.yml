@@ -20,6 +20,11 @@ services:
     ports:
       - "5432:5432"
 
+  web:
+    image: ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
+    ports:
+      - "9090:80"
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container

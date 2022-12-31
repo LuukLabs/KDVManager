@@ -17,7 +17,18 @@ spec:
             name: web
             port:
               number: 80
+  - host: "api.kdvmanager.nl"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: envoy
+            port:
+              number: 80
   tls:
   - hosts:
     - kdvmanager.nl
+    - api.kdvmanager.nl
     secretName: kdvmanager-nl-tls

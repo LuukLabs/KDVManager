@@ -33,8 +33,3 @@ spec:
           - name: https
             containerPort: 443
             protocol: TCP
-        env:
-          - name: REACT_APP_AUTH0_DOMAIN
-            value: kdvmanager.eu.auth0.com
-          - name: REACT_APP_AUTH0_CLIENT_ID
-            value: ITepsevBBZNElNNrVmZjgkwaVCsmmKWc

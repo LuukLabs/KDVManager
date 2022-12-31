@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crm-api
+  name: scheduling-api
   labels:
-    app: crm-api
+    app: scheduling-api
     release: production
 spec:
   replicas: 1
@@ -14,17 +14,17 @@ spec:
       maxUnavailable: 0 
   selector:
     matchLabels:
-      app: crm-api
+      app: scheduling-api
       release: production
   template:
     metadata:
       labels:
-        app: crm-api
+        app: scheduling-api
         release: production
     spec:
       containers:
-      - name: crm-pod
-        image: ghcr.io/luukvh/kdvmanager/crm.api:linux-master
+      - name: scheduling-pod
+        image: ghcr.io/luukvh/kdvmanager/scheduling.api:linux-master
         imagePullPolicy: Always
         ports:
           - name: http
@@ -45,11 +45,11 @@ spec:
               secretKeyRef:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
-          - name: ConnectionStrings__KDVManagerCRMConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerCRMDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+          - name: ConnectionStrings__KDVManagerSchedulingConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerSchedulingDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
-      - name: crm-migration
-        image: ghcr.io/luukvh/kdvmanager/crm.migrator:linux-master
+      - name: scheduling-migration
+        image: ghcr.io/luukvh/kdvmanager/scheduling.migrator:linux-master
         imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER
@@ -61,5 +61,5 @@ spec:
               secretKeyRef:
                   name: kdvmanager-postgres-secret
                   key: superUserPassword        
-          - name: ConnectionStrings__KDVManagerCRMConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerCRMDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+          - name: ConnectionStrings__KDVManagerSchedulingConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerSchedulingDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"

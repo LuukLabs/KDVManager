@@ -14,6 +14,11 @@ RUN pnpm install
 
 COPY . /app
 
+# Setup build args
+ARG REACT_APP_AUTH0_DOMAIN
+ARG REACT_APP_AUTH0_CLIENT_ID
+
+# Build the application
 RUN pnpm build
 
 # Run stage

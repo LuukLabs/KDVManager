@@ -37,7 +37,6 @@ static_resources:
                 match:
                   prefix: "/v1/children"
                 route:
-                  auto_host_rewrite: true
                   cluster: crm-api
               - name: "scheduling"
                 match:

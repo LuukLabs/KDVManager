@@ -7,6 +7,7 @@ metadata:
     release: production
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -37,9 +38,9 @@ spec:
           - name: ASPNETCORE_URLS
             value: "http://+:80"
           - name: POSTGRES_SERVER
-            value: "postgres"
+            value: "kdvmanager-postgres"
           - name: POSTGRES_USER
-            value: "admin"
+            value: "postgres"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -53,9 +54,9 @@ spec:
         imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER
-            value: "postgres"
+            value: "kdvmanager-postgres"
           - name: POSTGRES_USER
-            value: "admin"
+            value: "postgres"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:

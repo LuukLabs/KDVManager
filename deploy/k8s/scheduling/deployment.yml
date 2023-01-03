@@ -7,7 +7,6 @@ metadata:
     release: production
 spec:
   replicas: 1
-  revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -27,12 +26,25 @@ spec:
       - name: scheduling-pod
         image: ghcr.io/luukvh/kdvmanager/scheduling.api:linux-master
         imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /healthz
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /healthz
+          initialDelaySeconds: 10
+          periodSeconds: 3
         resources:
           limits:
-            memory: 300Mi
+            memory: 100Mi
             cpu: 500m
           requests:
-            memory: 100Mi
+            memory: 50Mi
             cpu: 200m
         ports:
           - name: http

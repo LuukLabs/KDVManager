@@ -26,6 +26,8 @@ app.UseCustomExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHealthChecks("/healthz");
+
 app.MapControllers();
 
 app.Run();

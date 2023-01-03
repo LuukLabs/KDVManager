@@ -14,6 +14,8 @@ public static class ConfigureServices
 
         services.AddControllers();
 
+        services.AddHealthChecks();
+
         string domain = $"https://{configuration["Auth0:Domain"]}/";
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

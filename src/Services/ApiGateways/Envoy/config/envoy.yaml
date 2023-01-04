@@ -35,15 +35,17 @@ static_resources:
               routes:
               - name: "crm"
                 match:
-                  prefix: "/v1/children"
+                  prefix: "/crm"
                 route:
+                  prefix_rewrite: "/"
+                  auto_host_rewrite: true
                   cluster: crm-api
               - name: "scheduling"
                 match:
-                  prefix: "/v1/scheduling"
+                  prefix: "/scheduling"
                 route:
+                  prefix_rewrite: "/"
                   auto_host_rewrite: true
-                  prefix_rewrite: "/v1"
                   cluster: scheduling-api
             - name: kdvmanager_web
               domains:

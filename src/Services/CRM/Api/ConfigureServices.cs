@@ -1,6 +1,7 @@
 using KDVManager.Services.CRM.Api.Services;
 using KDVManager.Services.CRM.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -12,18 +13,31 @@ public static class ConfigureServices
 
         services.AddHttpContextAccessor();
 
-        services.AddControllers();
-
         services.AddHealthChecks();
+
+        services.AddControllers();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "KDVManager CRM API",
+                Contact = new OpenApiContact
+                {
+                    Name = "Luuk van Hulten",
+                    Email = "admin@kdvmanager.nl",
+                },
+            });
+        });
 
         string domain = $"https://{configuration["Auth0:Domain"]}/";
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = domain;
-                options.Audience = configuration["Auth0:Audience"];
-            });
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = domain;
+                    options.Audience = configuration["Auth0:Audience"];
+                });
 
         services.AddScoped<ITenantService, TenantService>();
 

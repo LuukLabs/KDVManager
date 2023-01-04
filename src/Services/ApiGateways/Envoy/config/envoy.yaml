@@ -35,29 +35,16 @@ static_resources:
               routes:
               - name: "crm"
                 match:
-                  prefix: "/crm"
+                  prefix: /crm/
                 route:
-                  prefix_rewrite: "/"
-                  auto_host_rewrite: true
+                  prefix_rewrite: /
                   cluster: crm-api
               - name: "scheduling"
                 match:
-                  prefix: "/scheduling"
+                  prefix: /scheduling/
                 route:
-                  prefix_rewrite: "/"
-                  auto_host_rewrite: true
+                  prefix_rewrite: /
                   cluster: scheduling-api
-            - name: kdvmanager_web
-              domains:
-              - "*"
-              routes:
-              - name: "web"
-                match:
-                  prefix: "/"
-                route:
-                  auto_host_rewrite: true
-                  prefix_rewrite: "/"
-                  cluster: web
           http_filters:
           - name: envoy.filters.http.jwt_authn
             typed_config:
@@ -80,7 +67,7 @@ static_resources:
                   forward: "true"
               rules:
                 - match:
-                    prefix: /v1
+                    prefix: /
                   requires:
                     provider_name: auth0
               bypass_cors_preflight: 'true'
@@ -110,19 +97,6 @@ static_resources:
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
         sni: kdvmanager.eu.auth0.com
-  - name: web
-    connect_timeout: 0.25s
-    type: strict_dns
-    lb_policy: round_robin
-    load_assignment:
-      cluster_name: web
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: web
-                port_value: 80
   - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns

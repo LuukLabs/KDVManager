@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
+﻿using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
-using System.Net;
-using KDVManager.Services.CRM.Application.Contracts.Infrastructure;
 
 namespace KDVManager.Services.CRM.Api.Controllers;
 

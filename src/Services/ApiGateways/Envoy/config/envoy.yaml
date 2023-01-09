@@ -67,7 +67,9 @@ static_resources:
                   forward: "true"
               rules:
                 - match:
-                    prefix: /swagger/
+                    prefix: /crm/swagger/
+                - match:
+                    prefix: /scheduling/swagger/
                 - match:
                     prefix: /
                   requires:

@@ -67,6 +67,8 @@ static_resources:
                   forward: "true"
               rules:
                 - match:
+                    prefix: /swagger/
+                - match:
                     prefix: /
                   requires:
                     provider_name: auth0

@@ -1,17 +1,23 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.3",
   "info": {
-    "title": "KDVManager.Services.CRM.Api",
-    "version": "1.0"
+    "title": "KDVManager CRM API",
+    "contact": {
+      "name": "Luuk van Hulten",
+      "email": "admin@kdvmanager.nl"
+    },
+    "version": "v1"
   },
   "paths": {
-    "/v1/children": {
+    "/crm/v1/children": {
       "get": {
-        "tags": ["Children"],
+        "tags": [
+          "Children"
+        ],
         "operationId": "GetAllChildren",
         "parameters": [
           {
-            "name": "pageNumber",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -19,7 +25,7 @@
             }
           },
           {
-            "name": "pageSize",
+            "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -60,7 +66,9 @@
         }
       },
       "post": {
-        "tags": ["Children"],
+        "tags": [
+          "Children"
+        ],
         "operationId": "CreateChild",
         "requestBody": {
           "content": {
@@ -108,13 +116,15 @@
         }
       }
     },
-    "/v1/children/{id}": {
+    "/crm/v1/children/{Id}": {
       "delete": {
-        "tags": ["Children"],
+        "tags": [
+          "Children"
+        ],
         "operationId": "DeleteChild",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -150,13 +160,15 @@
         }
       }
     },
-    "/v1/scheduling/groups": {
+    "/scheduling/v1/groups": {
       "get": {
-        "tags": ["Groups"],
+        "tags": [
+          "Groups"
+        ],
         "operationId": "ListGroups",
         "parameters": [
           {
-            "name": "pageNumber",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -164,7 +176,7 @@
             }
           },
           {
-            "name": "pageSize",
+            "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -205,7 +217,9 @@
         }
       },
       "post": {
-        "tags": ["Groups"],
+        "tags": [
+          "Groups"
+        ],
         "operationId": "AddGroup",
         "requestBody": {
           "content": {
@@ -288,6 +302,16 @@
         },
         "additionalProperties": false
       },
+      "AddGroupCommand": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GroupListVM": {
         "type": "object",
         "properties": {
@@ -297,17 +321,7 @@
           },
           "name": {
             "type": "string",
-            "nullable": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddGroupCommand": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": false
+            "nullable": true
           }
         },
         "additionalProperties": false

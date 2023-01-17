@@ -1,1 +1,1 @@
-export const BASE_URL = "https://api.kdvmanager.nl/crm";
+export const BASE_URL = "https://api.kdvmanager.nl";

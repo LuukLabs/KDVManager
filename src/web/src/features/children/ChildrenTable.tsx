@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import { ChildListVM } from "../../api/models";
-import { useGetAllChildren } from "../../api/endpoints/children/children";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid";
+import { ChildListVM } from "../../api/models/childListVM";
+import { useGetAllChildren } from "../../api/endpoints/children/children";
 
 const columns: GridColDef[] = [
   {
@@ -27,8 +27,8 @@ export const ChildrenTable = () => {
 
   const { data, isLoading, isFetching } = useGetAllChildren(
     {
-      pageNumber: page,
-      pageSize: pageSize,
+      PageNumber: page,
+      PageSize: pageSize,
     },
     { query: { keepPreviousData: true } }
   );

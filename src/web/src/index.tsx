@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { createRoot } from "react-dom/client";
+import NiceModal from "@ebay/nice-modal-react";
 
 const queryClient = new QueryClient();
 const domain = process.env.REACT_APP_AUTH0_DOMAIN || "";
@@ -23,7 +24,9 @@ root.render(
       redirectUri={window.location.origin}
     >
       <QueryClientProvider client={queryClient}>
-        <App />
+        <NiceModal.Provider>
+          <App />
+        </NiceModal.Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Auth0Provider>

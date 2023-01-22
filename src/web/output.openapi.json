@@ -11,9 +11,7 @@
   "paths": {
     "/crm/v1/children": {
       "get": {
-        "tags": [
-          "Children"
-        ],
+        "tags": ["Children"],
         "operationId": "GetAllChildren",
         "parameters": [
           {
@@ -66,9 +64,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Children"
-        ],
+        "tags": ["Children"],
         "operationId": "CreateChild",
         "requestBody": {
           "content": {
@@ -118,9 +114,7 @@
     },
     "/crm/v1/children/{Id}": {
       "delete": {
-        "tags": [
-          "Children"
-        ],
+        "tags": ["Children"],
         "operationId": "DeleteChild",
         "parameters": [
           {
@@ -162,9 +156,7 @@
     },
     "/scheduling/v1/groups": {
       "get": {
-        "tags": [
-          "Groups"
-        ],
+        "tags": ["Groups"],
         "operationId": "ListGroups",
         "parameters": [
           {
@@ -217,9 +209,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Groups"
-        ],
+        "tags": ["Groups"],
         "operationId": "AddGroup",
         "requestBody": {
           "content": {

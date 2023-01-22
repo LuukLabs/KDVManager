@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet } from "react-router-dom";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -179,4 +179,6 @@ function MainNavbar() {
     </>
   );
 }
-export default MainNavbar;
+export default withAuthenticationRequired(MainNavbar, {
+  onRedirecting: () => <p>Redirecting to login page...</p>,
+});

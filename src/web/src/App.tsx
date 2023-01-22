@@ -2,7 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import MainNavbar from "./components/MainNavbar";
-import IndexChildPage from "./pages/children/IndexChildPage";
+import { IndexChildPage } from "./pages/children/IndexChildPage";
 import { NewChildPage } from "./pages/children/NewChildPage";
 import { ListGroupsPage } from "./pages/groups/ListGroupsPage";
 

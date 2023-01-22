@@ -6,7 +6,6 @@ import { ChildrenTable } from "../../features/children/ChildrenTable";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import makeStyles from "@mui/styles/makeStyles";
-import { withAuthenticationRequired } from "@auth0/auth0-react";
 
 const useStyles = makeStyles({
   // This group of buttons will be aligned to the right
@@ -16,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-const IndexChildPage = () => {
+export const IndexChildPage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const onAddChildClickHandler = () => navigate("/children/new");
@@ -42,7 +41,3 @@ const IndexChildPage = () => {
     </>
   );
 };
-
-export default withAuthenticationRequired(IndexChildPage, {
-  onRedirecting: () => <p>Redirecting to login page...</p>,
-});

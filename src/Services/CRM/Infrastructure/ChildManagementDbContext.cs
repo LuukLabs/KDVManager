@@ -17,11 +17,13 @@ namespace KDVManager.Services.CRM.Infrastructure
         }
 
         public DbSet<Child> Children { get; set; }
+        public DbSet<Person> People { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+            modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

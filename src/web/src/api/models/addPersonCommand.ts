@@ -5,7 +5,11 @@
  * OpenAPI spec version: v1
  */
 
-export interface CreateChildCommand {
+export interface AddPersonCommand {
   givenName?: string | null;
   familyName?: string | null;
+  dateOfBirth?: string;
+  email?: string | null;
+  bsn?: string | null;
+  phoneNumber?: string | null;
 }

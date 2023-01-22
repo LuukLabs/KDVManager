@@ -5,8 +5,11 @@
  * OpenAPI spec version: v1
  */
 
-export interface ChildListVM {
+export interface PersonListVM {
   id?: string;
   fullName?: string | null;
   dateOfBirth?: string;
+  email?: string | null;
+  bsn?: string | null;
+  phoneNumber?: string | null;
 }

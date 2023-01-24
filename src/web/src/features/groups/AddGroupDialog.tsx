@@ -2,18 +2,19 @@ import { AddGroupCommand } from "../../api/models";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
-import { useAddGroup } from "../../api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Dialog from "@mui/material/Dialog/Dialog";
 import DialogContentText from "@mui/material/DialogContentText/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
+import { useQueryClient } from "react-query";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const modal = useModal();
   const { mutateAsync } = useAddGroup();
-
+  const queryClient = useQueryClient();
   const formContext = useForm<AddGroupCommand>();
   const { handleSubmit, reset, setError } = formContext;
 
@@ -27,6 +28,7 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onSuccess = () => {
+    queryClient.invalidateQueries(getListGroupsQueryKey());
     reset();
     modal.remove();
   };

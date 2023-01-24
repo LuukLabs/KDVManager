@@ -23,7 +23,7 @@ public class GetChildListQueryHandler : IRequestHandler<GetChildListQuery, Paged
 
     public async Task<PagedList<ChildListVM>> Handle(GetChildListQuery request, CancellationToken cancellationToken)
     {
-        var children = await _childRepository.PagedAsync(request);
+        var children = await _childRepository.PagedAsync(request, request.Search);
         var count = await _childRepository.CountAsync();
 
         List<ChildListVM> childListVMs = _mapper.Map<List<ChildListVM>>(children);

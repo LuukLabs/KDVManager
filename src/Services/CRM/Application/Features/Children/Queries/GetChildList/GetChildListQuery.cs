@@ -8,5 +8,6 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
 {
     public class GetChildListQuery : PageParameters, IRequest<PagedList<ChildListVM>>
     {
+        public string Search { get; set; }
     }
 }

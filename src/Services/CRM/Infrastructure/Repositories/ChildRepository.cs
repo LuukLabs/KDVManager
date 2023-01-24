@@ -15,14 +15,20 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
     {
     }
 
-    public async Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter)
+    public async Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter, string search)
     {
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
-        return await _dbContext.Set<Child>()
-        .OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName)
-        .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize)
-        .ToListAsync();
+        IQueryable<Child> children = _dbContext.Set<Child>().AsQueryable();
+        if (!String.IsNullOrEmpty(search))
+        {
+            children = children.Where(child => (child.GivenName + child.FamilyName).Contains(search, StringComparison.OrdinalIgnoreCase));
+        }
+
+        children = children.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
+        children = children.OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName);
+
+        return await children.ToListAsync();
     }
 
     public async Task<int> CountAsync()

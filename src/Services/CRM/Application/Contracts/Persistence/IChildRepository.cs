@@ -8,6 +8,6 @@ namespace KDVManager.Services.CRM.Application.Contracts.Persistence;
 
 public interface IChildRepository : IAsyncRepository<Child>
 {
-    Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter);
+    Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter, string search = "");
     Task<int> CountAsync();
 }

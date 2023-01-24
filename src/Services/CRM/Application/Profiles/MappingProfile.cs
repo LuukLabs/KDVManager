@@ -17,6 +17,7 @@ namespace KDVManager.Services.CRM.Application.Profiles
                 .ForMember(ChildListVM => ChildListVM.FullName, opt => opt.MapFrom(child => (child.GivenName + " " + child.FamilyName).Trim()));
             CreateMap<Child, CreateChildCommand>().ReverseMap();
             CreateMap<GetChildListQuery, PageParameters>();
+
             CreateMap<Person, PersonListVM>()
                 .ForMember(PersonListVM => PersonListVM.FullName, opt => opt.MapFrom(person => (person.GivenName + " " + person.FamilyName).Trim()));
             CreateMap<Person, AddPersonCommand>().ReverseMap();

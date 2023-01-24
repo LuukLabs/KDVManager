@@ -6,7 +6,7 @@ metadata:
     app: crm-api
     release: production
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:

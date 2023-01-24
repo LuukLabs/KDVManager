@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using KDVManager.Services.CRM.Application.Contracts.Infrastructure;
+using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
 using MediatR;
 

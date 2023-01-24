@@ -11,5 +11,7 @@ namespace KDVManager.Services.CRM.Infrastructure
         }
 
         public DbSet<Child> Children { get; set; }
+
+        public DbSet<Person> People { get; set; }
     }
 }

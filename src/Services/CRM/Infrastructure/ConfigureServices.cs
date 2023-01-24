@@ -1,5 +1,5 @@
 ﻿using System;
-using KDVManager.Services.CRM.Application.Contracts.Infrastructure;
+using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Services.CRM.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +19,8 @@ public static class ConfigureServices
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
 
         services.AddScoped<IChildRepository, ChildRepository>();
+
+        services.AddScoped<IPersonRepository, PersonRepository>();
 
         return services;
     }

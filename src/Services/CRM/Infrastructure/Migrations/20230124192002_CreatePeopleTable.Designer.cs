@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20230122170642_CreatePeopleTable")]
+    [Migration("20230124192002_CreatePeopleTable")]
     partial class CreatePeopleTable
     {
         /// <inheritdoc />
@@ -46,6 +46,38 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Children");
+                });
+
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BSN")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FamilyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GivenName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("People");
                 });
 #pragma warning restore 612, 618
         }

@@ -44,6 +44,38 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
 
                     b.ToTable("Children");
                 });
+
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BSN")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FamilyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GivenName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("People");
+                });
 #pragma warning restore 612, 618
         }
     }

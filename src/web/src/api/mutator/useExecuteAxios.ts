@@ -4,9 +4,7 @@ import { BASE_URL } from "../constants";
 
 const AXIOS_INSTANCE = Axios.create({ baseURL: BASE_URL });
 
-export const useExecuteAxios = <T>(): ((
-  config: AxiosRequestConfig
-) => Promise<T>) => {
+export const useExecuteAxios = <T>(): ((config: AxiosRequestConfig) => Promise<T>) => {
   const { getAccessTokenSilently } = useAuth0();
 
   return (config: AxiosRequestConfig) => {

@@ -30,6 +30,7 @@ const config: ReturnType<typeof defineConfig> = {
         operations: {
           GetAllChildren: queryPaginated,
           ListGroups: queryPaginated,
+          GetAllPeople: queryPaginated,
         },
       },
     },

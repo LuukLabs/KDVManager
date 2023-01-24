@@ -13,11 +13,7 @@ import type {
   UseQueryResult,
   QueryKey,
 } from "react-query";
-import type {
-  GroupListVM,
-  ListGroupsParams,
-  AddGroupCommand,
-} from "../../models";
+import type { GroupListVM, ListGroupsParams, AddGroupCommand } from "../../models";
 import { useExecuteAxiosPaginated } from "../../mutator/useExecuteAxiosPaginated";
 import { useExecuteAxios } from "../../mutator/useExecuteAxios";
 
@@ -58,15 +54,14 @@ export const useListGroups = <
 
   const listGroups = useListGroupsHook();
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>
-  > = () => listGroups(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>> = () =>
+    listGroups(params);
 
-  const query = useQuery<
-    Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>,
-    TError,
-    TData
-  >(queryKey, queryFn, queryOptions) as UseQueryResult<TData, TError> & {
+  const query = useQuery<Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>, TError, TData>(
+    queryKey,
+    queryFn,
+    queryOptions
+  ) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
   };
 

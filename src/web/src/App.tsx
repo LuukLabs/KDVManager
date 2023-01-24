@@ -5,6 +5,7 @@ import MainNavbar from "./components/MainNavbar";
 import { IndexChildPage } from "./pages/children/IndexChildPage";
 import { NewChildPage } from "./pages/children/NewChildPage";
 import { ListGroupsPage } from "./pages/groups/ListGroupsPage";
+import { IndexPersonPage } from "./pages/people/IndexPersonPage";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "children/",
         element: <IndexChildPage />,
+      },
+      {
+        path: "people/",
+        element: <IndexPersonPage />,
       },
       {
         path: "children/new",

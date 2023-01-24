@@ -1,15 +1,31 @@
 import { useCallback, useState } from "react";
-import { GroupListVM } from "../../api/models";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
-import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import { useListGroups } from "../../api/endpoints/groups/groups";
+import { DataGrid } from "@mui/x-data-grid";
+import { ChildListVM } from "../../api/models/childListVM";
+import { useGetAllPeople } from "../../api/endpoints/people/people";
 
-const columns: GridColDef[] = [{ field: "name", headerName: "Groep", flex: 1 }];
+const columns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "ID",
+    width: 90,
+    disableColumnMenu: true,
+    disableReorder: true,
+  },
+  {
+    field: "fullName",
+    headerName: "Fullname",
+    flex: 1,
+    disableColumnMenu: true,
+    disableReorder: true,
+  },
+];
 
-const GroupsTable = () => {
+export const PeopleTable = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const { data, isLoading, isFetching } = useListGroups(
+
+  const { data, isLoading, isFetching } = useGetAllPeople(
     {
       PageNumber: page,
       PageSize: pageSize,
@@ -22,7 +38,7 @@ const GroupsTable = () => {
   const changePageSize = useCallback((newPageSize: number) => setPageSize(newPageSize), []);
 
   return (
-    <DataGrid<GroupListVM>
+    <DataGrid<ChildListVM>
       autoHeight
       rowsPerPageOptions={[5, 10, 20]}
       paginationMode="server"
@@ -36,5 +52,3 @@ const GroupsTable = () => {
     />
   );
 };
-
-export default GroupsTable;

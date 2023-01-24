@@ -13,23 +13,15 @@ import type {
   UseQueryResult,
   QueryKey,
 } from "react-query";
-import type {
-  PersonListVM,
-  GetAllPeopleParams,
-  AddPersonCommand,
-} from "../../models";
+import type { PersonListVM, GetAllPeopleParams, AddPersonCommand } from "../../models";
+import { useExecuteAxiosPaginated } from "../../mutator/useExecuteAxiosPaginated";
 import { useExecuteAxios } from "../../mutator/useExecuteAxios";
 
 export const useGetAllPeopleHook = () => {
-  const getAllPeople = useExecuteAxios<PersonListVM[]>();
+  const getAllPeople = useExecuteAxiosPaginated<PersonListVM[]>();
 
-  return (params?: GetAllPeopleParams, signal?: AbortSignal) => {
-    return getAllPeople({
-      url: `/crm/v1/people`,
-      method: "get",
-      params,
-      signal,
-    });
+  return (params?: GetAllPeopleParams) => {
+    return getAllPeople({ url: `/crm/v1/people`, method: "get", params });
   };
 };
 
@@ -62,9 +54,8 @@ export const useGetAllPeople = <
 
   const getAllPeople = useGetAllPeopleHook();
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>
-  > = ({ signal }) => getAllPeople(params, signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>> = () =>
+    getAllPeople(params);
 
   const query = useQuery<
     Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>,

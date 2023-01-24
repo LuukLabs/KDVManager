@@ -6,10 +6,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import {
-  getListGroupsQueryKey,
-  useAddGroup,
-} from "../../api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
 
 export const AddGroupForm = () => {
   const queryClient = useQueryClient();
@@ -29,10 +26,7 @@ export const AddGroupForm = () => {
   };
 
   return (
-    <FormContainer
-      formContext={formContext}
-      handleSubmit={handleSubmit(onSubmit)}
-    >
+    <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
       <Paper style={{ padding: 16 }}>
         <Grid container alignItems="flex-start" spacing={2}>
           <Grid item xs={12}>

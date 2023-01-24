@@ -44,13 +44,8 @@ export const AddGroupDialog = NiceModal.create(() => {
     <Dialog {...muiDialogV5(modal)}>
       <DialogTitle>Groep toevoegen</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          To add a group, please enter the group name here.
-        </DialogContentText>
-        <FormContainer
-          formContext={formContext}
-          handleSubmit={handleSubmit(onSubmit)}
-        >
+        <DialogContentText>To add a group, please enter the group name here.</DialogContentText>
+        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <TextFieldElement
             autoFocus
             name="name"

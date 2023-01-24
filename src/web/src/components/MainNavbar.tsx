@@ -21,12 +21,8 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function MainNavbar() {
   const navigate = useNavigate();
   const { loginWithRedirect, logout } = useAuth0();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -134,6 +130,12 @@ function MainNavbar() {
                 onClick={() => navigate("/groups")}
               >
                 Groepen
+              </Button>
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => navigate("/people")}
+              >
+                Personen
               </Button>
             </Box>
 

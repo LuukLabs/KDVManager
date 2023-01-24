@@ -6,10 +6,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-  getGetAllChildrenQueryKey,
-  useCreateChild,
-} from "../../api/endpoints/children/children";
+import { getGetAllChildrenQueryKey, useCreateChild } from "../../api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 
@@ -39,27 +36,14 @@ export const NewChildPage = () => {
       <Container>
         <div className="t1">Single user Creation</div>
         <CssBaseline />
-        <FormContainer
-          formContext={formContext}
-          handleSubmit={handleSubmit(onSubmit)}
-        >
+        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <Paper style={{ padding: 16 }}>
             <Grid container alignItems="flex-start" spacing={2}>
               <Grid item xs={12}>
-                <TextFieldElement
-                  name="givenName"
-                  label="Voornaam"
-                  required
-                  fullWidth
-                />
+                <TextFieldElement name="givenName" label="Voornaam" required fullWidth />
               </Grid>
               <Grid item xs={12}>
-                <TextFieldElement
-                  name="familyName"
-                  label="Achternaam"
-                  required
-                  fullWidth
-                />
+                <TextFieldElement name="familyName" label="Achternaam" required fullWidth />
               </Grid>
             </Grid>
           </Paper>

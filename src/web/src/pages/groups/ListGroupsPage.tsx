@@ -25,11 +25,7 @@ export const ListGroupsPage = () => {
       <Container>
         <Toolbar>
           <section className={classes.rightToolbar}>
-            <Button
-              variant="contained"
-              onClick={onAddGroupClickHandler}
-              startIcon={<AddIcon />}
-            >
+            <Button variant="contained" onClick={onAddGroupClickHandler} startIcon={<AddIcon />}>
               Groep
             </Button>
           </section>

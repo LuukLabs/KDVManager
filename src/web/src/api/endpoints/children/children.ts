@@ -13,11 +13,7 @@ import type {
   UseQueryResult,
   QueryKey,
 } from "react-query";
-import type {
-  ChildListVM,
-  GetAllChildrenParams,
-  CreateChildCommand,
-} from "../../models";
+import type { ChildListVM, GetAllChildrenParams, CreateChildCommand } from "../../models";
 import { useExecuteAxiosPaginated } from "../../mutator/useExecuteAxiosPaginated";
 import { useExecuteAxios } from "../../mutator/useExecuteAxios";
 
@@ -157,10 +153,8 @@ export const useDeleteChild = <TError = unknown, TContext = unknown>(options?: {
     return deleteChild(id);
   };
 
-  return useMutation<
-    Awaited<ReturnType<typeof deleteChild>>,
-    TError,
-    { id: string },
-    TContext
-  >(mutationFn, mutationOptions);
+  return useMutation<Awaited<ReturnType<typeof deleteChild>>, TError, { id: string }, TContext>(
+    mutationFn,
+    mutationOptions
+  );
 };

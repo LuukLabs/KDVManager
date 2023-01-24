@@ -35,10 +35,7 @@ export const ChildrenTable = () => {
 
   const changePage = useCallback((newPage: number) => setPage(newPage + 1), []);
 
-  const changePageSize = useCallback(
-    (newPageSize: number) => setPageSize(newPageSize),
-    []
-  );
+  const changePageSize = useCallback((newPageSize: number) => setPageSize(newPageSize), []);
 
   return (
     <DataGrid<ChildListVM>

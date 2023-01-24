@@ -25,11 +25,7 @@ export const IndexChildPage = () => {
       <Container>
         <Toolbar>
           <section className={classes.rightToolbar}>
-            <Button
-              variant="contained"
-              onClick={onAddChildClickHandler}
-              startIcon={<AddIcon />}
-            >
+            <Button variant="contained" onClick={onAddChildClickHandler} startIcon={<AddIcon />}>
               Kind
             </Button>
           </section>

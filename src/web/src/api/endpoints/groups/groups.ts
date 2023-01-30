@@ -61,9 +61,7 @@ export const useListGroups = <
     queryKey,
     queryFn,
     queryOptions
-  ) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryKey;
 

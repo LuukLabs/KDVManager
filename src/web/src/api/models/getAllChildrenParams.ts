@@ -5,4 +5,4 @@
  * OpenAPI spec version: v1
  */
 
-export type GetAllChildrenParams = { PageNumber?: number; PageSize?: number };
+export type GetAllChildrenParams = { Search?: string; PageNumber?: number; PageSize?: number };

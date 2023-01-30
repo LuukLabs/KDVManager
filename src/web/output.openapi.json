@@ -15,6 +15,13 @@
         "operationId": "GetAllChildren",
         "parameters": [
           {
+            "name": "Search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {

@@ -61,9 +61,7 @@ export const useGetAllPeople = <
     Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>,
     TError,
     TData
-  >(queryKey, queryFn, queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  >(queryKey, queryFn, queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryKey;
 

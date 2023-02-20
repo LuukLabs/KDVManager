@@ -3,8 +3,13 @@ kind: Ingress
 metadata:
   name: kdvmanager-ingress
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-productie"
     kubernetes.io/ingress.class: nginx
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "kdvmanager.nl"
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
+    service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
+    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
 spec:
   rules:
   - host: "kdvmanager.nl"

@@ -1,5 +1,4 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +14,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet } from "react-router-dom";
+import { AppBar } from "@mui/material";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -162,10 +162,7 @@ function MainNavbar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => logout({ returnTo: window.location.origin })}
-                  >
+                  <MenuItem key={setting} onClick={() => logout()}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}

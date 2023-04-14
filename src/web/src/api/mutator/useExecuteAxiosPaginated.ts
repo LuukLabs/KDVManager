@@ -21,7 +21,9 @@ export const useExecuteAxiosPaginated = <T>(): ((
   return (config: AxiosRequestConfig) => {
     const source = Axios.CancelToken.source();
     const promise = getAccessTokenSilently({
-      audience: "https://api.kdvmanager.nl/",
+      authorizationParams: {
+        audience: "https://api.kdvmanager.nl/",
+      },
     }).then((accessToken) =>
       AXIOS_INSTANCE({
         ...config,

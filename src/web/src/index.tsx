@@ -20,8 +20,10 @@ root.render(
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      audience="https://api.kdvmanager.nl/"
-      redirectUri={window.location.origin}
+      authorizationParams={{
+        audience: "https://api.kdvmanager.nl/",
+        redirectUri: window.location.origin,
+      }}
     >
       <QueryClientProvider client={queryClient}>
         <NiceModal.Provider>

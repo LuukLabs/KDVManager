@@ -22,7 +22,7 @@ ARG REACT_APP_AUTH0_CLIENT_ID
 RUN pnpm build
 
 # Run stage
-FROM nginx:1.23.3-alpine
+FROM nginx:1.24-alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
 

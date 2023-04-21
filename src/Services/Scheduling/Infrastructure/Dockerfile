@@ -13,7 +13,7 @@ RUN dotnet tool install -g dotnet-ef --version 7.0.0
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context MigrationDbContext
 
-FROM ubuntu:latest AS migrator
+FROM ubuntu:kinetic AS migrator
 
 RUN apt-get update && apt-get install -qqq libicu-dev libssl-dev
 

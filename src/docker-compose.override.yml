@@ -25,15 +25,6 @@ services:
     ports:
       - "9090:80"
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    ports:
-      - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: raj@nola.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-
   crm-migrator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -44,14 +35,15 @@ services:
   crm-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=7g3xqiiedLGmDrvAXNy8
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
     ports:
-      - "80"
-      - "443"
+      - "7070:80"
+      - "7079:443"
     volumes:
-      - ~/.aspnet/https:/root/.aspnet/https:ro
-      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+      - ${HOME}/.aspnet/https:/https/
 
   scheduling-migrator:
     environment:

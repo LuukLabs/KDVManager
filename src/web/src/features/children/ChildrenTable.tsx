@@ -23,13 +23,13 @@ const columns: GridColDef[] = [
 
 export const ChildrenTable = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 1,
+    page: 0,
     pageSize: 10,
   });
 
   const { data, isLoading, isFetching } = useGetAllChildren(
     {
-      PageNumber: paginationModel.page,
+      PageNumber: paginationModel.page + 1,
       PageSize: paginationModel.pageSize,
     },
     { query: { keepPreviousData: true } }

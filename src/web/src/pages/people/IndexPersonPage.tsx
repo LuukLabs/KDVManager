@@ -3,7 +3,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { PeopleTable } from "../../features/people/PeopleTable";
 import Paper from "@mui/material/Paper";
 
-export const IndexPersonPage = () => {
+const IndexPersonPage = () => {
   return (
     <>
       <Container>
@@ -15,3 +15,5 @@ export const IndexPersonPage = () => {
     </>
   );
 };
+
+export const Component = IndexPersonPage;

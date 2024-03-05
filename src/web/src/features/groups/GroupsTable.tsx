@@ -15,7 +15,7 @@ const GroupsTable = () => {
 
   const { data, isLoading, isFetching } = useListGroups(
     {
-      PageNumber: paginationModel.page,
+      PageNumber: paginationModel.page + 1,
       PageSize: paginationModel.pageSize,
     },
     { query: { keepPreviousData: true } }

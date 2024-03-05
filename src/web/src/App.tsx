@@ -2,10 +2,6 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import MainNavbar from "./components/MainNavbar";
-import { IndexChildPage } from "./pages/children/IndexChildPage";
-import { NewChildPage } from "./pages/children/NewChildPage";
-import { ListGroupsPage } from "./pages/groups/ListGroupsPage";
-import { IndexPersonPage } from "./pages/people/IndexPersonPage";
 
 const router = createBrowserRouter([
   {
@@ -15,19 +11,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "children/",
-        element: <IndexChildPage />,
+        lazy: () => import("./pages/children/IndexChildPage"),
       },
       {
         path: "people/",
-        element: <IndexPersonPage />,
+        lazy: () => import("./pages/people/IndexPersonPage"),
       },
       {
         path: "children/new",
-        element: <NewChildPage />,
+        lazy: () => import("./pages/children/NewChildPage"),
       },
       {
         path: "groups/",
-        element: <ListGroupsPage />,
+        lazy: () => import("./pages/groups/ListGroupsPage"),
       },
     ],
   },

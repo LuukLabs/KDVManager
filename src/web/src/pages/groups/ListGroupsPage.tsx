@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddGroupDialog } from "../../features/groups/AddGroupDialog";
 
-export const ListGroupsPage = () => {
+const ListGroupsPage = () => {
   const onAddGroupClickHandler = () => NiceModal.show(AddGroupDialog);
 
   return (
@@ -25,3 +25,5 @@ export const ListGroupsPage = () => {
     </>
   );
 };
+
+export const Component = ListGroupsPage;

@@ -10,7 +10,7 @@ import { getGetAllChildrenQueryKey, useCreateChild } from "../../api/endpoints/c
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 
-export const NewChildPage = () => {
+const NewChildPage = () => {
   const queryClient = useQueryClient();
   const { mutate } = useCreateChild();
   const navigate = useNavigate();
@@ -53,3 +53,5 @@ export const NewChildPage = () => {
     </>
   );
 };
+
+export const Component = NewChildPage;

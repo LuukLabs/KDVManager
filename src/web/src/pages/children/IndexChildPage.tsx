@@ -12,7 +12,7 @@ const StyledToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   marginRight: -12,
 }));
 
-export const IndexChildPage = () => {
+const IndexChildPage = () => {
   const navigate = useNavigate();
   const onAddChildClickHandler = () => navigate("/children/new");
 
@@ -31,3 +31,5 @@ export const IndexChildPage = () => {
     </>
   );
 };
+
+export const Component = IndexChildPage;

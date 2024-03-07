@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
 import { getGetAllChildrenQueryKey, useCreateChild } from "../../api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const NewChildPage = () => {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ const NewChildPage = () => {
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries(getGetAllChildrenQueryKey());
+    queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
     navigate("/children");
   };
 

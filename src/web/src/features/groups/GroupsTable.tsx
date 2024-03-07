@@ -4,12 +4,13 @@ import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "../../api/endpoints/groups/groups";
 import { GridPaginationModel } from "@mui/x-data-grid";
+import { keepPreviousData } from "@tanstack/react-query";
 
 const columns: GridColDef[] = [{ field: "name", headerName: "Groep", flex: 1 }];
 
 const GroupsTable = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 1,
+    page: 0,
     pageSize: 10,
   });
 
@@ -18,7 +19,7 @@ const GroupsTable = () => {
       PageNumber: paginationModel.page + 1,
       PageSize: paginationModel.pageSize,
     },
-    { query: { keepPreviousData: true } }
+    { query: { placeholderData: keepPreviousData } }
   );
 
   const paginationModelChange = useCallback(

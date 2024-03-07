@@ -35,13 +35,13 @@ services:
   crm-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=7g3xqiiedLGmDrvAXNy8
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerGroupManagementDB; User ID=sammy; password=shark; pooling=true
     ports:
-      - "7070:80"
-      - "7079:443"
+      - "80"
+      - "443"
     volumes:
       - ${HOME}/.aspnet/https:/https/
 

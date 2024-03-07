@@ -2,8 +2,8 @@ import React from "react";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { createRoot } from "react-dom/client";
 import NiceModal from "@ebay/nice-modal-react";
@@ -29,7 +29,7 @@ root.render(
         <NiceModal.Provider>
           <App />
         </NiceModal.Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </Auth0Provider>
   </React.StrictMode>

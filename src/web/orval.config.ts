@@ -1,21 +1,21 @@
 import { defineConfig } from "orval";
 
-const useMutatorAxios = {
-  path: "src/api/mutator/useExecuteAxios.ts",
-  name: "useExecuteAxios",
+const useMutatorFetch = {
+  path: "src/api/mutator/useExecuteFetch.ts",
+  name: "useExecuteFetch",
 };
 
-const useMutatorAxiosPaginated = {
-  path: "src/api/mutator/useExecuteAxiosPaginated.ts",
-  name: "useExecuteAxiosPaginated",
+const useMutatorFetchPaginated = {
+  path: "src/api/mutator/useExecuteFetchPaginated.ts",
+  name: "useExecuteFetchPaginated",
 };
 
 const queryPaginated = {
-  mutator: useMutatorAxiosPaginated,
+  mutator: useMutatorFetchPaginated,
   query: {
     useQuery: true,
   },
-};
+}
 
 const config: ReturnType<typeof defineConfig> = {
   kdvmanager: {
@@ -26,7 +26,7 @@ const config: ReturnType<typeof defineConfig> = {
       client: "react-query",
       prettier: true,
       override: {
-        mutator: useMutatorAxios,
+        mutator: useMutatorFetch,
         operations: {
           GetAllChildren: queryPaginated,
           ListGroups: queryPaginated,

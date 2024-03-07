@@ -9,7 +9,7 @@ import Dialog from "@mui/material/Dialog/Dialog";
 import DialogContentText from "@mui/material/DialogContentText/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const modal = useModal();
@@ -28,7 +28,7 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries(getListGroupsQueryKey());
+    queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     reset();
     modal.remove();
   };

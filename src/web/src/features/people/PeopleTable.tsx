@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { ChildListVM } from "../../api/models/childListVM";
+import { keepPreviousData } from "@tanstack/react-query";
 import { useGetAllPeople } from "../../api/endpoints/people/people";
 
 const columns: GridColDef[] = [
@@ -32,7 +33,7 @@ export const PeopleTable = () => {
       PageNumber: paginationModel.page,
       PageSize: paginationModel.pageSize,
     },
-    { query: { keepPreviousData: true } }
+    { query: { placeholderData: keepPreviousData } }
   );
 
   const paginationModelChange = useCallback(

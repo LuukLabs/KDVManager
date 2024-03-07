@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
 
 export const AddGroupForm = () => {
@@ -21,7 +21,7 @@ export const AddGroupForm = () => {
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries(getListGroupsQueryKey());
+    queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     navigate("/groups");
   };
 

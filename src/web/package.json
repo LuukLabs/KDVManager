@@ -81,6 +81,6 @@
     "openapi-merge-cli": "^1.3.1",
     "orval": "^6.25.0",
     "prettier": "^2.8.7",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   }
 }

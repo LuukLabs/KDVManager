@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const modal = useModal();
-  const { mutateAsync } = useAddGroup();
+  const mutateAsync = useAddGroup();
   const queryClient = useQueryClient();
   const formContext = useForm<AddGroupCommand>();
   const { handleSubmit, reset, setError } = formContext;
@@ -24,7 +24,7 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onSubmit = (data: AddGroupCommand) => {
-    mutateAsync({ data: data }, { onSuccess: onSuccess, onError: onError });
+    mutateAsync.mutate({ data: data }, { onSuccess: onSuccess, onError: onError });
   };
 
   const onSuccess = () => {
@@ -34,7 +34,7 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onError = (error: any) => {
-    error.response.data.errors.forEach((propertyError: any) => {
+    error.errors.forEach((propertyError: any) => {
       setError(propertyError.property, {
         type: "server",
         message: propertyError.title,

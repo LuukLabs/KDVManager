@@ -21,6 +21,7 @@ export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise
       method: method,
       ...(data ? { body: JSON.stringify(data) } : {}),
     });
+
     const json = await response.json().catch(() => ({
       code: response.status,
       message: response.statusText,

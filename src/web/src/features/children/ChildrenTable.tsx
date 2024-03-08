@@ -4,7 +4,7 @@ import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { ChildListVM } from "../../api/models/childListVM";
 
 import { keepPreviousData } from "@tanstack/react-query";
-import { useGetAllChildren } from "../../api/endpoints/children/children";
+import { useGetAllChildren } from "@api/endpoints/children/children";
 
 const columns: GridColDef[] = [
   {

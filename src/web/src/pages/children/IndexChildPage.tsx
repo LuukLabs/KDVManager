@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
-const StyledToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
+const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
   marginLeft: "auto",
   marginRight: -12,
 }));

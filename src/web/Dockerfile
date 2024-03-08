@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 
 RUN corepack enable
 RUN corepack prepare pnpm@latest --activate
@@ -24,7 +24,7 @@ RUN pnpm build
 # Run stage
 FROM nginx:1.24-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copy nginx config
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf

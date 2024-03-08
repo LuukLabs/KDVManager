@@ -1,8 +1,8 @@
-import { AddGroupCommand } from "../../api/models";
+import { AddGroupCommand } from "@api/models";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
-import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Dialog from "@mui/material/Dialog/Dialog";
@@ -60,7 +60,7 @@ export const AddGroupDialog = NiceModal.create(() => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleOnCancelClick}>Cancel</Button>
-        <Button onClick={handleSubmit(onSubmit, onError)}>Toevoegen</Button>
+        <Button onClick={handleSubmit(onSubmit)}>Toevoegen</Button>
       </DialogActions>
     </Dialog>
   );

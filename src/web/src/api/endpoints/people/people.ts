@@ -16,6 +16,7 @@ import type {
 import type { AddPersonCommand, GetAllPeopleParams, PersonListVM } from "../../models";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
 import { useExecuteFetch } from "../../mutator/useExecuteFetch";
+import type { ErrorType } from "../../mutator/useExecuteFetch";
 
 const useGetAllPeopleHook = () => {
   const getAllPeople = useExecuteFetchPaginated<PersonListVM[]>();
@@ -94,7 +95,10 @@ export const useAddPersonHook = () => {
   };
 };
 
-export const useAddPersonMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useAddPersonMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddPersonHook>>>,
     TError,
@@ -127,9 +131,9 @@ export type AddPersonMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useAddPersonHook>>>
 >;
 export type AddPersonMutationBody = AddPersonCommand;
-export type AddPersonMutationError = unknown;
+export type AddPersonMutationError = ErrorType<unknown>;
 
-export const useAddPerson = <TError = unknown, TContext = unknown>(options?: {
+export const useAddPerson = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddPersonHook>>>,
     TError,

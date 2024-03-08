@@ -16,6 +16,7 @@ import type {
 import type { AddGroupCommand, GroupListVM, ListGroupsParams } from "../../models";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
 import { useExecuteFetch } from "../../mutator/useExecuteFetch";
+import type { ErrorType } from "../../mutator/useExecuteFetch";
 
 const useListGroupsHook = () => {
   const listGroups = useExecuteFetchPaginated<GroupListVM[]>();
@@ -94,7 +95,10 @@ export const useAddGroupHook = () => {
   };
 };
 
-export const useAddGroupMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useAddGroupMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>,
     TError,
@@ -127,9 +131,9 @@ export type AddGroupMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>
 >;
 export type AddGroupMutationBody = AddGroupCommand;
-export type AddGroupMutationError = unknown;
+export type AddGroupMutationError = ErrorType<unknown>;
 
-export const useAddGroup = <TError = unknown, TContext = unknown>(options?: {
+export const useAddGroup = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>,
     TError,

@@ -16,6 +16,7 @@ import type {
 import type { ChildListVM, CreateChildCommand, GetAllChildrenParams } from "../../models";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
 import { useExecuteFetch } from "../../mutator/useExecuteFetch";
+import type { ErrorType } from "../../mutator/useExecuteFetch";
 
 const useGetAllChildrenHook = () => {
   const getAllChildren = useExecuteFetchPaginated<ChildListVM[]>();
@@ -95,7 +96,10 @@ export const useCreateChildHook = () => {
   };
 };
 
-export const useCreateChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useCreateChildMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useCreateChildHook>>>,
     TError,
@@ -128,9 +132,9 @@ export type CreateChildMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useCreateChildHook>>>
 >;
 export type CreateChildMutationBody = CreateChildCommand;
-export type CreateChildMutationError = unknown;
+export type CreateChildMutationError = ErrorType<unknown>;
 
-export const useCreateChild = <TError = unknown, TContext = unknown>(options?: {
+export const useCreateChild = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useCreateChildHook>>>,
     TError,
@@ -150,7 +154,10 @@ export const useDeleteChildHook = () => {
   };
 };
 
-export const useDeleteChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useDeleteChildMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useDeleteChildHook>>>,
     TError,
@@ -183,9 +190,9 @@ export type DeleteChildMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useDeleteChildHook>>>
 >;
 
-export type DeleteChildMutationError = unknown;
+export type DeleteChildMutationError = ErrorType<unknown>;
 
-export const useDeleteChild = <TError = unknown, TContext = unknown>(options?: {
+export const useDeleteChild = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useDeleteChildHook>>>,
     TError,

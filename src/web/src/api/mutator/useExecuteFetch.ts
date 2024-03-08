@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { RequestConfig } from "./requestConfig";
 import { determineUrl } from "./determineUrl";
+import { ErrorResponse } from "./errorResponse";
 
 export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise<T>) => {
   const { getAccessTokenSilently } = useAuth0();
@@ -35,3 +36,5 @@ export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise
     return json as T;
   };
 };
+
+export type ErrorType = ErrorResponse;

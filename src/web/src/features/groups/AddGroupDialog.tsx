@@ -1,8 +1,8 @@
-import { AddGroupCommand } from "../../api/models";
+import { AddGroupCommand } from "@api/models";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
-import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Dialog from "@mui/material/Dialog/Dialog";
@@ -10,6 +10,7 @@ import DialogContentText from "@mui/material/DialogContentText/DialogContentText
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { ErrorType } from "@api/mutator/useExecuteFetch";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const modal = useModal();
@@ -33,7 +34,7 @@ export const AddGroupDialog = NiceModal.create(() => {
     modal.remove();
   };
 
-  const onError = (error: any) => {
+  const onError = (error: ErrorType) => {
     error.errors.forEach((propertyError: any) => {
       setError(propertyError.property, {
         type: "server",
@@ -60,7 +61,7 @@ export const AddGroupDialog = NiceModal.create(() => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleOnCancelClick}>Cancel</Button>
-        <Button onClick={handleSubmit(onSubmit, onError)}>Toevoegen</Button>
+        <Button onClick={handleSubmit(onSubmit)}>Toevoegen</Button>
       </DialogActions>
     </Dialog>
   );

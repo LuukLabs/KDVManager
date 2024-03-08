@@ -9,8 +9,8 @@ import { createRoot } from "react-dom/client";
 import NiceModal from "@ebay/nice-modal-react";
 
 const queryClient = new QueryClient();
-const domain = process.env.REACT_APP_AUTH0_DOMAIN || "";
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID || "";
+const domain = import.meta.env.VITE_APP_AUTH0_DOMAIN || "";
+const clientId = import.meta.env.VITE_APP_AUTH0_CLIENT_ID || "";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);

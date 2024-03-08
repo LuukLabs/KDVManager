@@ -11,8 +11,6 @@ export type RequestMeta = {
   total?: number;
 };
 
-// The hook below is called in orval.config.ts
-// eslint-disable-next-line import/no-unused-modules
 export const useExecuteFetchPaginated = <T>(): ((
   requestConfig: RequestConfig
 ) => Promise<ListRecord<T>>) => {

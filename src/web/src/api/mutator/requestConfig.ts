@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type RequestConfig = {
   url: string;
   headers?: HeadersInit;

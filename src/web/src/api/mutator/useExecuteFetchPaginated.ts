@@ -52,7 +52,7 @@ export const useExecuteFetchPaginated = <T>(): ((
     return {
       value: json as T,
       meta: {
-        total: Number(response.headers.get("total")),
+        total: Number(response.headers.get("X-Total")),
       },
     };
   };

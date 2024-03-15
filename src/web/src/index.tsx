@@ -22,7 +22,7 @@ root.render(
       clientId={clientId}
       authorizationParams={{
         audience: "https://api.kdvmanager.nl/",
-        redirectUri: window.location.origin,
+        redirect_uri: window.location.origin
       }}
     >
       <QueryClientProvider client={queryClient}>

@@ -89,6 +89,6 @@
     "prettier": "^3.2.5",
     "typescript": "^5.4.2",
     "vite": "^5.1.6",
-    "vite-plugin-ruby": "^3.2.0"
+    "vite-plugin-ruby": "^5.0.0"
   }
 }

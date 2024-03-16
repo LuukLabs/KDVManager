@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { createRoot } from "react-dom/client";
 import NiceModal from "@ebay/nice-modal-react";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
 
 const queryClient = new QueryClient();
 const domain = import.meta.env.VITE_APP_AUTH0_DOMAIN || "";
@@ -26,9 +28,11 @@ root.render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <NiceModal.Provider>
-          <App />
-        </NiceModal.Provider>
+        <I18nextProvider i18n={i18n}>
+          <NiceModal.Provider>
+            <App />
+          </NiceModal.Provider>
+        </I18nextProvider>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </Auth0Provider>

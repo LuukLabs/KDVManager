@@ -10,8 +10,10 @@ import DialogContentText from "@mui/material/DialogContentText/DialogContentText
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from 'react-i18next';
 
 export const AddGroupDialog = NiceModal.create(() => {
+  const { t } = useTranslation();
   const modal = useModal();
   const mutateAsync = useAddGroup();
   const queryClient = useQueryClient();
@@ -44,14 +46,14 @@ export const AddGroupDialog = NiceModal.create(() => {
 
   return (
     <Dialog {...muiDialogV5(modal)}>
-      <DialogTitle>Groep toevoegen</DialogTitle>
+      <DialogTitle>{t('Add group')}</DialogTitle>
       <DialogContent>
-        <DialogContentText>To add a group, please enter the group name here.</DialogContentText>
+        <DialogContentText>{t('To add a group, please enter the group name here.')}</DialogContentText>
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <TextFieldElement
             autoFocus
             name="name"
-            label="Naam"
+            label={t('Name')}
             margin="dense"
             variant="standard"
             fullWidth
@@ -59,8 +61,8 @@ export const AddGroupDialog = NiceModal.create(() => {
         </FormContainer>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleOnCancelClick}>Cancel</Button>
-        <Button onClick={handleSubmit(onSubmit)}>Toevoegen</Button>
+        <Button onClick={handleOnCancelClick}>{t('Cancel')}</Button>
+        <Button onClick={handleSubmit(onSubmit)}>{t('Add')}</Button>
       </DialogActions>
     </Dialog>
   );

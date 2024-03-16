@@ -166,9 +166,6 @@ devDependencies:
   vite:
     specifier: ^5.1.6
     version: 5.1.6(@types/node@20.11.25)
-  vite-plugin-ruby:
-    specifier: ^3.2.0
-    version: 3.2.2(vite@5.1.6)
 
 packages:
 
@@ -5499,18 +5496,6 @@ packages:
   /validator@13.11.0:
     resolution: {integrity: sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==}
     engines: {node: '>= 0.10'}
-    dev: true
-
-  /vite-plugin-ruby@3.2.2(vite@5.1.6):
-    resolution: {integrity: sha512-cuHG1MajRWPR8YdfF6lvgsQRnKFEBRwZF//asFbRiI1psacxB5aPlHSvYZYxAu5IflrAa0MdR0HxEq+g98M3iQ==}
-    peerDependencies:
-      vite: '>=4.0.0'
-    dependencies:
-      debug: 4.3.4
-      fast-glob: 3.3.2
-      vite: 5.1.6(@types/node@20.11.25)
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /vite-tsconfig-paths@4.3.2(typescript@5.4.2)(vite@5.1.6):

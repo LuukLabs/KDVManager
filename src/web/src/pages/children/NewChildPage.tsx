@@ -1,12 +1,12 @@
 import Container from "@mui/material/Container";
-import { CreateChildCommand } from "../../api/models";
+import { CreateChildCommand } from "@api/models";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
-import { getGetAllChildrenQueryKey, useCreateChild } from "../../api/endpoints/children/children";
+import { getGetAllChildrenQueryKey, useCreateChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 

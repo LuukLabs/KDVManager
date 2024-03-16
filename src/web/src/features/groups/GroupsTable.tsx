@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import { GroupListVM } from "../../api/models";
+import { GroupListVM } from "@api/models";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import { useListGroups } from "../../api/endpoints/groups/groups";
+import { useListGroups } from "@api/endpoints/groups/groups";
 import { GridPaginationModel } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
 

@@ -1,4 +1,4 @@
-import { AddGroupCommand } from "../../api/models";
+import { AddGroupCommand } from "@api/models";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { getListGroupsQueryKey, useAddGroup } from "../../api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
 
 export const AddGroupForm = () => {
   const queryClient = useQueryClient();

@@ -61,8 +61,8 @@ export const AddGroupDialog = NiceModal.create(() => {
         </FormContainer>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleOnCancelClick}>{t('Cancel')}</Button>
-        <Button onClick={handleSubmit(onSubmit)}>{t('Add')}</Button>
+        <Button variant="outlined" onClick={handleOnCancelClick}>{t('Cancel')}</Button>
+        <Button variant="contained" onClick={handleSubmit(onSubmit)}>{t('Add')}</Button>
       </DialogActions>
     </Dialog>
   );

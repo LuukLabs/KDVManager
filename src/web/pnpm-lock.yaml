@@ -21,8 +21,8 @@ dependencies:
     specifier: ^5.0.12
     version: 5.0.12
   '@mui/icons-material':
-    specifier: ^5.15.12
-    version: 5.15.12(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0)
+    specifier: ^5.15.13
+    version: 5.15.13(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0)
   '@mui/material':
     specifier: ^5.15.12
     version: 5.15.12(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
@@ -67,7 +67,7 @@ dependencies:
     version: 7.51.0(react@18.2.0)
   react-hook-form-mui:
     specifier: ^6.8.0
-    version: 6.8.0(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/x-date-pickers@6.19.6)(react-hook-form@7.51.0)(react@18.2.0)
+    version: 6.8.0(@mui/icons-material@5.15.13)(@mui/material@5.15.12)(@mui/x-date-pickers@6.19.6)(react-hook-form@7.51.0)(react@18.2.0)
   react-i18next:
     specifier: ^14.1.0
     version: 14.1.0(i18next@23.10.1)(react-dom@18.2.0)(react@18.2.0)
@@ -990,8 +990,8 @@ packages:
     resolution: {integrity: sha512-brRO+tMFLpGyjEYHrX97bzqeF6jZmKpqqe1rY0LyIHAwP6xRVzh++zSecOQorDOCaZJg4XkGT9xfD+RWOWxZBA==}
     dev: false
 
-  /@mui/icons-material@5.15.12(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0):
-    resolution: {integrity: sha512-3BXiDlOd3AexZoEXa/VqpIpVIvosCzjLHsdMWzKMXbZdnBiJjmb9ECdqfjn5SpTClO49qvkKLhkTqdBH3fSFGw==}
+  /@mui/icons-material@5.15.13(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0):
+    resolution: {integrity: sha512-I7CioMQKBPaKyGgcE9i8+1dgzAmox5a/0wZ0E9sIxm7PzG5KJZRRJkdK4oDT4HfYRGv61KjcHEeqH48pht1dvQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
@@ -4693,7 +4693,7 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-hook-form-mui@6.8.0(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/x-date-pickers@6.19.6)(react-hook-form@7.51.0)(react@18.2.0):
+  /react-hook-form-mui@6.8.0(@mui/icons-material@5.15.13)(@mui/material@5.15.12)(@mui/x-date-pickers@6.19.6)(react-hook-form@7.51.0)(react@18.2.0):
     resolution: {integrity: sha512-p+Hu/z+nVgSoCXEijs1aXjOUmGoGX0oWzgyBJR4Xgay+il3c6E0HdSHd94XxcmC6i08a88u/+zJ96tuDDjjzRw==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4708,7 +4708,7 @@ packages:
       '@mui/x-date-pickers':
         optional: true
     dependencies:
-      '@mui/icons-material': 5.15.12(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0)
+      '@mui/icons-material': 5.15.13(@mui/material@5.15.12)(@types/react@18.2.64)(react@18.2.0)
       '@mui/material': 5.15.12(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
       '@mui/x-date-pickers': 6.19.6(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@mui/material@5.15.12)(@mui/system@5.15.12)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0

@@ -27,7 +27,7 @@ const NewChildPage = () => {
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
     navigate("/children");
   };
 
@@ -36,7 +36,7 @@ const NewChildPage = () => {
       <Container>
         <div className="t1">Single user Creation</div>
         <CssBaseline />
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
           <Paper style={{ padding: 16 }}>
             <Grid container alignItems="flex-start" spacing={2}>
               <Grid item xs={12}>
@@ -47,7 +47,7 @@ const NewChildPage = () => {
               </Grid>
             </Grid>
           </Paper>
-          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+          <Button onClick={void handleSubmit(onSubmit)}>Submit</Button>
         </FormContainer>
       </Container>
     </>

@@ -33,13 +33,12 @@ export const PeopleTable = () => {
       PageNumber: paginationModel.page,
       PageSize: paginationModel.pageSize,
     },
-    { query: { placeholderData: keepPreviousData } }
+    { query: { placeholderData: keepPreviousData } },
   );
 
-  const paginationModelChange = useCallback(
-    (model: GridPaginationModel) => setPaginationModel(model),
-    []
-  );
+  const paginationModelChange = useCallback((model: GridPaginationModel) => {
+    setPaginationModel(model);
+  }, []);
 
   return (
     <DataGrid<ChildListVM>
@@ -47,7 +46,7 @@ export const PeopleTable = () => {
       pageSizeOptions={[5, 10, 20]}
       paginationMode="server"
       paginationModel={paginationModel}
-      rowCount={data?.meta?.total || 0}
+      rowCount={data?.meta.total || 0}
       loading={isLoading || isFetching}
       columns={columns}
       rows={data?.value || []}

@@ -31,14 +31,14 @@ export const getGetAllPeopleQueryKey = (params?: GetAllPeopleParams) => {
 
 export const useGetAllPeopleQueryOptions = <
   TData = Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: GetAllPeopleParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>, TError, TData>
     >;
-  }
+  },
 ) => {
   const { query: queryOptions } = options ?? {};
 
@@ -63,14 +63,14 @@ export type GetAllPeopleQueryError = unknown;
 
 export const useGetAllPeople = <
   TData = Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: GetAllPeopleParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetAllPeopleHook>>>, TError, TData>
     >;
-  }
+  },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = useGetAllPeopleQueryOptions(params, options);
 

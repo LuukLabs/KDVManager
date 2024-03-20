@@ -12,7 +12,7 @@ export type RequestMeta = {
 };
 
 export const useExecuteFetchPaginated = <T>(): ((
-  requestConfig: RequestConfig
+  requestConfig: RequestConfig,
 ) => Promise<ListRecord<T>>) => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -39,18 +39,15 @@ export const useExecuteFetchPaginated = <T>(): ((
       signal,
       ...(data ? { body: JSON.stringify(data) } : {}),
     });
-    const json = await response.json().catch(() => ({
-      code: response.status,
-      message: response.statusText,
-      errors: {},
-    }));
+
+    const json = (await response.json()) as T;
 
     if (!response.ok) {
       return Promise.reject(json);
     }
 
     return {
-      value: json as T,
+      value: json,
       meta: {
         total: Number(response.headers.get("X-Total")),
       },

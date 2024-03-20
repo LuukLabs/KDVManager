@@ -21,12 +21,12 @@ export const AddGroupForm = () => {
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     navigate("/groups");
   };
 
   return (
-    <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+    <FormContainer formContext={formContext} handleSubmit={() => handleSubmit(onSubmit)}>
       <Paper style={{ padding: 16 }}>
         <Grid container alignItems="flex-start" spacing={2}>
           <Grid item xs={12}>
@@ -34,7 +34,7 @@ export const AddGroupForm = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+      <Button onClick={() => handleSubmit(onSubmit)}>Submit</Button>
     </FormContainer>
   );
 };

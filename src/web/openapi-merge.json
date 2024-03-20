@@ -1,13 +1,13 @@
 {
   "inputs": [
     {
-      "inputURL": "https://api.kdvmanager.nl/crm/swagger/v1/swagger.json",
+      "inputURL": "http://localhost:5200/crm/swagger/v1/swagger.json",
       "pathModification": {
         "prepend": "/crm"
       }
     },
     {
-      "inputURL": "https://api.kdvmanager.nl/scheduling/swagger/v1/swagger.json",
+      "inputURL": "http://localhost:5200/scheduling/swagger/v1/swagger.json",
       "pathModification": {
         "prepend": "/scheduling"
       }

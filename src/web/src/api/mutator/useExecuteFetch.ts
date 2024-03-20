@@ -22,16 +22,12 @@ export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise
       ...(data ? { body: JSON.stringify(data) } : {}),
     });
 
-    const json = await response.json().catch(() => ({
-      code: response.status,
-      message: response.statusText,
-      errors: {},
-    }));
+    const json = (await response.json()) as T;
 
     if (!response.ok) {
       return Promise.reject(json);
     }
 
-    return json as T;
+    return json;
   };
 };

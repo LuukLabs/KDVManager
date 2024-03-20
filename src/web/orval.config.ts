@@ -15,7 +15,7 @@ const queryPaginated = {
   query: {
     useQuery: true,
   },
-}
+};
 
 const config: ReturnType<typeof defineConfig> = {
   kdvmanager: {

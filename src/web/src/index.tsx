@@ -11,11 +11,11 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 
 const queryClient = new QueryClient();
-const domain = import.meta.env.VITE_APP_AUTH0_DOMAIN || "";
-const clientId = import.meta.env.VITE_APP_AUTH0_CLIENT_ID || "";
+const domain = (import.meta.env.VITE_APP_AUTH0_DOMAIN as string) || "";
+const clientId = (import.meta.env.VITE_APP_AUTH0_CLIENT_ID as string) || "";
 
-const container = document.getElementById("root");
-const root = createRoot(container!);
+const container = document.getElementById("root") as Element;
+const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
@@ -24,7 +24,7 @@ root.render(
       clientId={clientId}
       authorizationParams={{
         audience: "https://api.kdvmanager.nl/",
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin,
       }}
     >
       <QueryClientProvider client={queryClient}>
@@ -36,7 +36,7 @@ root.render(
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </Auth0Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

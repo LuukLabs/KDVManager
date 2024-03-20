@@ -14,7 +14,9 @@ const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
 
 const IndexChildPage = () => {
   const navigate = useNavigate();
-  const onAddChildClickHandler = () => navigate("/children/new");
+  const onAddChildClickHandler = () => {
+    navigate("/children/new");
+  };
 
   return (
     <>

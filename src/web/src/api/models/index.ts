@@ -14,3 +14,5 @@ export * from "./getAllPeopleParams";
 export * from "./groupListVM";
 export * from "./listGroupsParams";
 export * from "./personListVM";
+export * from "./unprocessableEntityResponse";
+export * from "./validationError";

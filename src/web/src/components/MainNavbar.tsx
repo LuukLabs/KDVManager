@@ -121,19 +121,25 @@ function MainNavbar() {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => navigate("/children")}
+                onClick={() => {
+                  navigate("/children");
+                }}
               >
                 Kinderen
               </Button>
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => navigate("/groups")}
+                onClick={() => {
+                  navigate("/groups");
+                }}
               >
                 Groepen
               </Button>
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => navigate("/people")}
+                onClick={() => {
+                  navigate("/people");
+                }}
               >
                 Personen
               </Button>
@@ -162,11 +168,21 @@ function MainNavbar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => logout()}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => {
+                      void logout();
+                    }}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
-                <MenuItem key="Login" onClick={() => loginWithRedirect()}>
+                <MenuItem
+                  key="Login"
+                  onClick={() => {
+                    void loginWithRedirect();
+                  }}
+                >
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
               </Menu>

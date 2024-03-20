@@ -8,7 +8,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import { AddGroupDialog } from "../../features/groups/AddGroupDialog";
 
 const ListGroupsPage = () => {
-  const onAddGroupClickHandler = () => NiceModal.show(AddGroupDialog);
+  const onAddGroupClickHandler = () => void NiceModal.show(AddGroupDialog);
 
   return (
     <>

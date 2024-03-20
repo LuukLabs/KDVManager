@@ -1,5 +1,5 @@
-import { AddGroupCommand } from "@api/models";
-import { useForm } from "react-hook-form";
+import { AddGroupCommand, UnprocessableEntityResponse } from "@api/models";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
@@ -10,12 +10,13 @@ import DialogContentText from "@mui/material/DialogContentText/DialogContentText
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();
   const modal = useModal();
-  const mutateAsync = useAddGroup();
+  const mutate = useAddGroup();
   const queryClient = useQueryClient();
   const formContext = useForm<AddGroupCommand>();
   const { handleSubmit, reset, setError } = formContext;
@@ -25,18 +26,18 @@ export const AddGroupDialog = NiceModal.create(() => {
     modal.remove();
   };
 
-  const onSubmit = (data: AddGroupCommand) => {
-    mutateAsync.mutate({ data: data }, { onSuccess: onSuccess, onError: onError });
+  const onSubmit: SubmitHandler<AddGroupCommand> = async (data) => {
+    await mutate.mutateAsync({ data: data }, { onSuccess: onSuccess, onError: onError });
   };
 
   const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     reset();
     modal.remove();
   };
 
-  const onError = (error: any) => {
-    error.errors.forEach((propertyError: any) => {
+  const onError = (error: UnprocessableEntityResponse) => {
+    error.errors.forEach((propertyError) => {
       setError(propertyError.property, {
         type: "server",
         message: propertyError.title,
@@ -46,14 +47,16 @@ export const AddGroupDialog = NiceModal.create(() => {
 
   return (
     <Dialog {...muiDialogV5(modal)}>
-      <DialogTitle>{t('Add group')}</DialogTitle>
+      <DialogTitle>{t("Add group")}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{t('To add a group, please enter the group name here.')}</DialogContentText>
+        <DialogContentText>
+          {t("To add a group, please enter the group name here.")}
+        </DialogContentText>
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <TextFieldElement
             autoFocus
             name="name"
-            label={t('Name')}
+            label={t("Name")}
             margin="dense"
             variant="standard"
             fullWidth
@@ -61,8 +64,16 @@ export const AddGroupDialog = NiceModal.create(() => {
         </FormContainer>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={handleOnCancelClick}>{t('Cancel')}</Button>
-        <Button variant="contained" onClick={handleSubmit(onSubmit)}>{t('Add')}</Button>
+        <Button variant="outlined" onClick={handleOnCancelClick}>
+          {t("Cancel")}
+        </Button>
+        <LoadingButton
+          variant="contained"
+          loading={mutate.isPending}
+          onClick={handleSubmit(onSubmit)}
+        >
+          <span>{t("Add")}</span>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

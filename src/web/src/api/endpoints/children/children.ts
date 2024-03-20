@@ -31,14 +31,14 @@ export const getGetAllChildrenQueryKey = (params?: GetAllChildrenParams) => {
 
 export const useGetAllChildrenQueryOptions = <
   TData = Awaited<ReturnType<ReturnType<typeof useGetAllChildrenHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: GetAllChildrenParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetAllChildrenHook>>>, TError, TData>
     >;
-  }
+  },
 ) => {
   const { query: queryOptions } = options ?? {};
 
@@ -64,14 +64,14 @@ export type GetAllChildrenQueryError = unknown;
 
 export const useGetAllChildren = <
   TData = Awaited<ReturnType<ReturnType<typeof useGetAllChildrenHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: GetAllChildrenParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useGetAllChildrenHook>>>, TError, TData>
     >;
-  }
+  },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = useGetAllChildrenQueryOptions(params, options);
 

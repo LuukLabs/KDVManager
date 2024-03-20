@@ -13,7 +13,12 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { AddGroupCommand, GroupListVM, ListGroupsParams } from "../../models";
+import type {
+  AddGroupCommand,
+  GroupListVM,
+  ListGroupsParams,
+  UnprocessableEntityResponse,
+} from "../../models";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
 import { useExecuteFetch } from "../../mutator/useExecuteFetch";
 
@@ -31,14 +36,14 @@ export const getListGroupsQueryKey = (params?: ListGroupsParams) => {
 
 export const useListGroupsQueryOptions = <
   TData = Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: ListGroupsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>, TError, TData>
     >;
-  }
+  },
 ) => {
   const { query: queryOptions } = options ?? {};
 
@@ -63,14 +68,14 @@ export type ListGroupsQueryError = unknown;
 
 export const useListGroups = <
   TData = Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>,
-  TError = unknown
+  TError = unknown,
 >(
   params?: ListGroupsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<ReturnType<typeof useListGroupsHook>>>, TError, TData>
     >;
-  }
+  },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = useListGroupsQueryOptions(params, options);
 
@@ -94,7 +99,10 @@ export const useAddGroupHook = () => {
   };
 };
 
-export const useAddGroupMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useAddGroupMutationOptions = <
+  TError = UnprocessableEntityResponse,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>,
     TError,
@@ -127,9 +135,9 @@ export type AddGroupMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>
 >;
 export type AddGroupMutationBody = AddGroupCommand;
-export type AddGroupMutationError = unknown;
+export type AddGroupMutationError = UnprocessableEntityResponse;
 
-export const useAddGroup = <TError = unknown, TContext = unknown>(options?: {
+export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useAddGroupHook>>>,
     TError,

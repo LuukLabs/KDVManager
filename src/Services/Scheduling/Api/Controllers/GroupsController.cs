@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
+using System.Net.Mime;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -36,6 +37,8 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPost(Name = "AddGroup")]
+    [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UnprocessableEntityResponse), (int)HttpStatusCode.UnprocessableEntity)]
     public async Task<ActionResult<Guid>> AddGroup([FromBody] AddGroupCommand addGroupCommand)
     {
         var id = await _mediator.Send(addGroupCommand);

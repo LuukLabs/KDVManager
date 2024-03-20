@@ -45,16 +45,7 @@ public class ExceptionHandlerMiddleware
         {
             case ValidationException validationException:
                 httpStatusCode = HttpStatusCode.UnprocessableEntity;
-                result = JsonSerializer.Serialize(new
-                {
-                    status = (int)httpStatusCode,
-                    errors = validationException.ValidationErrors.Select(e => new
-                    {
-                        property = System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(e.Property),
-                        code = e.Code,
-                        title = e.Title
-                    })
-                }, jsonSerializerOptions);
+                result = JsonSerializer.Serialize(new UnprocessableEntityResponse((int)httpStatusCode, validationException), jsonSerializerOptions);
                 break;
             case BadRequestException badRequestException:
                 httpStatusCode = HttpStatusCode.BadRequest;
@@ -68,7 +59,6 @@ public class ExceptionHandlerMiddleware
         }
 
         context.Response.StatusCode = (int)httpStatusCode;
-
 
         if (result == string.Empty)
         {

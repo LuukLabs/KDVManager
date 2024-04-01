@@ -19,26 +19,27 @@ export const AddGroupDialog = NiceModal.create(() => {
   const mutate = useAddGroup();
   const queryClient = useQueryClient();
   const formContext = useForm<AddGroupCommand>();
-  const { handleSubmit, reset, setError } = formContext;
 
+  const { handleSubmit, reset, setError, formState: { isValid, isDirty, isSubmitting } } = formContext;
+  
   const handleOnCancelClick = () => {
-    reset();
     modal.remove();
+    reset();
   };
 
   const onSubmit: SubmitHandler<AddGroupCommand> = async (data) => {
-    await mutate.mutateAsync({ data: data }, { onSuccess: onSuccess, onError: onError });
+    await mutate.mutateAsync({ data: data }, { onSuccess: onMutateSuccess, onError: onMutateError });
   };
 
-  const onSuccess = () => {
+  const onMutateSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
-    reset();
     modal.remove();
+    reset();
   };
 
-  const onError = (error: UnprocessableEntityResponse) => {
+  const onMutateError = (error: UnprocessableEntityResponse) => {
     error.errors.forEach((propertyError) => {
-      setError(propertyError.property, {
+      setError(propertyError.property as any, {
         type: "server",
         message: propertyError.title,
       });
@@ -59,8 +60,7 @@ export const AddGroupDialog = NiceModal.create(() => {
             label={t("Name")}
             margin="dense"
             variant="standard"
-            fullWidth
-          />
+            fullWidth />
         </FormContainer>
       </DialogContent>
       <DialogActions>
@@ -69,7 +69,8 @@ export const AddGroupDialog = NiceModal.create(() => {
         </Button>
         <LoadingButton
           variant="contained"
-          loading={mutate.isPending}
+          disabled={!isDirty || !isValid}
+          loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
           <span>{t("Add")}</span>

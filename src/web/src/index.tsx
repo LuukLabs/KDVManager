@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { createRoot } from "react-dom/client";
+import { SnackbarProvider } from 'notistack';
 import NiceModal from "@ebay/nice-modal-react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
@@ -29,9 +30,11 @@ root.render(
     >
       <QueryClientProvider client={queryClient}>
         <I18nextProvider i18n={i18n}>
-          <NiceModal.Provider>
-            <App />
-          </NiceModal.Provider>
+          <SnackbarProvider>
+            <NiceModal.Provider>
+              <App />
+            </NiceModal.Provider>
+          </SnackbarProvider>
         </I18nextProvider>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>

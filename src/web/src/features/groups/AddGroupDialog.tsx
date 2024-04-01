@@ -12,6 +12,7 @@ import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useSnackbar } from "notistack";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();
@@ -21,7 +22,8 @@ export const AddGroupDialog = NiceModal.create(() => {
   const formContext = useForm<AddGroupCommand>();
 
   const { handleSubmit, reset, setError, formState: { isValid, isDirty, isSubmitting } } = formContext;
-  
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleOnCancelClick = () => {
     modal.remove();
     reset();
@@ -34,6 +36,7 @@ export const AddGroupDialog = NiceModal.create(() => {
   const onMutateSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     modal.remove();
+    enqueueSnackbar(t("Group added"), { variant: "success"});
     reset();
   };
 

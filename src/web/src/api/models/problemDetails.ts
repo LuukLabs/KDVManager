@@ -11,5 +11,4 @@ export interface ProblemDetails {
   status?: number | null;
   title?: string | null;
   type?: string | null;
-  [key: string]: {};
 }

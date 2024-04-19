@@ -5,8 +5,6 @@ import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/endpoints/groups/groups";
 import { GridPaginationModel, GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
-import IconButton from "@mui/material/IconButton/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteGroupButton } from "./DeleteGroupButton";
 
 const columns: GridColDef[] = [

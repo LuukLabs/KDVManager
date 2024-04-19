@@ -572,8 +572,7 @@
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": {}
+        }
       },
       "UnprocessableEntityResponse": {
         "required": ["errors", "status"],

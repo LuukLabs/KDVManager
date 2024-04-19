@@ -21,7 +21,12 @@ export const AddGroupDialog = NiceModal.create(() => {
   const queryClient = useQueryClient();
   const formContext = useForm<AddGroupCommand>();
 
-  const { handleSubmit, reset, setError, formState: { isValid, isDirty, isSubmitting } } = formContext;
+  const {
+    handleSubmit,
+    reset,
+    setError,
+    formState: { isValid, isDirty, isSubmitting },
+  } = formContext;
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOnCancelClick = () => {
@@ -30,13 +35,16 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onSubmit: SubmitHandler<AddGroupCommand> = async (data) => {
-    await mutate.mutateAsync({ data: data }, { onSuccess: onMutateSuccess, onError: onMutateError });
+    await mutate.mutateAsync(
+      { data: data },
+      { onSuccess: onMutateSuccess, onError: onMutateError },
+    );
   };
 
   const onMutateSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
     modal.remove();
-    enqueueSnackbar(t("Group added"), { variant: "success"});
+    enqueueSnackbar(t("Group added"), { variant: "success" });
     reset();
   };
 
@@ -63,7 +71,8 @@ export const AddGroupDialog = NiceModal.create(() => {
             label={t("Name")}
             margin="dense"
             variant="standard"
-            fullWidth />
+            fullWidth
+          />
         </FormContainer>
       </DialogContent>
       <DialogActions>

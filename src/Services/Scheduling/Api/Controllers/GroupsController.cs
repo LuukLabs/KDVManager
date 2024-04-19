@@ -12,6 +12,7 @@ using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using System.Net.Mime;
+using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -45,4 +46,17 @@ public class GroupsController : ControllerBase
         return Ok(id);
     }
 
+    /// <summary>
+    /// Deletes a group by ID.
+    /// </summary>
+    /// <param name="Id">The ID of the group to delete.</param>
+    [HttpDelete("{Id:guid}", Name = "DeleteGroup")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [Produces("application/json")]
+    public async Task<ActionResult> DeleteGroup([FromRoute] DeleteGroupCommand deleteGroupCommand)
+    {
+        await _mediator.Send(deleteGroupCommand);
+        return NoContent();
+    }
 }

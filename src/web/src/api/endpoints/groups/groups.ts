@@ -17,6 +17,7 @@ import type {
   AddGroupCommand,
   GroupListVM,
   ListGroupsParams,
+  ProblemDetails,
   UnprocessableEntityResponse,
 } from "../../models";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
@@ -146,6 +147,64 @@ export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unk
   >;
 }) => {
   const mutationOptions = useAddGroupMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+export const useDeleteGroupHook = () => {
+  const deleteGroup = useExecuteFetch<void>();
+
+  return (id: string) => {
+    return deleteGroup({ url: `/scheduling/v1/groups/${id}`, method: "DELETE" });
+  };
+};
+
+export const useDeleteGroupMutationOptions = <
+  TError = ProblemDetails,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteGroupHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<ReturnType<typeof useDeleteGroupHook>>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const { mutation: mutationOptions } = options ?? {};
+
+  const deleteGroup = useDeleteGroupHook();
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<ReturnType<typeof useDeleteGroupHook>>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteGroup(id);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteGroupMutationResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof useDeleteGroupHook>>>
+>;
+
+export type DeleteGroupMutationError = ProblemDetails;
+
+export const useDeleteGroup = <TError = ProblemDetails, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<ReturnType<typeof useDeleteGroupHook>>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}) => {
+  const mutationOptions = useDeleteGroupMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

@@ -22,6 +22,11 @@ export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise
       ...(data ? { body: JSON.stringify(data) } : {}),
     });
 
+    // If server responds with no content don't try to parse the reponse
+    if (response.status === 204) { 
+      return undefined as T;
+    }
+
     const json = (await response.json()) as T;
 
     if (!response.ok) {

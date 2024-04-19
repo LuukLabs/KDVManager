@@ -3,10 +3,24 @@ import { GroupListVM } from "@api/models";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/endpoints/groups/groups";
-import { GridPaginationModel } from "@mui/x-data-grid";
+import { GridPaginationModel, GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
+import IconButton from "@mui/material/IconButton/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteGroupButton } from "./DeleteGroupButton";
 
-const columns: GridColDef[] = [{ field: "name", headerName: "Groep", flex: 1, sortable: false }];
+const columns: GridColDef[] = [
+  { field: "name", headerName: "Groep", flex: 1, sortable: false, disableColumnMenu: true },
+  {
+    field: "id",
+    headerName: "Actions",
+    sortable: false,
+    disableColumnMenu: true,
+    renderCell: (params: GridRenderCellParams<any, string>) => (
+      <DeleteGroupButton id={params.value!} />
+    ),
+  },
+];
 
 const GroupsTable = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({

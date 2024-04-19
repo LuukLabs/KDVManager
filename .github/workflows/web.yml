@@ -23,9 +23,42 @@ env:
 
 jobs:
 
+  CI:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/web
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 
+
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 8
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+        cache-dependency-path: src/web/pnpm-lock.yaml
+
+    - name: Install pnpm dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Run ESLint
+      run: pnpm eslint
+    
+    - name: Run typecheck
+      run: pnpm tsc
+
   BuildContainersForPR_Linux:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -34,12 +67,6 @@ jobs:
         service: ${{ env.SERVICE }}
         registry_endpoint: ${{ secrets.REGISTRY_ENDPOINT }}
 
-  BuildLinux:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
     - uses: ./.github/workflows/composite/build-push
       with:
         service: ${{ env.SERVICE }}

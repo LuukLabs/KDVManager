@@ -2,7 +2,7 @@
 FROM node:20-alpine as build
 
 RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
+RUN corepack prepare pnpm@8 --activate
 
 RUN mkdir /app
 

@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": "20.x",
-    "pnpm": "9.x"
+    "pnpm": "8.x"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
@@ -43,7 +43,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint",
-    "lint:fix": "lint --fix"
+    "lint:fix": "lint --fix",
+    "typecheck": "tsc"
   },
   "eslintConfig": {
     "extends": [

@@ -49,6 +49,7 @@ const GroupsTable = () => {
       columns={columns}
       rows={data?.value || []}
       onPaginationModelChange={paginationModelChange}
+      disableRowSelectionOnClick
     />
   );
 };

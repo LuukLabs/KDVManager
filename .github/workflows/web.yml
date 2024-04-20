@@ -67,6 +67,13 @@ jobs:
         service: ${{ env.SERVICE }}
         registry_endpoint: ${{ secrets.REGISTRY_ENDPOINT }}
 
+  BuildLinux:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
     - uses: ./.github/workflows/composite/build-push
       with:
         service: ${{ env.SERVICE }}

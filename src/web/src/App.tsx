@@ -10,11 +10,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "children/",
+        path: "children",
         lazy: () => import("./pages/children/IndexChildPage"),
       },
       {
-        path: "people/",
+        path: "people",
         lazy: () => import("./pages/people/IndexPersonPage"),
       },
       {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         lazy: () => import("./pages/children/NewChildPage"),
       },
       {
-        path: "groups/",
+        path: "groups",
         lazy: () => import("./pages/groups/ListGroupsPage"),
       },
     ],

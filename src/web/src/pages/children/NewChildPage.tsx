@@ -5,12 +5,13 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import CssBaseline from "@mui/material/CssBaseline";
 import { getGetAllChildrenQueryKey, useCreateChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const NewChildPage = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { mutate } = useCreateChild();
   const navigate = useNavigate();
@@ -34,10 +35,9 @@ const NewChildPage = () => {
   return (
     <>
       <Container>
-        <div className="t1">Single user Creation</div>
-        <CssBaseline />
-        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
-          <Paper style={{ padding: 16 }}>
+        <div className="t1">{t("Single user Creation")}</div>
+        <Paper style={{ padding: 16 }}>
+          <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
             <Grid container alignItems="flex-start" spacing={2}>
               <Grid item xs={12}>
                 <TextFieldElement name="givenName" label="Voornaam" required fullWidth />
@@ -46,9 +46,9 @@ const NewChildPage = () => {
                 <TextFieldElement name="familyName" label="Achternaam" required fullWidth />
               </Grid>
             </Grid>
-          </Paper>
-          <Button onClick={void handleSubmit(onSubmit)}>Submit</Button>
-        </FormContainer>
+            <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+          </FormContainer>
+        </Paper>
       </Container>
     </>
   );

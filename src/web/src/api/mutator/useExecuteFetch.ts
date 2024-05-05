@@ -23,7 +23,7 @@ export const useExecuteFetch = <T>(): ((requestConfig: RequestConfig) => Promise
     });
 
     // If server responds with no content don't try to parse the reponse
-    if (response.status === 204) { 
+    if (response.status === 204) {
       return undefined as T;
     }
 

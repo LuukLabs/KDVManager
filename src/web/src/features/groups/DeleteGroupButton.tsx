@@ -16,10 +16,7 @@ export const DeleteGroupButton: React.FC<DeleteGroupButtonProps> = ({ id }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOnDeleteClick = async () => {
-    await mutate.mutateAsync(
-      { id: id },
-      { onSuccess: onMutateSuccess, onError: onMutateError },
-    );
+    await mutate.mutateAsync({ id: id }, { onSuccess: onMutateSuccess, onError: onMutateError });
   };
 
   const onMutateSuccess = () => {

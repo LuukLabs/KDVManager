@@ -1,4 +1,4 @@
-import { GroupListVM } from "@api/models";
+import { GroupListVM } from "@api/models/groupListVM";
 import { GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/endpoints/groups/groups";

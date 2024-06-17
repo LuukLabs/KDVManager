@@ -1,4 +1,4 @@
-import { AddGroupCommand, UnprocessableEntityResponse } from "@api/models";
+import { AddGroupCommand } from "@api/models/addGroupCommand";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useSnackbar } from "notistack";
+import { UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();

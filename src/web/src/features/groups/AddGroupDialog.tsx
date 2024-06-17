@@ -71,6 +71,7 @@ export const AddGroupDialog = NiceModal.create(() => {
             label={t("Name")}
             margin="dense"
             variant="standard"
+            autoComplete='off'
             fullWidth
           />
         </FormContainer>

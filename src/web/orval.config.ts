@@ -25,6 +25,7 @@ const config: ReturnType<typeof defineConfig> = {
       schemas: "src/api/models",
       client: "react-query",
       prettier: true,
+      indexFiles: false,
       override: {
         mutator: useMutatorFetch,
         operations: {

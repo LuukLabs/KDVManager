@@ -1,5 +1,5 @@
 import Container from "@mui/material/Container";
-import { CreateChildCommand } from "@api/models/createChildCommand";
+import { type CreateChildCommand } from "@api/models/createChildCommand";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";

@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
-import { DataGridProps, GridPaginationModel } from "@mui/x-data-grid";
+import { type DataGridProps, type GridPaginationModel } from "@mui/x-data-grid";
 
-interface Pagination {
+type Pagination = {
   pageNumber: number;
   pageSize: number;
-}
+};
 
 export const usePagination = () => {
   const [pagination, setPagination] = useState<Pagination>({

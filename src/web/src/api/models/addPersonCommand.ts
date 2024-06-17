@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface AddPersonCommand {
+export type AddPersonCommand = {
   /** @nullable */
   bsn?: string | null;
   dateOfBirth?: string;
@@ -17,4 +17,4 @@ export interface AddPersonCommand {
   givenName?: string | null;
   /** @nullable */
   phoneNumber?: string | null;
-}
+};

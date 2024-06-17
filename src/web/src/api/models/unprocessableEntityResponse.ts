@@ -6,7 +6,7 @@
  */
 import type { ValidationError } from "./validationError";
 
-export interface UnprocessableEntityResponse {
+export type UnprocessableEntityResponse = {
   errors: ValidationError[];
   status: number;
-}
+};

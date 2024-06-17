@@ -1,52 +1,48 @@
-// @ts-check
-
-import eslint from "@eslint/js";
-import deprecationPlugin from "eslint-plugin-deprecation";
+import globals from "globals";
+import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
+import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
 
-export default tseslint.config(
-  // register all of the plugins up-front
-  {
-    // note - intentionally uses computed syntax to make it easy to sort the keys
-    plugins: {
-      ["@typescript-eslint"]: tseslint.plugin,
-      ["deprecation"]: deprecationPlugin,
-    },
-  },
+export default [
+  { languageOptions: { globals: globals.browser } },
+  pluginJs.configs.recommended,
+  ...tseslint.configs.strict,
+  ...tseslint.configs.stylistic,
   {
     // config with just ignores is the replacement for `.eslintignore`
-    ignores: ["**/node_modules/**", "**/dist/**"],
+    ignores: ["**/dist/**"],
   },
-
-  // extends ...
-  // eslint-disable-next-line
-  eslint.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  // ...tseslint.configs.stylisticTypeChecked,
-
-  // base config
   {
     languageOptions: {
-      // globals: {
-      //    ...globals.es2020,
-      //    ...globals.node,
-      // },
       parserOptions: {
-        allowAutomaticSingleRunInference: true,
         project: ["./tsconfig.json", "./tsconfig.node.json"],
       },
     },
+    rules: {
+      "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 1 }],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          fixStyle: "inline-type-imports",
+        },
+      ],
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+    },
   },
   {
-    files: ["eslint.config.{js,cjs,mjs}"],
-    rules: {},
+    files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
+    ...pluginReactConfig,
+    rules: {
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off",
+    },
   },
   {
     files: ["src/api/**/*.ts"],
     rules: {
-      "@typescript-eslint/no-unnecessary-condition": "off",
-      "@typescript-eslint/prefer-promise-reject-errors": "off",
+      "@typescript-eslint/no-invalid-void-type": "off",
     },
   },
-);
+];

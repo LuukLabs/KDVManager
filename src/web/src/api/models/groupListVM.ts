@@ -5,8 +5,8 @@
  * OpenAPI spec version: v1
  */
 
-export interface GroupListVM {
+export type GroupListVM = {
   id?: string;
   /** @nullable */
   name?: string | null;
-}
+};

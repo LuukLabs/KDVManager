@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface AddGroupCommand {
+export type AddGroupCommand = {
   /** @nullable */
   name?: string | null;
-}
+};

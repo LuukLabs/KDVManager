@@ -1,4 +1,4 @@
-import Toolbar, { ToolbarProps } from "@mui/material/Toolbar";
+import Toolbar, { type ToolbarProps } from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";

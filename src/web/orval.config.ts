@@ -1,4 +1,4 @@
-import { defineConfig } from "orval";
+import { type defineConfig } from "orval";
 
 const useMutatorFetch = {
   path: "src/api/mutator/useExecuteFetch.ts",

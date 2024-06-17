@@ -5,8 +5,8 @@
  * OpenAPI spec version: v1
  */
 
-export interface ValidationError {
+export type ValidationError = {
   code: string;
   property: string;
   title: string;
-}
+};

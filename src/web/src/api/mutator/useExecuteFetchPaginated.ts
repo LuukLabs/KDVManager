@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { RequestConfig } from "./requestConfig";
+import { type RequestConfig } from "./requestConfig";
 import { determineUrl } from "./determineUrl";
 
 export type ListRecord<RecordType> = {

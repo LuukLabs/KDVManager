@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface PersonListVM {
+export type PersonListVM = {
   /** @nullable */
   bsn?: string | null;
   dateOfBirth?: string;
@@ -16,4 +16,4 @@ export interface PersonListVM {
   id?: string;
   /** @nullable */
   phoneNumber?: string | null;
-}
+};

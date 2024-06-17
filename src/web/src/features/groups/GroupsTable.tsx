@@ -1,8 +1,8 @@
-import { GroupListVM } from "@api/models/groupListVM";
-import { GridColDef } from "@mui/x-data-grid/models/colDef";
+import { type GroupListVM } from "@api/models/groupListVM";
+import { type GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/endpoints/groups/groups";
-import { GridRenderCellParams } from "@mui/x-data-grid";
+import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
 import { DeleteGroupButton } from "./DeleteGroupButton";
 import { usePagination } from "@hooks/usePagination";

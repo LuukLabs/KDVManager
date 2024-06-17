@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface ProblemDetails {
+export type ProblemDetails = {
   /** @nullable */
   detail?: string | null;
   /** @nullable */
@@ -16,4 +16,4 @@ export interface ProblemDetails {
   title?: string | null;
   /** @nullable */
   type?: string | null;
-}
+};

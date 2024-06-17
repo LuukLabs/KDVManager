@@ -1,5 +1,5 @@
-import { AddGroupCommand } from "@api/models/addGroupCommand";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { type AddGroupCommand } from "@api/models/addGroupCommand";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
@@ -8,12 +8,12 @@ import DialogActions from "@mui/material/DialogActions/DialogActions";
 import Dialog from "@mui/material/Dialog/Dialog";
 import DialogContentText from "@mui/material/DialogContentText/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
-import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react";
+import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useSnackbar } from "notistack";
-import { UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();
@@ -72,7 +72,7 @@ export const AddGroupDialog = NiceModal.create(() => {
             label={t("Name")}
             margin="dense"
             variant="standard"
-            autoComplete='off'
+            autoComplete="off"
             fullWidth
           />
         </FormContainer>

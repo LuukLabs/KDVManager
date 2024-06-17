@@ -1,6 +1,6 @@
-import { GridColDef } from "@mui/x-data-grid/models/colDef";
+import { type GridColDef } from "@mui/x-data-grid/models/colDef";
 import { DataGrid } from "@mui/x-data-grid";
-import { ChildListVM } from "@api/models/childListVM";
+import { type ChildListVM } from "@api/models/childListVM";
 
 import { keepPreviousData } from "@tanstack/react-query";
 import { useGetAllChildren } from "@api/endpoints/children/children";
@@ -17,12 +17,11 @@ const columns: GridColDef[] = [
 ];
 
 export const ChildrenTable = () => {
-  const { apiPagination, muiPagination} = usePagination();
+  const { apiPagination, muiPagination } = usePagination();
 
-  const { data, isLoading, isFetching } = useGetAllChildren(
-    apiPagination,
-    { query: { placeholderData: keepPreviousData } },
-  );
+  const { data, isLoading, isFetching } = useGetAllChildren(apiPagination, {
+    query: { placeholderData: keepPreviousData },
+  });
 
   return (
     <DataGrid<ChildListVM>

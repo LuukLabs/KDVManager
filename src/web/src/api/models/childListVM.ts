@@ -5,9 +5,9 @@
  * OpenAPI spec version: v1
  */
 
-export interface ChildListVM {
+export type ChildListVM = {
   dateOfBirth?: string;
   /** @nullable */
   fullName?: string | null;
   id?: string;
-}
+};

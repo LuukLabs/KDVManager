@@ -195,5 +195,28 @@ function MainNavbar() {
   );
 }
 export default withAuthenticationRequired(MainNavbar, {
-  onRedirecting: () => <p>Redirecting to login page...</p>,
+  onRedirecting: () => (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        textAlign: "center",
+        p: 2, // padding for better spacing on small screens
+      }}
+    >
+      <Box
+        component="img"
+        src="/logo.jpeg"
+        alt="Logo"
+        sx={{
+          maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
+          maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
+          height: "auto",
+        }}
+      />
+    </Box>
+  ),
 });

@@ -13,6 +13,6 @@ namespace KDVManager.Services.CRM.Domain.Entities
 
         public string FamilyName { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 }

@@ -16,4 +16,5 @@ export type ProblemDetails = {
   title?: string | null;
   /** @nullable */
   type?: string | null;
+  [key: string]: unknown;
 };

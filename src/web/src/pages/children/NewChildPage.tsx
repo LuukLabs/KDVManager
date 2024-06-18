@@ -1,14 +1,16 @@
 import Container from "@mui/material/Container";
 import { type CreateChildCommand } from "@api/models/createChildCommand";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getGetAllChildrenQueryKey, useCreateChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 const NewChildPage = () => {
   const { t } = useTranslation();
@@ -44,6 +46,24 @@ const NewChildPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextFieldElement name="familyName" label="Achternaam" required fullWidth />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  control={formContext.control}
+                  name="dateOfBirth"
+                  render={({ field }) => {
+                    return (
+                      <DatePicker
+                        label="Date"
+                        defaultValue={field.value ? dayjs(field.value) : undefined}
+                        inputRef={field.ref}
+                        onChange={(date) => {
+                          field.onChange(date);
+                        }}
+                      />
+                    );
+                  }}
+                ></Controller>
               </Grid>
             </Grid>
             <Button onClick={handleSubmit(onSubmit)}>Submit</Button>

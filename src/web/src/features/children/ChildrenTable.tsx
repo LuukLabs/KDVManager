@@ -5,6 +5,7 @@ import { type ChildListVM } from "@api/models/childListVM";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useGetAllChildren } from "@api/endpoints/children/children";
 import { usePagination } from "@hooks/usePagination";
+import dayjs from "dayjs";
 
 const columns: GridColDef[] = [
   {
@@ -13,6 +14,14 @@ const columns: GridColDef[] = [
     flex: 1,
     disableColumnMenu: true,
     disableReorder: true,
+  },
+  {
+    field: "dateOfBirth",
+    headerName: "Birthdate",
+    flex: 1,
+    disableColumnMenu: true,
+    disableReorder: true,
+    valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY"),
   },
 ];
 

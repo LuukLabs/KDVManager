@@ -1,12 +1,11 @@
-import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
-import MainNavbar from "./components/MainNavbar";
+import MainLayout from "./components/AuthProviderLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainNavbar />,
+    element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -30,11 +29,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <React.Fragment>
-      <RouterProvider router={router} />
-    </React.Fragment>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

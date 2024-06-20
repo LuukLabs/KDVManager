@@ -13,12 +13,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { Outlet } from "react-router-dom";
 import { AppBar } from "@mui/material";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+type MainNavbarProps = {
+  children: React.ReactNode;
+};
 
-function MainNavbar() {
+const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
   const { loginWithRedirect, logout } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -190,10 +192,10 @@ function MainNavbar() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Outlet />
+      {children}
     </>
   );
-}
+};
 export default withAuthenticationRequired(MainNavbar, {
   onRedirecting: () => (
     <Box

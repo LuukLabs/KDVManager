@@ -4,7 +4,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createRoot } from "react-dom/client";
 import { SnackbarProvider } from "notistack";
-import NiceModal from "@ebay/nice-modal-react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
@@ -19,9 +18,7 @@ root.render(
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
       <I18nextProvider i18n={i18n}>
         <SnackbarProvider>
-          <NiceModal.Provider>
-            <App />
-          </NiceModal.Provider>
+          <App />
         </SnackbarProvider>
       </I18nextProvider>
     </LocalizationProvider>

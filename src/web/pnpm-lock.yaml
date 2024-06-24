@@ -72,11 +72,11 @@ dependencies:
     specifier: ^18.3.1
     version: 18.3.1(react@18.3.1)
   react-hook-form:
-    specifier: ^7.51.5
-    version: 7.51.5(react@18.3.1)
+    specifier: ^7.52.0
+    version: 7.52.0(react@18.3.1)
   react-hook-form-mui:
     specifier: ^7.0.0
-    version: 7.0.0(@mui/icons-material@5.15.20)(@mui/material@5.15.20)(@mui/x-date-pickers@7.7.0)(react-hook-form@7.51.5)(react@18.3.1)
+    version: 7.0.0(@mui/icons-material@5.15.20)(@mui/material@5.15.20)(@mui/x-date-pickers@7.7.0)(react-hook-form@7.52.0)(react@18.3.1)
   react-i18next:
     specifier: ^14.1.2
     version: 14.1.2(i18next@23.11.5)(react-dom@18.3.1)(react@18.3.1)
@@ -4660,7 +4660,7 @@ packages:
       scheduler: 0.23.2
     dev: false
 
-  /react-hook-form-mui@7.0.0(@mui/icons-material@5.15.20)(@mui/material@5.15.20)(@mui/x-date-pickers@7.7.0)(react-hook-form@7.51.5)(react@18.3.1):
+  /react-hook-form-mui@7.0.0(@mui/icons-material@5.15.20)(@mui/material@5.15.20)(@mui/x-date-pickers@7.7.0)(react-hook-form@7.52.0)(react@18.3.1):
     resolution: {integrity: sha512-P/0Vd2p1Sjom1+um2hS58L5xMsiNObg3aenmRqsND8IG+dTQhLRevGl0U6UOpWr9UZ5X51wgDwPOzxKbylIcog==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4679,14 +4679,14 @@ packages:
       '@mui/material': 5.15.20(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       '@mui/x-date-pickers': 7.7.0(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@mui/material@5.15.20)(@types/react@18.3.3)(dayjs@1.11.11)(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
-      react-hook-form: 7.51.5(react@18.3.1)
+      react-hook-form: 7.52.0(react@18.3.1)
     dev: false
 
-  /react-hook-form@7.51.5(react@18.3.1):
-    resolution: {integrity: sha512-J2ILT5gWx1XUIJRETiA7M19iXHlG74+6O3KApzvqB/w8S5NQR7AbU8HVZrMALdmDgWpRPYiZJl0zx8Z4L2mP6Q==}
+  /react-hook-form@7.52.0(react@18.3.1):
+    resolution: {integrity: sha512-mJX506Xc6mirzLsmXUJyqlAI3Kj9Ph2RhplYhUVffeOQSnubK2uVqBFOBJmvKikvbFV91pxVXmDiR+QMF19x6A==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
+      react: ^16.8.0 || ^17 || ^18 || ^19
     dependencies:
       react: 18.3.1
     dev: false

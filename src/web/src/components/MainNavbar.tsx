@@ -15,14 +15,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 type MainNavbarProps = {
   children: React.ReactNode;
 };
 
 const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { loginWithRedirect, logout } = useAuth0();
+  const { loginWithRedirect, logout, user } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -32,7 +32,6 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -62,7 +61,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              KDVManager
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -150,7 +149,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={user?.name} src={user?.picture} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -172,13 +171,18 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting}
-                    onClick={() => {
-                      void logout();
-                    }}
                   >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+                 <MenuItem
+                  key="Logout"
+                  onClick={() => {
+                    void logout();
+                  }}
+                >
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
                 <MenuItem
                   key="Login"
                   onClick={() => {

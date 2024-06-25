@@ -1,6 +1,4 @@
 ﻿using KDVManager.Services.Scheduling.Api.Middleware;
-using KDVManager.Services.Scheduling.Application;
-using KDVManager.Services.Scheduling.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,7 +1,4 @@
-using System;
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 using KDVManager.Services.Scheduling.Application.Exceptions;
 
 namespace KDVManager.Services.Scheduling.Api.Services;

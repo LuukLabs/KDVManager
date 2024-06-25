@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
+﻿using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
-using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
-using System.Net.Mime;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;

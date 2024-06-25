@@ -20,13 +20,14 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
         IQueryable<Child> children = _dbContext.Set<Child>().AsQueryable();
+
         if (!String.IsNullOrEmpty(search))
         {
             children = children.Where(child => (child.GivenName + child.FamilyName).Contains(search, StringComparison.OrdinalIgnoreCase));
         }
 
-        children = children.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
         children = children.OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName);
+        children = children.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
 
         return await children.ToListAsync();
     }

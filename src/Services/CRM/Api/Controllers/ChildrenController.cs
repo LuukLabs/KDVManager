@@ -2,6 +2,7 @@
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using MediatR;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
@@ -46,17 +47,20 @@ public class ChildrenController : ControllerBase
         return Ok(id);
     }
 
-    [HttpPut("{ChildId:guid}", Name = "UpdateChild")]
-    public async Task<ActionResult<Guid>> UpdateChild([FromRoute] Guid ChildId, [FromBody] UpdateChildCommand updateChildCommand)
+    [HttpPut("{Id:guid}", Name = "UpdateChild")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(typeof(UnprocessableEntityResponse), (int)HttpStatusCode.UnprocessableEntity)]
+    public async Task<ActionResult<Guid>> UpdateChild([FromRoute] Guid Id, [FromBody] UpdateChildCommand updateChildCommand)
     {
         // Set the route id to the command
-        updateChildCommand.Id = ChildId;
+        updateChildCommand.Id = Id;
 
         await _mediator.Send(updateChildCommand);
         return NoContent();
     }
 
     [HttpDelete("{Id:guid}", Name = "DeleteChild")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<ActionResult<Guid>> DeleteChild([FromRoute] DeleteChildCommand deleteChildCommand)
     {
         await _mediator.Send(deleteChildCommand);

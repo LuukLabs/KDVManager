@@ -1,6 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -9,23 +8,33 @@ import {
   useGetChildById,
   useUpdateChild,
 } from "@api/endpoints/children/children";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { type UpdateChildCommand } from "@api/models/updateChildCommand";
+import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
+import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
-  const { mutate } = useUpdateChild();
-  const navigate = useNavigate();
+  const { mutateAsync } = useUpdateChild();
 
   const { data: child } = useGetChildById(childId);
 
   const formContext = useForm<UpdateChildCommand>({});
 
-  const { reset } = formContext;
+  const {
+    handleSubmit,
+    reset,
+    setError,
+    formState: { isValid, isDirty, isSubmitting },
+  } = formContext;
 
   useEffect(() => {
     if (child) {
@@ -37,15 +46,26 @@ const UpdateChildPage = () => {
     }
   }, [child, reset]);
 
-  const handleSubmit = formContext.handleSubmit;
-
   const onSubmit = (data: UpdateChildCommand) => {
-    mutate({ id: childId, data: data }, { onSuccess: onSuccess });
+    mutateAsync(
+      { id: childId, data: data },
+      { onSuccess: onMutateSuccess, onError: onMutateError },
+    );
   };
 
-  const onSuccess = () => {
+  const onMutateSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
-    navigate("/children");
+    enqueueSnackbar(t("Child updated"), { variant: "success" });
+    reset({}, { keepValues: true });
+  };
+
+  const onMutateError = (error: UnprocessableEntityResponse) => {
+    error.errors.forEach((propertyError) => {
+      setError(propertyError.property as any, {
+        type: "server",
+        message: propertyError.title,
+      });
+    });
   };
 
   return (
@@ -79,7 +99,14 @@ const UpdateChildPage = () => {
               ></Controller>
             </Grid>
           </Grid>
-          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={!isDirty || !isValid}
+            loading={isSubmitting}
+            onClick={handleSubmit(onSubmit)}
+          >
+            <span>{t("Save")}</span>
+          </LoadingButton>
         </FormContainer>
       </Paper>
     </>

@@ -6,72 +6,66 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 
-namespace KDVManager.Services.CRM.Api.Middleware
+namespace KDVManager.Services.CRM.Api.Middleware;
+
+public class ExceptionHandlerMiddleware
 {
-    public class ExceptionHandlerMiddleware
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandlerMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
+        }
+        catch (Exception exception)
+        {
+            await ConvertException(context, exception);
+        }
+    }
+
+    private Task ConvertException(HttpContext context, Exception exception)
+    {
+        HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
+
+        context.Response.ContentType = "application/json";
+
+        var result = string.Empty;
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        switch (exception)
+        {
+            case ValidationException validationException:
+                httpStatusCode = HttpStatusCode.UnprocessableEntity;
+                result = JsonSerializer.Serialize(new UnprocessableEntityResponse((int)httpStatusCode, validationException), jsonSerializerOptions);
+                break;
+            case BadRequestException badRequestException:
+                httpStatusCode = HttpStatusCode.BadRequest;
+                break;
+            case NotFoundException notFoundException:
+                httpStatusCode = HttpStatusCode.NotFound;
+                break;
+            case Exception ex:
+                httpStatusCode = HttpStatusCode.BadRequest;
+                break;
         }
 
-        public async Task Invoke(HttpContext context)
+        context.Response.StatusCode = (int)httpStatusCode;
+
+        if (result == string.Empty)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception exception)
-            {
-                await ConvertException(context, exception);
-            }
+            result = JsonSerializer.Serialize(new { error = exception.Message, status = (int)httpStatusCode }, jsonSerializerOptions);
+
         }
 
-        private Task ConvertException(HttpContext context, Exception exception)
-        {
-            HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
-
-            context.Response.ContentType = "application/json";
-
-            var result = string.Empty;
-            var jsonSerializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            switch (exception)
-            {
-                case ValidationException validationException:
-                    httpStatusCode = HttpStatusCode.UnprocessableEntity;
-                    result = JsonSerializer.Serialize(new
-                    {
-                        status = (int)httpStatusCode,
-                        errors = validationException.ValidationErrors
-                    }, jsonSerializerOptions);
-                    break;
-                case BadRequestException badRequestException:
-                    httpStatusCode = HttpStatusCode.BadRequest;
-                    break;
-                case NotFoundException notFoundException:
-                    httpStatusCode = HttpStatusCode.NotFound;
-                    break;
-                case Exception ex:
-                    httpStatusCode = HttpStatusCode.BadRequest;
-                    break;
-            }
-
-            context.Response.StatusCode = (int)httpStatusCode;
-
-
-            if (result == string.Empty)
-            {
-                result = JsonSerializer.Serialize(new { error = exception.Message, status = (int)httpStatusCode }, jsonSerializerOptions);
-
-            }
-
-            return context.Response.WriteAsync(result);
-        }
+        return context.Response.WriteAsync(result);
     }
 }

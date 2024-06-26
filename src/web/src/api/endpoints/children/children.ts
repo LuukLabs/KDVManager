@@ -19,8 +19,8 @@ import type { ChildDetailVM } from "../../models/childDetailVM";
 import type { ChildListVM } from "../../models/childListVM";
 import type { CreateChildCommand } from "../../models/createChildCommand";
 import type { GetAllChildrenParams } from "../../models/getAllChildrenParams";
+import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
 import type { UpdateChildCommand } from "../../models/updateChildCommand";
-import type { UpdateChildParams } from "../../models/updateChildParams";
 import { useExecuteFetchPaginated } from "../../mutator/useExecuteFetchPaginated";
 import { useExecuteFetch } from "../../mutator/useExecuteFetch";
 
@@ -229,33 +229,35 @@ export const useGetChildById = <
 };
 
 export const useUpdateChildHook = () => {
-  const updateChild = useExecuteFetch<string>();
+  const updateChild = useExecuteFetch<void>();
 
   return useCallback(
-    (id: string, updateChildCommand: UpdateChildCommand, params?: UpdateChildParams) => {
+    (id: string, updateChildCommand: UpdateChildCommand) => {
       return updateChild({
         url: `/crm/v1/children/${id}`,
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         data: updateChildCommand,
-        params,
       });
     },
     [updateChild],
   );
 };
 
-export const useUpdateChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const useUpdateChildMutationOptions = <
+  TError = UnprocessableEntityResponse,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>,
     TError,
-    { id: string; data: UpdateChildCommand; params?: UpdateChildParams },
+    { id: string; data: UpdateChildCommand },
     TContext
   >;
 }): UseMutationOptions<
   Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>,
   TError,
-  { id: string; data: UpdateChildCommand; params?: UpdateChildParams },
+  { id: string; data: UpdateChildCommand },
   TContext
 > => {
   const { mutation: mutationOptions } = options ?? {};
@@ -264,11 +266,11 @@ export const useUpdateChildMutationOptions = <TError = unknown, TContext = unkno
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>,
-    { id: string; data: UpdateChildCommand; params?: UpdateChildParams }
+    { id: string; data: UpdateChildCommand }
   > = (props) => {
-    const { id, data, params } = props ?? {};
+    const { id, data } = props ?? {};
 
-    return updateChild(id, data, params);
+    return updateChild(id, data);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -278,19 +280,19 @@ export type UpdateChildMutationResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>
 >;
 export type UpdateChildMutationBody = UpdateChildCommand;
-export type UpdateChildMutationError = unknown;
+export type UpdateChildMutationError = UnprocessableEntityResponse;
 
-export const useUpdateChild = <TError = unknown, TContext = unknown>(options?: {
+export const useUpdateChild = <TError = UnprocessableEntityResponse, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>,
     TError,
-    { id: string; data: UpdateChildCommand; params?: UpdateChildParams },
+    { id: string; data: UpdateChildCommand },
     TContext
   >;
 }): UseMutationResult<
   Awaited<ReturnType<ReturnType<typeof useUpdateChildHook>>>,
   TError,
-  { id: string; data: UpdateChildCommand; params?: UpdateChildParams },
+  { id: string; data: UpdateChildCommand },
   TContext
 > => {
   const mutationOptions = useUpdateChildMutationOptions(options);
@@ -298,7 +300,7 @@ export const useUpdateChild = <TError = unknown, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const useDeleteChildHook = () => {
-  const deleteChild = useExecuteFetch<string>();
+  const deleteChild = useExecuteFetch<void>();
 
   return useCallback(
     (id: string) => {

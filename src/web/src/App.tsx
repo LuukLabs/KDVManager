@@ -9,6 +9,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        path: "children/:childId",
+        lazy: () => import("./pages/children/UpdateChildPage"),
+      },
+      {
         path: "children",
         lazy: () => import("./pages/children/IndexChildPage"),
       },

@@ -169,13 +169,11 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                  >
+                  <MenuItem key={setting}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
-                 <MenuItem
+                <MenuItem
                   key="Logout"
                   onClick={() => {
                     void logout();

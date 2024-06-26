@@ -120,6 +120,99 @@
       }
     },
     "/crm/v1/children/{Id}": {
+      "get": {
+        "tags": ["Children"],
+        "operationId": "GetChildById",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChildDetailVM"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Children"],
+        "operationId": "UpdateChild",
+        "parameters": [
+          {
+            "name": "childId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChildCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChildCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChildCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": ["Children"],
         "operationId": "DeleteChild",
@@ -452,6 +545,29 @@
         },
         "additionalProperties": false
       },
+      "ChildDetailVM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ChildListVM": {
         "type": "object",
         "properties": {
@@ -515,6 +631,25 @@
           },
           "phoneNumber": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateChildCommand": {
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

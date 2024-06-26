@@ -4,6 +4,8 @@ using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
+using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
+using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 
 namespace KDVManager.Services.CRM.Api.Controllers;
 
@@ -28,11 +30,30 @@ public class ChildrenController : ControllerBase
         return Ok(dtos);
     }
 
+
+    [HttpGet("{Id:guid}", Name = "GetChildById")]
+    [Produces("application/json")]
+    public async Task<ActionResult<ChildDetailVM>> GetChildById([FromRoute] GetChildDetailQuery getChildByIdQuery)
+    {
+        var dto = await _mediator.Send(getChildByIdQuery);
+        return Ok(dto);
+    }
+
     [HttpPost(Name = "CreateChild")]
     public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
     {
         var id = await _mediator.Send(createChildCommand);
         return Ok(id);
+    }
+
+    [HttpPut("{ChildId:guid}", Name = "UpdateChild")]
+    public async Task<ActionResult<Guid>> UpdateChild([FromRoute] Guid ChildId, [FromBody] UpdateChildCommand updateChildCommand)
+    {
+        // Set the route id to the command
+        updateChildCommand.Id = ChildId;
+
+        await _mediator.Send(updateChildCommand);
+        return NoContent();
     }
 
     [HttpDelete("{Id:guid}", Name = "DeleteChild")]

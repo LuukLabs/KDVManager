@@ -1,9 +1,14 @@
 ﻿using System;
-namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail
+using System.Text.Json.Serialization;
+using MediatR;
+
+namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild
 {
-    public class ChildDetailVM
+    public class UpdateChildCommand : IRequest
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
+
         public string GivenName { get; set; }
 
         public string FamilyName { get; set; }

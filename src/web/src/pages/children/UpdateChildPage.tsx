@@ -98,15 +98,17 @@ const UpdateChildPage = () => {
                 }}
               ></Controller>
             </Grid>
+            <Grid item xs={12}>
+              <LoadingButton
+                variant="contained"
+                disabled={!isDirty || !isValid}
+                loading={isSubmitting}
+                onClick={handleSubmit(onSubmit)}
+              >
+                <span>{t("Save")}</span>
+              </LoadingButton>
+            </Grid>
           </Grid>
-          <LoadingButton
-            variant="contained"
-            disabled={!isDirty || !isValid}
-            loading={isSubmitting}
-            onClick={handleSubmit(onSubmit)}
-          >
-            <span>{t("Save")}</span>
-          </LoadingButton>
         </FormContainer>
       </Paper>
     </>

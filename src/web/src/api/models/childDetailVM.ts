@@ -5,10 +5,12 @@
  * OpenAPI spec version: v1
  */
 
-export type ChildListVM = {
+export type ChildDetailVM = {
   /** @nullable */
   dateOfBirth?: string | null;
   /** @nullable */
-  fullName?: string | null;
+  familyName?: string | null;
+  /** @nullable */
+  givenName?: string | null;
   id?: string;
 };

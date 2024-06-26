@@ -5,10 +5,11 @@
  * OpenAPI spec version: v1
  */
 
-export type ChildListVM = {
+export type UpdateChildCommand = {
   /** @nullable */
   dateOfBirth?: string | null;
   /** @nullable */
-  fullName?: string | null;
-  id?: string;
+  familyName?: string | null;
+  /** @nullable */
+  givenName?: string | null;
 };

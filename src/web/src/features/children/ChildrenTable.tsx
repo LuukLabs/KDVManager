@@ -13,6 +13,7 @@ const columns: GridColDef[] = [
     field: "fullName",
     headerName: "Fullname",
     flex: 1,
+    sortable: false,
     disableColumnMenu: true,
     disableReorder: true,
   },
@@ -20,6 +21,7 @@ const columns: GridColDef[] = [
     field: "dateOfBirth",
     headerName: "Birthdate",
     flex: 1,
+    sortable: false,
     disableColumnMenu: true,
     disableReorder: true,
     valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY"),
@@ -29,6 +31,7 @@ const columns: GridColDef[] = [
     headerName: "Actions",
     sortable: false,
     disableColumnMenu: true,
+    disableReorder: true,
     renderCell: (params: GridRenderCellParams<any, string>) => (
       <>
         <DeleteChildButton id={params.value!} fullName={params.row.fullName} />

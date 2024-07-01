@@ -30,7 +30,7 @@ export const DeleteGroupButton: React.FC<DeleteGroupButtonProps> = ({ id }) => {
   };
 
   return (
-    <IconButton aria-label="delete" onClick={handleOnDeleteClick}>
+    <IconButton aria-label={t("delete")} onClick={handleOnDeleteClick}>
       <DeleteIcon />
     </IconButton>
   );

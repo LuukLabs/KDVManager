@@ -34,7 +34,7 @@ export const DeleteChildButton: React.FC<DeleteChildButtonProps> = ({ id, fullNa
   };
 
   return (
-    <IconButton aria-label="delete" onClick={handleOnDeleteClick}>
+    <IconButton aria-label={t("delete")} onClick={handleOnDeleteClick}>
       <DeleteIcon />
     </IconButton>
   );

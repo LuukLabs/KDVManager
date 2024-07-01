@@ -74,10 +74,10 @@ const UpdateChildPage = () => {
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <Grid container alignItems="flex-start" spacing={2}>
             <Grid item xs={12}>
-              <TextFieldElement name="givenName" label="Voornaam" required fullWidth />
+              <TextFieldElement name="givenName" label={t("Voornaam")} required fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <TextFieldElement name="familyName" label="Achternaam" required fullWidth />
+              <TextFieldElement name="familyName" label={t("Achternaam")} required fullWidth />
             </Grid>
             <Grid item xs={12}>
               <Controller

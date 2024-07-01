@@ -14,6 +14,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const settings = ["Profile", "Account", "Dashboard"];
 type MainNavbarProps = {
@@ -22,6 +23,7 @@ type MainNavbarProps = {
 
 const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { loginWithRedirect, logout, user } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -61,13 +63,13 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 textDecoration: "none",
               }}
             >
-              KDVManager
+              {t("KDVManager")}
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
-                aria-label="account of current user"
+                aria-label={t("account of current user")}
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleOpenNavMenu}
@@ -117,7 +119,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              {t("LOGO")}
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Button
@@ -126,7 +128,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                   navigate("/children");
                 }}
               >
-                Kinderen
+                {t("Children")}
               </Button>
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
@@ -134,7 +136,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                   navigate("/groups");
                 }}
               >
-                Groepen
+                {t("Groups")}
               </Button>
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
@@ -142,12 +144,12 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                   navigate("/people");
                 }}
               >
-                Personen
+                {t("People")}
               </Button>
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title={t("Open settings")}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt={user?.name} src={user?.picture} />
                 </IconButton>
@@ -179,7 +181,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                     void logout();
                   }}
                 >
-                  <Typography textAlign="center">Logout</Typography>
+                  <Typography textAlign="center">{t("Logout")}</Typography>
                 </MenuItem>
                 <MenuItem
                   key="Login"
@@ -187,7 +189,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                     void loginWithRedirect();
                   }}
                 >
-                  <Typography textAlign="center">Login</Typography>
+                  <Typography textAlign="center">{t("Login")}</Typography>
                 </MenuItem>
               </Menu>
             </Box>
@@ -214,7 +216,6 @@ export default withAuthenticationRequired(MainNavbar, {
       <Box
         component="img"
         src="/logo.jpeg"
-        alt="Logo"
         sx={{
           maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
           maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive width

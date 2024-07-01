@@ -6,6 +6,7 @@ import { ChildrenTable } from "../../features/children/ChildrenTable";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
   marginLeft: "auto",
@@ -14,6 +15,7 @@ const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
 
 const IndexChildPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const onAddChildClickHandler = () => {
     navigate("/children/new");
   };
@@ -23,7 +25,7 @@ const IndexChildPage = () => {
       <Container>
         <StyledToolbar>
           <Button variant="contained" onClick={onAddChildClickHandler} startIcon={<AddIcon />}>
-            Kind
+            {t("Child")}
           </Button>
         </StyledToolbar>
         <Paper>

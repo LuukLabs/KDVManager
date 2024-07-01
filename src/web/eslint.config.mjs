@@ -2,6 +2,8 @@ import globals from "globals";
 import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
+import i18next from "eslint-plugin-i18next";
+import { fixupPluginRules } from "@eslint/compat";
 
 export default [
   { languageOptions: { globals: globals.browser } },
@@ -37,6 +39,57 @@ export default [
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
+    },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
+    plugins: {
+      i18next: fixupPluginRules(i18next),
+    },
+    rules: {
+      "i18next/no-literal-string": [
+        "error",
+        {
+          mode: "jsx-only",
+          "jsx-attributes": {
+            include: [
+              "label",
+              "alt",
+              "title",
+              "placeholder",
+              "aria-description",
+              "aria-label",
+              "aria-placeholder",
+              "aria-roledescription",
+              "aria-valuetext",
+              "aria-braillelabel",
+            ],
+            exclude: [],
+          },
+          "jsx-components": {
+            include: [],
+            exclude: ["Trans", "Auth0Provider", "LocalizationProvider"],
+          },
+          callees: {
+            exclude: [
+              "i18n(ext)?",
+              "t",
+              "require",
+              "addEventListener",
+              "removeEventListener",
+              "postMessage",
+              "getElementById",
+              "dispatch",
+              "commit",
+              "includes",
+              "indexOf",
+              "endsWith",
+              "startsWith",
+              "navigate",
+            ],
+          },
+        },
+      ],
     },
   },
   {

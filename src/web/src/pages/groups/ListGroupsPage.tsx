@@ -6,8 +6,11 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddGroupDialog } from "../../features/groups/AddGroupDialog";
+import { useTranslation } from "react-i18next";
 
 const ListGroupsPage = () => {
+  const { t } = useTranslation();
+
   const onAddGroupClickHandler = () => void NiceModal.show(AddGroupDialog);
 
   return (
@@ -15,7 +18,7 @@ const ListGroupsPage = () => {
       <Container>
         <Toolbar>
           <Button variant="contained" onClick={onAddGroupClickHandler} startIcon={<AddIcon />}>
-            Groep
+            {t("Group")}
           </Button>
         </Toolbar>
         <Paper>

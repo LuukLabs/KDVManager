@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": "20.x",
-    "pnpm": "8.x"
+    "pnpm": "9.x"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",

@@ -79,7 +79,7 @@ export const AddGroupDialog = NiceModal.create(() => {
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>
-          {t("Cancel")}
+          {t("Cancel", { ns: "common" })}
         </Button>
         <LoadingButton
           variant="contained"
@@ -87,7 +87,7 @@ export const AddGroupDialog = NiceModal.create(() => {
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
-          <span>{t("Add")}</span>
+          <span>{t("Add", { ns: "common" })}</span>
         </LoadingButton>
       </DialogActions>
     </Dialog>

@@ -66,7 +66,7 @@ const NewChildPage = () => {
                 ></Controller>
               </Grid>
             </Grid>
-            <Button onClick={handleSubmit(onSubmit)}>{t("Save")}</Button>
+            <Button onClick={handleSubmit(onSubmit)}>{t("Save", { ns: "common" })}</Button>
           </FormContainer>
         </Paper>
       </Container>

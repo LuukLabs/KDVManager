@@ -16,7 +16,10 @@ export const EditChildButton: React.FC<EditChildButtonProps> = ({ id }) => {
   };
 
   return (
-    <IconButton aria-label={t("edit")} onClick={handleOnEditClick}>
+    <IconButton
+      aria-label={t("edit", { ns: "common", context: "aria-label" })}
+      onClick={handleOnEditClick}
+    >
       <EditIcon />
     </IconButton>
   );

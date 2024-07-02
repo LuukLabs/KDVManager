@@ -12,10 +12,11 @@ void i18n
   .init({
     lng: "nl",
     fallbackLng: "en",
+    ns: ["common", "translation"],
     interpolation: {
       escapeValue: false,
     },
-    debug: true,
+    debug: !import.meta.env.PROD,
   });
 
 export default i18n;

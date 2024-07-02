@@ -105,7 +105,7 @@ const UpdateChildPage = () => {
                 loading={isSubmitting}
                 onClick={handleSubmit(onSubmit)}
               >
-                <span>{t("Save")}</span>
+                <span>{t("Save", { ns: "common" })}</span>
               </LoadingButton>
             </Grid>
           </Grid>

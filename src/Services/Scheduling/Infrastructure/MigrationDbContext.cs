@@ -12,6 +12,8 @@ public class MigrationDbContext : DbContext
     }
 
     public DbSet<Group> Groups { get; set; }
+    public DbSet<ScheduleItem> ScheduleItems { get; set; }
+    public DbSet<RecurringSchedulePattern> RecurringSchedulePatterns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

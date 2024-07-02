@@ -196,7 +196,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      {children}
+      <Container maxWidth="xl">{children}</Container>
     </>
   );
 };

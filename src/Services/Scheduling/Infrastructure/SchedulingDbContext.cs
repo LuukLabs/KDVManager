@@ -18,11 +18,15 @@ public class SchedulingDbContext : DbContext
     }
 
     public DbSet<Group> Groups { get; set; }
+    public DbSet<ScheduleItem> ScheduleItems { get; set; }
+    public DbSet<RecurringSchedulePattern> RecurringSchedulePatterns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<ScheduleItem>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<RecurringSchedulePattern>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 

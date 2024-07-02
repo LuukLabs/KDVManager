@@ -24,7 +24,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     disableReorder: true,
-    valueFormatter: (value) => dayjs(value).format("DD/MM/YYYY"),
+    valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
   },
   {
     field: "id",

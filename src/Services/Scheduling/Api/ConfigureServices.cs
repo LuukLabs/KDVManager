@@ -2,6 +2,7 @@ using KDVManager.Services.Scheduling.Api.Services;
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +26,14 @@ public static class ConfigureServices
                     Name = "Luuk van Hulten",
                     Email = "admin@kdvmanager.nl",
                 },
+            });
+
+            // Add a custom schema filter to handle TimeSpan as string with time format
+            options.MapType<TimeSpan>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Format = "time",
+                Example = new OpenApiString("14:30:00")
             });
         });
 

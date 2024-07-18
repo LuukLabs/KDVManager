@@ -24,7 +24,7 @@ type MainNavbarProps = {
 const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { loginWithRedirect, logout, user } = useAuth0();
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -175,6 +175,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+                {isAuthenticated ? (
                 <MenuItem
                   key="Logout"
                   onClick={() => {
@@ -183,6 +184,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 >
                   <Typography textAlign="center">{t("Logout")}</Typography>
                 </MenuItem>
+                ) : (
                 <MenuItem
                   key="Login"
                   onClick={() => {
@@ -191,6 +193,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 >
                   <Typography textAlign="center">{t("Login")}</Typography>
                 </MenuItem>
+                )}
               </Menu>
             </Box>
           </Toolbar>

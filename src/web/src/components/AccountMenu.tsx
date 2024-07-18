@@ -13,6 +13,7 @@ import Logout from "@mui/icons-material/Logout";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useTranslation } from "react-i18next";
 import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,6 +24,7 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const navigate = useNavigate();
   const { logout, user, isAuthenticated } = useAuth0();
   const { t } = useTranslation();
 
@@ -85,7 +87,7 @@ export default function AccountMenu() {
           </Stack>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate("/settings")}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
@@ -95,7 +97,6 @@ export default function AccountMenu() {
           <MenuItem
             key="Logout"
             onClick={() => {
-              void handleClose();
               void logout();
             }}
           >

@@ -6,17 +6,14 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import AccountMenu from "./AccountMenu";
 
-const settings = ["Profile", "Account", "Dashboard"];
 type MainNavbarProps = {
   children: React.ReactNode;
 };
@@ -24,22 +21,12 @@ type MainNavbarProps = {
 const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -147,55 +134,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 {t("People")}
               </Button>
             </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title={t("Open settings")}>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user?.name} src={user?.picture} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-                {isAuthenticated ? (
-                <MenuItem
-                  key="Logout"
-                  onClick={() => {
-                    void logout();
-                  }}
-                >
-                  <Typography textAlign="center">{t("Logout")}</Typography>
-                </MenuItem>
-                ) : (
-                <MenuItem
-                  key="Login"
-                  onClick={() => {
-                    void loginWithRedirect();
-                  }}
-                >
-                  <Typography textAlign="center">{t("Login")}</Typography>
-                </MenuItem>
-                )}
-              </Menu>
-            </Box>
+            <AccountMenu />
           </Toolbar>
         </Container>
       </AppBar>

@@ -28,6 +28,10 @@ const router = createBrowserRouter([
         path: "groups",
         lazy: () => import("./pages/groups/ListGroupsPage"),
       },
+      {
+        path: "settings",
+        lazy: () => import("./pages/settings/SettingsPage"),
+      },
     ],
   },
 ]);

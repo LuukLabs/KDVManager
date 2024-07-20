@@ -30,7 +30,16 @@ const router = createBrowserRouter([
       },
       {
         path: "settings",
-        lazy: () => import("./pages/settings/SettingsPage"),
+        children: [
+          {
+            index: true,
+            lazy: () => import("./pages/settings/SettingsPage"),
+          },
+          {
+            path: "scheduling",
+            lazy: () => import("./pages/settings/SchedulingSettingsPage"),
+          },
+        ],
       },
     ],
   },

@@ -1,5 +1,4 @@
-﻿using System;
-using KDVManager.Services.Scheduling.Domain.Entities;
+﻿using KDVManager.Services.Scheduling.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -12,6 +11,8 @@ public class MigrationDbContext : DbContext
     }
 
     public DbSet<Group> Groups { get; set; }
+
+    public DbSet<TimeSlot> TimeSlots { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

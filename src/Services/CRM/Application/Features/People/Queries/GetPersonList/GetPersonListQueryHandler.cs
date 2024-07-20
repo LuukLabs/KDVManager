@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
-using KDVManager.Services.CRM.Domain.Entities;
 using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.People.Queries.GetPersonList;

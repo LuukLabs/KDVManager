@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
-using KDVManager.Services.Scheduling.Domain.Entities;
 using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;

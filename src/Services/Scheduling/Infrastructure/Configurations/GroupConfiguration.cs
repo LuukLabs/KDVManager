@@ -1,5 +1,4 @@
-﻿using System;
-using KDVManager.Services.Scheduling.Domain.Entities;
+﻿using KDVManager.Services.Scheduling.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

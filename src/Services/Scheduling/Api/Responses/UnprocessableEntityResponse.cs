@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using KDVManager.Services.Scheduling.Application.Exceptions;
 using ValidationException = KDVManager.Services.Scheduling.Application.Exceptions.ValidationException;
 
 public class ValidationError

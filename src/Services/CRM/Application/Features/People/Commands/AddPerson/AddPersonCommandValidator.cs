@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace KDVManager.Services.CRM.Application.Features.People.Commands.AddPerson;
 

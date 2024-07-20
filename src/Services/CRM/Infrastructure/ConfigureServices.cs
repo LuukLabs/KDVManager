@@ -1,10 +1,8 @@
-﻿using System;
-using KDVManager.Services.CRM.Application.Contracts.Persistence;
+﻿using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Services.CRM.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

@@ -8,30 +8,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class GroupRepository : BaseRepository<Group>, IGroupRepository
+public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
 {
-    public GroupRepository(SchedulingDbContext dbContext) : base(dbContext)
+    public TimeSlotRepository(SchedulingDbContext dbContext) : base(dbContext)
     {
     }
 
-    public async Task<IReadOnlyList<Group>> PagedAsync(IPaginationFilter paginationFilter)
+    public async Task<IReadOnlyList<TimeSlot>> PagedAsync(IPaginationFilter paginationFilter)
     {
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
-        return await _dbContext.Set<Group>()
-        .OrderBy(group => group.Name)
+        return await _dbContext.Set<TimeSlot>()
+        .OrderBy(timeSlot => timeSlot.Name)
         .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize)
         .ToListAsync();
     }
 
     public async Task<int> CountAsync()
     {
-        return await _dbContext.Set<Group>().CountAsync();
+        return await _dbContext.Set<TimeSlot>().CountAsync();
     }
 
-    public async Task<bool> IsGroupNameUnique(string name)
+    public async Task<bool> IsTimeSlotNameUnique(string name)
     {
-        var matches = _dbContext.Groups.Any(e => e.Name.Equals(name));
+        var matches = _dbContext.TimeSlots.Any(e => e.Name.Equals(name));
         return await Task.FromResult(matches);
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using KDVManager.Services.Scheduling.Application.Exceptions;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http;
 
 namespace KDVManager.Services.Scheduling.Api.Middleware;
 

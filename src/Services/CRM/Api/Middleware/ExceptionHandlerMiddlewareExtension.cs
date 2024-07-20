@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-
-namespace KDVManager.Services.CRM.Api.Middleware
+﻿namespace KDVManager.Services.CRM.Api.Middleware
 {
     public static class ExceptionHandlerMiddlewareExtension
     {

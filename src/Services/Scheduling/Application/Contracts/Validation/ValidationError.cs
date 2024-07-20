@@ -1,5 +1,4 @@
-﻿using System;
-namespace KDVManager.Services.Scheduling.Application.Contracts.Validation;
+﻿namespace KDVManager.Services.Scheduling.Application.Contracts.Validation;
 
 public class ValidationError
 {

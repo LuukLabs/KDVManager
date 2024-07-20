@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using KDVManager.Services.CRM.Application.Exceptions;
 using ValidationException = KDVManager.Services.CRM.Application.Exceptions.ValidationException;
 
 public class ValidationError

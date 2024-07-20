@@ -5,11 +5,12 @@ using KDVManager.Services.Scheduling.Domain.Interfaces;
 
 namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 
-public interface IGroupRepository : IAsyncRepository<Group>
+public interface ITimeSlotRepository : IAsyncRepository<TimeSlot>
 {
-    Task<IReadOnlyList<Group>> PagedAsync(IPaginationFilter paginationFilter);
+    Task<IReadOnlyList<TimeSlot>> PagedAsync(IPaginationFilter paginationFilter);
+
     Task<int> CountAsync();
 
-    Task<bool> IsGroupNameUnique(string name);
+    Task<bool> IsTimeSlotNameUnique(string name);
 }
 

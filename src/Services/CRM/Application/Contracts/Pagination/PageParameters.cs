@@ -1,5 +1,4 @@
 using KDVManager.Services.CRM.Domain.Interfaces;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Contracts.Pagination
 {

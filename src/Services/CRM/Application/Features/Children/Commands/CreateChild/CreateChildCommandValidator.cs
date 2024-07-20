@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
-using KDVManager.Services.CRM.Application.Contracts.Persistence;
+﻿using FluentValidation;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
 

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 
 type Handle = {
-  crumb: (data: any) => string;
+  crumb: (data: any) => React.ReactElement;
 };
 
 const RouterBreadcrumbs: React.FC = () => {
@@ -38,7 +38,7 @@ const RouterBreadcrumbs: React.FC = () => {
             color="inherit"
             to={crumb.pathname}
           >
-            {t(crumb.crumbElement)}
+            {crumb.crumbElement}
           </Link>
         ),
       )}

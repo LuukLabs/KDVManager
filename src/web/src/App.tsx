@@ -7,6 +7,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
+    handle: {
+      crumb: () => "Home",
+    },
     children: [
       {
         path: "children/:childId",
@@ -15,10 +18,16 @@ const router = createBrowserRouter([
       {
         path: "children",
         lazy: () => import("./pages/children/IndexChildPage"),
+        handle: {
+          crumb: () => "Children",
+        },
       },
       {
         path: "people",
         lazy: () => import("./pages/people/IndexPersonPage"),
+        handle: {
+          crumb: () => "People",
+        },
       },
       {
         path: "children/new",
@@ -27,9 +36,15 @@ const router = createBrowserRouter([
       {
         path: "groups",
         lazy: () => import("./pages/groups/ListGroupsPage"),
+        handle: {
+          crumb: () => "Groups",
+        },
       },
       {
         path: "settings",
+        handle: {
+          crumb: () => "Settings",
+        },
         children: [
           {
             index: true,
@@ -38,6 +53,9 @@ const router = createBrowserRouter([
           {
             path: "scheduling",
             lazy: () => import("./pages/settings/SchedulingSettingsPage"),
+            handle: {
+              crumb: () => "Scheduling",
+            },
           },
         ],
       },

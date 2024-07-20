@@ -18,7 +18,7 @@ const SettingsPage = () => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2} sx={{ marginTop: "5px" }}>
+      <Grid container spacing={2}>
         {settings.map((setting, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <SettingsCard

@@ -13,6 +13,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AccountMenu from "./AccountMenu";
+import RouterBreadcrumbs from "./RouterBreadcrumbs";
 
 type MainNavbarProps = {
   children: React.ReactNode;
@@ -138,7 +139,12 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container maxWidth="xl">{children}</Container>
+      <Container maxWidth="xl">
+        <Box display="flex" alignItems="center" marginY={1}>
+          <RouterBreadcrumbs />
+        </Box>
+        {children}
+      </Container>
     </>
   );
 };

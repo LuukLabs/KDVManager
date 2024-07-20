@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-
-namespace KDVManager.Services.Scheduling.Api.Middleware;
+﻿namespace KDVManager.Services.Scheduling.Api.Middleware;
 
 public static class ExceptionHandlerMiddlewareExtension
 {

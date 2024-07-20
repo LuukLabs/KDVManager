@@ -1,5 +1,4 @@
-﻿using System;
-using KDVManager.Services.CRM.Domain.Entities;
+﻿using KDVManager.Services.CRM.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

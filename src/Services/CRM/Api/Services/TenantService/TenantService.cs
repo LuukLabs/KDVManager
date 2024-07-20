@@ -1,7 +1,4 @@
-using System;
 using KDVManager.Services.CRM.Application.Contracts.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 using KDVManager.Services.CRM.Application.Exceptions;
 
 namespace KDVManager.Services.CRM.Api.Services;

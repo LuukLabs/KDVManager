@@ -1,5 +1,4 @@
-﻿using System;
-using KDVManager.Services.CRM.Domain.Entities;
+﻿using KDVManager.Services.CRM.Domain.Entities;
 using KDVManager.Services.CRM.Application.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;

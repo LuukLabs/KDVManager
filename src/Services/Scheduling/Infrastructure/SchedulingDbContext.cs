@@ -1,5 +1,4 @@
-﻿using System;
-using KDVManager.Services.Scheduling.Domain.Entities;
+﻿using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -18,11 +17,13 @@ public class SchedulingDbContext : DbContext
     }
 
     public DbSet<Group> Groups { get; set; }
+    public DbSet<TimeSlot> TimeSlots { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 

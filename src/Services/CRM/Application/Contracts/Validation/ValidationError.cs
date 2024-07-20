@@ -1,5 +1,4 @@
-﻿using System;
-namespace KDVManager.Services.CRM.Application.Contracts.Validation
+﻿namespace KDVManager.Services.CRM.Application.Contracts.Validation
 {
     public class ValidationError
     {

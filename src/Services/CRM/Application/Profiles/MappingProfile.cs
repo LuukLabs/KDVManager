@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;

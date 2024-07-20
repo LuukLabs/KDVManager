@@ -1,5 +1,4 @@
 using KDVManager.Services.Scheduling.Domain.Interfaces;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 

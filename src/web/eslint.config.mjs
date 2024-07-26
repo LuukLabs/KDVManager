@@ -12,12 +12,12 @@ export default [
   ...tseslint.configs.stylistic,
   {
     // config with just ignores is the replacement for `.eslintignore`
-    ignores: ["**/dist/**"],
+    ignores: ["dist", ".eslintrc.cjs"],
   },
   {
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.json", "./tsconfig.node.json"],
+        project: ["./tsconfig.json", "./tsconfig.node.json", "./tsconfig.app.json"],
       },
     },
     rules: {

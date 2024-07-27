@@ -78,8 +78,8 @@ importers:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
       react-hook-form-mui:
-        specifier: ^7.0.0
-        version: 7.0.0(y46gcnsf2u4sw7vrsb4p73u57q)
+        specifier: ^7.0.1
+        version: 7.0.1(y46gcnsf2u4sw7vrsb4p73u57q)
       react-i18next:
         specifier: ^14.1.2
         version: 14.1.2(i18next@23.11.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3010,8 +3010,8 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-hook-form-mui@7.0.0:
-    resolution: {integrity: sha512-P/0Vd2p1Sjom1+um2hS58L5xMsiNObg3aenmRqsND8IG+dTQhLRevGl0U6UOpWr9UZ5X51wgDwPOzxKbylIcog==}
+  react-hook-form-mui@7.0.1:
+    resolution: {integrity: sha512-ik4upg0pc3K9VTJcKSxmGXfwwPVoDLA+mPtD+csF47h1tYx4rrrRBpJ/27fvmzBPhUZS3pFAo7rs1LgMQ94Ukw==}
     engines: {node: '>=14'}
     peerDependencies:
       '@mui/icons-material': '>= 5.x <6'
@@ -6758,7 +6758,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-hook-form-mui@7.0.0(y46gcnsf2u4sw7vrsb4p73u57q):
+  react-hook-form-mui@7.0.1(y46gcnsf2u4sw7vrsb4p73u57q):
     dependencies:
       '@mui/material': 5.16.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1

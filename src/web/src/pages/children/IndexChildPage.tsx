@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
+import Box from "@mui/material/Box";
 
 const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
   marginLeft: "auto",
@@ -20,16 +21,15 @@ const IndexChildPage = () => {
   };
 
   return (
-    <>
+    <Paper>
       <StyledToolbar>
+        <Box display="flex" flexGrow={1} />
         <Button variant="contained" onClick={onAddChildClickHandler} startIcon={<AddIcon />}>
           {t("Child")}
         </Button>
       </StyledToolbar>
-      <Paper>
-        <ChildrenTable />
-      </Paper>
-    </>
+      <ChildrenTable />
+    </Paper>
   );
 };
 

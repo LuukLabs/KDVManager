@@ -6,7 +6,10 @@
  */
 
 export type ValidationError = {
+  /** @minLength 1 */
   code: string;
+  /** @minLength 1 */
   property: string;
+  /** @minLength 1 */
   title: string;
 };

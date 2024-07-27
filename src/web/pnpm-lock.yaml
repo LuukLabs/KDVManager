@@ -60,8 +60,8 @@ importers:
         specifier: ^1.11.12
         version: 1.11.12
       i18next:
-        specifier: ^23.11.5
-        version: 23.11.5
+        specifier: ^23.12.2
+        version: 23.12.2
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
@@ -82,7 +82,7 @@ importers:
         version: 7.0.1(bskfenodojhinnzwr7dx3qx56i)
       react-i18next:
         specifier: ^15.0.0
-        version: 15.0.0(i18next@23.11.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 15.0.0(i18next@23.12.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: 6.24.0
         version: 6.24.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -300,10 +300,6 @@ packages:
 
   '@babel/runtime@7.24.5':
     resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/runtime@7.24.7':
-    resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.25.0':
@@ -2352,8 +2348,8 @@ packages:
   i18next-resources-to-backend@1.2.1:
     resolution: {integrity: sha512-okHbVA+HZ7n1/76MsfhPqDou0fptl2dAlhRDu2ideXloRRduzHsqDOznJBef+R3DFZnbvWoBW+KxJ7fnFjd6Yw==}
 
-  i18next@23.11.5:
-    resolution: {integrity: sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==}
+  i18next@23.12.2:
+    resolution: {integrity: sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==}
 
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -3787,10 +3783,6 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.24.5':
-    dependencies:
-      regenerator-runtime: 0.14.1
-
-  '@babel/runtime@7.24.7':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -6062,7 +6054,7 @@ snapshots:
       esbuild: 0.20.2
       fs-extra: 11.2.0
       gulp-sort: 2.0.0
-      i18next: 23.11.5
+      i18next: 23.12.2
       js-yaml: 4.1.0
       lilconfig: 3.1.2
       rsvp: 4.8.5
@@ -6077,9 +6069,9 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.4
 
-  i18next@23.11.5:
+  i18next@23.12.2:
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.25.0
 
   iconv-lite@0.6.3:
     dependencies:
@@ -6730,11 +6722,11 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-i18next@15.0.0(i18next@23.11.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-i18next@15.0.0(i18next@23.12.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.0
       html-parse-stringify: 3.0.1
-      i18next: 23.11.5
+      i18next: 23.12.2
       react: 18.3.1
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)

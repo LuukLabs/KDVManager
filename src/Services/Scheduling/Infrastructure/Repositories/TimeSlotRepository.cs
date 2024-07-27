@@ -19,7 +19,7 @@ public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
         return await _dbContext.Set<TimeSlot>()
-        .OrderBy(timeSlot => timeSlot.Name)
+        .OrderBy(timeSlot => timeSlot.EndTime).ThenBy(timeSlot => timeSlot.StartTime)
         .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize)
         .ToListAsync();
     }

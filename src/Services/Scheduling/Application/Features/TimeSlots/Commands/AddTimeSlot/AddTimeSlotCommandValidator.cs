@@ -22,6 +22,19 @@ public class AddTimeSlotCommandValidator : AbstractValidator<AddTimeSlotCommand>
             .MustAsync(TimeSlotNameUnique)
             .WithErrorCode("TSNU001")
             .WithMessage("An group with the same name already exists.");
+
+        RuleFor(addTimeSlotCommand => addTimeSlotCommand.StartTime)
+            .NotEmpty()
+            .NotNull();
+
+        RuleFor(addTimeSlotCommand => addTimeSlotCommand.EndTime)
+            .NotEmpty()
+            .NotNull();
+
+        RuleFor(addTimeSlotCommand => addTimeSlotCommand.EndTime)
+            .GreaterThan(addTimeSlotCommand => addTimeSlotCommand.StartTime)
+            .WithErrorCode("TSEV001")
+            .WithMessage("EndTime must be after StartTime.");
     }
 
     private async Task<bool> TimeSlotNameUnique(string name, CancellationToken token)

@@ -35,7 +35,7 @@
     "react-router-dom": "6.24.0",
     "styled-components": "^6.1.11",
     "vite-tsconfig-paths": "^4.3.2",
-    "web-vitals": "^3.5.2"
+    "web-vitals": "^4.2.2"
   },
   "scripts": {
     "api:generate": "orval --clean",

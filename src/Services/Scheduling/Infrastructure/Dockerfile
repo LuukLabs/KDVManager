@@ -1,5 +1,5 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["Services/Scheduling/Api/Api.csproj", "Services/Scheduling/Api/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]
@@ -9,11 +9,11 @@ RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/Services/Scheduling/Infrastructure"
 
-RUN dotnet tool install -g dotnet-ef --version 7.0.0
+RUN dotnet tool install -g dotnet-ef --version 8.0.0
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context MigrationDbContext
 
-FROM ubuntu:22.10 AS migrator
+FROM ubuntu:24.04 AS migrator
 
 RUN apt-get update && apt-get install -qqq libicu-dev libssl-dev
 

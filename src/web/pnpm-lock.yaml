@@ -124,8 +124,8 @@ importers:
         specifier: 9.x
         version: 9.8.0
       eslint-plugin-i18next:
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^6.0.9
+        version: 6.0.9
       eslint-plugin-react:
         specifier: ^7.35.0
         version: 7.35.0(eslint@9.8.0)
@@ -2061,8 +2061,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  eslint-plugin-i18next@6.0.3:
-    resolution: {integrity: sha512-RtQXYfg6PZCjejIQ/YG+dUj/x15jPhufJ9hUDGH0kCpJ6CkVMAWOQ9exU1CrbPmzeykxLjrXkjAaOZF/V7+DOA==}
+  eslint-plugin-i18next@6.0.9:
+    resolution: {integrity: sha512-tAof/p58sN4Az+P6kqu+RijqddalHhz0X6fe+exyBJAUvN9Yk1plOKl8XMySCIQS+vnRWbzzThgHXeDe++uEXQ==}
     engines: {node: '>=0.10.0'}
 
   eslint-plugin-react@7.35.0:
@@ -5686,7 +5686,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-i18next@6.0.3:
+  eslint-plugin-i18next@6.0.9:
     dependencies:
       lodash: 4.17.21
       requireindex: 1.1.0

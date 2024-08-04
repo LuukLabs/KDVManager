@@ -17,6 +17,7 @@ import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntit
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+import { ChildSchedule } from "../../features/schedule/ChildSchedule";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -97,6 +98,9 @@ const UpdateChildPage = () => {
                   );
                 }}
               ></Controller>
+            </Grid>
+            <Grid item xs={12}>
+              <ChildSchedule childId={childId} />
             </Grid>
             <Grid item xs={12}>
               <LoadingButton

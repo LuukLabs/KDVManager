@@ -14,6 +14,7 @@ const queryPaginated = {
   mutator: useMutatorFetchPaginated,
   query: {
     useQuery: true,
+    useInfiniteQueryParam: "PageNumber",
   },
 };
 

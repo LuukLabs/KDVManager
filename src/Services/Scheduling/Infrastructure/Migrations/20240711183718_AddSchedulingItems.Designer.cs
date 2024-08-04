@@ -3,6 +3,7 @@ using System;
 using KDVManager.Services.Scheduling.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240711183718_AddSchedulingItems")]
+    partial class AddSchedulingItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,56 +43,33 @@ namespace Infrastructure.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.TimeSlot", b =>
+            modelBuilder.Entity("RecurringSchedulePattern", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time without time zone");
+                    b.Property<int>("Day")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval");
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time without time zone");
+                    b.Property<Guid>("ScheduleItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TimeSlots");
+                    b.HasIndex("ScheduleItemId");
+
+                    b.ToTable("RecurringSchedulePatterns");
                 });
-
-            modelBuilder.Entity("RecurringSchedulePattern", b =>
-            {
-                b.Property<Guid>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("uuid");
-
-                b.Property<int>("Day")
-                    .HasColumnType("integer");
-
-                b.Property<TimeSpan>("EndTime")
-                    .HasColumnType("interval");
-
-                b.Property<Guid>("ScheduleItemId")
-                    .HasColumnType("uuid");
-
-                b.Property<TimeSpan>("StartTime")
-                    .HasColumnType("interval");
-
-                b.Property<Guid>("TenantId")
-                    .HasColumnType("uuid");
-
-                b.HasKey("Id");
-
-                b.HasIndex("ScheduleItemId");
-
-                b.ToTable("RecurringSchedulePatterns");
-            });
 
             modelBuilder.Entity("ScheduleItem", b =>
                 {

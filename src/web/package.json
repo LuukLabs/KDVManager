@@ -34,7 +34,7 @@
     "react-i18next": "^15.0.1",
     "react-router-dom": "6.26.1",
     "styled-components": "^6.1.12",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-tsconfig-paths": "^5.0.1"
   },
   "scripts": {
     "api:generate": "orval --clean",

@@ -9,5 +9,5 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "eslint.config.mjs"]
+  "include": ["vite.config.mts", "eslint.config.mjs"]
 }

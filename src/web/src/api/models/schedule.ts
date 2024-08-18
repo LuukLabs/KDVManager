@@ -4,8 +4,8 @@
  * KDVManager CRM API
  * OpenAPI spec version: v1
  */
+import type { DayOfWeek } from "./dayOfWeek";
 
-export type AddGroupCommand = {
-  /** @nullable */
-  name?: string | null;
+export type Schedule = {
+  day?: DayOfWeek;
 };

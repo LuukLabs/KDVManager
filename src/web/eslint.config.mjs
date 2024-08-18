@@ -96,6 +96,7 @@ export default [
     files: ["src/api/**/*.ts"],
     rules: {
       "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/unified-signatures": "off",
     },
   },
 ];

@@ -5,7 +5,6 @@
  * OpenAPI spec version: v1
  */
 
-export type AddGroupCommand = {
-  /** @nullable */
-  name?: string | null;
+export type ListScheduleItemsParams = {
+  ChildId?: string;
 };

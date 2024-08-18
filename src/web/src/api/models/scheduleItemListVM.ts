@@ -5,7 +5,10 @@
  * OpenAPI spec version: v1
  */
 
-export type AddGroupCommand = {
+export type ScheduleItemListVM = {
+  childId?: string;
   /** @nullable */
-  name?: string | null;
+  endDate?: string | null;
+  id?: string;
+  startDate?: string;
 };

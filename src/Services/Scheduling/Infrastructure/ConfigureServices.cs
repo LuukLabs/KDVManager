@@ -20,6 +20,8 @@ public static class ConfigureServices
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
+        services.AddScoped<IScheduleItemRepository, ScheduleItemRepository>();
+
         return services;
     }
 }

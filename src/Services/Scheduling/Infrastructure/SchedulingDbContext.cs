@@ -18,12 +18,17 @@ public class SchedulingDbContext : DbContext
 
     public DbSet<Group> Groups { get; set; }
     public DbSet<TimeSlot> TimeSlots { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<ScheduleRule> ScheduleRules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant).HasMany(si => si.ScheduleRules);
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 

@@ -25,7 +25,7 @@ public class GroupsController : ControllerBase
     public async Task<ActionResult<PagedList<GroupListVM>>> ListGroups([FromQuery] ListGroupsQuery listGroupsQuery)
     {
         var dtos = await _mediator.Send(listGroupsQuery);
-        Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
+        Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
 

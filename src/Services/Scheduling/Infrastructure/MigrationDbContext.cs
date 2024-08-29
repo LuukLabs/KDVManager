@@ -11,8 +11,9 @@ public class MigrationDbContext : DbContext
     }
 
     public DbSet<Group> Groups { get; set; }
-
     public DbSet<TimeSlot> TimeSlots { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<ScheduleRule> ScheduleRules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -24,7 +24,7 @@ public class TimeSlotsController : ControllerBase
     public async Task<ActionResult<PagedList<TimeSlotListVM>>> ListTimeSlots([FromQuery] ListTimeSlotsQuery listTimeSlotsQuery)
     {
         var dtos = await _mediator.Send(listTimeSlotsQuery);
-        Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
+        Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
 

@@ -6,6 +6,7 @@
  */
 import type { DayOfWeek } from "./dayOfWeek";
 
-export type Schedule = {
+export type ChildScheduleListVMScheduleRule = {
   day?: DayOfWeek;
+  timeSlotId?: string;
 };

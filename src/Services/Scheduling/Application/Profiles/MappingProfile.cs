@@ -27,11 +27,11 @@ public class MappingProfile : Profile
         // Schedule Mappings
         CreateMap<AddScheduleCommand, Schedule>()
             .ForMember(dest => dest.ScheduleRules, opt => opt.MapFrom(src => src.ScheduleRules));
-        CreateMap<AddScheduleCommand.ScheduleRule, ScheduleRule>();
+        CreateMap<AddScheduleCommand.AddScheduleCommandScheduleRule, ScheduleRule>();
 
         CreateMap<Schedule, ChildScheduleListVM>()
             .ForMember(dest => dest.ScheduleRules, opt => opt.MapFrom(src => src.ScheduleRules));
-        CreateMap<ScheduleRule, ChildScheduleListVM.ScheduleRule>();
+        CreateMap<ScheduleRule, ChildScheduleListVM.ChildScheduleListVMScheduleRule>();
     }
 }
 

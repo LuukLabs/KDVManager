@@ -485,10 +485,10 @@
         }
       }
     },
-    "/scheduling/v1/scheduleitems": {
+    "/scheduling/v1/schedules": {
       "get": {
-        "tags": ["ScheduleItems"],
-        "operationId": "ListScheduleItems",
+        "tags": ["Schedules"],
+        "operationId": "GetChildSchedules",
         "parameters": [
           {
             "name": "ChildId",
@@ -507,7 +507,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ScheduleItemListVM"
+                    "$ref": "#/components/schemas/ChildScheduleListVM"
                   }
                 }
               },
@@ -515,7 +515,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ScheduleItemListVM"
+                    "$ref": "#/components/schemas/ChildScheduleListVM"
                   }
                 }
               },
@@ -523,7 +523,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ScheduleItemListVM"
+                    "$ref": "#/components/schemas/ChildScheduleListVM"
                   }
                 }
               }
@@ -532,23 +532,23 @@
         }
       },
       "post": {
-        "tags": ["ScheduleItems"],
-        "operationId": "AddScheduleItem",
+        "tags": ["Schedules"],
+        "operationId": "AddSchedule",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddScheduleItemCommand"
+                "$ref": "#/components/schemas/AddScheduleCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddScheduleItemCommand"
+                "$ref": "#/components/schemas/AddScheduleCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AddScheduleItemCommand"
+                "$ref": "#/components/schemas/AddScheduleCommand"
               }
             }
           }
@@ -912,7 +912,7 @@
         },
         "additionalProperties": false
       },
-      "AddScheduleItemCommand": {
+      "AddScheduleCommand": {
         "type": "object",
         "properties": {
           "childId": {
@@ -932,12 +932,25 @@
             "format": "date-time",
             "nullable": true
           },
-          "schedules": {
+          "scheduleRules": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Schedule"
+              "$ref": "#/components/schemas/AddScheduleCommandScheduleRule"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddScheduleCommandScheduleRule": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "$ref": "#/components/schemas/DayOfWeek"
+          },
+          "timeSlotId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -956,6 +969,49 @@
           "endTime": {
             "type": "string",
             "format": "time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChildScheduleListVM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "scheduleRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChildScheduleListVMScheduleRule"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChildScheduleListVMScheduleRule": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "$ref": "#/components/schemas/DayOfWeek"
+          },
+          "timeSlotId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -1005,38 +1061,6 @@
           }
         },
         "additionalProperties": {}
-      },
-      "Schedule": {
-        "type": "object",
-        "properties": {
-          "day": {
-            "$ref": "#/components/schemas/DayOfWeek"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ScheduleItemListVM": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "childId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "TimeSlotListVM": {
         "type": "object",

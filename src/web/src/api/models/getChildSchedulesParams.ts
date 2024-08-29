@@ -5,6 +5,6 @@
  * OpenAPI spec version: v1
  */
 
-export type ListScheduleItemsParams = {
+export type GetChildSchedulesParams = {
   ChildId?: string;
 };

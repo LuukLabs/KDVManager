@@ -40,7 +40,7 @@
     "api:generate": "orval --clean",
     "api:merge": "openapi-merge-cli --config ./openapi-merge.json",
     "start": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",

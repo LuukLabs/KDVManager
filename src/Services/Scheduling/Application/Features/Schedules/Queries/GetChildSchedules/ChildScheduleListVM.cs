@@ -11,9 +11,9 @@ public class ChildScheduleListVM
     public DateTime? EndDate { get; set; }
 
     // Collection of nested schedules
-    public ICollection<ScheduleRule> ScheduleRules { get; set; } = new List<ScheduleRule>();
+    public ICollection<ChildScheduleListVMScheduleRule> ScheduleRules { get; set; } = new List<ChildScheduleListVMScheduleRule>();
 
-    public class ScheduleRule
+    public class ChildScheduleListVMScheduleRule
     {
         public DayOfWeek Day { get; set; }
 

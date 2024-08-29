@@ -17,6 +17,7 @@ import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntit
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+import { ChildSchedule } from "../../features/schedules/ChildSchedule";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -74,10 +75,10 @@ const UpdateChildPage = () => {
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <Grid container alignItems="flex-start" spacing={2}>
             <Grid item xs={12}>
-              <TextFieldElement name="givenName" label={t("Voornaam")} required fullWidth />
+              <TextFieldElement name="givenName" label={t("First name")} required fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <TextFieldElement name="familyName" label={t("Achternaam")} required fullWidth />
+              <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
             </Grid>
             <Grid item xs={12}>
               <Controller
@@ -86,7 +87,7 @@ const UpdateChildPage = () => {
                 render={({ field }) => {
                   return (
                     <DatePicker
-                      label="Date"
+                      label={t("Date of birth")}
                       value={field.value ? dayjs(field.value) : undefined}
                       defaultValue={field.value ? dayjs(field.value) : undefined}
                       inputRef={field.ref}
@@ -97,6 +98,9 @@ const UpdateChildPage = () => {
                   );
                 }}
               ></Controller>
+            </Grid>
+            <Grid item xs={12}>
+              <ChildSchedule childId={childId} />
             </Grid>
             <Grid item xs={12}>
               <LoadingButton

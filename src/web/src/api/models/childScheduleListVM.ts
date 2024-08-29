@@ -4,14 +4,14 @@
  * KDVManager CRM API
  * OpenAPI spec version: v1
  */
-import type { Schedule } from "./schedule";
+import type { ChildScheduleListVMScheduleRule } from "./childScheduleListVMScheduleRule";
 
-export type AddScheduleItemCommand = {
+export type ChildScheduleListVM = {
   childId?: string;
   /** @nullable */
   endDate?: string | null;
-  groupId?: string;
+  id?: string;
   /** @nullable */
-  schedules?: Schedule[] | null;
+  scheduleRules?: ChildScheduleListVMScheduleRule[] | null;
   startDate?: string;
 };

@@ -8,15 +8,9 @@ import { AddChildScheduleDialog } from "./AddChildScheduleDialog";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { useGetChildSchedules } from "@api/endpoints/schedules/schedules";
+import { scheduleRulesFormatter } from "../../utils/scheduleRulesFormatter";
 
 const columns: GridColDef[] = [
-  {
-    field: "name",
-    headerName: "Name",
-    flex: 1,
-    disableColumnMenu: true,
-    disableReorder: true,
-  },
   {
     field: "startDate",
     headerName: "StartDate",
@@ -32,6 +26,14 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     disableReorder: true,
     valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
+  },
+  {
+    field: "scheduleRules",
+    headerName: "WeekSchedule",
+    flex: 1,
+    disableColumnMenu: true,
+    disableReorder: true,
+    valueFormatter: (value) => value && scheduleRulesFormatter(value),
   },
 ];
 

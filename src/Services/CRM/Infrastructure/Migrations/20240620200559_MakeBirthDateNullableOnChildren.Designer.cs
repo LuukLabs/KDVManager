@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
+    [DbContext(typeof(CRMDbContext))]
     [Migration("20240620200559_MakeBirthDateNullableOnChildren")]
     partial class MakeBirthDateNullableOnChildren
     {

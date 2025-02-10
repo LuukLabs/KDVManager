@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
     [DbContext(typeof(CRMDbContext))]
-    [Migration("20230124192002_CreatePeopleTable")]
-    partial class CreatePeopleTable
+    [Migration("20250210212746_RemoveMultiTenancy")]
+    partial class RemoveMultiTenancy
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -31,7 +31,7 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FamilyName")
@@ -39,9 +39,6 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
 
                     b.Property<string>("GivenName")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -71,9 +68,6 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

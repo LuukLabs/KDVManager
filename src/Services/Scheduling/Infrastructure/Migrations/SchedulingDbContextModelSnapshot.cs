@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SchedulingDbContext))]
+    partial class SchedulingDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -31,9 +31,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -58,9 +55,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("Schedules");
@@ -76,9 +70,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("ScheduleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("TimeSlotId")
@@ -105,9 +96,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time without time zone");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

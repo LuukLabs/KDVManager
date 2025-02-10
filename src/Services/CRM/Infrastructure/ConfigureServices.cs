@@ -13,7 +13,7 @@ public static class ConfigureServices
         services.AddDbContext<CRMDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
 
-        services.AddDbContext<MigrationDbContext>(options =>
+        services.AddDbContext<CRMDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
 
         services.AddScoped<IChildRepository, ChildRepository>();

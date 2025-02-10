@@ -13,7 +13,7 @@ public static class ConfigureServices
         services.AddDbContext<SchedulingDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
-        services.AddDbContext<MigrationDbContext>(options =>
+        services.AddDbContext<SchedulingDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
         services.AddScoped<IGroupRepository, GroupRepository>();

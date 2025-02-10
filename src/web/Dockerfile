@@ -1,28 +1,31 @@
-# Build stage
-FROM node:20-alpine as build
-
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g corepack@0.31
 RUN corepack enable
-RUN corepack prepare pnpm@9 --activate
-
-RUN mkdir /app
-
+COPY . /app
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml .npmrc /app/
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-RUN pnpm install
-
-COPY . /app
+FROM base AS build
 
 # Setup build args
 ARG REACT_APP_AUTH0_DOMAIN
 ARG REACT_APP_AUTH0_CLIENT_ID
 
-# Build the application
-RUN pnpm build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
+
+FROM base AS development
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/dist /app/dist
+EXPOSE 8000
+CMD [ "pnpm", "start" ]
 
 # Run stage
-FROM nginx:1.24-alpine
+FROM nginx:1.27-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 

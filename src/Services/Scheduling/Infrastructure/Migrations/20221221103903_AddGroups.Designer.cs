@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
+    [DbContext(typeof(SchedulingDbContext))]
     [Migration("20221221103903_AddGroups")]
     partial class AddGroups
     {

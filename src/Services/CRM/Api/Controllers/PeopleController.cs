@@ -23,7 +23,7 @@ public class PeopleController : ControllerBase
     public async Task<ActionResult<PagedList<PersonListVM>>> GetAllPeople([FromQuery] GetPersonListQuery getPersonListQuery)
     {
         var dtos = await _mediator.Send(getPersonListQuery);
-        Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
+        Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
 

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
+    [DbContext(typeof(CRMDbContext))]
     [Migration("20230124192002_CreatePeopleTable")]
     partial class CreatePeopleTable
     {

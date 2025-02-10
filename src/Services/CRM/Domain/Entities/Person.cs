@@ -1,13 +1,10 @@
 ﻿using System;
-using KDVManager.Services.CRM.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Domain.Entities
 {
-    public class Person : IMustHaveTenant
+    public class Person
     {
         public Guid Id { get; set; }
-
-        public Guid TenantId { get; set; }
 
         public string GivenName { get; set; }
 

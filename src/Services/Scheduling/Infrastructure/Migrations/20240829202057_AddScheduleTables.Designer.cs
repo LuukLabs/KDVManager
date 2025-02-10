@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
+    [DbContext(typeof(SchedulingDbContext))]
     [Migration("20240829202057_AddScheduleTables")]
     partial class AddScheduleTables
     {

@@ -27,7 +27,7 @@ public class ChildrenController : ControllerBase
     public async Task<ActionResult<PagedList<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
     {
         var dtos = await _mediator.Send(getChildListQuery);
-        Response.Headers.Add("x-Total", dtos.TotalCount.ToString());
+        Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
 

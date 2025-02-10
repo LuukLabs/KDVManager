@@ -9,9 +9,9 @@ RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/Services/Scheduling/Infrastructure"
 
-RUN dotnet tool install -g dotnet-ef --version 8.0.0
+RUN dotnet tool install -g dotnet-ef --version 8.0.8
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context MigrationDbContext
+RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context SchedulingDbContext
 
 FROM ubuntu:24.04 AS migrator
 

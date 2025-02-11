@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   getGetAllChildrenQueryKey,
@@ -75,13 +75,13 @@ const UpdateChildPage = () => {
       <Paper style={{ padding: 16 }}>
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <Grid container alignItems="flex-start" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TextFieldElement name="givenName" label={t("First name")} required fullWidth />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Controller
                 control={formContext.control}
                 name="dateOfBirth"
@@ -100,10 +100,10 @@ const UpdateChildPage = () => {
                 }}
               ></Controller>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <ChildSchedule childId={childId} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Button
                 variant="contained"
                 disabled={!isDirty || !isValid}

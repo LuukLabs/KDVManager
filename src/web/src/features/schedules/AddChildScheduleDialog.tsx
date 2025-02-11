@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { MenuItem, Select, InputLabel, FormControl, IconButton } from "@mui/material";
@@ -79,7 +79,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
 
     const renderScheduleFields = (item, index) => (
       <Grid container key={item.id}>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <FormControl fullWidth>
             <InputLabel>{t("Day")}</InputLabel>
             <Controller
@@ -106,7 +106,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             />
           </FormControl>
         </Grid>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <FormControl fullWidth>
             <Controller
               name={`scheduleRules.${index}.timeSlotId`}
@@ -123,7 +123,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             />
           </FormControl>
         </Grid>
-        <Grid item xs={1}>
+        <Grid size={1}>
           <IconButton onClick={() => remove(index)}>
             <DeleteIcon />
           </IconButton>
@@ -140,7 +140,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
           </DialogContentText>
           <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
             <Grid container alignItems="flex-start" spacing={2}>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Controller
                   control={control}
                   name="startDate"
@@ -157,7 +157,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Controller
                   control={control}
                   name="endDate"
@@ -174,7 +174,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <FormControl required fullWidth>
                   <Controller
                     name={`groupId`}
@@ -193,10 +193,10 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   />
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 {fields.map((item, index) => renderScheduleFields(item, index))}
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Button
                   variant="contained"
                   color="primary"

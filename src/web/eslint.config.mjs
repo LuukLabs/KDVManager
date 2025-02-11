@@ -15,11 +15,6 @@ export default [
     ignores: ["dist", ".eslintrc.cjs"],
   },
   {
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.json", "./tsconfig.node.json", "./tsconfig.app.json"],
-      },
-    },
     rules: {
       "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 1 }],
       "@typescript-eslint/consistent-type-imports": [
@@ -94,6 +89,11 @@ export default [
   },
   {
     files: ["src/api/**/*.ts"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./tsconfig.json", "./tsconfig.node.json", "./tsconfig.app.json"],
+      },
+    },
     rules: {
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/unified-signatures": "off",

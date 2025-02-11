@@ -11,7 +11,6 @@ import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useSnackbar } from "notistack";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 
@@ -81,14 +80,14 @@ export const AddGroupDialog = NiceModal.create(() => {
         <Button variant="outlined" onClick={handleOnCancelClick}>
           {t("Cancel", { ns: "common" })}
         </Button>
-        <LoadingButton
+        <Button
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
           <span>{t("Add", { ns: "common" })}</span>
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

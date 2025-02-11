@@ -14,7 +14,6 @@ import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntit
 import { getListTimeSlotsQueryKey, useAddTimeSlot } from "@api/endpoints/time-slots/time-slots";
 import { type AddTimeSlotCommand } from "@api/models/addTimeSlotCommand";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
-import LoadingButton from "@mui/lab/LoadingButton";
 import dayjs from "dayjs";
 
 export const AddTimeSlotDialog = NiceModal.create(() => {
@@ -118,14 +117,14 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
         <Button variant="outlined" onClick={handleOnCancelClick}>
           {t("Cancel", { ns: "common" })}
         </Button>
-        <LoadingButton
+        <Button
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
           <span>{t("Add", { ns: "common" })}</span>
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

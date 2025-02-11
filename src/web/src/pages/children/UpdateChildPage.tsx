@@ -16,8 +16,9 @@ import { type UpdateChildCommand } from "@api/models/updateChildCommand";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+
 import { ChildSchedule } from "../../features/schedules/ChildSchedule";
+import { Button } from "@mui/material";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -103,14 +104,14 @@ const UpdateChildPage = () => {
               <ChildSchedule childId={childId} />
             </Grid>
             <Grid item xs={12}>
-              <LoadingButton
+              <Button
                 variant="contained"
                 disabled={!isDirty || !isValid}
                 loading={isSubmitting}
                 onClick={handleSubmit(onSubmit)}
               >
                 <span>{t("Save", { ns: "common" })}</span>
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
         </FormContainer>

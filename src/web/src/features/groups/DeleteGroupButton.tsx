@@ -2,7 +2,7 @@ import { getListGroupsQueryKey, useDeleteGroup } from "@api/endpoints/groups/gro
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import IconButton from "@mui/material/IconButton/IconButton";
+import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type DeleteGroupButtonProps = {

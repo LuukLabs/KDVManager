@@ -1,11 +1,11 @@
 import { Controller, useForm, useFieldArray, type SubmitHandler } from "react-hook-form";
 import { FormContainer } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
-import DialogContent from "@mui/material/DialogContent/DialogContent";
-import DialogActions from "@mui/material/DialogActions/DialogActions";
-import Dialog from "@mui/material/Dialog/Dialog";
-import DialogContentText from "@mui/material/DialogContentText/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";

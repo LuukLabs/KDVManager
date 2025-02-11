@@ -1,4 +1,4 @@
-import { type GridColDef } from "@mui/x-data-grid/models/colDef";
+import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { keepPreviousData } from "@tanstack/react-query";
 import { usePagination } from "@hooks/usePagination";

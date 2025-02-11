@@ -26,6 +26,12 @@ export default [
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": ["@mui/*/*/*"]
+        }
+      ],
     },
   },
   {

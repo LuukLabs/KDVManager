@@ -1,4 +1,4 @@
-import { type GridColDef } from "@mui/x-data-grid/models/colDef";
+import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
 import { keepPreviousData } from "@tanstack/react-query";

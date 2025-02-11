@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import { SnackbarProvider } from "notistack";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/nl";
 import { ThemeProvider } from "@mui/material/styles";

@@ -1,5 +1,5 @@
 import { type GroupListVM } from "@api/models/groupListVM";
-import { type GridColDef } from "@mui/x-data-grid/models/colDef";
+import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/endpoints/groups/groups";
 import { type GridRenderCellParams } from "@mui/x-data-grid";

@@ -14,7 +14,7 @@ const columns: GridColDef[] = [
   {
     field: "startDate",
     headerName: "StartDate",
-    flex: 1,
+    width: 120,
     disableColumnMenu: true,
     disableReorder: true,
     valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
@@ -22,7 +22,7 @@ const columns: GridColDef[] = [
   {
     field: "endDate",
     headerName: "EndDate",
-    flex: 1,
+    width: 120,
     disableColumnMenu: true,
     disableReorder: true,
     valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
@@ -30,7 +30,7 @@ const columns: GridColDef[] = [
   {
     field: "groupName",
     headerName: "Group",
-    flex: 1,
+    width: 150,
     disableColumnMenu: true,
     disableReorder: true,
   },
@@ -38,6 +38,7 @@ const columns: GridColDef[] = [
     field: "scheduleRules",
     headerName: "WeekSchedule",
     flex: 1,
+    minWidth: 200,
     disableColumnMenu: true,
     disableReorder: true,
     valueFormatter: (value) => value && scheduleRulesFormatter(value),

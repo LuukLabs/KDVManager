@@ -993,6 +993,14 @@
             "format": "date-time",
             "nullable": true
           },
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
           "scheduleRules": {
             "type": "array",
             "items": {
@@ -1012,6 +1020,18 @@
           "timeSlotId": {
             "type": "string",
             "format": "uuid"
+          },
+          "timeSlotName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
           }
         },
         "additionalProperties": false

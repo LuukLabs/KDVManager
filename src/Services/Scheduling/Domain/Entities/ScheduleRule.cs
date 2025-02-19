@@ -12,4 +12,5 @@ public class ScheduleRule : IMustHaveTenant
     public Guid ScheduleId { get; set; }
     [Required]
     public Guid TimeSlotId { get; set; }
+    public TimeSlot TimeSlot { get; set; }
 }

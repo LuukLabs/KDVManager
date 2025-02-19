@@ -6,7 +6,10 @@
  */
 import type { DayOfWeek } from "./dayOfWeek";
 
-export type ChildScheduleListVMScheduleRule = {
-  day?: DayOfWeek;
-  timeSlotId?: string;
-};
+export interface ChildScheduleListVMScheduleRule {
+    day?: number;
+    timeSlotId?: string;
+    timeSlotName?: string;
+    startTime?: string;
+    endTime?: string;
+}

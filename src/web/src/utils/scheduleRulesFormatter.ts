@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 export const scheduleRulesFormatter = (
   scheduleRules: ChildScheduleListVMScheduleRule[],
 ): string => {
-  const monday = dayjs().startOf("week").add(1, "day"); // Ensure the week starts on Monday
+  const monday = dayjs().startOf("week").add(1, "day");
 
   return scheduleRules
     .map((rule) => {
-      const dayName = monday.add(rule.day!, "day").format("dd"); // Get the localized day name
-      return `${dayName}: ${rule.timeSlotId}`;
+      const dayName = monday.add(rule.day!, "day").format("dd");
+      return `${dayName}: ${rule.timeSlotName} (${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)})`;
     })
-    .join("\n"); // Join all formatted rules into a single string with line breaks
+    .join("\n");
 };

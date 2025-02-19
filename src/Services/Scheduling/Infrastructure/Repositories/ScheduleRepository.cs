@@ -22,6 +22,7 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             .OrderByDescending(si => si.StartDate)
             .ThenBy(si => si.EndDate)
             .Include(s => s.ScheduleRules)
+                .ThenInclude(sr => sr.TimeSlot)
             .ToListAsync();
     }
 }

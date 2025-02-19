@@ -18,8 +18,10 @@ public class ChildScheduleListVM
     public class ChildScheduleListVMScheduleRule
     {
         public DayOfWeek Day { get; set; }
-
         public Guid TimeSlotId { get; set; }
+        public string TimeSlotName { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
     }
 }
 

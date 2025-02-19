@@ -28,6 +28,13 @@ const columns: GridColDef[] = [
     valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
   },
   {
+    field: "groupName",
+    headerName: "Group",
+    flex: 1,
+    disableColumnMenu: true,
+    disableReorder: true,
+  },
+  {
     field: "scheduleRules",
     headerName: "WeekSchedule",
     flex: 1,

@@ -30,6 +30,7 @@ public class MappingProfile : Profile
         CreateMap<AddScheduleCommand.AddScheduleCommandScheduleRule, ScheduleRule>();
 
         CreateMap<Schedule, ChildScheduleListVM>()
+            .ForMember(dest => dest.GroupName, opt => opt.Ignore())
             .ForMember(dest => dest.ScheduleRules, opt => opt.MapFrom(src => src.ScheduleRules));
         CreateMap<ScheduleRule, ChildScheduleListVM.ChildScheduleListVMScheduleRule>();
     }

@@ -1,3 +1,5 @@
+using KDVManager.Services.Scheduling.Api.Services;
+using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
@@ -45,6 +47,8 @@ public static class ConfigureServices
                 options.Authority = domain;
                 options.Audience = configuration["Auth0:Audience"];
             });
+
+        services.AddScoped<ITenantService, TenantService>();
 
         return services;
     }

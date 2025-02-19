@@ -10,10 +10,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<CRMDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
-
-        services.AddDbContext<CRMDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
 
         services.AddScoped<IChildRepository, ChildRepository>();

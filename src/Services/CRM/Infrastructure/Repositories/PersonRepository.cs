@@ -10,7 +10,7 @@ namespace KDVManager.Services.CRM.Infrastructure.Repositories;
 
 public class PersonRepository : BaseRepository<Person>, IPersonRepository
 {
-    public PersonRepository(CRMDbContext dbContext) : base(dbContext)
+    public PersonRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 

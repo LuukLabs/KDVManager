@@ -14,6 +14,9 @@ namespace KDVManager.Services.CRM.Infrastructure.Configurations
         {
             builder.Property(e => e.FamilyName)
                 .IsRequired();
+
+            builder.Property(e => e.TenantId)
+                .IsRequired();
         }
     }
 }

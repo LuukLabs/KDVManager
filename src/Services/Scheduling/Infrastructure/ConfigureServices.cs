@@ -10,10 +10,10 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<SchedulingDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
-        services.AddDbContext<SchedulingDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
         services.AddScoped<IGroupRepository, GroupRepository>();

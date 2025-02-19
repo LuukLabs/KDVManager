@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
-    [DbContext(typeof(CRMDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211230170517_InitialCreate")]
     partial class InitialCreate
     {

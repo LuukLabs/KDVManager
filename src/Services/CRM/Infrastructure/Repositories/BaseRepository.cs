@@ -8,9 +8,9 @@ namespace KDVManager.Services.CRM.Infrastructure.Repositories;
 
 public class BaseRepository<T> : IAsyncRepository<T> where T : class
 {
-    protected readonly CRMDbContext _dbContext;
+    protected readonly ApplicationDbContext _dbContext;
 
-    public BaseRepository(CRMDbContext dbContext)
+    public BaseRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -8,9 +8,9 @@ namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
 public class BaseRepository<T> : IAsyncRepository<T> where T : class
 {
-    protected readonly SchedulingDbContext _dbContext;
+    protected readonly ApplicationDbContext _dbContext;
 
-    public BaseRepository(SchedulingDbContext dbContext)
+    public BaseRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

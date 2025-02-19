@@ -10,7 +10,7 @@ namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
 public class GroupRepository : BaseRepository<Group>, IGroupRepository
 {
-    public GroupRepository(SchedulingDbContext dbContext) : base(dbContext)
+    public GroupRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 

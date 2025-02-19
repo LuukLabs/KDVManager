@@ -10,14 +10,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
-    [DbContext(typeof(CRMDbContext))]
-    partial class CRMDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -37,9 +37,12 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.Property<string>("GivenName")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Children");
+                    b.ToTable("Children", (string)null);
                 });
 
             modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Person", b =>
@@ -66,9 +69,12 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.ToTable("People", (string)null);
                 });
 #pragma warning restore 612, 618
         }

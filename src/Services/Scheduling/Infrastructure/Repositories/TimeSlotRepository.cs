@@ -10,7 +10,7 @@ namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
 public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
 {
-    public TimeSlotRepository(SchedulingDbContext dbContext) : base(dbContext)
+    public TimeSlotRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 

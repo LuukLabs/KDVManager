@@ -11,7 +11,7 @@ namespace KDVManager.Services.CRM.Infrastructure.Repositories;
 
 public class ChildRepository : BaseRepository<Child>, IChildRepository
 {
-    public ChildRepository(CRMDbContext dbContext) : base(dbContext)
+    public ChildRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 

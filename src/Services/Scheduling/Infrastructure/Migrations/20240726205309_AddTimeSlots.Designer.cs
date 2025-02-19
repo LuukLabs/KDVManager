@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(SchedulingDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240726205309_AddTimeSlots")]
     partial class AddTimeSlots
     {

@@ -8,10 +8,6 @@ on:
   push:
     branches:
     - main
-
-    paths:
-    - src/Services/Scheduling/Persistence/**
-    - .github/workflows/scheduling-migrator.yml
   
   pull_request:
     branches:

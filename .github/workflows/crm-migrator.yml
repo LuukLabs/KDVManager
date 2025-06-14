@@ -5,10 +5,6 @@ on:
   push:
     branches:
     - main
-
-    paths:
-    - src/Services/CRM/Persistence/**
-    - .github/workflows/crm-migrator.yml
   
   pull_request:
     branches:

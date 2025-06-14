@@ -5,10 +5,6 @@ on:
   push:
     branches:
     - main
-
-    paths:
-    - src/web/**
-    - .github/workflows/web.yml
   
   pull_request:
     branches:

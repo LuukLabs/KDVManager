@@ -19,7 +19,7 @@ public class DeleteChildCommandHandler : IRequestHandler<DeleteChildCommand>
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(DeleteChildCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteChildCommand request, CancellationToken cancellationToken)
     {
         var childToDelete = await _childRepository.GetByIdAsync(request.Id);
 
@@ -29,7 +29,5 @@ public class DeleteChildCommandHandler : IRequestHandler<DeleteChildCommand>
         }
 
         await _childRepository.DeleteAsync(childToDelete);
-
-        return Unit.Value;
     }
 }

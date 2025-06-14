@@ -18,7 +18,7 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateChildCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateChildCommand request, CancellationToken cancellationToken)
         {
             // Retrieve the existing child entity
             var child = await _childRepository.GetByIdAsync(request.Id);
@@ -36,8 +36,6 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             _mapper.Map(request, child);
 
             await _childRepository.UpdateAsync(child);
-
-            return Unit.Value;
         }
     }
 }

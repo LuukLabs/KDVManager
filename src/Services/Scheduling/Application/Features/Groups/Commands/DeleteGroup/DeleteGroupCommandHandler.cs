@@ -19,7 +19,7 @@ public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
     {
         var groupToDelete = await _groupRepository.GetByIdAsync(request.Id);
 
@@ -29,7 +29,5 @@ public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
         }
 
         await _groupRepository.DeleteAsync(groupToDelete);
-
-        return Unit.Value;
     }
 }

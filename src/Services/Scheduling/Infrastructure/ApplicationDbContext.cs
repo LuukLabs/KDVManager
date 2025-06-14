@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using KDVManager.Services.Scheduling.Domain.Interfaces;
 using System.Reflection;
+using System;
 
 namespace KDVManager.Services.Scheduling.Infrastructure;
 
@@ -44,6 +45,23 @@ public class ApplicationDbContext : DbContext
                     break;
             }
         }
+
+        // Ensure all DateTime properties are UTC before saving
+        foreach (var entry in ChangeTracker.Entries<Schedule>())
+        {
+            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            {
+                if (entry.Entity.StartDate.Kind != DateTimeKind.Utc)
+                {
+                    entry.Entity.StartDate = DateTime.SpecifyKind(entry.Entity.StartDate, DateTimeKind.Utc);
+                }
+                if (entry.Entity.EndDate.HasValue && entry.Entity.EndDate.Value.Kind != DateTimeKind.Utc)
+                {
+                    entry.Entity.EndDate = DateTime.SpecifyKind(entry.Entity.EndDate.Value, DateTimeKind.Utc);
+                }
+            }
+        }
+
         var result = await base.SaveChangesAsync(cancellationToken);
         return result;
     }

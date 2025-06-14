@@ -600,6 +600,61 @@
         }
       }
     },
+    "/scheduling/v1/schedules/daterange": {
+      "get": {
+        "tags": ["Schedules"],
+        "operationId": "GetSchedulesByDate",
+        "parameters": [
+          {
+            "name": "Date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "GroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleByDateVM"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleByDateVM"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleByDateVM"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/scheduling/v1/timeslots": {
       "get": {
         "tags": ["TimeSlots"],
@@ -1081,6 +1136,36 @@
           }
         },
         "additionalProperties": {}
+      },
+      "ScheduleByDateVM": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "childFullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeSlotName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
+          }
+        },
+        "additionalProperties": false
       },
       "TimeSlotListVM": {
         "type": "object",

@@ -6,6 +6,7 @@ using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.Add
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Domain.Entities;
 
 namespace KDVManager.Services.Scheduling.Application.Profiles;
@@ -33,6 +34,15 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.GroupName, opt => opt.Ignore())
             .ForMember(dest => dest.ScheduleRules, opt => opt.MapFrom(src => src.ScheduleRules));
         CreateMap<ScheduleRule, ChildScheduleListVM.ChildScheduleListVMScheduleRule>();
+
+        // Map from ScheduleRule to ScheduleByDateVM for nested relationship
+        CreateMap<ScheduleRule, ScheduleByDateVM>()
+            .ForMember(dest => dest.ScheduleId, opt => opt.MapFrom(src => src.ScheduleId))
+            .ForMember(dest => dest.ChildId, opt => opt.MapFrom(src => src.Schedule.ChildId))
+            .ForMember(dest => dest.ChildFullName, opt => opt.Ignore())
+            .ForMember(dest => dest.TimeSlotName, opt => opt.MapFrom(src => src.TimeSlot.Name))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.TimeSlot.StartTime))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime));
     }
 }
 

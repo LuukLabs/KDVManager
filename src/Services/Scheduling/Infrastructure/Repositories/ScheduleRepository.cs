@@ -25,4 +25,21 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
                 .ThenInclude(sr => sr.TimeSlot)
             .ToListAsync();
     }
+
+    public async Task<IReadOnlyList<Schedule>> GetSchedulesByDateAsync(DateOnly date, Guid groupId)
+    {
+        var dayOfWeek = date.DayOfWeek;
+        var dateUtc = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+
+        return await _dbContext.Schedules
+            .Where(s => s.GroupId == groupId)
+            .Where(s =>
+                s.StartDate <= dateUtc &&
+                (!s.EndDate.HasValue || s.EndDate >= dateUtc)
+            )
+            .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek))
+                .ThenInclude(sr => sr.TimeSlot)
+            .Where(s => s.ScheduleRules.Any(sr => sr.Day == dayOfWeek))
+            .ToListAsync();
+    }
 }

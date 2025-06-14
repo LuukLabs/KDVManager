@@ -17,6 +17,10 @@ const router = (t: TFunction<"translation", undefined>) =>
       },
       children: [
         {
+          path: "home",
+          lazy: () => import("./pages/HomePage"),
+        },
+        {
           path: "children/:childId",
           lazy: () => import("./pages/children/UpdateChildPage"),
         },

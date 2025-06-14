@@ -8,12 +8,12 @@ using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild
 {
-    public class UpdateChildCommandHandler : IRequestHandler<CreateChildCommand, Guid>
+    public class CreateChildCommandHandler : IRequestHandler<CreateChildCommand, Guid>
     {
         private readonly IChildRepository _childRepository;
         private readonly IMapper _mapper;
 
-        public UpdateChildCommandHandler(IChildRepository childRepository, IMapper mapper)
+        public CreateChildCommandHandler(IChildRepository childRepository, IMapper mapper)
         {
             _childRepository = childRepository;
             _mapper = mapper;

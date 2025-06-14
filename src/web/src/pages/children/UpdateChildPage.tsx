@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   getGetAllChildrenQueryKey,

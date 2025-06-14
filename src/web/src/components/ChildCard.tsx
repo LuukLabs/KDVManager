@@ -31,7 +31,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
 
   const calculateAge = (dateOfBirth: string | null) => {
     if (!dateOfBirth) return t("N/A");
-    return dayjs().diff(dayjs(dateOfBirth), "year");
+    const years = dayjs().diff(dayjs(dateOfBirth), "year");
+    return years === 1 ? `${years} ${t("year")}` : `${years} ${t("years")}`;
   };
 
   const getFullName = () => {
@@ -149,7 +150,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                   {getFullName()}
                 </Typography>
                 <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
-                  {t("Age")}: {calculateAge(childDetails?.dateOfBirth || null)}
+                  {calculateAge(childDetails?.dateOfBirth || null)}
                 </Typography>
               </Box>
               <Chip

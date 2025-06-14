@@ -25,6 +25,8 @@ jobs:
 
   CI:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: ./src/web
@@ -57,6 +59,9 @@ jobs:
 
   BuildContainersForPR_Linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event_name == 'pull_request' }}
 
     steps:
@@ -69,6 +74,9 @@ jobs:
 
   BuildLinux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event_name != 'pull_request' }}
 
     steps:

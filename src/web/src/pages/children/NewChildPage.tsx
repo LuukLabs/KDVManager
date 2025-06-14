@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getGetAllChildrenQueryKey, useCreateChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";

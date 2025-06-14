@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { SettingsCard } from "../../features/settings/SettingsCard";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import React from "react";
 

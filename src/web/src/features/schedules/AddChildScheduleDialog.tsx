@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { MenuItem, Select, InputLabel, FormControl, IconButton } from "@mui/material";

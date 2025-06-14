@@ -31,7 +31,7 @@
     "react-hook-form": "^7.57.0",
     "react-hook-form-mui": "^7.5.0",
     "react-i18next": "^15.4.0",
-    "react-router-dom": "7.1.5",
+    "react-router-dom": "7.6.2",
     "styled-components": "^6.1.19",
     "vite-tsconfig-paths": "^5.1.4"
   },

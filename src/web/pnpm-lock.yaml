@@ -75,8 +75,8 @@ importers:
         specifier: ^7.58.0
         version: 7.58.0(react@19.1.0)
       react-hook-form-mui:
-        specifier: ^7.5.0
-        version: 7.5.0(7c98b16e4f1f79ccb49e3c257ef8e370)
+        specifier: ^7.6.1
+        version: 7.6.1(7c98b16e4f1f79ccb49e3c257ef8e370)
       react-i18next:
         specifier: ^15.5.3
         version: 15.5.3(i18next@25.2.1(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
@@ -2807,12 +2807,12 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-hook-form-mui@7.5.0:
-    resolution: {integrity: sha512-skgTMuhjK6UKVUZvqMKwGS7EYqZwB0/oscmu8eYtabDk/9Oo9TDQo3/3VfCS5pxbCF9uJc/fqi6Bu2UVOQ1iQQ==}
+  react-hook-form-mui@7.6.1:
+    resolution: {integrity: sha512-B6mYk+cK0i/mmh/oWqD/uNnGa+C2U6swRynubn4Hjcbmx/lwyjepODlGDiMMi4OEglgPtrPThxH8nEDyKNxCEA==}
     engines: {node: '>=14'}
     peerDependencies:
-      '@mui/icons-material': '>= 5.x <7'
-      '@mui/material': '>= 5.x <7'
+      '@mui/icons-material': '>= 5.x <8'
+      '@mui/material': '>= 5.x <8'
       '@mui/x-date-pickers': '>=7.17.0 <8'
       react: '>=17 <20'
       react-hook-form: '>=7.33.1'
@@ -6556,7 +6556,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-hook-form-mui@7.5.0(7c98b16e4f1f79ccb49e3c257ef8e370):
+  react-hook-form-mui@7.6.1(7c98b16e4f1f79ccb49e3c257ef8e370):
     dependencies:
       '@mui/material': 7.1.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0

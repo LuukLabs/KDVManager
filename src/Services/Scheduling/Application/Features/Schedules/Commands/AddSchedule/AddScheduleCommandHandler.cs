@@ -13,17 +13,19 @@ namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Commands
 public class AddScheduleCommandHandler : IRequestHandler<AddScheduleCommand, Guid>
 {
     private readonly IScheduleRepository _scheduleRepository;
+    private readonly ITimeSlotRepository _timeSlotRepository;
     private readonly IMapper _mapper;
 
-    public AddScheduleCommandHandler(IScheduleRepository scheduleRepository, IMapper mapper)
+    public AddScheduleCommandHandler(IScheduleRepository scheduleRepository, ITimeSlotRepository timeSlotRepository, IMapper mapper)
     {
         _scheduleRepository = scheduleRepository;
+        _timeSlotRepository = timeSlotRepository;
         _mapper = mapper;
     }
 
     public async Task<Guid> Handle(AddScheduleCommand request, CancellationToken cancellationToken)
     {
-        var validator = new AddScheduleCommandValidator();
+        var validator = new AddScheduleCommandValidator(_timeSlotRepository);
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)

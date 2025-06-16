@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProviderWithNavigate from "./AuthProviderWithNavigate";
+import AuthInject from "./AuthInject";
 import MainNavbar from "./MainNavbar";
 import { Outlet } from "react-router-dom";
 import NiceModal from "@ebay/nice-modal-react";
@@ -9,6 +10,7 @@ const queryClient = new QueryClient();
 function AuthProviderLayout() {
   return (
     <AuthProviderWithNavigate>
+      <AuthInject />
       <QueryClientProvider client={queryClient}>
         <NiceModal.Provider>
           <MainNavbar>

@@ -1,17 +1,17 @@
 import { type defineConfig } from "orval";
 
-const useMutatorFetch = {
-  path: "src/api/mutator/useExecuteFetch.ts",
-  name: "useExecuteFetch",
+const mutatorFetch = {
+  path: "src/api/mutator/executeFetch.ts",
+  name: "executeFetch",
 };
 
-const useMutatorFetchPaginated = {
-  path: "src/api/mutator/useExecuteFetchPaginated.ts",
-  name: "useExecuteFetchPaginated",
+const mutatorFetchPaginated = {
+  path: "src/api/mutator/executeFetchPaginated.ts",
+  name: "executeFetchPaginated",
 };
 
 const queryPaginated = {
-  mutator: useMutatorFetchPaginated,
+  mutator: mutatorFetchPaginated,
   query: {
     useQuery: true,
     useInfiniteQueryParam: "PageNumber",
@@ -28,7 +28,7 @@ const config: ReturnType<typeof defineConfig> = {
       prettier: true,
       indexFiles: false,
       override: {
-        mutator: useMutatorFetch,
+        mutator: mutatorFetch,
         operations: {
           GetAllChildren: queryPaginated,
           ListGroups: queryPaginated,

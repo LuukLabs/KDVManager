@@ -1,6 +1,6 @@
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { FormContainer } from "react-hook-form-mui";
-import {DatePickerElement} from 'react-hook-form-mui/date-pickers'
+import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -49,11 +49,12 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
 
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
       // Filter out schedule rules that don't have a timeslot selected
-      const filteredScheduleRules = data.scheduleRules?.filter(rule => rule && rule.timeSlotId) || [];
-      
+      const filteredScheduleRules =
+        data.scheduleRules?.filter((rule) => rule && rule.timeSlotId) || [];
+
       const submitData = {
         ...data,
-        scheduleRules: filteredScheduleRules
+        scheduleRules: filteredScheduleRules,
       };
 
       await mutate.mutateAsync(
@@ -102,7 +103,6 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                 <Controller
                   name={`scheduleRules.${day.value}.timeSlotId`}
                   control={control}
-                  
                   render={({ field, fieldState }) => (
                     <TimeSlotAutocomplete
                       {...field}
@@ -136,14 +136,14 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          <DialogContentText sx={{ mb: 3, color: 'text.secondary' }}>
+          <DialogContentText sx={{ mb: 3, color: "text.secondary" }}>
             {t("To add a schedule, please enter the details below.")}
           </DialogContentText>
           <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               {/* Left Column */}
               <Grid size={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   {/* Date Range Section */}
                   <Box>
                     <Typography variant="h6" gutterBottom color="primary">
@@ -151,11 +151,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                     </Typography>
                     <Grid container spacing={3}>
                       <Grid size={12}>
-                        <DatePickerElement
-                          label={t("Start Date")}
-                          name="startDate"
-                        />
-
+                        <DatePickerElement label={t("Start Date")} name="startDate" />
                       </Grid>
                       <Grid size={12}>
                         <Controller
@@ -221,7 +217,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {t("Select the days and time slots for this schedule")}
                   </Typography>
-                  
+
                   {renderWeeklySchedule()}
                 </Box>
               </Grid>

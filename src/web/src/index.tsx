@@ -11,9 +11,11 @@ import "dayjs/locale/nl";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./lib/theme";
 import { CssBaseline } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const container = document.getElementById("root") as Element;
 const root = createRoot(container);
+export const queryClient = new QueryClient();
 
 root.render(
   <StrictMode>
@@ -21,9 +23,11 @@ root.render(
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <SnackbarProvider>
-            <App />
-          </SnackbarProvider>
+            <QueryClientProvider client={queryClient}>
+              <SnackbarProvider>
+                <App />
+              </SnackbarProvider>
+          </QueryClientProvider>
         </ThemeProvider>
       </I18nextProvider>
     </LocalizationProvider>

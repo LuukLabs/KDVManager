@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next";
 import ErrorPage from "./components/ErrorPage";
 import MainLayout from "./components/AuthProviderLayout";
 import { type TFunction } from "i18next";
+import { type QueryClient, useQueryClient } from "@tanstack/react-query";
+import { updateChildPageLoader } from "./pages/children/updateChildPage.loader";
 
-const router = (t: TFunction<"translation", undefined>) =>
+const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>) =>
   createBrowserRouter([
     {
       path: "/",
@@ -23,6 +25,7 @@ const router = (t: TFunction<"translation", undefined>) =>
         {
           path: "children/:childId",
           lazy: () => import("./pages/children/UpdateChildPage"),
+          loader: updateChildPageLoader(queryClient),
         },
         {
           path: "children",
@@ -84,8 +87,9 @@ const router = (t: TFunction<"translation", undefined>) =>
 
 function App() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
-  return <RouterProvider router={router(t)} />;
+  return <RouterProvider router={router(queryClient, t)} />;
 }
 
 export default App;

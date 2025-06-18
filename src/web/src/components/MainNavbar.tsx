@@ -113,6 +113,14 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={() => {
+                  navigate("/schedule");
+                }}
+              >
+                {t("Schedule Overview")}
+              </Button>
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => {
                   navigate("/children");
                 }}
               >

@@ -11,7 +11,7 @@ dayjs.extend(utc);
 
 const DATE_FORMAT = "MMMM D, YYYY";
 
-const HomePage = () => {
+const ScheduleOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs().utc());
   const { t, i18n } = useTranslation();
 
@@ -90,4 +90,4 @@ const HomePage = () => {
   );
 };
 
-export const Component = HomePage;
+export const Component = ScheduleOverviewPage;

@@ -18,10 +18,14 @@ import { useTranslation } from "react-i18next";
 import { ChildSchedule } from "../../features/schedules/ChildSchedule";
 import { Button } from "@mui/material";
 import { Alert } from "@mui/material";
+import { type updateChildPageLoader } from "./updateChildPage.loader";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
-  const loaderData = useLoaderData() as any; // Replace 'any' with your actual child type
+  const loaderData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof updateChildPageLoader>>
+  >;
+
   const { data: child } = useGetChildById(childId, {
     query: { initialData: loaderData },
   });

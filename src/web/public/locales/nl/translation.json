@@ -1,0 +1,10 @@
+{
+  "error": {
+    "oops": "Oeps!",
+    "unexpected": "Sorry, er is een onverwachte fout opgetreden.",
+    "notFound": "Niet gevonden"
+  },
+  "loading": {
+    "page": "Pagina wordt geladen..."
+  }
+}

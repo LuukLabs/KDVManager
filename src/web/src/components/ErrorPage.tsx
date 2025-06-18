@@ -8,10 +8,10 @@ export default function ErrorPage() {
 
   return (
     <div id="error-page">
-      <h1>{t("Oops!")}</h1>
-      <p>{t("Sorry, an unexpected error has occurred.")}</p>
+      <h1>{t("error.oops")}</h1>
+      <p>{t("error.unexpected")}</p>
       <p>
-        <i>{t("Not found")}</i>
+        <i>{t("error.notFound")}</i>
       </p>
     </div>
   );

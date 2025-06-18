@@ -1,0 +1,44 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100vh;
+  gap: 15px;
+  padding-bottom: 40px;
+}
+
+.block {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.block.a {
+  background-color: #fbbf24;
+  animation-delay: 0s;
+}
+.block.b {
+  background-color: #f472b6;
+  animation-delay: 0.2s;
+}
+.block.c {
+  background-color: #34d399;
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}

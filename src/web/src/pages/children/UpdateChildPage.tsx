@@ -23,7 +23,7 @@ const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
   const loaderData = useLoaderData() as any; // Replace 'any' with your actual child type
   const { data: child } = useGetChildById(childId, {
-    query: { initialData: loaderData }
+    query: { initialData: loaderData },
   });
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -68,19 +68,11 @@ const UpdateChildPage = () => {
   };
 
   if (!childId) {
-    return (
-      <Alert severity="error">
-        {t("Child ID is required")}
-      </Alert>
-    );
+    return <Alert severity="error">{t("Child ID is required")}</Alert>;
   }
 
   if (!child) {
-    return (
-      <Alert severity="warning">
-        {t("Child not found")}
-      </Alert>
-    );
+    return <Alert severity="warning">{t("Child not found")}</Alert>;
   }
 
   return (

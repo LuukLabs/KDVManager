@@ -5,31 +5,38 @@ import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   getGetAllChildrenQueryKey,
-  useGetChildById,
   useUpdateChild,
+  useGetChildById,
 } from "@api/endpoints/children/children";
-import { useParams } from "react-router-dom";
+import { useParams, useLoaderData } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useEffect } from "react";
 import { type UpdateChildCommand } from "@api/models/updateChildCommand";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-
 import { ChildSchedule } from "../../features/schedules/ChildSchedule";
 import { Button } from "@mui/material";
+import { Alert } from "@mui/material";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
+  const loaderData = useLoaderData() as any; // Replace 'any' with your actual child type
+  const { data: child } = useGetChildById(childId, {
+    query: { initialData: loaderData }
+  });
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const { mutateAsync } = useUpdateChild();
 
-  const { data: child } = useGetChildById(childId);
-
-  const formContext = useForm<UpdateChildCommand>({});
+  const formContext = useForm<UpdateChildCommand>({
+    defaultValues: {
+      givenName: child?.givenName || "",
+      familyName: child?.familyName || "",
+      dateOfBirth: child?.dateOfBirth || "",
+    },
+  });
 
   const {
     handleSubmit,
@@ -37,16 +44,6 @@ const UpdateChildPage = () => {
     setError,
     formState: { isValid, isDirty, isSubmitting },
   } = formContext;
-
-  useEffect(() => {
-    if (child) {
-      reset({
-        givenName: child.givenName,
-        familyName: child.familyName,
-        dateOfBirth: child.dateOfBirth,
-      });
-    }
-  }, [child, reset]);
 
   const onSubmit = (data: UpdateChildCommand) => {
     mutateAsync(
@@ -69,6 +66,22 @@ const UpdateChildPage = () => {
       });
     });
   };
+
+  if (!childId) {
+    return (
+      <Alert severity="error">
+        {t("Child ID is required")}
+      </Alert>
+    );
+  }
+
+  if (!child) {
+    return (
+      <Alert severity="warning">
+        {t("Child not found")}
+      </Alert>
+    );
+  }
 
   return (
     <>

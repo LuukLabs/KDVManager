@@ -24,14 +24,14 @@ const HomePage = () => {
     <Box sx={{ p: 3 }}>
       <Grid container spacing={3}>
         {/* Title - Full Width */}
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant="h4">
             {t("Schedule Overview")} - {selectedDate.locale(i18n.language).format(DATE_FORMAT)}
           </Typography>
         </Grid>
 
         {/* Groups Section with Horizontal Scroll */}
-        <Grid item xs={12} lg={9}>
+        <Grid size={{ xs: 12, lg: 9 }}>
           {!groups || groups.length === 0 ? (
             <Typography variant="body1" sx={{ textAlign: "center", mt: 4 }}>
               {t("No groups found")}
@@ -76,7 +76,7 @@ const HomePage = () => {
         </Grid>
 
         {/* Calendar - Fixed Position */}
-        <Grid item xs={12} lg={3}>
+        <Grid size={{ xs: 12, lg: 3 }}>
           <Paper sx={{ p: 2 }}>
             <DateCalendar
               value={selectedDate}

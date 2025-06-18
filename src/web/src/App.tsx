@@ -19,8 +19,13 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
       },
       children: [
         {
-          path: "home",
-          lazy: () => import("./pages/HomePage"),
+          path: "schedule",
+          lazy: () => import("./pages/ScheduleOverviewPage"),
+          handle: {
+            crumb: () => {
+              return t("Schedule Overview");
+            },
+          },
         },
         {
           path: "children/:childId",

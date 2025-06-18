@@ -1,32 +1,18 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  CircularProgress,
-  Avatar,
-  Chip,
-  IconButton,
-  Fade,
-} from "@mui/material";
-import { CheckCircle, Cancel, Help } from "@mui/icons-material";
+import { Card, CardContent, Typography, Box, CircularProgress, Avatar } from "@mui/material";
+import { Schedule } from "@mui/icons-material";
 import { useGetChildById } from "@api/endpoints/children/children";
 import type { ScheduleByDateVM } from "@api/models/scheduleByDateVM";
 import dayjs from "dayjs";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import AttendanceControl, { type AttendanceState } from "./AttendanceControl";
 
 type ChildCardProps = {
   childId: string;
   schedule: ScheduleByDateVM;
 };
 
-type AttendanceState = "present" | "absent" | "unknown";
-
 const ChildCard = ({ childId, schedule }: ChildCardProps) => {
   const { data: childDetails, isLoading: isLoadingChild } = useGetChildById(childId);
-  const [attendanceState, setAttendanceState] = useState<AttendanceState>("unknown");
-  const [isHovered, setIsHovered] = useState(false);
   const { t } = useTranslation();
 
   const calculateAge = (dateOfBirth: string | null) => {
@@ -58,80 +44,39 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
 
   const formatTime = (time: string) => {
     if (!time) return "";
-    // Parse time string and format to HH:mm
     return dayjs(`2000-01-01T${time}`).format("HH:mm");
   };
 
-  const getAttendanceConfig = (state: AttendanceState) => {
-    switch (state) {
-      case "present":
-        return {
-          label: "Present",
-          color: "success" as const,
-          icon: <CheckCircle sx={{ fontSize: 16 }} />,
-          bgColor: "success.50",
-        };
-      case "absent":
-        return {
-          label: "Absent",
-          color: "error" as const,
-          icon: <Cancel sx={{ fontSize: 16 }} />,
-          bgColor: "error.50",
-        };
-      case "unknown":
-      default:
-        return {
-          label: "Unknown",
-          color: "default" as const,
-          icon: <Help sx={{ fontSize: 16 }} />,
-          bgColor: "grey.100",
-        };
-    }
+  const handleAttendanceChange = (state: AttendanceState) => {
+    // Handle attendance state change (e.g., API call)
+    console.log(`Attendance changed to: ${state}`);
   };
-
-  const attendanceConfig = getAttendanceConfig(attendanceState);
 
   return (
     <Card
       sx={{
         transition: "all 0.2s ease-in-out",
-        position: "relative",
-        border: "2px solid",
-        borderColor:
-          attendanceState === "present"
-            ? "success.main"
-            : attendanceState === "absent"
-              ? "error.main"
-              : "grey.300",
         "&:hover": {
-          boxShadow: 4,
-          borderColor:
-            attendanceState === "present"
-              ? "success.dark"
-              : attendanceState === "absent"
-                ? "error.dark"
-                : "primary.main",
+          boxShadow: 2,
         },
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      <CardContent sx={{ pb: 2 }}>
+      <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
         {isLoadingChild ? (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <CircularProgress size={24} />
-            <Typography variant="subtitle1">Loading child details...</Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <CircularProgress size={20} />
+            <Typography variant="body2">Loading...</Typography>
           </Box>
         ) : (
           <Box>
-            {/* Header with avatar and attendance status */}
-            <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", mb: 2 }}>
+            {/* Header with avatar and name */}
+            <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", mb: 1.5 }}>
               <Avatar
                 sx={{
-                  width: 48,
-                  height: 48,
+                  width: 36,
+                  height: 36,
                   bgcolor: "primary.main",
-                  fontSize: "1.1rem",
+                  fontSize: "0.9rem",
                   fontWeight: "bold",
                 }}
               >
@@ -139,99 +84,60 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
               </Avatar>
               <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Typography
-                  variant="subtitle1"
+                  variant="subtitle2"
                   sx={{
                     fontWeight: 600,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
+                    lineHeight: 1.2,
                   }}
                 >
                   {getFullName()}
                 </Typography>
-                <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
+                <Typography variant="caption" color="text.secondary">
                   {calculateAge(childDetails?.dateOfBirth || null)}
                 </Typography>
               </Box>
-              <Chip
-                icon={attendanceConfig.icon}
-                label={attendanceConfig.label}
-                color={attendanceConfig.color}
-                size="small"
-                sx={{ fontWeight: 500 }}
-              />
             </Box>
 
-            {/* Time slot info */}
+            {/* Time slot info - improved display */}
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                gap: 0.5,
-                p: 1.5,
+                alignItems: "center",
+                gap: 1,
+                p: 1,
                 borderRadius: 1,
+                bgcolor: "primary.50",
                 border: "1px solid",
-                borderColor: "grey.300",
+                borderColor: "primary.100",
+                mb: 1.5,
               }}
             >
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                {schedule.timeSlotName}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
-              </Typography>
+              <Schedule sx={{ fontSize: 16, color: "primary.main" }} />
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontWeight: 600,
+                    display: "block",
+                    color: "primary.dark",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {schedule.timeSlotName}
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.25 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                    {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
 
-            {/* Hover controls */}
-            <Fade in={isHovered}>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  display: "flex",
-                  gap: 0.5,
-                  bgcolor: "background.paper",
-                  borderRadius: 1,
-                  boxShadow: 2,
-                  p: 0.5,
-                }}
-              >
-                <IconButton
-                  size="small"
-                  color="success"
-                  onClick={() => setAttendanceState("present")}
-                  sx={{
-                    bgcolor: attendanceState === "present" ? "success.100" : "transparent",
-                    "&:hover": { bgcolor: "success.100" },
-                  }}
-                >
-                  <CheckCircle sx={{ fontSize: 18 }} />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => setAttendanceState("absent")}
-                  sx={{
-                    bgcolor: attendanceState === "absent" ? "error.100" : "transparent",
-                    "&:hover": { bgcolor: "error.100" },
-                  }}
-                >
-                  <Cancel sx={{ fontSize: 18 }} />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  color="default"
-                  onClick={() => setAttendanceState("unknown")}
-                  sx={{
-                    bgcolor: attendanceState === "unknown" ? "grey.100" : "transparent",
-                    "&:hover": { bgcolor: "grey.100" },
-                  }}
-                >
-                  <Help sx={{ fontSize: 18 }} />
-                </IconButton>
-              </Box>
-            </Fade>
+            {/* Attendance control */}
+            <AttendanceControl onStateChange={handleAttendanceChange} />
           </Box>
         )}
       </CardContent>

@@ -1,0 +1,10 @@
+{
+  "error": {
+    "oops": "Oops!",
+    "unexpected": "Sorry, an unexpected error has occurred.",
+    "notFound": "Not found"
+  },
+  "loading": {
+    "page": "Loading page..."
+  }
+}

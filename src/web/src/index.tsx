@@ -23,10 +23,10 @@ root.render(
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-            <QueryClientProvider client={queryClient}>
-              <SnackbarProvider>
-                <App />
-              </SnackbarProvider>
+          <QueryClientProvider client={queryClient}>
+            <SnackbarProvider>
+              <App />
+            </SnackbarProvider>
           </QueryClientProvider>
         </ThemeProvider>
       </I18nextProvider>

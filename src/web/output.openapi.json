@@ -655,6 +655,38 @@
         }
       }
     },
+    "/scheduling/v1/schedules/{Id}": {
+      "delete": {
+        "tags": ["Schedules"],
+        "operationId": "DeleteSchedule",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/scheduling/v1/timeslots": {
       "get": {
         "tags": ["TimeSlots"],

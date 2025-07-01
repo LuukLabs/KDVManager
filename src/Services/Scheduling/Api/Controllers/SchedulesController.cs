@@ -6,6 +6,7 @@ using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetC
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -44,5 +45,19 @@ public class SchedulesController : ControllerBase
     {
         var id = await _mediator.Send(addScheduleCommand);
         return Ok(id);
+    }
+
+    /// <summary>
+    /// Deletes a schedule by ID.
+    /// </summary>
+    /// <param name="Id">The ID of the schedule to delete.</param>
+    [HttpDelete("{Id:guid}", Name = "DeleteSchedule")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [Produces("application/json")]
+    public async Task<ActionResult> DeleteSchedule([FromRoute] DeleteScheduleCommand deleteScheduleCommand)
+    {
+        await _mediator.Send(deleteScheduleCommand);
+        return NoContent();
     }
 }

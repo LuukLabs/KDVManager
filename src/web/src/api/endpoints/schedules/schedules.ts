@@ -28,6 +28,8 @@ import type { GetChildSchedulesParams } from "../../models/getChildSchedulesPara
 
 import type { GetSchedulesByDateParams } from "../../models/getSchedulesByDateParams";
 
+import type { ProblemDetails } from "../../models/problemDetails";
+
 import type { ScheduleByDateVM } from "../../models/scheduleByDateVM";
 
 import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
@@ -322,3 +324,66 @@ export function useGetSchedulesByDate<
 
   return query;
 }
+
+export const deleteSchedule = (id: string) => {
+  return executeFetch<void>({ url: `/scheduling/v1/schedules/${id}`, method: "DELETE" });
+};
+
+export const getDeleteScheduleMutationOptions = <
+  TError = ProblemDetails,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteSchedule>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteSchedule>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deleteSchedule"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSchedule>>, { id: string }> = (
+    props,
+  ) => {
+    const { id } = props ?? {};
+
+    return deleteSchedule(id);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSchedule>>>;
+
+export type DeleteScheduleMutationError = ProblemDetails;
+
+export const useDeleteSchedule = <TError = ProblemDetails, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteSchedule>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteSchedule>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteScheduleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};

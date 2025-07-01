@@ -13,6 +13,8 @@ namespace KDVManager.Services.CRM.Domain.Entities
 
         public string FamilyName { get; set; }
 
+        public string CID { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
     }
 }

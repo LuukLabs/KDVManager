@@ -10,7 +10,11 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useGetChildSchedules, useDeleteSchedule, getGetChildSchedulesQueryKey } from "@api/endpoints/schedules/schedules";
+import {
+  useGetChildSchedules,
+  useDeleteSchedule,
+  getGetChildSchedulesQueryKey,
+} from "@api/endpoints/schedules/schedules";
 import { scheduleRulesFormatter } from "../../utils/scheduleRulesFormatter";
 
 type ChildScheduleProps = {

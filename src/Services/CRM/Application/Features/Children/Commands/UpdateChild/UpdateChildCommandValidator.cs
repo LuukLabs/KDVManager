@@ -15,5 +15,8 @@ public class UpdateChildCommandValidator : AbstractValidator<UpdateChildCommand>
             .NotEmpty()
             .NotNull()
             .MaximumLength(25);
+
+        RuleFor(p => p.CID)
+            .MaximumLength(25);
     }
 }

@@ -7,6 +7,7 @@ import {
   getGetAllChildrenQueryKey,
   useUpdateChild,
   useGetChildById,
+  getGetChildByIdQueryOptions,
 } from "@api/endpoints/children/children";
 import { useParams, useLoaderData } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -39,6 +40,7 @@ const UpdateChildPage = () => {
       givenName: child?.givenName || "",
       familyName: child?.familyName || "",
       dateOfBirth: child?.dateOfBirth || "",
+      cid: child?.cid || "",
     },
   });
 
@@ -58,6 +60,7 @@ const UpdateChildPage = () => {
 
   const onMutateSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getGetChildByIdQueryOptions(childId).queryKey });
     enqueueSnackbar(t("Child updated"), { variant: "success" });
     reset({}, { keepValues: true });
   };
@@ -108,6 +111,9 @@ const UpdateChildPage = () => {
                   );
                 }}
               ></Controller>
+            </Grid>
+            <Grid size={12}>
+              <TextFieldElement name="cid" label={t("CID")} fullWidth />
             </Grid>
             <Grid size={12}>
               <ChildSchedule childId={childId} />

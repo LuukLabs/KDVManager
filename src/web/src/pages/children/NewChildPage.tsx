@@ -63,6 +63,9 @@ const NewChildPage = () => {
                 }}
               ></Controller>
             </Grid>
+            <Grid size={12}>
+              <TextFieldElement name="CID" label={t("CID")} fullWidth />
+            </Grid>
           </Grid>
           <Button onClick={handleSubmit(onSubmit)}>{t("Save", { ns: "common" })}</Button>
         </FormContainer>

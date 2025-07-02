@@ -862,6 +862,10 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "cid": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -899,6 +903,10 @@
           "dateOfBirth": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "cid": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -965,6 +973,10 @@
           "dateOfBirth": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "cid": {
+            "type": "string",
             "nullable": true
           }
         },

@@ -10,5 +10,7 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateC
         public string FamilyName { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
+
+        public string CID { get; set; }
     }
 }

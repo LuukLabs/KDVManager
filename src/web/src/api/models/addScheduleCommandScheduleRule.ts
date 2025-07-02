@@ -9,4 +9,5 @@ import type { DayOfWeek } from "./dayOfWeek";
 export type AddScheduleCommandScheduleRule = {
   day?: DayOfWeek;
   timeSlotId?: string;
+  groupId?: string;
 };

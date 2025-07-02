@@ -7,8 +7,6 @@ public class AddScheduleCommand : IRequest<Guid>
 {
     public Guid ChildId { get; set; }
 
-    public Guid GroupId { get; set; }
-
     public DateTime StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
@@ -21,5 +19,7 @@ public class AddScheduleCommand : IRequest<Guid>
         public DayOfWeek Day { get; set; }
 
         public Guid TimeSlotId { get; set; }
+
+        public Guid GroupId { get; set; }
     }
 }

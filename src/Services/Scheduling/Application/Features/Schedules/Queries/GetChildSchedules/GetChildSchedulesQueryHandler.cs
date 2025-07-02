@@ -31,8 +31,11 @@ public class GetChildSchedulesQueryHandler : IRequestHandler<GetChildSchedulesQu
     {
         var schedules = await _scheduleRepository.GetSchedulesByChildIdAsync(request.ChildId);
 
-        // Get group information
-        var groupIds = schedules.Select(s => s.GroupId).Distinct();
+        // Get group information from schedule rules
+        var groupIds = schedules
+            .SelectMany(s => s.ScheduleRules)
+            .Select(sr => sr.GroupId)
+            .Distinct();
         var groups = await _groupRepository.GetGroupsByIdsAsync(groupIds.ToList());
         var groupsDictionary = groups.ToDictionary(g => g.Id, g => g.Name);
 
@@ -40,9 +43,12 @@ public class GetChildSchedulesQueryHandler : IRequestHandler<GetChildSchedulesQu
         var childScheduleListVMs = _mapper.Map<List<ChildScheduleListVM>>(schedules);
         foreach (var schedule in childScheduleListVMs)
         {
-            if (groupsDictionary.TryGetValue(schedule.GroupId, out var groupName))
+            foreach (var scheduleRule in schedule.ScheduleRules)
             {
-                schedule.GroupName = groupName;
+                if (groupsDictionary.TryGetValue(scheduleRule.GroupId, out var groupName))
+                {
+                    scheduleRule.GroupName = groupName;
+                }
             }
         }
 

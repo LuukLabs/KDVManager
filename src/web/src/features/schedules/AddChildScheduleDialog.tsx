@@ -16,7 +16,7 @@ import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
 import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { FormControl, Box, Typography, Divider } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import GroupAutocomplete from "../groups/GroupAutocomplete";
 import TimeSlotAutocomplete from "../timeSlots/TimeSlotAutocomplete";
 import { getGetChildSchedulesQueryKey, useAddSchedule } from "@api/endpoints/schedules/schedules";
@@ -27,41 +27,41 @@ type AddChildScheduleDialogProps = {
 
 export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogProps>(
   ({ childId }) => {
-    const { t } = useTranslation();
-    const modal = useModal();
-    const mutate = useAddSchedule();
-    const queryClient = useQueryClient();
-    const formContext = useForm<AddScheduleCommand>({ defaultValues: { scheduleRules: [] } });
+  const { t } = useTranslation();
+  const modal = useModal();
+  const mutate = useAddSchedule();
+  const queryClient = useQueryClient();
+  const formContext = useForm<AddScheduleCommand>({ defaultValues: { scheduleRules: [] } });
 
-    const {
-      control,
-      handleSubmit,
-      reset,
-      setError,
-      formState: { isValid, isDirty, isSubmitting },
-    } = formContext;
-    const { enqueueSnackbar } = useSnackbar();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { isValid, isDirty, isSubmitting },
+  } = formContext;
+  const { enqueueSnackbar } = useSnackbar();
 
-    const handleOnCancelClick = () => {
-      modal.remove();
-      reset();
+  const handleOnCancelClick = () => {
+    modal.remove();
+    reset();
+  };
+
+  const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
+    // Filter out schedule rules that don't have a timeslot or group selected
+    const filteredScheduleRules =
+      data.scheduleRules?.filter((rule) => rule && rule.timeSlotId && rule.groupId) || [];
+
+    const submitData = {
+      ...data,
+      scheduleRules: filteredScheduleRules,
     };
 
-    const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
-      // Filter out schedule rules that don't have a timeslot selected
-      const filteredScheduleRules =
-        data.scheduleRules?.filter((rule) => rule && rule.timeSlotId) || [];
-
-      const submitData = {
-        ...data,
-        scheduleRules: filteredScheduleRules,
-      };
-
-      await mutate.mutateAsync(
-        { data: { childId: childId, ...submitData } },
-        { onSuccess: onMutateSuccess, onError: onMutateError },
-      );
-    };
+    await mutate.mutateAsync(
+      { data: { childId: childId, ...submitData } },
+      { onSuccess: onMutateSuccess, onError: onMutateError },
+    );
+  };
 
     const onMutateSuccess = () => {
       void queryClient.invalidateQueries({
@@ -92,37 +92,46 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     const renderWeeklySchedule = () => (
       <Box>
         {weekdays.map((day) => (
-          <Box key={day.key} sx={{ mb: 1, py: 0.5 }}>
-            <Grid container spacing={2} alignItems="center">
-              <Grid size={4}>
-                <Typography variant="subtitle1" fontWeight="medium">
-                  {day.label}
-                </Typography>
-              </Grid>
-              <Grid size={8}>
+          <Box key={day.key} sx={{ mb: 2, py: 0.5, border: '1px solid #e0e0e0', borderRadius: 1, p: 2 }}>
+            <Typography variant="subtitle1" fontWeight="medium" sx={{ mb: 2 }}>
+              {day.label}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={6}>
                 <Controller
                   name={`scheduleRules.${day.value}.timeSlotId`}
                   control={control}
-                  render={({ field, fieldState }) => (
+                  render={({ field }) => (
                     <TimeSlotAutocomplete
-                      {...field}
-                      value={field.value}
-                      onChange={(event, newValue) => {
+                      value={null}
+                      onChange={(_, newValue) => {
                         field.onChange(newValue ? newValue.id : null);
                       }}
-                      error={!!fieldState.error}
-                      helperText={fieldState.error ? fieldState.error.message : null}
                     />
                   )}
                 />
+              </Grid>
+              <Grid size={6}>
                 <Controller
-                  name={`scheduleRules.${day.value}.day`}
+                  name={`scheduleRules.${day.value}.groupId`}
                   control={control}
-                  defaultValue={day.value}
-                  render={() => null} // Hidden field
+                  render={({ field }) => (
+                    <GroupAutocomplete
+                      value={null}
+                      onChange={(_, newValue) =>
+                        field.onChange(newValue ? newValue.id : null)
+                      }
+                    />
+                  )}
                 />
               </Grid>
             </Grid>
+            <Controller
+              name={`scheduleRules.${day.value}.day`}
+              control={control}
+              defaultValue={day.value as any}
+              render={() => <></>} // Hidden field
+            />
           </Box>
         ))}
       </Box>
@@ -178,32 +187,6 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                         />
                       </Grid>
                     </Grid>
-                  </Box>
-
-                  <Divider />
-
-                  {/* Group Selection */}
-                  <Box>
-                    <Typography variant="h6" gutterBottom color="primary">
-                      {t("Group Assignment")}
-                    </Typography>
-                    <FormControl required fullWidth>
-                      <Controller
-                        name={`groupId`}
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <GroupAutocomplete
-                            {...field}
-                            onChange={(event, newValue) =>
-                              field.onChange(newValue ? newValue.id : null)
-                            }
-                            value={field.value}
-                            error={!!fieldState.error}
-                            helperText={fieldState.error ? fieldState.error.message : null}
-                          />
-                        )}
-                      />
-                    </FormControl>
                   </Box>
                 </Box>
               </Grid>

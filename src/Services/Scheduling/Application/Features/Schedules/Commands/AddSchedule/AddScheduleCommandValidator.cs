@@ -26,10 +26,6 @@ public class AddScheduleCommandValidator : AbstractValidator<AddScheduleCommand>
                 .GreaterThan(AddScheduleCommand => AddScheduleCommand.StartDate)
                 .When(AddScheduleCommand => AddScheduleCommand.EndDate.HasValue);
 
-        RuleFor(AddScheduleCommand => AddScheduleCommand.GroupId)
-            .NotEmpty()
-            .NotNull();
-
         RuleFor(AddScheduleCommand => AddScheduleCommand.ScheduleRules)
             .NotEmpty()
             .NotNull();
@@ -45,6 +41,10 @@ public class AddScheduleCommandValidator : AbstractValidator<AddScheduleCommand>
                     .NotEqual(Guid.Empty)
                     .MustAsync(TimeSlotExists)
                     .WithMessage("The specified time slot does not exist.");
+
+                rule.RuleFor(r => r.GroupId)
+                    .NotEmpty()
+                    .NotNull();
             });
     }
 

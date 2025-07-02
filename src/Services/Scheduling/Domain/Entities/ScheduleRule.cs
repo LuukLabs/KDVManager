@@ -10,6 +10,7 @@ public class ScheduleRule : IMustHaveTenant
     public Guid TenantId { get; set; }
     public DayOfWeek Day { get; set; }
     public Guid ScheduleId { get; set; }
+    public Guid GroupId { get; set; }
     [Required]
     public Guid TimeSlotId { get; set; }
     public TimeSlot TimeSlot { get; set; }

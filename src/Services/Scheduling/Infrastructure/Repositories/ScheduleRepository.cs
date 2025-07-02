@@ -32,14 +32,13 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
         var dateUtc = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
 
         return await _dbContext.Schedules
-            .Where(s => s.GroupId == groupId)
             .Where(s =>
                 s.StartDate <= dateUtc &&
                 (!s.EndDate.HasValue || s.EndDate >= dateUtc)
             )
-            .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek))
+            .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
                 .ThenInclude(sr => sr.TimeSlot)
-            .Where(s => s.ScheduleRules.Any(sr => sr.Day == dayOfWeek))
+            .Where(s => s.ScheduleRules.Any(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
             .ToListAsync();
     }
 }

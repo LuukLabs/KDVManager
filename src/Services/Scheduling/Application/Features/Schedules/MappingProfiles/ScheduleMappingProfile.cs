@@ -1,6 +1,7 @@
 using AutoMapper;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.MappingProfiles;
 
@@ -14,5 +15,9 @@ public class ScheduleMappingProfile : Profile
             .ForMember(dest => dest.TimeSlotName, opt => opt.MapFrom(src => src.TimeSlot.Name))
             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.TimeSlot.StartTime))
             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime));
+
+        CreateMap<AddScheduleCommand, Schedule>();
+
+        CreateMap<AddScheduleCommand.AddScheduleCommandScheduleRule, ScheduleRule>();
     }
 }

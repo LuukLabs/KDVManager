@@ -8,7 +8,6 @@ import type { AddScheduleCommandScheduleRule } from "./addScheduleCommandSchedul
 
 export type AddScheduleCommand = {
   childId?: string;
-  groupId?: string;
   startDate?: string;
   /** @nullable */
   endDate?: string | null;

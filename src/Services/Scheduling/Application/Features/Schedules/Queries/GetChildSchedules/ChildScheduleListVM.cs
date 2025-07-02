@@ -9,8 +9,6 @@ public class ChildScheduleListVM
     public Guid ChildId { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public Guid GroupId { get; set; }
-    public string GroupName { get; set; }
 
     // Collection of nested schedules
     public ICollection<ChildScheduleListVMScheduleRule> ScheduleRules { get; set; } = new List<ChildScheduleListVMScheduleRule>();
@@ -22,6 +20,8 @@ public class ChildScheduleListVM
         public string TimeSlotName { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+        public Guid GroupId { get; set; }
+        public string GroupName { get; set; }
     }
 }
 

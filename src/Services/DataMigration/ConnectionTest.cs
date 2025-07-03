@@ -9,8 +9,12 @@ public class DatabaseConnectionTest
 {
     public static async Task TestConnections()
     {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        Console.WriteLine($"Running in environment: {environment}");
+
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true)
             .Build();
 
         // Test PostgreSQL connection
@@ -43,7 +47,14 @@ public class DatabaseConnectionTest
         // Test MSSQL connection
         Console.WriteLine("Testing MSSQL connection...");
         var mssqlConnectionString = configuration.GetConnectionString("MSSQLSourceConnectionString");
-        Console.WriteLine($"Connection string: {mssqlConnectionString.Replace(";Password=nLK9AJCR7pAAhVJeautT;", ";Password=***;")}");
+        Console.WriteLine($"Raw MSSQL connection string: {mssqlConnectionString}");
+        Console.WriteLine($"Connection string: {mssqlConnectionString?.Replace(";Password=nLK9AJCR7pAAhVJeautT;", ";Password=***;")}");
+
+        if (string.IsNullOrEmpty(mssqlConnectionString))
+        {
+            Console.WriteLine("❌ MSSQL connection string is null or empty");
+            return;
+        }
 
         try
         {

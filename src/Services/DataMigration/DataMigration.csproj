@@ -17,13 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Infrastructure/Infrastructure.csproj" />
-    <ProjectReference Include="../Domain/Domain.csproj" />
-    <ProjectReference Include="../Application/Application.csproj" />
+    <ProjectReference Include="../CRM/Infrastructure/Infrastructure.csproj" />
+    <ProjectReference Include="../CRM/Domain/Domain.csproj" />
+    <ProjectReference Include="../CRM/Application/Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -26,6 +26,7 @@ public class Program
 
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
             .Build();
 
         var services = new ServiceCollection();

@@ -64,10 +64,29 @@ public class DatabaseConnectionTest
 
             // Test if tables exist
             using var command = new Microsoft.Data.SqlClient.SqlCommand(
-                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME IN ('Child', 'Person')",
+                "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME",
                 sqlConnection);
-            var tableCount = (int)await command.ExecuteScalarAsync();
-            Console.WriteLine($"Found {tableCount} relevant tables (Child, Person)");
+            using var reader = await command.ExecuteReaderAsync();
+            Console.WriteLine("Available tables:");
+            while (await reader.ReadAsync())
+            {
+                Console.WriteLine($"  - {reader.GetString(0)}");
+            }
+            reader.Close();
+
+            // Check SchedulingRule table structure if it exists
+            using var columnCommand = new Microsoft.Data.SqlClient.SqlCommand(
+                @"SELECT COLUMN_NAME, DATA_TYPE 
+                  FROM INFORMATION_SCHEMA.COLUMNS 
+                  WHERE TABLE_NAME = 'SchedulingRule' 
+                  ORDER BY ORDINAL_POSITION",
+                sqlConnection);
+            using var columnReader = await columnCommand.ExecuteReaderAsync();
+            Console.WriteLine("SchedulingRule table columns:");
+            while (await columnReader.ReadAsync())
+            {
+                Console.WriteLine($"  - {columnReader.GetString(0)} ({columnReader.GetString(1)})");
+            }
         }
         catch (Exception ex)
         {

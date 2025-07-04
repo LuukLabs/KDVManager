@@ -151,17 +151,17 @@ public class ChildrenDataMigrator
             throw new InvalidOperationException("MSSQLSourceConnectionString not found in configuration");
         }
 
-        // Get all children from CRM database
+        // Get all children from CRM database ordered by creation time or ID
         var existingChildren = await _context.Children
-            .Where(c => !string.IsNullOrEmpty(c.CID))
+            .OrderBy(c => c.Id)
             .ToListAsync();
 
-        // Get corresponding external IDs from MSSQL
+        // Get external children from MSSQL in the same order as they were migrated
         var query = @"
-            SELECT [dbo].[Child].id as external_child_id, cid
+            SELECT [dbo].[Child].id as external_child_id
             FROM [dbo].[Child]
             LEFT JOIN [dbo].[Person] ON ([dbo].[Person].id = [dbo].[Child].id)
-            WHERE cid IS NOT NULL";
+            ORDER BY [dbo].[Child].id";
 
         using var connection = new SqlConnection(mssqlConnectionString);
         await connection.OpenAsync();
@@ -169,16 +169,14 @@ public class ChildrenDataMigrator
         using var command = new SqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync())
+        var index = 0;
+        while (await reader.ReadAsync() && index < existingChildren.Count)
         {
             var externalChildId = reader.GetInt32("external_child_id");
-            var cid = reader.GetString("cid");
+            var internalChild = existingChildren[index];
 
-            var matchingChild = existingChildren.FirstOrDefault(c => c.CID == cid);
-            if (matchingChild != null)
-            {
-                childIdMapping[externalChildId] = matchingChild.Id;
-            }
+            childIdMapping[externalChildId] = internalChild.Id;
+            index++;
         }
 
         Console.WriteLine($"Built child ID mapping with {childIdMapping.Count} entries");

@@ -27,6 +27,13 @@ public class Program
             return;
         }
 
+        // Check if we should search for a child
+        if (args.Length > 1 && args[0] == "--find-child")
+        {
+            await FindChildByName(args[1]);
+            return;
+        }
+
         // Check if we should run only scheduling migration
         if (args.Length > 0 && args[0] == "--scheduling-only")
         {
@@ -112,6 +119,26 @@ public class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Scheduling migration failed: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+    private static async Task FindChildByName(string name)
+    {
+        Console.WriteLine($"Searching for child with name: {name}");
+
+        var configuration = BuildConfiguration();
+        var serviceProvider = BuildServiceProvider(configuration);
+
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            var findChildQuery = scope.ServiceProvider.GetRequiredService<FindChildQuery>();
+            await findChildQuery.FindChildByNameAsync(name);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Search failed: {ex.Message}");
             Console.WriteLine(ex.StackTrace);
         }
     }

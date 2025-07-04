@@ -65,13 +65,6 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
       valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
     },
     {
-      field: "groupName",
-      headerName: "Group",
-      width: 150,
-      disableColumnMenu: true,
-      disableReorder: true,
-    },
-    {
       field: "scheduleRules",
       headerName: "WeekSchedule",
       flex: 1,

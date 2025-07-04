@@ -14,16 +14,13 @@ namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.
 public class GetChildSchedulesQueryHandler : IRequestHandler<GetChildSchedulesQuery, List<ChildScheduleListVM>>
 {
     private readonly IScheduleRepository _scheduleRepository;
-    private readonly IGroupRepository _groupRepository;
     private readonly IMapper _mapper;
 
     public GetChildSchedulesQueryHandler(
         IMapper mapper,
-        IScheduleRepository scheduleRepository,
-        IGroupRepository groupRepository)
+        IScheduleRepository scheduleRepository)
     {
         _scheduleRepository = scheduleRepository;
-        _groupRepository = groupRepository;
         _mapper = mapper;
     }
 
@@ -31,26 +28,8 @@ public class GetChildSchedulesQueryHandler : IRequestHandler<GetChildSchedulesQu
     {
         var schedules = await _scheduleRepository.GetSchedulesByChildIdAsync(request.ChildId);
 
-        // Get group information from schedule rules
-        var groupIds = schedules
-            .SelectMany(s => s.ScheduleRules)
-            .Select(sr => sr.GroupId)
-            .Distinct();
-        var groups = await _groupRepository.GetGroupsByIdsAsync(groupIds.ToList());
-        var groupsDictionary = groups.ToDictionary(g => g.Id, g => g.Name);
-
-        // Map and enrich with group names
+        // Map schedules to view models (group names will be mapped automatically through navigation properties)
         var childScheduleListVMs = _mapper.Map<List<ChildScheduleListVM>>(schedules);
-        foreach (var schedule in childScheduleListVMs)
-        {
-            foreach (var scheduleRule in schedule.ScheduleRules)
-            {
-                if (groupsDictionary.TryGetValue(scheduleRule.GroupId, out var groupName))
-                {
-                    scheduleRule.GroupName = groupName;
-                }
-            }
-        }
 
         return childScheduleListVMs;
     }

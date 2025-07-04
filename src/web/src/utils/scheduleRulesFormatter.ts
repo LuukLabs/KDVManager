@@ -9,7 +9,8 @@ export const scheduleRulesFormatter = (
   return scheduleRules
     .map((rule) => {
       const dayName = monday.add(rule.day!, "day").format("dd");
-      return `${dayName}: ${rule.timeSlotName} (${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)})`;
+      const groupName = rule.groupName ? ` - ${rule.groupName}` : "";
+      return `${dayName}: ${rule.timeSlotName} (${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)})${groupName}`;
     })
     .join("\n");
 };

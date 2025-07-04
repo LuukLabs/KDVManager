@@ -30,6 +30,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant).HasMany(si => si.ScheduleRules);
 
+        // Configure ScheduleRule relationships
+        modelBuilder.Entity<ScheduleRule>()
+            .HasOne(sr => sr.Group)
+            .WithMany()
+            .HasForeignKey(sr => sr.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 

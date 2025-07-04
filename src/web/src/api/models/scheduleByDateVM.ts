@@ -14,4 +14,7 @@ export type ScheduleByDateVM = {
   timeSlotName?: string | null;
   startTime?: string;
   endTime?: string;
+  groupId?: string;
+  /** @nullable */
+  groupName?: string | null;
 };

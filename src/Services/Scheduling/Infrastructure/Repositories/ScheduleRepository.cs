@@ -23,6 +23,8 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             .ThenBy(si => si.EndDate)
             .Include(s => s.ScheduleRules)
                 .ThenInclude(sr => sr.TimeSlot)
+            .Include(s => s.ScheduleRules)
+                .ThenInclude(sr => sr.Group)
             .ToListAsync();
     }
 
@@ -38,6 +40,8 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             )
             .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
                 .ThenInclude(sr => sr.TimeSlot)
+            .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
+                .ThenInclude(sr => sr.Group)
             .Where(s => s.ScheduleRules.Any(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
             .ToListAsync();
     }

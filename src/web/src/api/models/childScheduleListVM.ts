@@ -12,9 +12,6 @@ export type ChildScheduleListVM = {
   startDate?: string;
   /** @nullable */
   endDate?: string | null;
-  groupId?: string;
-  /** @nullable */
-  groupName?: string | null;
   /** @nullable */
   scheduleRules?: ChildScheduleListVMScheduleRule[] | null;
 };

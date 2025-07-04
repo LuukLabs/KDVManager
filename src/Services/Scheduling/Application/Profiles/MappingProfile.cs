@@ -33,7 +33,11 @@ public class MappingProfile : Profile
         CreateMap<Schedule, ChildScheduleListVM>()
             .ForMember(dest => dest.ScheduleRules, opt => opt.MapFrom(src => src.ScheduleRules));
         CreateMap<ScheduleRule, ChildScheduleListVM.ChildScheduleListVMScheduleRule>()
-            .ForMember(dest => dest.GroupName, opt => opt.Ignore());
+            .ForMember(dest => dest.TimeSlotName, opt => opt.MapFrom(src => src.TimeSlot.Name))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.TimeSlot.StartTime))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime))
+            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.GroupId))
+            .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Group.Name));
 
         // Map from ScheduleRule to ScheduleByDateVM for nested relationship
         CreateMap<ScheduleRule, ScheduleByDateVM>()
@@ -42,7 +46,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ChildFullName, opt => opt.Ignore())
             .ForMember(dest => dest.TimeSlotName, opt => opt.MapFrom(src => src.TimeSlot.Name))
             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.TimeSlot.StartTime))
-            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime));
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime))
+            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.GroupId))
+            .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Group.Name));
     }
 }
 

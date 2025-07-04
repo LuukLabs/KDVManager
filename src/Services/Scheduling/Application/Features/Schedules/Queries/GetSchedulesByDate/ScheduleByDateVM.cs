@@ -11,4 +11,6 @@ public class ScheduleByDateVM
     public string TimeSlotName { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
+    public Guid GroupId { get; set; }
+    public string GroupName { get; set; }
 }

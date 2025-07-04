@@ -13,4 +13,7 @@ export type ChildScheduleListVMScheduleRule = {
   timeSlotName?: string | null;
   startTime?: string;
   endTime?: string;
+  groupId?: string;
+  /** @nullable */
+  groupName?: string | null;
 };

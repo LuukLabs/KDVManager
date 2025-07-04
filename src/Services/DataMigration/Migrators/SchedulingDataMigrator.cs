@@ -71,10 +71,34 @@ public class SchedulingDataMigrator
             var endTime = TimeOnly.FromTimeSpan((TimeSpan)reader["EndTime"]);
             var key = $"{beginTime}-{endTime}";
 
+            // Determine the specific time slot name based on the times
+            string timeSlotName;
+            if (beginTime == new TimeOnly(8, 0) && endTime == new TimeOnly(13, 0))
+            {
+                timeSlotName = "Ochtend";
+                Console.WriteLine($"Creating time slot: {timeSlotName} (08:00-13:00)");
+            }
+            else if (beginTime == new TimeOnly(8, 0) && endTime == new TimeOnly(18, 0))
+            {
+                timeSlotName = "Hele dag";
+                Console.WriteLine($"Creating time slot: {timeSlotName} (08:00-18:00)");
+            }
+            else if (beginTime == new TimeOnly(13, 0) && endTime == new TimeOnly(18, 0))
+            {
+                timeSlotName = "Middag";
+                Console.WriteLine($"Creating time slot: {timeSlotName} (13:00-18:00)");
+            }
+            else
+            {
+                // Fallback to the default format for any other time combinations
+                timeSlotName = $"{beginTime:HH:mm} - {endTime:HH:mm}";
+                Console.WriteLine($"Creating time slot: {timeSlotName} (custom time range)");
+            }
+
             var timeSlot = new TimeSlot
             {
                 Id = Guid.NewGuid(),
-                Name = $"{beginTime:HH:mm} - {endTime:HH:mm}",
+                Name = timeSlotName,
                 StartTime = beginTime,
                 EndTime = endTime,
                 TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")

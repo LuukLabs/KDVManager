@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>KDVManager.Services.CRM.Domain</AssemblyName>
+    <RootNamespace>KDVManager.Services.CRM.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

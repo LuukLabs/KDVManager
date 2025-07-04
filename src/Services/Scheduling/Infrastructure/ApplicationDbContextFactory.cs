@@ -11,7 +11,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        optionsBuilder.UseNpgsql("Server=127.0.0.1; port=5432; database=KDVManagerCRMDB; pooling=true;");
+        optionsBuilder.UseNpgsql("Server=127.0.0.1; port=5432; database=KDVManagerSchedulingDB; pooling=true;");
 
         // Create a dummy tenant provider with a default tenant ID
         ITenantService tenantService = new DummyTenantService { Tenant = Guid.NewGuid() };

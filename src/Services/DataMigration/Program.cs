@@ -1,21 +1,17 @@
 using System;
-using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using KDVManager.Services.CRM.Infrastructure;
-using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.CRM.Application.Contracts.Services;
+using KDVManager.Services.DataMigration.Migrators;
+using KDVManager.Services.DataMigration.Services;
 
-namespace KDVManager.Services.CRM.DataMigration;
+namespace KDVManager.Services.DataMigration;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        Console.WriteLine("Starting Children Data Migration from MSSQL to CRM...");
+        Console.WriteLine("Starting Data Migration from MSSQL to KDVManager...");
 
         // Check if we should run connection test
         if (args.Length > 0 && args[0] == "--test-connections")
@@ -24,21 +20,42 @@ public class Program
             return;
         }
 
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .Build();
+        // Check if we should run only children migration
+        if (args.Length > 0 && args[0] == "--children-only")
+        {
+            await RunChildrenOnlyMigration();
+            return;
+        }
 
-        var services = new ServiceCollection();
-        ConfigureServices(services, configuration);
+        // Check if we should run only scheduling migration
+        if (args.Length > 0 && args[0] == "--scheduling-only")
+        {
+            await RunSchedulingOnlyMigration();
+            return;
+        }
 
-        var serviceProvider = services.BuildServiceProvider();
+        // Default: run both migrations
+        await RunFullMigration();
+    }
+
+    private static async Task RunFullMigration()
+    {
+        Console.WriteLine("Running full migration (Children + Scheduling)...");
+
+        var configuration = BuildConfiguration();
+        var serviceProvider = BuildServiceProvider(configuration);
 
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var migrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
-            await migrator.MigrateAsync();
+
+            // First migrate children and get the mapping
+            var childrenMigrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
+            var childIdMapping = await childrenMigrator.MigrateAsync();
+
+            // Then migrate scheduling using the child mapping
+            var schedulingMigrator = scope.ServiceProvider.GetRequiredService<SchedulingDataMigrator>();
+            await schedulingMigrator.MigrateAsync(childIdMapping);
 
             Console.WriteLine("Migration completed successfully!");
         }
@@ -49,145 +66,69 @@ public class Program
         }
     }
 
-    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    private static async Task RunChildrenOnlyMigration()
     {
-        // Register configuration as a service
-        services.AddSingleton<IConfiguration>(configuration);
+        Console.WriteLine("Running children-only migration...");
 
-        // Configure CRM Database Context
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
+        var configuration = BuildConfiguration();
+        var serviceProvider = BuildServiceProvider(configuration);
 
-        // Add tenant service with a default tenant for migration
-        services.AddScoped<ITenantService, MigrationTenantService>();
-        services.AddScoped<ChildrenDataMigrator>();
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            var childrenMigrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
+            await childrenMigrator.MigrateAsync();
+
+            Console.WriteLine("Children migration completed successfully!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Children migration failed: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+    private static async Task RunSchedulingOnlyMigration()
+    {
+        Console.WriteLine("Running scheduling-only migration...");
+        Console.WriteLine("Note: This requires existing children data to map external child IDs.");
+
+        var configuration = BuildConfiguration();
+        var serviceProvider = BuildServiceProvider(configuration);
+
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+
+            // For scheduling-only migration, we need to rebuild the child mapping from existing data
+            var childrenMigrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
+            var childIdMapping = await childrenMigrator.BuildChildIdMappingFromExistingData();
+
+            var schedulingMigrator = scope.ServiceProvider.GetRequiredService<SchedulingDataMigrator>();
+            await schedulingMigrator.MigrateAsync(childIdMapping);
+
+            Console.WriteLine("Scheduling migration completed successfully!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Scheduling migration failed: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+    private static IConfiguration BuildConfiguration()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .Build();
+    }
+
+    private static ServiceProvider BuildServiceProvider(IConfiguration configuration)
+    {
+        var services = new ServiceCollection();
+        ServiceConfiguration.ConfigureServices(services, configuration);
+        return services.BuildServiceProvider();
     }
 }
 
-public class ChildrenDataMigrator
-{
-    private readonly ApplicationDbContext _context;
-    private readonly IConfiguration _configuration;
-
-    public ChildrenDataMigrator(ApplicationDbContext context, IConfiguration configuration)
-    {
-        _context = context;
-        _configuration = configuration;
-    }
-
-    public async Task MigrateAsync()
-    {
-        // Truncate the Children table before importing
-        Console.WriteLine("Truncating Children table...");
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Children\" RESTART IDENTITY CASCADE;");
-        Console.WriteLine("Children table truncated.");
-
-        var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
-
-        if (string.IsNullOrEmpty(mssqlConnectionString))
-        {
-            throw new InvalidOperationException("MSSQLSourceConnectionString not found in configuration");
-        }
-
-        var query = @"
-            SELECT firstname, lastname, infixes, cid, dateofbirth
-            FROM [dbo].[Child]
-            LEFT JOIN [dbo].[Person] ON ([dbo].[Person].id = [dbo].[Child].id)";
-
-        using var connection = new SqlConnection(mssqlConnectionString);
-        await connection.OpenAsync();
-
-        using var command = new SqlCommand(query, connection);
-        using var reader = await command.ExecuteReaderAsync();
-
-        var migratedCount = 0;
-        var skippedCount = 0;
-
-        Console.WriteLine("Reading children data from MSSQL...");
-
-        while (await reader.ReadAsync())
-        {
-            string firstName = null, lastName = null, infixes = null, cid = null;
-            DateTime? dateOfBirth = null;
-            try
-            {
-                firstName = GetSafeString(reader, "firstname");
-                lastName = GetSafeString(reader, "lastname");
-                infixes = GetSafeString(reader, "infixes");
-                cid = GetSafeString(reader, "cid");
-                dateOfBirth = null;
-                if (!reader.IsDBNull("dateofbirth"))
-                {
-                    var dob = reader.GetDateTime("dateofbirth");
-                    dateOfBirth = DateTime.SpecifyKind(dob, DateTimeKind.Utc);
-                }
-
-                // Skip if essential data is missing
-                if (string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
-                {
-                    skippedCount++;
-                    continue;
-                }
-
-                // Combine lastname and infixes for FamilyName
-                var familyName = string.IsNullOrWhiteSpace(infixes)
-                    ? lastName
-                    : string.IsNullOrWhiteSpace(lastName)
-                        ? infixes
-                        : $"{infixes} {lastName}";
-
-                // Do not migrate gender
-
-                var child = new Child
-                {
-                    Id = Guid.NewGuid(),
-                    GivenName = firstName?.Trim(),
-                    FamilyName = familyName?.Trim(),
-                    CID = cid?.Trim(),
-                    DateOfBirth = dateOfBirth,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
-                };
-
-                _context.Children.Add(child);
-                migratedCount++;
-
-                // Batch save every 100 records
-                if (migratedCount % 100 == 0)
-                {
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine($"Migrated {migratedCount} children...");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing record: {ex.Message}");
-                if (ex.InnerException != null)
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                Console.WriteLine($"Data: firstName={firstName}, lastName={lastName}, infixes={infixes}, cid={cid}, dateOfBirth={dateOfBirth}");
-                skippedCount++;
-            }
-        }
-
-        // Save any remaining records
-        if (_context.ChangeTracker.HasChanges())
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        Console.WriteLine($"Migration completed: {migratedCount} children migrated, {skippedCount} skipped");
-    }
-
-    private static string GetSafeString(SqlDataReader reader, string columnName)
-    {
-        if (reader.IsDBNull(columnName))
-            return null;
-
-        var value = reader.GetValue(columnName);
-        return value?.ToString();
-    }
-}
-
-public class MigrationTenantService : ITenantService
-{
-    public Guid Tenant { get; } = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f"); // Default tenant for migration
-}

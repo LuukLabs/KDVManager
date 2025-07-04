@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace KDVManager.Services.CRM.DataMigration;
+namespace KDVManager.Services.DataMigration;
 
 public class DatabaseConnectionTest
 {

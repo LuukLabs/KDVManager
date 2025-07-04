@@ -17,10 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../CRM/Infrastructure/Infrastructure.csproj" />
-    <ProjectReference Include="../CRM/Domain/Domain.csproj" />
-    <ProjectReference Include="../CRM/Application/Application.csproj" />
+    <ProjectReference Include="..\CRM\Domain\Domain.csproj" />
+    <ProjectReference Include="..\CRM\Application\Application.csproj" />
+    <ProjectReference Include="..\CRM\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Scheduling\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Scheduling\Application\Application.csproj" />
+    <ProjectReference Include="..\Scheduling\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+
 
   <ItemGroup>
     <None Update="appsettings.json">

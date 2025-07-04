@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>KDVManager.Services.Scheduling.Infrastructure</AssemblyName>
+    <RootNamespace>KDVManager.Services.Scheduling.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,8 +14,9 @@ import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
+import { useTranslation } from "react-i18next";
 
-interface ScheduleCardProps {
+type ScheduleCardProps = {
   schedule: {
     id: string;
     startDate: string;
@@ -31,6 +32,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
   onDelete, 
   onEdit 
 }) => {
+  const { t } = useTranslation();
   const now = dayjs();
   const startDate = dayjs(schedule.startDate);
   const endDate = dayjs(schedule.endDate);
@@ -41,11 +43,11 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
 
   const getStatusChip = () => {
     if (isActive) {
-      return <Chip label="Active" color="success" size="small" />;
+      return <Chip label={t("Active")} color="success" size="small" />;
     } else if (isUpcoming) {
-      return <Chip label="Upcoming" color="info" size="small" />;
+      return <Chip label={t("Upcoming")} color="info" size="small" />;
     } else if (isExpired) {
-      return <Chip label="Expired" color="default" size="small" />;
+      return <Chip label={t("Expired")} color="default" size="small" />;
     }
     return null;
   };
@@ -65,16 +67,11 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
 
   return (
     <Card 
-      elevation={2}
       sx={{
         position: 'relative',
         transition: 'all 0.3s ease',
         border: isActive ? '2px solid' : '1px solid',
         borderColor: isActive ? 'success.main' : 'divider',
-        '&:hover': {
-          elevation: 4,
-          transform: 'translateY(-2px)',
-        },
       }}
     >
       <CardContent sx={{ pb: 2 }}>
@@ -82,7 +79,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Box>
             <Typography variant="h6" gutterBottom>
-              Schedule Period
+              {t("Schedule Period")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {getDateRangeDisplay()}
@@ -92,7 +89,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
             {getStatusChip()}
             <Box>
               {onEdit && (
-                <Tooltip title="Edit Schedule">
+                <Tooltip title={t("Edit Schedule")}>
                   <IconButton 
                     size="small" 
                     onClick={() => onEdit(schedule.id)}
@@ -102,7 +99,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                   </IconButton>
                 </Tooltip>
               )}
-              <Tooltip title="Delete Schedule">
+              <Tooltip title={t("Delete Schedule")}>
                 <IconButton 
                   size="small" 
                   onClick={() => onDelete(schedule.id)}
@@ -120,7 +117,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
         {/* Weekly Schedule Grid */}
         <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle2" gutterBottom sx={{ mb: 1 }}>
-            Weekly Schedule
+            {t("Weekly Schedule")}
           </Typography>
           <WeeklyScheduleGrid scheduleRules={schedule.scheduleRules} />
         </Box>
@@ -128,24 +125,24 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
         {/* Schedule Summary */}
         <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle2" gutterBottom>
-            Schedule Summary
+            {t("Schedule Summary")}
           </Typography>
           <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
             {schedule.scheduleRules.length > 0 ? (
               <>
                 <Chip 
-                  label={`${schedule.scheduleRules.length} time slots`} 
+                  label={`${schedule.scheduleRules.length} ${t("time slots")}`} 
                   size="small" 
                   variant="outlined" 
                 />
                 <Chip 
-                  label={`${new Set(schedule.scheduleRules.map(r => r.day)).size} days`} 
+                  label={`${new Set(schedule.scheduleRules.map(r => r.day)).size} ${t("days")}`} 
                   size="small" 
                   variant="outlined" 
                 />
                 {schedule.scheduleRules.some(r => r.groupName) && (
                   <Chip 
-                    label={`${new Set(schedule.scheduleRules.filter(r => r.groupName).map(r => r.groupName)).size} groups`} 
+                    label={`${new Set(schedule.scheduleRules.filter(r => r.groupName).map(r => r.groupName)).size} ${t("groups")}`} 
                     size="small" 
                     variant="outlined" 
                   />
@@ -153,7 +150,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
               </>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                No schedule rules defined
+                {t("No schedule rules defined")}
               </Typography>
             )}
           </Stack>

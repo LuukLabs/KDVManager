@@ -68,7 +68,7 @@ export default [
             exclude: [],
           },
           "jsx-components": {
-            include: [],
+            include: ["Chip"],
             exclude: ["Trans", "Auth0Provider", "LocalizationProvider"],
           },
           callees: {

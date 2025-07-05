@@ -68,11 +68,16 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
               elevation={0}
               sx={{
                 p: 1,
-                minHeight: 80,
+                minHeight: 100,
                 backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "background.default",
                 border: "1px solid",
                 borderColor: "divider",
                 borderRadius: 1,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  backgroundColor: rulesByDay[dayIndex] ? "action.selected" : "action.hover",
+                  borderColor: 'primary.main',
+                },
               }}
             >
               <Typography
@@ -83,6 +88,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                   display: "block",
                   textAlign: "center",
                   mb: 0.5,
+                  fontSize: "0.7rem",
                 }}
               >
                 {dayName}
@@ -101,6 +107,11 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                           width: "100%",
                           backgroundColor: getGroupColor(rule.groupName),
                           color: "white",
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            transform: 'scale(1.05)',
+                            boxShadow: 2,
+                          },
                           "& .MuiChip-label": {
                             px: 0.5,
                           },
@@ -115,6 +126,9 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                             display: "block",
                             textAlign: "center",
                             mt: 0.25,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
                           }}
                         >
                           {rule.groupName}

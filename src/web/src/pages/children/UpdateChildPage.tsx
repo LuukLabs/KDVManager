@@ -20,6 +20,7 @@ import { ChildSchedule } from "../../features/schedules/ChildSchedule";
 import { Button } from "@mui/material";
 import { Alert } from "@mui/material";
 import { type updateChildPageLoader } from "./updateChildPage.loader";
+import { ChildScheduleView } from "../../features/schedules/ChildScheduleView";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -116,7 +117,8 @@ const UpdateChildPage = () => {
               <TextFieldElement name="cid" label={t("CID")} fullWidth />
             </Grid>
             <Grid size={12}>
-              <ChildSchedule childId={childId} />
+              <ChildScheduleView childId={childId} />
+              {/* <ChildSchedule childId={childId} /> */}
             </Grid>
             <Grid size={12}>
               <Button

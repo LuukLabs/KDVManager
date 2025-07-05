@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { 
   Box, 
-  Toolbar, 
   Button, 
   ToggleButton, 
   ToggleButtonGroup, 
@@ -41,16 +40,22 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
   return (
     <Box>
       {/* Common Toolbar */}
-      <Toolbar sx={{ gap: 2, justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={onAddChildScheduleClickHandler}
-            startIcon={<AddIcon />}
-          >
-            {t("Add Schedule")}
-          </Button>
-        </Box>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        mb: 2,
+        flexWrap: 'wrap',
+        gap: 1
+      }}>
+        <Button
+          variant="contained"
+          onClick={onAddChildScheduleClickHandler}
+          startIcon={<AddIcon />}
+          size="medium"
+        >
+          {t("Add Schedule")}
+        </Button>
         
         <ToggleButtonGroup
           value={viewMode}
@@ -69,7 +74,7 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
             </Tooltip>
           </ToggleButton>
         </ToggleButtonGroup>
-      </Toolbar>
+      </Box>
 
       {/* Content based on view mode */}
       {viewMode === 'cards' ? (

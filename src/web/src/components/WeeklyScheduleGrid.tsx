@@ -66,32 +66,22 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
     <Box sx={{ width: "100%" }}>
       <Box sx={{ display: "flex", gap: 1 }}>
         {DAY_NAMES.map((dayName, dayIndex) => (
-          <Box key={dayIndex} sx={{ flex: 1 }}>
+          <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
             <Paper
-              elevation={0}
+              variant="outlined"
               sx={{
                 p: 1,
-                minHeight: 100,
-                backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "background.default",
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 1,
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  backgroundColor: rulesByDay[dayIndex] ? "action.selected" : "action.hover",
-                  borderColor: 'primary.main',
-                },
+                minHeight: 80,
+                backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "transparent",
               }}
             >
               <Typography
                 variant="caption"
                 sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
+                  fontWeight: "medium",
                   display: "block",
                   textAlign: "center",
                   mb: 0.5,
-                  fontSize: "0.7rem",
                 }}
               >
                 {dayName}
@@ -105,18 +95,15 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                         label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
                         size="small"
                         sx={{
-                          fontSize: "0.65rem",
-                          height: 18,
+                          fontSize: "0.6rem",
+                          height: 16,
                           width: "100%",
                           backgroundColor: getGroupColor(rule.groupName),
                           color: "white",
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            transform: 'scale(1.05)',
-                            boxShadow: 2,
-                          },
                           "& .MuiChip-label": {
                             px: 0.5,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           },
                         }}
                       />
@@ -124,7 +111,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                         <Typography
                           variant="caption"
                           sx={{
-                            fontSize: "0.6rem",
+                            fontSize: "0.55rem",
                             color: "text.secondary",
                             display: "block",
                             textAlign: "center",

@@ -6,8 +6,6 @@ import {
   Typography, 
   Chip, 
   IconButton, 
-  Tooltip,
-  Divider,
   Stack
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
@@ -68,16 +66,14 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
   return (
     <Card 
       sx={{
-        position: 'relative',
-        transition: 'all 0.3s ease',
-        border: isActive ? '2px solid' : '1px solid',
+        border: isActive ? 2 : 1,
         borderColor: isActive ? 'success.main' : 'divider',
       }}
     >
-      <CardContent sx={{ pb: 2 }}>
+      <CardContent>
         {/* Header */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Box>
+          <Box sx={{ flex: 1 }}>
             <Typography variant="h6" gutterBottom>
               {t("Schedule Period")}
             </Typography>
@@ -89,41 +85,34 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
             {getStatusChip()}
             <Box>
               {onEdit && (
-                <Tooltip title={t("Edit Schedule")}>
-                  <IconButton 
-                    size="small" 
-                    onClick={() => onEdit(schedule.id)}
-                    sx={{ ml: 1 }}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              )}
-              <Tooltip title={t("Delete Schedule")}>
                 <IconButton 
                   size="small" 
-                  onClick={() => onDelete(schedule.id)}
-                  color="error"
+                  onClick={() => onEdit(schedule.id)}
                 >
-                  <DeleteIcon fontSize="small" />
+                  <EditIcon fontSize="small" />
                 </IconButton>
-              </Tooltip>
+              )}
+              <IconButton 
+                size="small" 
+                onClick={() => onDelete(schedule.id)}
+                color="error"
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
             </Box>
           </Box>
         </Box>
 
-        <Divider sx={{ my: 2 }} />
-
         {/* Weekly Schedule Grid */}
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle2" gutterBottom sx={{ mb: 1 }}>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle2" gutterBottom>
             {t("Weekly Schedule")}
           </Typography>
           <WeeklyScheduleGrid scheduleRules={schedule.scheduleRules} />
         </Box>
 
         {/* Schedule Summary */}
-        <Box sx={{ mt: 2 }}>
+        <Box>
           <Typography variant="subtitle2" gutterBottom>
             {t("Schedule Summary")}
           </Typography>

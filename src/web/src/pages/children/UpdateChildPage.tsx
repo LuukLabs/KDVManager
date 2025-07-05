@@ -1,8 +1,23 @@
 import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import { 
+  Grid, 
+  Button, 
+  Alert, 
+  Box, 
+  Typography, 
+  Card,
+  CardContent,
+  Avatar,
+  Chip,
+  Stack
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { 
+  Person as PersonIcon, 
+  Save as SaveIcon, 
+  CalendarMonth as CalendarIcon 
+} from "@mui/icons-material";
 import {
   getGetAllChildrenQueryKey,
   useUpdateChild,
@@ -16,8 +31,6 @@ import { type UpdateChildCommand } from "@api/models/updateChildCommand";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import { Button } from "@mui/material";
-import { Alert } from "@mui/material";
 import { type updateChildPageLoader } from "./updateChildPage.loader";
 import { ChildScheduleView } from "../../features/schedules/ChildScheduleView";
 
@@ -74,6 +87,26 @@ const UpdateChildPage = () => {
     });
   };
 
+  const getFullName = () => {
+    if (child?.givenName && child?.familyName) {
+      return `${child.givenName} ${child.familyName}`.trim();
+    }
+    return t("Unknown Child");
+  };
+
+  const getInitials = () => {
+    if (child?.givenName && child?.familyName) {
+      return `${child.givenName[0]}${child.familyName[0]}`.toUpperCase();
+    }
+    return "?";
+  };
+
+  const calculateAge = () => {
+    if (!child?.dateOfBirth) return t("N/A");
+    const years = dayjs().diff(dayjs(child.dateOfBirth), "year");
+    return years === 1 ? `${years} ${t("year")}` : `${years} ${t("years")}`;
+  };
+
   if (!childId) {
     return <Alert severity="error">{t("Child ID is required")}</Alert>;
   }
@@ -83,56 +116,147 @@ const UpdateChildPage = () => {
   }
 
   return (
-    <>
-      <Paper style={{ padding: 16 }}>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <Grid container alignItems="flex-start" spacing={2}>
-            <Grid size={12}>
-              <TextFieldElement name="givenName" label={t("First name")} required fullWidth />
-            </Grid>
-            <Grid size={12}>
-              <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
-            </Grid>
-            <Grid size={12}>
-              <Controller
-                control={formContext.control}
-                name="dateOfBirth"
-                render={({ field }) => {
-                  return (
-                    <DatePicker
-                      label={t("Date of birth")}
-                      value={field.value ? dayjs(field.value) : undefined}
-                      defaultValue={field.value ? dayjs(field.value) : undefined}
-                      inputRef={field.ref}
-                      onChange={(date) => {
-                        field.onChange(date);
+    <Box sx={{ 
+      maxWidth: 1200, 
+      mx: "auto", 
+      p: 3
+    }}>
+      <Grid container spacing={3}>
+        {/* Header Section */}
+        <Grid size={12}>
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Avatar
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    bgcolor: "primary.main",
+                  }}
+                >
+                  {getInitials()}
+                </Avatar>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h4" component="h1" gutterBottom>
+                    {getFullName()}
+                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Chip
+                      icon={<CalendarIcon />}
+                      label={calculateAge()}
+                      size="small"
+                    />
+                    {child?.cid && (
+                      <Chip
+                        label={`CID: ${child.cid}`}
+                        size="small"
+                        variant="outlined"
+                      />
+                    )}
+                  </Stack>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Personal Information Section */}
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                <PersonIcon color="primary" />
+                <Typography variant="h6" component="h2">
+                  {t("Personal Information")}
+                </Typography>
+              </Box>
+              
+              <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+                <Grid container spacing={3}>
+                  <Grid size={12}>
+                    <TextFieldElement 
+                      name="givenName" 
+                      label={t("First name")} 
+                      required 
+                      fullWidth 
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <TextFieldElement 
+                      name="familyName" 
+                      label={t("Family name")} 
+                      required 
+                      fullWidth 
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <Controller
+                      control={formContext.control}
+                      name="dateOfBirth"
+                      render={({ field }) => {
+                        return (
+                          <DatePicker
+                            label={t("Date of birth")}
+                            value={field.value ? dayjs(field.value) : undefined}
+                            defaultValue={field.value ? dayjs(field.value) : undefined}
+                            inputRef={field.ref}
+                            onChange={(date) => {
+                              field.onChange(date);
+                            }}
+                            slotProps={{
+                              textField: {
+                                fullWidth: true,
+                              },
+                            }}
+                          />
+                        );
                       }}
                     />
-                  );
-                }}
-              ></Controller>
-            </Grid>
-            <Grid size={12}>
-              <TextFieldElement name="cid" label={t("CID")} fullWidth />
-            </Grid>
-            <Grid size={12}>
+                  </Grid>
+                  <Grid size={12}>
+                    <TextFieldElement 
+                      name="cid" 
+                      label={t("CID")} 
+                      fullWidth 
+                      helperText={t("Child identification number")}
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", pt: 2 }}>
+                      <Button
+                        variant="contained"
+                        disabled={!isDirty || !isValid}
+                        loading={isSubmitting}
+                        onClick={handleSubmit(onSubmit)}
+                        startIcon={<SaveIcon />}
+                      >
+                        {t("Save Changes", { ns: "common" })}
+                      </Button>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </FormContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Schedule Section */}
+        <Grid size={{ xs: 12, xl: 6 }}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                <CalendarIcon color="primary" />
+                <Typography variant="h6" component="h2">
+                  {t("Schedule Management")}
+                </Typography>
+              </Box>
+              
               <ChildScheduleView childId={childId} />
-              {/* <ChildSchedule childId={childId} /> */}
-            </Grid>
-            <Grid size={12}>
-              <Button
-                variant="contained"
-                disabled={!isDirty || !isValid}
-                loading={isSubmitting}
-                onClick={handleSubmit(onSubmit)}
-              >
-                <span>{t("Save", { ns: "common" })}</span>
-              </Button>
-            </Grid>
-          </Grid>
-        </FormContainer>
-      </Paper>
-    </>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

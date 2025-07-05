@@ -1,14 +1,12 @@
 import React from "react";
 import { 
   Box, 
-  Toolbar, 
   Button, 
   Typography, 
   CircularProgress,
-  Paper,
-  Container
+  Paper
 } from "@mui/material";
-import { Add as AddIcon, ViewModule as ViewModuleIcon } from "@mui/icons-material";
+import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
 import { useTranslation } from "react-i18next";
@@ -65,25 +63,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 2 }}>
-      {/* Header */}
-      <Paper elevation={1} sx={{ mb: 3 }}>
-        <Toolbar sx={{ gap: 2 }}>
-          <ViewModuleIcon color="primary" />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {t("Child Schedules")}
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={onAddChildScheduleClickHandler}
-            startIcon={<AddIcon />}
-            sx={{ ml: 'auto' }}
-          >
-            {t("Add Schedule")}
-          </Button>
-        </Toolbar>
-      </Paper>
-
+    <Box>
       {/* Loading state */}
       {isFetching && !isLoading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
@@ -94,9 +74,9 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
       {/* Schedule Cards */}
       {data && data.length > 0 ? (
         <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-          gap: 3 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 2
         }}>
           {data.map((schedule) => (
             <ScheduleCard 
@@ -117,10 +97,11 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
           elevation={0} 
           sx={{ 
             textAlign: 'center', 
-            py: 8, 
-            backgroundColor: 'background.default',
+            py: 6, 
+            backgroundColor: 'grey.50',
             border: '2px dashed',
-            borderColor: 'divider',
+            borderColor: 'grey.300',
+            borderRadius: 2
           }}
         >
           <Typography variant="h6" gutterBottom color="text.secondary">
@@ -138,6 +119,6 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
           </Button>
         </Paper>
       )}
-    </Container>
+    </Box>
   );
 };

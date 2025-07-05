@@ -14,8 +14,6 @@ import { useSnackbar } from "notistack";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
 import Grid from "@mui/material/Grid";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
 import { Box, Typography } from "@mui/material";
 import GroupAutocomplete from "../groups/GroupAutocomplete";
 import TimeSlotAutocomplete from "../timeSlots/TimeSlotAutocomplete";
@@ -90,20 +88,34 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     ];
 
     const renderWeeklySchedule = () => (
-      <Box>
-        {weekdays.map((day) => (
-          <Box key={day.key} sx={{ mb: 2, py: 0.5, border: '1px solid #e0e0e0', borderRadius: 1, p: 2 }}>
-            <Typography variant="subtitle1" fontWeight="medium" sx={{ mb: 2 }}>
+      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2 }}>
+        {weekdays.map((day, index) => (
+          <Box key={day.key} sx={{ 
+            mb: index === weekdays.length - 1 ? 0 : 1.5,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            py: 1
+          }}>
+            <Typography 
+              variant="body2" 
+              fontWeight="medium" 
+              sx={{ 
+                minWidth: 80,
+                color: 'text.secondary',
+                fontSize: '0.875rem'
+              }}
+            >
               {day.label}
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={1.5} sx={{ flex: 1 }}>
               <Grid size={6}>
                 <Controller
                   name={`scheduleRules.${day.value}.timeSlotId`}
                   control={control}
                   render={({ field }) => (
                     <TimeSlotAutocomplete
-                      value={null}
+                      size="small"
                       onChange={(_, newValue) => {
                         field.onChange(newValue ? newValue.id : null);
                       }}
@@ -117,7 +129,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   control={control}
                   render={({ field }) => (
                     <GroupAutocomplete
-                      value={null}
+                      size="small"
                       onChange={(_, newValue) =>
                         field.onChange(newValue ? newValue.id : null)
                       }
@@ -138,66 +150,60 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     );
 
     return (
-      <Dialog {...muiDialogV5(modal)} maxWidth="lg" fullWidth>
+      <Dialog {...muiDialogV5(modal)} maxWidth="md" fullWidth>
         <DialogTitle sx={{ pb: 1 }}>
           <Typography variant="h5" component="div">
             {t("Add schedule")}
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          <DialogContentText sx={{ mb: 3, color: "text.secondary" }}>
+          <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: '0.875rem' }}>
             {t("To add a schedule, please enter the details below.")}
           </DialogContentText>
           <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={4}>
-              {/* Left Column */}
-              <Grid size={6}>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                  {/* Date Range Section */}
-                  <Box>
-                    <Typography variant="h6" gutterBottom color="primary">
-                      {t("Schedule Period")}
-                    </Typography>
-                    <Grid container spacing={3}>
-                      <Grid size={12}>
-                        <DatePickerElement label={t("Start Date")} name="startDate" />
-                      </Grid>
-                      <Grid size={12}>
-                        <Controller
-                          control={control}
-                          name="endDate"
-                          render={({ field, fieldState }) => (
-                            <DatePicker
-                              label={t("End date")}
-                              defaultValue={field.value ? dayjs(field.value) : undefined}
-                              inputRef={field.ref}
-                              format="L"
-                              onChange={(date) => {
-                                field.onChange(date);
-                              }}
-                              slotProps={{
-                                textField: {
-                                  fullWidth: true,
-                                  error: !!fieldState.error,
-                                  helperText: fieldState.error ? fieldState.error.message : null,
-                                },
-                              }}
-                            />
-                          )}
-                        />
-                      </Grid>
+            <Grid container spacing={3}>
+              {/* Left Column - Date Range */}
+              <Grid size={4}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Typography variant="h6" gutterBottom color="primary" sx={{ fontSize: '1.1rem' }}>
+                    {t("Schedule Period")}
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid size={12}>
+                      <DatePickerElement 
+                        label={t("Start Date")} 
+                        name="startDate"
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            fullWidth: true
+                          }
+                        }}
+                      />
                     </Grid>
-                  </Box>
+                    <Grid size={12}>
+                      <DatePickerElement 
+                        label={t("End date")} 
+                        name="endDate"
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            fullWidth: true
+                          }
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
                 </Box>
               </Grid>
 
               {/* Right Column - Weekly Schedule */}
-              <Grid size={6}>
+              <Grid size={8}>
                 <Box>
-                  <Typography variant="h6" color="primary" gutterBottom>
+                  <Typography variant="h6" color="primary" gutterBottom sx={{ fontSize: '1.1rem' }}>
                     {t("Weekly Schedule")}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: '0.875rem' }}>
                     {t("Select the days and time slots for this schedule")}
                   </Typography>
 
@@ -208,7 +214,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
           </FormContainer>
         </DialogContent>
         <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
-          <Button variant="outlined" onClick={handleOnCancelClick} size="large">
+          <Button variant="outlined" onClick={handleOnCancelClick} size="medium">
             {t("Cancel", { ns: "common" })}
           </Button>
           <Button
@@ -216,7 +222,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             disabled={!isDirty || !isValid}
             loading={isSubmitting}
             onClick={handleSubmit(onSubmit)}
-            size="large"
+            size="medium"
           >
             <span>{t("Add Schedule", { ns: "common" })}</span>
           </Button>

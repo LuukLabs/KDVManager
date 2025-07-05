@@ -1,11 +1,6 @@
 import { DataGrid, type GridColDef, GridActionsCellItem } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
-import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import NiceModal from "@ebay/nice-modal-react";
-import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { AddChildScheduleDialog } from "./AddChildScheduleDialog";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,7 +10,6 @@ import {
   useDeleteSchedule,
   getGetChildSchedulesQueryKey,
 } from "@api/endpoints/schedules/schedules";
-import { ScheduleRulesDisplay } from "../../components/ScheduleRulesDisplay";
 import { ScheduleVisualization } from "../../components/ScheduleVisualization";
 
 type ChildScheduleProps = {
@@ -30,9 +24,6 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
     ChildId: childId,
   });
   const deleteScheduleMutation = useDeleteSchedule();
-
-  const onAddChildScheduleClickHandler = () =>
-    void NiceModal.show(AddChildScheduleDialog, { childId: childId });
 
   const handleDeleteSchedule = async (scheduleId: string) => {
     if (window.confirm(t("Are you sure you want to delete this schedule?"))) {
@@ -97,28 +88,17 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
   ];
 
   return (
-    <>
-      <Toolbar>
-        <Button
-          variant="contained"
-          onClick={onAddChildScheduleClickHandler}
-          startIcon={<AddIcon />}
-        >
-          {t("Schedule")}
-        </Button>
-      </Toolbar>
-      <DataGrid<ChildListVM>
-        autoHeight
-        loading={isLoading || isFetching}
-        columns={columns}
-        rows={data || []}
-        getRowHeight={() => 'auto'}
-        sx={{
-          '& .MuiDataGrid-cell': {
-            py: 1,
-          },
-        }}
-      />
-    </>
+    <DataGrid<ChildListVM>
+      autoHeight
+      loading={isLoading || isFetching}
+      columns={columns}
+      rows={data || []}
+      getRowHeight={() => 'auto'}
+      sx={{
+        '& .MuiDataGrid-cell': {
+          py: 1,
+        },
+      }}
+    />
   );
 };

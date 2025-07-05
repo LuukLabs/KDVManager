@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -50,5 +51,14 @@ public class GroupsController : ControllerBase
     {
         await _mediator.Send(deleteGroupCommand);
         return NoContent();
+    }
+
+    [HttpGet("{groupId:guid}/schedules", Name = "GetSchedulesByDateForGroup")]
+    [ProducesResponseType(typeof(List<ScheduleByDateVM>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<List<ScheduleByDateVM>>> GetSchedulesByDateRange([FromRoute] Guid groupId, [FromQuery] DateOnly date)
+    {
+        var query = new GetSchedulesByDateQuery { GroupId = groupId, Date = date };
+        var schedules = await _mediator.Send(query);
+        return Ok(schedules);
     }
 }

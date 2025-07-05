@@ -18,7 +18,7 @@ const ScheduleOverviewPage = () => {
 
   // Get date from URL parameter or default to today
   const getInitialDate = () => {
-    const dateParam = searchParams.get('date');
+    const dateParam = searchParams.get("date");
     if (dateParam) {
       const parsedDate = dayjs(dateParam);
       if (parsedDate.isValid()) {
@@ -34,17 +34,17 @@ const ScheduleOverviewPage = () => {
   const handleDateChange = (newDate: dayjs.Dayjs | null) => {
     if (newDate) {
       setSelectedDate(newDate); // Store as local time for calendar
-      
+
       // Update URL search params with date-only format
       const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('date', newDate.format('YYYY-MM-DD'));
+      newSearchParams.set("date", newDate.format("YYYY-MM-DD"));
       setSearchParams(newSearchParams, { replace: true });
     }
   };
 
   // Update state when URL changes (e.g., browser back/forward)
   useEffect(() => {
-    const dateParam = searchParams.get('date');
+    const dateParam = searchParams.get("date");
     if (dateParam) {
       const parsedDate = dayjs(dateParam);
       if (parsedDate.isValid()) {

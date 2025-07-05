@@ -1,8 +1,8 @@
 import { Box, Paper, Typography, CircularProgress } from "@mui/material";
 import { type Dayjs } from "dayjs";
-import { useGetSchedulesByDate } from "@api/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
 import { useTranslation } from "react-i18next";
+import { useGetSchedulesByDateForGroup } from "@api/endpoints/groups/groups";
 
 type Group = {
   id: string;
@@ -16,9 +16,8 @@ type GroupColumnProps = {
 
 const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
   const { t } = useTranslation();
-  const { data: schedules, isLoading } = useGetSchedulesByDate({
-    Date: selectedDate.format("YYYY-MM-DD"),
-    GroupId: group.id,
+  const { data: schedules, isLoading } = useGetSchedulesByDateForGroup(group.id, {
+    date: selectedDate.format("YYYY-MM-DD"),
   });
 
   return (

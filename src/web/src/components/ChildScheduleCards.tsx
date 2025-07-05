@@ -1,11 +1,5 @@
 import React from "react";
-import { 
-  Box, 
-  Button, 
-  Typography, 
-  CircularProgress,
-  Paper
-} from "@mui/material";
+import { Box, Button, Typography, CircularProgress, Paper } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
@@ -56,7 +50,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
         <CircularProgress />
       </Box>
     );
@@ -66,26 +60,28 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
     <Box>
       {/* Loading state */}
       {isFetching && !isLoading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
           <CircularProgress size={24} />
         </Box>
       )}
 
       {/* Schedule Cards */}
       {data && data.length > 0 ? (
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: 2
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
           {data.map((schedule) => (
-            <ScheduleCard 
+            <ScheduleCard
               key={schedule.id}
               schedule={{
-                id: schedule.id || '',
-                startDate: schedule.startDate || '',
-                endDate: schedule.endDate || '',
-                scheduleRules: schedule.scheduleRules || []
+                id: schedule.id || "",
+                startDate: schedule.startDate || "",
+                endDate: schedule.endDate || "",
+                scheduleRules: schedule.scheduleRules || [],
               }}
               onDelete={handleDeleteSchedule}
               onEdit={handleEditSchedule}
@@ -93,15 +89,15 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
           ))}
         </Box>
       ) : (
-        <Paper 
-          elevation={0} 
-          sx={{ 
-            textAlign: 'center', 
-            py: 6, 
-            backgroundColor: 'grey.50',
-            border: '2px dashed',
-            borderColor: 'grey.300',
-            borderRadius: 2
+        <Paper
+          elevation={0}
+          sx={{
+            textAlign: "center",
+            py: 6,
+            backgroundColor: "grey.50",
+            border: "2px dashed",
+            borderColor: "grey.300",
+            borderRadius: 2,
           }}
         >
           <Typography variant="h6" gutterBottom color="text.secondary">

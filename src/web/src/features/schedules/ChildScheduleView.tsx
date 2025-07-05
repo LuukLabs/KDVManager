@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import { 
-  Box, 
-  Button, 
-  ToggleButton, 
-  ToggleButtonGroup, 
-  Tooltip
-} from "@mui/material";
-import { 
-  Add as AddIcon, 
-  ViewList as ViewListIcon, 
-  ViewModule as ViewModuleIcon 
+import { Box, Button, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
+import {
+  Add as AddIcon,
+  ViewList as ViewListIcon,
+  ViewModule as ViewModuleIcon,
 } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "./AddChildScheduleDialog";
@@ -23,14 +17,14 @@ type ChildScheduleViewProps = {
 
 export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId }) => {
   const { t } = useTranslation();
-  const [viewMode, setViewMode] = useState<'table' | 'cards'>('cards');
+  const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
 
   const handleViewModeChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newViewMode: 'table' | 'cards' | null,
+    newViewMode: "table" | "cards" | null,
   ) => {
     if (newViewMode !== null) {
       setViewMode(newViewMode);
@@ -40,14 +34,16 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
   return (
     <Box>
       {/* Common Toolbar */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        mb: 2,
-        flexWrap: 'wrap',
-        gap: 1
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+          flexWrap: "wrap",
+          gap: 1,
+        }}
+      >
         <Button
           variant="contained"
           onClick={onAddChildScheduleClickHandler}
@@ -56,13 +52,8 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
         >
           {t("Add Schedule")}
         </Button>
-        
-        <ToggleButtonGroup
-          value={viewMode}
-          exclusive
-          onChange={handleViewModeChange}
-          size="small"
-        >
+
+        <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewModeChange} size="small">
           <ToggleButton value="cards">
             <Tooltip title={t("Card View")}>
               <ViewModuleIcon />
@@ -77,7 +68,7 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
       </Box>
 
       {/* Content based on view mode */}
-      {viewMode === 'cards' ? (
+      {viewMode === "cards" ? (
         <ChildScheduleCards childId={childId} />
       ) : (
         <ChildScheduleDataGrid childId={childId} />

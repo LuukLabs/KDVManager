@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 type ScheduleRulesDisplayProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
-}
+};
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -23,7 +23,7 @@ const GROUP_COLORS = [
 
 const getGroupColor = (groupName: string | null | undefined): string => {
   if (!groupName) return "#757575"; // Grey for no group
-  
+
   // Simple hash function to get consistent colors for group names
   let hash = 0;
   for (let i = 0; i < groupName.length; i++) {
@@ -32,11 +32,9 @@ const getGroupColor = (groupName: string | null | undefined): string => {
   return GROUP_COLORS[Math.abs(hash) % GROUP_COLORS.length];
 };
 
-export const ScheduleRulesDisplay: React.FC<ScheduleRulesDisplayProps> = ({
-  scheduleRules,
-}) => {
+export const ScheduleRulesDisplay: React.FC<ScheduleRulesDisplayProps> = ({ scheduleRules }) => {
   const { t } = useTranslation();
-  
+
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
       <Typography variant="body2" color="text.secondary">

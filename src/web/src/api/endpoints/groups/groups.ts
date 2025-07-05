@@ -22,11 +22,15 @@ import type {
 
 import type { AddGroupCommand } from "../../models/addGroupCommand";
 
+import type { GetSchedulesByDateForGroupParams } from "../../models/getSchedulesByDateForGroupParams";
+
 import type { GroupListVM } from "../../models/groupListVM";
 
 import type { ListGroupsParams } from "../../models/listGroupsParams";
 
 import type { ProblemDetails } from "../../models/problemDetails";
+
+import type { ScheduleByDateVM } from "../../models/scheduleByDateVM";
 
 import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
 
@@ -254,3 +258,134 @@ export const useDeleteGroup = <TError = ProblemDetails, TContext = unknown>(
 
   return useMutation(mutationOptions, queryClient);
 };
+export const getSchedulesByDateForGroup = (
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+  signal?: AbortSignal,
+) => {
+  return executeFetch<ScheduleByDateVM[]>({
+    url: `/scheduling/v1/groups/${groupId}/schedules`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getGetSchedulesByDateForGroupQueryKey = (
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+) => {
+  return [`/scheduling/v1/groups/${groupId}/schedules`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetSchedulesByDateForGroupQueryOptions = <
+  TData = Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+  TError = unknown,
+>(
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetSchedulesByDateForGroupQueryKey(groupId, params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>> = ({
+    signal,
+  }) => getSchedulesByDateForGroup(groupId, params, signal);
+
+  return { queryKey, queryFn, enabled: !!groupId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetSchedulesByDateForGroupQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getSchedulesByDateForGroup>>
+>;
+export type GetSchedulesByDateForGroupQueryError = unknown;
+
+export function useGetSchedulesByDateForGroup<
+  TData = Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+  TError = unknown,
+>(
+  groupId: string,
+  params: undefined | GetSchedulesByDateForGroupParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+          TError,
+          Awaited<ReturnType<typeof getSchedulesByDateForGroup>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetSchedulesByDateForGroup<
+  TData = Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+  TError = unknown,
+>(
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+          TError,
+          Awaited<ReturnType<typeof getSchedulesByDateForGroup>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetSchedulesByDateForGroup<
+  TData = Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+  TError = unknown,
+>(
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetSchedulesByDateForGroup<
+  TData = Awaited<ReturnType<typeof getSchedulesByDateForGroup>>,
+  TError = unknown,
+>(
+  groupId: string,
+  params?: GetSchedulesByDateForGroupParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDateForGroup>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetSchedulesByDateForGroupQueryOptions(groupId, params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}

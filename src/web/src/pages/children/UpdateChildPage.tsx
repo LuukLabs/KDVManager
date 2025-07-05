@@ -1,22 +1,22 @@
 import { Controller, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import { 
-  Grid, 
-  Button, 
-  Alert, 
-  Box, 
-  Typography, 
+import {
+  Grid,
+  Button,
+  Alert,
+  Box,
+  Typography,
   Card,
   CardContent,
   Avatar,
   Chip,
-  Stack
+  Stack,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { 
-  Person as PersonIcon, 
-  Save as SaveIcon, 
-  CalendarMonth as CalendarIcon 
+import {
+  Person as PersonIcon,
+  Save as SaveIcon,
+  CalendarMonth as CalendarIcon,
 } from "@mui/icons-material";
 import {
   getGetAllChildrenQueryKey,
@@ -116,11 +116,13 @@ const UpdateChildPage = () => {
   }
 
   return (
-    <Box sx={{ 
-      maxWidth: 1200, 
-      mx: "auto", 
-      p: 3
-    }}>
+    <Box
+      sx={{
+        maxWidth: 1200,
+        mx: "auto",
+        p: 3,
+      }}
+    >
       <Grid container spacing={3}>
         {/* Header Section */}
         <Grid size={12}>
@@ -141,17 +143,9 @@ const UpdateChildPage = () => {
                     {getFullName()}
                   </Typography>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <Chip
-                      icon={<CalendarIcon />}
-                      label={calculateAge()}
-                      size="small"
-                    />
+                    <Chip icon={<CalendarIcon />} label={calculateAge()} size="small" />
                     {child?.cid && (
-                      <Chip
-                        label={`CID: ${child.cid}`}
-                        size="small"
-                        variant="outlined"
-                      />
+                      <Chip label={`CID: ${child.cid}`} size="small" variant="outlined" />
                     )}
                   </Stack>
                 </Box>
@@ -170,23 +164,18 @@ const UpdateChildPage = () => {
                   {t("Personal Information")}
                 </Typography>
               </Box>
-              
+
               <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={3}>
                   <Grid size={12}>
-                    <TextFieldElement 
-                      name="givenName" 
-                      label={t("First name")} 
-                      required 
-                      fullWidth 
-                    />
+                    <TextFieldElement name="givenName" label={t("First name")} required fullWidth />
                   </Grid>
                   <Grid size={12}>
-                    <TextFieldElement 
-                      name="familyName" 
-                      label={t("Family name")} 
-                      required 
-                      fullWidth 
+                    <TextFieldElement
+                      name="familyName"
+                      label={t("Family name")}
+                      required
+                      fullWidth
                     />
                   </Grid>
                   <Grid size={12}>
@@ -214,10 +203,10 @@ const UpdateChildPage = () => {
                     />
                   </Grid>
                   <Grid size={12}>
-                    <TextFieldElement 
-                      name="cid" 
-                      label={t("CID")} 
-                      fullWidth 
+                    <TextFieldElement
+                      name="cid"
+                      label={t("CID")}
+                      fullWidth
                       helperText={t("Child identification number")}
                     />
                   </Grid>
@@ -250,7 +239,7 @@ const UpdateChildPage = () => {
                   {t("Schedule Management")}
                 </Typography>
               </Box>
-              
+
               <ChildScheduleView childId={childId} />
             </CardContent>
           </Card>

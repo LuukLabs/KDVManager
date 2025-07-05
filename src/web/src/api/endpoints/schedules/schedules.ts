@@ -26,11 +26,7 @@ import type { ChildScheduleListVM } from "../../models/childScheduleListVM";
 
 import type { GetChildSchedulesParams } from "../../models/getChildSchedulesParams";
 
-import type { GetSchedulesByDateParams } from "../../models/getSchedulesByDateParams";
-
 import type { ProblemDetails } from "../../models/problemDetails";
-
-import type { ScheduleByDateVM } from "../../models/scheduleByDateVM";
 
 import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
 
@@ -214,117 +210,6 @@ export const useAddSchedule = <TError = UnprocessableEntityResponse, TContext = 
 
   return useMutation(mutationOptions, queryClient);
 };
-export const getSchedulesByDate = (params?: GetSchedulesByDateParams, signal?: AbortSignal) => {
-  return executeFetch<ScheduleByDateVM[]>({
-    url: `/scheduling/v1/schedules/daterange`,
-    method: "GET",
-    params,
-    signal,
-  });
-};
-
-export const getGetSchedulesByDateQueryKey = (params?: GetSchedulesByDateParams) => {
-  return [`/scheduling/v1/schedules/daterange`, ...(params ? [params] : [])] as const;
-};
-
-export const getGetSchedulesByDateQueryOptions = <
-  TData = Awaited<ReturnType<typeof getSchedulesByDate>>,
-  TError = unknown,
->(
-  params?: GetSchedulesByDateParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDate>>, TError, TData>>;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getGetSchedulesByDateQueryKey(params);
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSchedulesByDate>>> = ({ signal }) =>
-    getSchedulesByDate(params, signal);
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getSchedulesByDate>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type GetSchedulesByDateQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSchedulesByDate>>
->;
-export type GetSchedulesByDateQueryError = unknown;
-
-export function useGetSchedulesByDate<
-  TData = Awaited<ReturnType<typeof getSchedulesByDate>>,
-  TError = unknown,
->(
-  params: undefined | GetSchedulesByDateParams,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDate>>, TError, TData>> &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSchedulesByDate>>,
-          TError,
-          Awaited<ReturnType<typeof getSchedulesByDate>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetSchedulesByDate<
-  TData = Awaited<ReturnType<typeof getSchedulesByDate>>,
-  TError = unknown,
->(
-  params?: GetSchedulesByDateParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDate>>, TError, TData>
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSchedulesByDate>>,
-          TError,
-          Awaited<ReturnType<typeof getSchedulesByDate>>
-        >,
-        "initialData"
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetSchedulesByDate<
-  TData = Awaited<ReturnType<typeof getSchedulesByDate>>,
-  TError = unknown,
->(
-  params?: GetSchedulesByDateParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDate>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-export function useGetSchedulesByDate<
-  TData = Awaited<ReturnType<typeof getSchedulesByDate>>,
-  TError = unknown,
->(
-  params?: GetSchedulesByDateParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSchedulesByDate>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetSchedulesByDateQueryOptions(params, options);
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
-}
-
 export const deleteSchedule = (id: string) => {
   return executeFetch<void>({ url: `/scheduling/v1/schedules/${id}`, method: "DELETE" });
 };

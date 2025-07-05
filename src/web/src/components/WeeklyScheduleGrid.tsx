@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 type WeeklyScheduleGridProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
-}
+};
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -23,7 +23,7 @@ const GROUP_COLORS = [
 
 const getGroupColor = (groupName: string | null | undefined): string => {
   if (!groupName) return "#757575"; // Grey for no group
-  
+
   // Simple hash function to get consistent colors for group names
   let hash = 0;
   for (let i = 0; i < groupName.length; i++) {
@@ -32,11 +32,9 @@ const getGroupColor = (groupName: string | null | undefined): string => {
   return GROUP_COLORS[Math.abs(hash) % GROUP_COLORS.length];
 };
 
-export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
-  scheduleRules,
-}) => {
+export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ scheduleRules }) => {
   const { t } = useTranslation();
-  
+
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
       <Typography variant="body2" color="text.secondary">
@@ -46,15 +44,18 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   }
 
   // Group rules by day
-  const rulesByDay = scheduleRules.reduce((acc, rule) => {
-    const day = rule.day ?? 0;
-    if (!acc[day]) acc[day] = [];
-    acc[day].push(rule);
-    return acc;
-  }, {} as Record<number, ChildScheduleListVMScheduleRule[]>);
+  const rulesByDay = scheduleRules.reduce(
+    (acc, rule) => {
+      const day = rule.day ?? 0;
+      if (!acc[day]) acc[day] = [];
+      acc[day].push(rule);
+      return acc;
+    },
+    {} as Record<number, ChildScheduleListVMScheduleRule[]>,
+  );
 
   // Sort rules within each day by start time
-  Object.keys(rulesByDay).forEach(day => {
+  Object.keys(rulesByDay).forEach((day) => {
     rulesByDay[parseInt(day)].sort((a, b) => {
       const timeA = a.startTime || "00:00";
       const timeB = b.startTime || "00:00";
@@ -86,7 +87,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
               >
                 {dayName}
               </Typography>
-              
+
               {rulesByDay[dayIndex] && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
                   {rulesByDay[dayIndex].map((rule, index) => (

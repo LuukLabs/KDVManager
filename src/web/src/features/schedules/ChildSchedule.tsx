@@ -15,7 +15,8 @@ import {
   useDeleteSchedule,
   getGetChildSchedulesQueryKey,
 } from "@api/endpoints/schedules/schedules";
-import { scheduleRulesFormatter } from "../../utils/scheduleRulesFormatter";
+import { ScheduleRulesDisplay } from "../../components/ScheduleRulesDisplay";
+import { ScheduleVisualization } from "../../components/ScheduleVisualization";
 
 type ChildScheduleProps = {
   childId: string;
@@ -68,10 +69,14 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
       field: "scheduleRules",
       headerName: "WeekSchedule",
       flex: 1,
-      minWidth: 200,
+      minWidth: 400,
       disableColumnMenu: true,
       disableReorder: true,
-      valueFormatter: (value) => value && scheduleRulesFormatter(value),
+      renderCell: (params) => {
+        return params.value ? (
+          <ScheduleVisualization scheduleRules={params.value} />
+        ) : null;
+      },
     },
     {
       field: "actions",
@@ -107,6 +112,12 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
         loading={isLoading || isFetching}
         columns={columns}
         rows={data || []}
+        getRowHeight={() => 'auto'}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            py: 1,
+          },
+        }}
       />
     </>
   );

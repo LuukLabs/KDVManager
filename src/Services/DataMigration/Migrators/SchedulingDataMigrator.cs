@@ -32,11 +32,8 @@ public class SchedulingDataMigrator
         // Then create Groups for unique group IDs
         var groupMapping = await MigrateGroupsAsync();
 
-        // Then migrate Schedules
-        await MigrateSchedulesAsync(childIdMapping);
-
-        // Finally, migrate ScheduleRules
-        await MigrateScheduleRulesAsync(childIdMapping, timeSlotMapping, groupMapping);
+        // Finally, migrate Schedules and ScheduleRules together
+        await MigrateSchedulesAsync(childIdMapping, timeSlotMapping, groupMapping);
     }
 
     private async Task<Dictionary<string, Guid>> MigrateTimeSlotsAsync()
@@ -161,12 +158,13 @@ public class SchedulingDataMigrator
         return groupMapping;
     }
 
-    private async Task MigrateSchedulesAsync(Dictionary<int, Guid> childIdMapping)
+    private async Task MigrateSchedulesAsync(Dictionary<int, Guid> childIdMapping, Dictionary<string, Guid> timeSlotMapping, Dictionary<int, Guid> groupMapping)
     {
-        // Truncate the Schedules table before importing
-        Console.WriteLine("Truncating Schedules table...");
+        // Truncate both tables before importing
+        Console.WriteLine("Truncating Schedules and ScheduleRules tables...");
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"ScheduleRules\" RESTART IDENTITY CASCADE;");
         await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Schedules\" RESTART IDENTITY CASCADE;");
-        Console.WriteLine("Schedules table truncated.");
+        Console.WriteLine("Tables truncated.");
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
 
@@ -180,11 +178,20 @@ public class SchedulingDataMigrator
                 SELECT
                     s.Id AS SchedulingId,
                     s.ChildId,
-                    s.[Date] AS StartDate
+                    s.[Date] AS StartDate,
+                    sr.Id AS ScheduleRuleId,
+                    sr.[group] AS GroupId,
+                    sr.day,
+                    CAST(sr.begintime AS TIME) AS BeginTime,
+                    CAST(sr.endtime AS TIME) AS EndTime
                 FROM
                     Scheduling s
                 JOIN
                     SchedulingRule sr ON s.Id = sr.SchedulingId
+                WHERE sr.begintime IS NOT NULL 
+                    AND sr.endtime IS NOT NULL 
+                    AND sr.[group] IS NOT NULL
+                    AND sr.day IS NOT NULL
             ),
             OrderedSchedules AS (
                 SELECT
@@ -197,6 +204,11 @@ public class SchedulingDataMigrator
                     curr.SchedulingId,
                     curr.ChildId,
                     curr.StartDate,
+                    curr.ScheduleRuleId,
+                    curr.GroupId,
+                    curr.day,
+                    curr.BeginTime,
+                    curr.EndTime,
                     next.StartDate AS PotentialEndDate
                 FROM
                     OrderedSchedules curr
@@ -210,15 +222,25 @@ public class SchedulingDataMigrator
                     SchedulingId,
                     ChildId,
                     StartDate,
-                    MIN(PotentialEndDate) AS EndDate  -- eerstvolgende geldige afspraak
+                    ScheduleRuleId,
+                    GroupId,
+                    day,
+                    BeginTime,
+                    EndTime,
+                    MIN(PotentialEndDate) AS EndDate
                 FROM SchedulingWithPotentialNext
-                GROUP BY SchedulingId, ChildId, StartDate
+                GROUP BY SchedulingId, ChildId, StartDate, ScheduleRuleId, GroupId, day, BeginTime, EndTime
             ),
             FinalWithFallback AS (
                 SELECT
                     nd.SchedulingId,
                     nd.ChildId,
                     nd.StartDate,
+                    nd.ScheduleRuleId,
+                    nd.GroupId,
+                    nd.day,
+                    nd.BeginTime,
+                    nd.EndTime,
                     ISNULL(nd.EndDate, DATEADD(YEAR, 4, c.dateofbirth)) AS EndDate
                 FROM
                     NextEndDates nd
@@ -227,7 +249,7 @@ public class SchedulingDataMigrator
             )
             SELECT *
             FROM FinalWithFallback
-            ORDER BY ChildId, StartDate;
+            ORDER BY ChildId, StartDate, ScheduleRuleId;
         ";
 
         using var connection = new SqlConnection(mssqlConnectionString);
@@ -236,174 +258,66 @@ public class SchedulingDataMigrator
         using var command = new SqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
-        var migratedCount = 0;
+        var migratedScheduleCount = 0;
+        var migratedRuleCount = 0;
         var skippedCount = 0;
+        var currentScheduleId = Guid.Empty;
+        var scheduleMapping = new Dictionary<int, Guid>(); // Maps external scheduling ID to internal schedule ID
 
-        Console.WriteLine("Reading scheduling data from MSSQL...");
+        Console.WriteLine("Reading scheduling data with rules from MSSQL...");
 
         while (await reader.ReadAsync())
         {
             try
             {
+                var externalSchedulingId = Convert.ToInt32(reader["SchedulingId"]);
                 var externalChildId = Convert.ToInt32(reader["ChildId"]);
                 var startDate = Convert.ToDateTime(reader["StartDate"]);
                 var endDate = reader["EndDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["EndDate"]);
 
+                var externalGroupId = Convert.ToInt32(reader["GroupId"]);
+                var day = Convert.ToInt32(reader["day"]);
+                var beginTime = TimeOnly.FromTimeSpan((TimeSpan)reader["BeginTime"]);
+                var endTime = TimeOnly.FromTimeSpan((TimeSpan)reader["EndTime"]);
+
                 // Map external child ID to internal child ID
                 if (!childIdMapping.ContainsKey(externalChildId))
                 {
-                    Console.WriteLine($"Warning: External child ID {externalChildId} not found in mapping. Skipping schedule.");
+                    Console.WriteLine($"Warning: External child ID {externalChildId} not found in mapping. Skipping.");
                     skippedCount++;
                     continue;
                 }
 
-                var childId = childIdMapping[externalChildId];
-
-                var schedule = new Schedule
-                {
-                    Id = Guid.NewGuid(),
-                    ChildId = childId,
-                    StartDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc),
-                    EndDate = endDate.HasValue ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) : null,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
-                };
-
-                _context.Schedules.Add(schedule);
-                migratedCount++;
-
-                // Batch save every 100 records
-                if (migratedCount % 100 == 0)
-                {
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine($"Migrated {migratedCount} schedules...");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing schedule record: {ex.Message}");
-                if (ex.InnerException != null)
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                skippedCount++;
-            }
-        }
-
-        // Save any remaining records
-        if (_context.ChangeTracker.HasChanges())
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        Console.WriteLine($"Scheduling migration completed: {migratedCount} schedules migrated, {skippedCount} skipped");
-    }
-
-    private async Task MigrateScheduleRulesAsync(Dictionary<int, Guid> childIdMapping, Dictionary<string, Guid> timeSlotMapping, Dictionary<int, Guid> groupMapping)
-    {
-        Console.WriteLine("Migrating ScheduleRules...");
-
-        // Truncate ScheduleRules table
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"ScheduleRules\" RESTART IDENTITY CASCADE;");
-
-        var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
-
-        var query = @"
-            SELECT 
-                sr.Id,
-                sr.SchedulingId,
-                sr.[group] AS GroupId,
-                sr.day,
-                CAST(sr.begintime AS TIME) AS BeginTime,
-                CAST(sr.endtime AS TIME) AS EndTime,
-                s.ChildId
-            FROM SchedulingRule sr
-            INNER JOIN Scheduling s ON sr.SchedulingId = s.Id
-            WHERE sr.begintime IS NOT NULL 
-                AND sr.endtime IS NOT NULL 
-                AND sr.[group] IS NOT NULL
-                AND sr.day IS NOT NULL
-            ORDER BY sr.SchedulingId, sr.day;
-        ";
-
-        using var connection = new SqlConnection(mssqlConnectionString);
-        await connection.OpenAsync();
-
-        using var command = new SqlCommand(query, connection);
-        using var reader = await command.ExecuteReaderAsync();
-
-        var migratedCount = 0;
-        var skippedCount = 0;
-
-        // First, let's get all schedules and create a mapping from external scheduling ID to internal schedule ID
-        var scheduleMapping = new Dictionary<int, Guid>();
-        var schedules = await _context.Schedules.ToListAsync();
-
-        // We need to create a mapping from external scheduling data to internal schedule IDs
-        // This requires matching based on child ID and date ranges
-        var externalScheduleQuery = @"
-            SELECT DISTINCT
-                s.Id AS SchedulingId,
-                s.ChildId,
-                s.[Date] AS StartDate
-            FROM Scheduling s
-            ORDER BY s.ChildId, s.[Date];
-        ";
-
-        using var scheduleConnection = new SqlConnection(mssqlConnectionString);
-        await scheduleConnection.OpenAsync();
-        using var scheduleCommand = new SqlCommand(externalScheduleQuery, scheduleConnection);
-        using var scheduleReader = await scheduleCommand.ExecuteReaderAsync();
-
-        while (await scheduleReader.ReadAsync())
-        {
-            var externalSchedulingId = Convert.ToInt32(scheduleReader["SchedulingId"]);
-            var externalChildId = Convert.ToInt32(scheduleReader["ChildId"]);
-            var startDate = Convert.ToDateTime(scheduleReader["StartDate"]);
-
-            if (childIdMapping.ContainsKey(externalChildId))
-            {
-                var internalChildId = childIdMapping[externalChildId];
-                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-
-                // Find matching internal schedule
-                var matchingSchedule = schedules.FirstOrDefault(s =>
-                    s.ChildId == internalChildId &&
-                    s.StartDate <= startDateUtc &&
-                    (!s.EndDate.HasValue || s.EndDate >= startDateUtc));
-
-                if (matchingSchedule != null)
-                {
-                    scheduleMapping[externalSchedulingId] = matchingSchedule.Id;
-                }
-            }
-        }
-
-        // Now process the schedule rules
-        await connection.CloseAsync();
-        await connection.OpenAsync();
-
-        using var rulesCommand = new SqlCommand(query, connection);
-        using var rulesReader = await rulesCommand.ExecuteReaderAsync();
-
-        while (await rulesReader.ReadAsync())
-        {
-            try
-            {
-                var externalSchedulingId = Convert.ToInt32(rulesReader["SchedulingId"]);
-                var externalGroupId = Convert.ToInt32(rulesReader["GroupId"]);
-                var day = Convert.ToInt32(rulesReader["day"]);
-                var beginTime = TimeOnly.FromTimeSpan((TimeSpan)rulesReader["BeginTime"]);
-                var endTime = TimeOnly.FromTimeSpan((TimeSpan)rulesReader["EndTime"]);
-
-                // Map to internal IDs
+                // Check if we need to create a new schedule or if we're adding rules to an existing one
                 if (!scheduleMapping.ContainsKey(externalSchedulingId))
                 {
-                    Console.WriteLine($"Warning: External scheduling ID {externalSchedulingId} not found in mapping. Skipping schedule rule.");
-                    skippedCount++;
-                    continue;
+                    // Create new schedule
+                    var childId = childIdMapping[externalChildId];
+                    var scheduleId = Guid.NewGuid();
+
+                    var schedule = new Schedule
+                    {
+                        Id = scheduleId,
+                        ChildId = childId,
+                        StartDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc),
+                        EndDate = endDate.HasValue ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) : null,
+                        TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                    };
+
+                    _context.Schedules.Add(schedule);
+                    scheduleMapping[externalSchedulingId] = scheduleId;
+                    currentScheduleId = scheduleId;
+                    migratedScheduleCount++;
+                }
+                else
+                {
+                    currentScheduleId = scheduleMapping[externalSchedulingId];
                 }
 
+                // Create schedule rule
                 if (!groupMapping.ContainsKey(externalGroupId))
                 {
-                    Console.WriteLine($"Warning: External group ID {externalGroupId} not found in mapping. Skipping schedule rule.");
+                    Console.WriteLine($"Warning: External group ID {externalGroupId} not found in mapping. Skipping rule.");
                     skippedCount++;
                     continue;
                 }
@@ -411,17 +325,15 @@ public class SchedulingDataMigrator
                 var timeSlotKey = $"{beginTime}-{endTime}";
                 if (!timeSlotMapping.ContainsKey(timeSlotKey))
                 {
-                    Console.WriteLine($"Warning: Time slot {timeSlotKey} not found in mapping. Skipping schedule rule.");
+                    Console.WriteLine($"Warning: Time slot {timeSlotKey} not found in mapping. Skipping rule.");
                     skippedCount++;
                     continue;
                 }
 
-                var scheduleId = scheduleMapping[externalSchedulingId];
                 var groupId = groupMapping[externalGroupId];
                 var timeSlotId = timeSlotMapping[timeSlotKey];
 
                 // Convert day from integer to DayOfWeek 
-                // Source system appears to be shifted by one (1=Sunday, 2=Monday, etc.)
                 DayOfWeek dayOfWeek;
                 switch (day)
                 {
@@ -433,7 +345,7 @@ public class SchedulingDataMigrator
                     case 6: dayOfWeek = DayOfWeek.Friday; break;
                     case 7: dayOfWeek = DayOfWeek.Saturday; break;
                     default:
-                        Console.WriteLine($"Warning: Invalid day value {day}. Skipping schedule rule.");
+                        Console.WriteLine($"Warning: Invalid day value {day}. Skipping rule.");
                         skippedCount++;
                         continue;
                 }
@@ -441,7 +353,7 @@ public class SchedulingDataMigrator
                 var scheduleRule = new ScheduleRule
                 {
                     Id = Guid.NewGuid(),
-                    ScheduleId = scheduleId,
+                    ScheduleId = currentScheduleId,
                     GroupId = groupId,
                     TimeSlotId = timeSlotId,
                     Day = dayOfWeek,
@@ -449,18 +361,18 @@ public class SchedulingDataMigrator
                 };
 
                 _context.ScheduleRules.Add(scheduleRule);
-                migratedCount++;
+                migratedRuleCount++;
 
                 // Batch save every 100 records
-                if (migratedCount % 100 == 0)
+                if ((migratedScheduleCount + migratedRuleCount) % 100 == 0)
                 {
                     await _context.SaveChangesAsync();
-                    Console.WriteLine($"Migrated {migratedCount} schedule rules...");
+                    Console.WriteLine($"Migrated {migratedScheduleCount} schedules and {migratedRuleCount} rules...");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing schedule rule record: {ex.Message}");
+                Console.WriteLine($"Error processing record: {ex.Message}");
                 if (ex.InnerException != null)
                     Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 skippedCount++;
@@ -473,6 +385,6 @@ public class SchedulingDataMigrator
             await _context.SaveChangesAsync();
         }
 
-        Console.WriteLine($"ScheduleRules migration completed: {migratedCount} schedule rules migrated, {skippedCount} skipped");
+        Console.WriteLine($"Scheduling migration completed: {migratedScheduleCount} schedules and {migratedRuleCount} schedule rules migrated, {skippedCount} skipped");
     }
 }

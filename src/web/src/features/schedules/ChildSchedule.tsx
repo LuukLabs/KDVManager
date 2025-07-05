@@ -10,7 +10,7 @@ import {
   useDeleteSchedule,
   getGetChildSchedulesQueryKey,
 } from "@api/endpoints/schedules/schedules";
-import { ScheduleVisualization } from "../../components/ScheduleVisualization";
+import { ScheduleRulesDisplay } from "../../components/ScheduleRulesDisplay";
 
 type ChildScheduleProps = {
   childId: string;
@@ -65,7 +65,7 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
       disableReorder: true,
       renderCell: (params) => {
         return params.value ? (
-          <ScheduleVisualization scheduleRules={params.value} />
+          <ScheduleRulesDisplay scheduleRules={params.value} />
         ) : null;
       },
     },

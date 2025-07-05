@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs from "dayjs";
@@ -6,14 +6,52 @@ import utc from "dayjs/plugin/utc";
 import { useTranslation } from "react-i18next";
 import { useListGroups } from "@api/endpoints/groups/groups";
 import GroupColumn from "../components/GroupColumn";
+import { useSearchParams } from "react-router-dom";
 
 dayjs.extend(utc);
 
 const DATE_FORMAT = "MMMM D, YYYY";
 
 const ScheduleOverviewPage = () => {
-  const [selectedDate, setSelectedDate] = useState(dayjs().utc());
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t, i18n } = useTranslation();
+
+  // Get date from URL parameter or default to today
+  const getInitialDate = () => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const parsedDate = dayjs(dateParam);
+      if (parsedDate.isValid()) {
+        return parsedDate; // Keep as local time for calendar
+      }
+    }
+    return dayjs(); // Local time for calendar
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getInitialDate);
+
+  // Update URL when date changes
+  const handleDateChange = (newDate: dayjs.Dayjs | null) => {
+    if (newDate) {
+      setSelectedDate(newDate); // Store as local time for calendar
+      
+      // Update URL search params with date-only format
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('date', newDate.format('YYYY-MM-DD'));
+      setSearchParams(newSearchParams, { replace: true });
+    }
+  };
+
+  // Update state when URL changes (e.g., browser back/forward)
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const parsedDate = dayjs(dateParam);
+      if (parsedDate.isValid()) {
+        setSelectedDate(parsedDate); // Keep as local time for calendar
+      }
+    }
+  }, [searchParams]);
 
   const { data, isLoading: isLoadingGroups } = useListGroups();
   const groups = data?.value || [];
@@ -68,7 +106,7 @@ const ScheduleOverviewPage = () => {
                     flexShrink: 0,
                   }}
                 >
-                  <GroupColumn group={group} selectedDate={selectedDate} />
+                  <GroupColumn group={group} selectedDate={selectedDate.utc()} />
                 </Box>
               ))}
             </Box>
@@ -80,7 +118,7 @@ const ScheduleOverviewPage = () => {
           <Paper sx={{ p: 2 }}>
             <DateCalendar
               value={selectedDate}
-              onChange={(newValue) => newValue && setSelectedDate(newValue.utc())}
+              onChange={handleDateChange}
               sx={{ width: "100%", maxWidth: 300 }}
             />
           </Paper>

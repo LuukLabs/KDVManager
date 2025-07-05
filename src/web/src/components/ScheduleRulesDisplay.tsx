@@ -1,8 +1,9 @@
 import React from "react";
 import { Box, Chip, Typography } from "@mui/material";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
+import { useTranslation } from "react-i18next";
 
-interface ScheduleRulesDisplayProps {
+type ScheduleRulesDisplayProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
 }
 
@@ -34,10 +35,12 @@ const getGroupColor = (groupName: string | null | undefined): string => {
 export const ScheduleRulesDisplay: React.FC<ScheduleRulesDisplayProps> = ({
   scheduleRules,
 }) => {
+  const { t } = useTranslation();
+  
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
       <Typography variant="body2" color="text.secondary">
-        No schedule rules
+        {t("No schedule rules")}
       </Typography>
     );
   }

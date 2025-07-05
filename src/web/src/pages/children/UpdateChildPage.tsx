@@ -16,7 +16,6 @@ import { type UpdateChildCommand } from "@api/models/updateChildCommand";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import { ChildSchedule } from "../../features/schedules/ChildSchedule";
 import { Button } from "@mui/material";
 import { Alert } from "@mui/material";
 import { type updateChildPageLoader } from "./updateChildPage.loader";

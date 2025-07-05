@@ -4,14 +4,16 @@ import { ViewList, ViewModule } from "@mui/icons-material";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
 import { ScheduleRulesDisplay } from "./ScheduleRulesDisplay";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
+import { useTranslation } from "react-i18next";
 
-interface ScheduleVisualizationProps {
+type ScheduleVisualizationProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
 }
 
 export const ScheduleVisualization: React.FC<ScheduleVisualizationProps> = ({
   scheduleRules,
 }) => {
+  const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   const toggleViewMode = () => {
@@ -21,7 +23,7 @@ export const ScheduleVisualization: React.FC<ScheduleVisualizationProps> = ({
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Tooltip title={viewMode === "list" ? "Switch to grid view" : "Switch to list view"}>
+        <Tooltip title={viewMode === "list" ? t("Switch to grid view") : t("Switch to list view")}>
           <IconButton 
             size="small" 
             onClick={toggleViewMode}

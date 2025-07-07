@@ -1,0 +1,60 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Namespace for all resources
+namespace: kdvmanager-prod
+
+# Resource ordering is important for ArgoCD
+resources:
+  # 1. Namespace first
+  - namespace.yml
+  
+  # 2. Certificate issuers (disabled for now)
+  # - letsencrypt/production_issuer.yml
+  # - letsencrypt/staging_issuer.yml
+  
+  # 3. Core services
+  - web/service.yml
+  - web/deployment.yml
+  - crm/service.yml
+  - crm/deployment.yml
+  - scheduling/service.yml
+  - scheduling/deployment.yml
+  - envoy/service.yml
+  - envoy/deployment.yml
+  
+  # 4. Ingress (depends on services)
+  - envoy/ingress.yml
+  
+  # 5. Policies and scaling
+  - pod-disruption-budgets.yml
+  - network-policies.yml
+  - horizontal-pod-autoscaler.yml
+  
+  # 6. Monitoring
+  - monitoring.yml
+
+# Common labels for all resources
+commonLabels:
+  app.kubernetes.io/name: kdvmanager
+  app.kubernetes.io/instance: production
+  app.kubernetes.io/managed-by: argocd
+
+# Common annotations
+commonAnnotations:
+  argocd.argoproj.io/sync-wave: "1"
+
+# Images to be managed by ArgoCD
+images:
+  - name: ghcr.io/luukvh/kdvmanager/web
+    newTag: linux-master
+  - name: ghcr.io/luukvh/kdvmanager/crm.api
+    newTag: linux-master
+  - name: ghcr.io/luukvh/kdvmanager/scheduling.api
+    newTag: linux-master
+  - name: ghcr.io/luukvh/kdvmanager/envoy
+    newTag: linux-master
+
+# Patches for environment-specific configurations
+patchesStrategicMerge:
+  - production-overrides.yml

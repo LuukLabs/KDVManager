@@ -2,11 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: envoy
+  namespace: kdvmanager-prod
   labels:
     app: envoy
     release: production
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -22,6 +25,10 @@ spec:
         app: envoy
         release: production
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
       containers:
       - name: envoy
         image: ghcr.io/luukvh/kdvmanager/envoy:linux-master
@@ -33,8 +40,33 @@ spec:
           - name: https
             containerPort: 443
             protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 500m
+          requests:
+            memory: 256Mi
+            cpu: 200m
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 9901
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9901
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
         env:
           - name: ENVOY_UID
-            value: "0"
+            value: "1000"
           - name: ENVOY_GID
-            value: "0"
+            value: "1000"

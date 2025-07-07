@@ -2,11 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: crm-api
+  namespace: kdvmanager-prod
   labels:
     app: crm-api
     release: production
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -22,6 +25,10 @@ spec:
         app: crm-api
         release: production
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
       containers:
       - name: crm-pod
         image: ghcr.io/luukvh/kdvmanager/crm.api:linux-master
@@ -41,11 +48,17 @@ spec:
           periodSeconds: 3
         resources:
           limits:
-            memory: 100Mi
+            memory: 200Mi
             cpu: 500m
           requests:
-            memory: 50Mi
+            memory: 100Mi
             cpu: 200m
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
         ports:
           - name: http
             containerPort: 80

@@ -1,0 +1,69 @@
+# Service Monitor for Prometheus monitoring
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kdvmanager-servicemonitor
+  namespace: kdvmanager-prod
+  labels:
+    app: kdvmanager
+spec:
+  selector:
+    matchLabels:
+      app: crm-api
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scheduling-servicemonitor
+  namespace: kdvmanager-prod
+  labels:
+    app: scheduling-api
+spec:
+  selector:
+    matchLabels:
+      app: scheduling-api
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+# ConfigMap for logging configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: kdvmanager-prod
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+
+    [INPUT]
+        Name              tail
+        Path              /var/log/containers/*.log
+        Parser            docker
+        Tag               kube.*
+        Refresh_Interval  5
+        Mem_Buf_Limit     50MB
+        Skip_Long_Lines   On
+
+    [OUTPUT]
+        Name  stdout
+        Match *
+  parsers.conf: |
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep   On

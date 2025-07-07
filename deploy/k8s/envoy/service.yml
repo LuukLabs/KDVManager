@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: envoy
+  namespace: kdvmanager-prod
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   type: ClusterIP
   ports:

@@ -1,0 +1,13 @@
+# NGINX Ingress Controller Installation
+# This file contains the configuration for installing NGINX Ingress Controller
+# Note: This is typically installed cluster-wide, not per-namespace
+
+# For installation, use:
+# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+
+# Or if using Helm:
+# helm upgrade --install ingress-nginx ingress-nginx \
+#   --repo https://kubernetes.github.io/ingress-nginx \
+#   --namespace ingress-nginx --create-namespace
+
+# The actual ingress configuration is in envoy/ingress.yml

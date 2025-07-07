@@ -3,15 +3,11 @@ kind: Application
 metadata:
   name: kdvmanager-prod
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
     repoURL: https://github.com/LuukLabs/KDVManager
-    targetRevision: HEAD
+    targetRevision: build-Remove-kubegress
     path: deploy/k8s
     directory:
       recurse: true

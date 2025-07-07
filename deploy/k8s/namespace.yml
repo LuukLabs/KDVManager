@@ -5,5 +5,3 @@ metadata:
   labels:
     name: kdvmanager-prod
     environment: production
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"

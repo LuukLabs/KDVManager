@@ -17,6 +17,7 @@ on:
     - src/Services/Scheduling/Persistence/**
     - .github/workflows/scheduling-migrator.yml
 env:
+  REGISTRY: ghcr.io
   SERVICE: scheduling-migrator
   IMAGE: scheduling-migrator
 
@@ -24,7 +25,10 @@ jobs:
 
   BuildContainersForPR_Linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: ${{ github.event_name == 'pull_request' }}
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -36,7 +40,11 @@ jobs:
 
   BuildLinux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event_name != 'pull_request' }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -44,8 +52,8 @@ jobs:
     - uses: ./.github/workflows/composite/build-push
       with:
         service: ${{ env.SERVICE }}
-        registry_host: ${{ vars.REGISTRY_HOST }}
+        registry_host: ${{ env.REGISTRY }}
         registry_endpoint: ${{ vars.REGISTRY_ENDPOINT }}
         image_name: ${{ env.IMAGE }}
-        registry_username: ${{ vars.REGISTRY_USERNAME }}
-        registry_password: ${{ secrets.REGISTRY_PASSWORD }}
+        registry_username: ${{ github.actor }}
+        registry_password: ${{ secrets.GITHUB_TOKEN }}

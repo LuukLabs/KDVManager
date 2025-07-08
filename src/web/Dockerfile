@@ -14,6 +14,10 @@ FROM base AS build
 # Setup build args
 ARG VITE_APP_AUTH0_DOMAIN
 ARG VITE_APP_AUTH0_CLIENT_ID
+ARG VITE_API_BASE_URL
+
+# Set environment variables for the build
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build

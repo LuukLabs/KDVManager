@@ -45,6 +45,7 @@ runs:
     env:
       TAG: ${{ env.BRANCH }}
       REGISTRY: ${{ inputs.registry_endpoint }}
+      VITE_API_BASE_URL: https://api.kdvmanager.nl
 
   - name: Compose push ${{ inputs.service }}
     shell: bash

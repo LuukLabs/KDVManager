@@ -48,3 +48,13 @@ services:
       dockerfile: Services/Scheduling/Infrastructure/Dockerfile
     depends_on:
       - postgres
+
+  data-migration:
+    image: ${REGISTRY:-kdvmanager}/data.migration:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/DataMigration/Dockerfile
+    depends_on:
+      - postgres
+      - crm-api
+      - scheduling-api

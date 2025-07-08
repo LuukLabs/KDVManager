@@ -41,10 +41,10 @@ spec:
             protocol: TCP
         resources:
           limits:
-            memory: 512Mi
-            cpu: 500m
+            memory: 200Mi
+            cpu: 400m
           requests:
-            memory: 256Mi
+            memory: 100Mi
             cpu: 200m
         securityContext:
           allowPrivilegeEscalation: false

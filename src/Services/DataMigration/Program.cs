@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using KDVManager.Services.DataMigration.Migrators;
 using KDVManager.Services.DataMigration.Services;
 
@@ -148,6 +149,7 @@ public class Program
         return new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddEnvironmentVariables()
             .Build();
     }
 

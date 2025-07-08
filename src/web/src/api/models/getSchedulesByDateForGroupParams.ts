@@ -5,7 +5,6 @@
  * OpenAPI spec version: v1
  */
 
-export type GetSchedulesByDateParams = {
-  Date?: string;
-  GroupId?: string;
+export type GetSchedulesByDateForGroupParams = {
+  date?: string;
 };

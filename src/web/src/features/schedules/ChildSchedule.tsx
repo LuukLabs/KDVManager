@@ -64,9 +64,7 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
       disableColumnMenu: true,
       disableReorder: true,
       renderCell: (params) => {
-        return params.value ? (
-          <ScheduleRulesDisplay scheduleRules={params.value} />
-        ) : null;
+        return params.value ? <ScheduleRulesDisplay scheduleRules={params.value} /> : null;
       },
     },
     {
@@ -93,9 +91,9 @@ export const ChildSchedule: React.FC<ChildScheduleProps> = ({ childId }) => {
       loading={isLoading || isFetching}
       columns={columns}
       rows={data || []}
-      getRowHeight={() => 'auto'}
+      getRowHeight={() => "auto"}
       sx={{
-        '& .MuiDataGrid-cell': {
+        "& .MuiDataGrid-cell": {
           py: 1,
         },
       }}

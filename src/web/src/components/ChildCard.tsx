@@ -1,4 +1,12 @@
-import { Card, CardContent, Typography, Box, CircularProgress, Avatar, CardActionArea } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  CircularProgress,
+  Avatar,
+  CardActionArea,
+} from "@mui/material";
 import { Schedule } from "@mui/icons-material";
 import { useGetChildById } from "@api/endpoints/children/children";
 import type { ScheduleByDateVM } from "@api/models/scheduleByDateVM";
@@ -67,7 +75,9 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
           {isLoadingChild ? (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <CircularProgress size={14} />
-              <Typography variant="body2" fontSize="0.7rem">Loading...</Typography>
+              <Typography variant="body2" fontSize="0.7rem">
+                Loading...
+              </Typography>
             </Box>
           ) : (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -100,7 +110,11 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                 >
                   {getFullName()}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.7rem", lineHeight: 1 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ fontSize: "0.7rem", lineHeight: 1 }}
+                >
                   {calculateAge(childDetails?.dateOfBirth || null)}
                 </Typography>
               </Box>
@@ -146,32 +160,32 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       mt: 0.25,
                     }}
                   >
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        fontWeight: 600, 
-                        fontSize: "0.65rem", 
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "0.65rem",
                         color: "success.main",
                         fontFamily: "monospace",
                       }}
                     >
                       {formatTime(schedule.startTime || "")}
                     </Typography>
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        fontSize: "0.6rem", 
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontSize: "0.6rem",
                         color: "text.secondary",
                         mx: 0.25,
                       }}
                     >
                       →
                     </Typography>
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        fontWeight: 600, 
-                        fontSize: "0.65rem", 
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "0.65rem",
                         color: "error.main",
                         fontFamily: "monospace",
                       }}

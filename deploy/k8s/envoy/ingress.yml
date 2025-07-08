@@ -12,7 +12,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
 spec:
   rules:
-  - host: "kdvmanager.nl"
+  - host: "app.kdvmanager.nl"
     http:
       paths:
       - pathType: Prefix
@@ -34,6 +34,6 @@ spec:
               number: 80
   tls:
   - hosts:
-    - kdvmanager.nl
+    - app.kdvmanager.nl
     - api.kdvmanager.nl
     secretName: kdvmanager-nl-tls

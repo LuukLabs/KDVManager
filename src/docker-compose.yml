@@ -14,8 +14,8 @@ services:
     build:
       context: ./web
       args:
-        REACT_APP_AUTH0_DOMAIN: kdvmanager.eu.auth0.com
-        REACT_APP_AUTH0_CLIENT_ID: ITepsevBBZNElNNrVmZjgkwaVCsmmKWc
+        VITE_APP_AUTH0_DOMAIN: kdvmanager.eu.auth0.com
+        VITE_APP_AUTH0_CLIENT_ID: ITepsevBBZNElNNrVmZjgkwaVCsmmKWc
 
   crm-api:
     image: ${REGISTRY:-kdvmanager}/crm.api:${PLATFORM:-linux}-${TAG:-latest}

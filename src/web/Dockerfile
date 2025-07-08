@@ -12,8 +12,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 FROM base AS build
 
 # Setup build args
-ARG REACT_APP_AUTH0_DOMAIN
-ARG REACT_APP_AUTH0_CLIENT_ID
+ARG VITE_APP_AUTH0_DOMAIN
+ARG VITE_APP_AUTH0_CLIENT_ID
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build

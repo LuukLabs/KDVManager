@@ -120,6 +120,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.ScheduleRule", b =>
                 {
+                    b.HasOne("KDVManager.Services.Scheduling.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("KDVManager.Services.Scheduling.Domain.Entities.Schedule", "Schedule")
                         .WithMany("ScheduleRules")
                         .HasForeignKey("ScheduleId")
@@ -131,6 +137,8 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("TimeSlotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
 
                     b.Navigation("Schedule");
 

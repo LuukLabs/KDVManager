@@ -22,9 +22,10 @@ spec:
         app: crm-api
         release: production
     spec:
+      serviceAccountName: kdvmanager-sa
       containers:
       - name: crm-pod
-        image: ghcr.io/luukvh/kdvmanager/crm.api:linux-master
+        image: ghcr.io/luuklabs/kdvmanager/crm.api:linux-main
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -69,7 +70,7 @@ spec:
             value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerCRMDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
       initContainers:
       - name: crm-migration
-        image: ghcr.io/luukvh/kdvmanager/crm.migrator:linux-master
+        image: ghcr.io/luuklabs/kdvmanager/crm.migrator:linux-main
         imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER

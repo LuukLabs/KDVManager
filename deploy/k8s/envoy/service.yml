@@ -2,10 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: envoy
+  namespace: kdvmanager-prod
 spec:
   type: ClusterIP
   ports:
   - port: 80
     targetPort: 80
+    protocol: TCP
   selector:
     app: envoy

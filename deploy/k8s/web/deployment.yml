@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
+  namespace: kdvmanager-prod
   labels:
     app: web
     release: production
@@ -23,9 +24,10 @@ spec:
         app: web
         release: production
     spec:
+      serviceAccountName: kdvmanager-sa
       containers:
       - name: web
-        image: ghcr.io/luukvh/kdvmanager/web:linux-master
+        image: ghcr.io/luuklabs/kdvmanager/web:linux-main
         imagePullPolicy: Always
         ports:
           - name: http
@@ -34,3 +36,11 @@ spec:
           - name: https
             containerPort: 443
             protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 500m
+          requests:
+            memory: 256Mi
+            cpu: 200m
+        

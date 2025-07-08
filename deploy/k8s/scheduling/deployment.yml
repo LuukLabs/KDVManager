@@ -6,7 +6,7 @@ metadata:
     app: scheduling-api
     release: production
 spec:
-  replicas: 0
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -58,29 +58,37 @@ spec:
           - name: ASPNETCORE_URLS
             value: "http://+:80"
           - name: POSTGRES_SERVER
-            value: "kdvmanager-postgres"
+            value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER
-            value: "postgres"
+            value: "doadmin"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                  name: kdvmanager-postgres-secret
-                  key: superUserPassword        
+                name: kdvmanager-postgres-secret
+                key: password
+          - name: POSTGRES_PORT
+            value: "25060"
+          - name: POSTGRES_DATABASE
+            value: "KDVManagerSchedulingDB"
           - name: ConnectionStrings__KDVManagerSchedulingConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerSchedulingDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require"
       initContainers:
       - name: scheduling-migration
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
         imagePullPolicy: Always
         env:
           - name: POSTGRES_SERVER
-            value: "kdvmanager-postgres"
+            value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER
-            value: "postgres"
+            value: "doadmin"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                  name: kdvmanager-postgres-secret
-                  key: superUserPassword        
+                name: kdvmanager-postgres-secret
+                key: password
+          - name: POSTGRES_PORT
+            value: "25060"
+          - name: POSTGRES_DATABASE
+            value: "KDVManagerSchedulingDB"
           - name: ConnectionStrings__KDVManagerSchedulingConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=5432; database=KDVManagerSchedulingDB; User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling = true"
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require"

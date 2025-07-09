@@ -35,6 +35,13 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
           path: "children/:childId",
           lazy: () => import("./pages/children/UpdateChildPage"),
           loader: updateChildPageLoader(queryClient),
+          handle: {
+            crumb: (data: any) => {
+              return data?.firstName && data?.lastName 
+                ? `${data.firstName} ${data.lastName}`
+                : t("Child");
+            },
+          },
         },
         {
           path: "children",

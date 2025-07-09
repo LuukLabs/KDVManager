@@ -37,8 +37,8 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
           loader: updateChildPageLoader(queryClient),
           handle: {
             crumb: (data: any) => {
-              return data?.firstName && data?.lastName 
-                ? `${data.firstName} ${data.lastName}`
+              return data?.givenName && data?.familyName 
+                ? `${data.givenName} ${data.familyName}`
                 : t("Child");
             },
           },

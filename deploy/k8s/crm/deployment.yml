@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: crm-api
+  namespace: kdvmanager-prod
   labels:
     app: crm-api
     release: production

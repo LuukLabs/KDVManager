@@ -2,9 +2,13 @@ version: '3.4'
 
 services:
   envoy:
-    image: ${REGISTRY:-kdvmanager}/envoy:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: ./Services/ApiGateways/Envoy
+    image: envoyproxy/envoy:v1.24.1
+    command: ["/usr/local/bin/envoy", "-c", "/etc/envoy/envoy.yaml", "--log-level", "info"]
+    volumes:
+      - ./Services/ApiGateways/Envoy/config/envoy.yaml:/etc/envoy/envoy.yaml:ro
+    ports:
+      - "8080:8080"
+      - "8001:8001"
 
   postgres:
     image: postgres:latest

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduling-api
+  namespace: kdvmanager-prod
   labels:
     app: scheduling-api
     release: production

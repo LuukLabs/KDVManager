@@ -3,12 +3,11 @@ version: '3.4'
 services:
   envoy:
     volumes:
-      - ./Services/ApiGateways/Envoy/config:/etc/envoy
+      - ./Services/ApiGateways/Envoy/config/envoy.yaml:/etc/envoy/envoy.yaml:ro
       - ./Services/ApiGateways/Envoy/logs:/var/log
     ports:
-      - "5200:80"
+      - "5200:8080"
       - "8001:8001"
-      - "8080:8080"
 
   postgres:
     environment:

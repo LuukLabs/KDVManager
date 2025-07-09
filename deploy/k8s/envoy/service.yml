@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: envoy
   namespace: kdvmanager-prod
+  labels:
+    app: envoy
+    release: production
 spec:
   type: ClusterIP
   ports:

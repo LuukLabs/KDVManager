@@ -22,7 +22,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  
+
   // Define navigation items for better maintainability
   const navigationItems = [
     { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
@@ -34,7 +34,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -52,13 +52,13 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
             <Box
               component="img"
               src="/favicon-32x32.png"
-              alt="KDVManager"
-              sx={{ 
-                display: { xs: "none", md: "flex" }, 
+              alt={t("KDVManager")}
+              sx={{
+                display: { xs: "none", md: "flex" },
                 mr: 1,
                 width: 32,
-                height: 32
-              }} 
+                height: 32,
+              }}
             />
             <Typography
               variant="h6"
@@ -117,13 +117,13 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
             <Box
               component="img"
               src="/favicon-32x32.png"
-              alt="KDVManager"
-              sx={{ 
-                display: { xs: "flex", md: "none" }, 
+              alt={t("KDVManager")}
+              sx={{
+                display: { xs: "flex", md: "none" },
                 mr: 1,
                 width: 24,
-                height: 24
-              }} 
+                height: 24,
+              }}
             />
             <Typography
               variant="h5"
@@ -183,7 +183,7 @@ export default withAuthenticationRequired(MainNavbar, {
       <Box
         component="img"
         src="/logo_transparent.png"
-        alt="KDVManager Logo"
+        alt="KDVManager Logo" // eslint-disable-line i18next/no-literal-string
         sx={{
           maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
           maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive height

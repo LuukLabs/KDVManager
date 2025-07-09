@@ -25,7 +25,7 @@ export default function ErrorPage() {
       <Box
         component="img"
         src="/logo_transparent.png"
-        alt="KDVManager Logo"
+        alt={t("KDVManager Logo")}
         sx={{
           maxWidth: { xs: "200px", sm: "250px", md: "300px" },
           height: "auto",
@@ -43,11 +43,7 @@ export default function ErrorPage() {
           {t("error.notFound")}
         </Typography>
       </Box>
-      <Button
-        variant="contained"
-        onClick={() => navigate("/")}
-        sx={{ mt: 2 }}
-      >
+      <Button variant="contained" onClick={() => navigate("/")} sx={{ mt: 2 }}>
         {t("Go to Home")}
       </Button>
     </Box>

@@ -1,13 +1,5 @@
 import React from "react";
-import { 
-  Box, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Chip, 
-  IconButton, 
-  Stack
-} from "@mui/material";
+import { Box, Card, CardContent, Typography, Chip, IconButton, Stack } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
@@ -23,19 +15,15 @@ type ScheduleCardProps = {
   };
   onDelete: (scheduleId: string) => void;
   onEdit?: (scheduleId: string) => void;
-}
+};
 
-export const ScheduleCard: React.FC<ScheduleCardProps> = ({ 
-  schedule, 
-  onDelete, 
-  onEdit 
-}) => {
+export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, onEdit }) => {
   const { t } = useTranslation();
   const now = dayjs();
   const startDate = dayjs(schedule.startDate);
   const endDate = dayjs(schedule.endDate);
-  
-  const isActive = now.isAfter(startDate) && now.isBefore(endDate.add(1, 'day'));
+
+  const isActive = now.isAfter(startDate) && now.isBefore(endDate.add(1, "day"));
   const isUpcoming = now.isBefore(startDate);
   const isExpired = now.isAfter(endDate);
 
@@ -53,26 +41,28 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
   const getDateRangeDisplay = () => {
     const startDate = dayjs(schedule.startDate);
     const endDate = dayjs(schedule.endDate);
-    
-    if (startDate.isSame(endDate, 'year')) {
-      if (startDate.isSame(endDate, 'month')) {
-        return `${startDate.format('MMM D')} - ${endDate.format('D, YYYY')}`;
+
+    if (startDate.isSame(endDate, "year")) {
+      if (startDate.isSame(endDate, "month")) {
+        return `${startDate.format("MMM D")} - ${endDate.format("D, YYYY")}`;
       }
-      return `${startDate.format('MMM D')} - ${endDate.format('MMM D, YYYY')}`;
+      return `${startDate.format("MMM D")} - ${endDate.format("MMM D, YYYY")}`;
     }
-    return `${startDate.format('MMM D, YYYY')} - ${endDate.format('MMM D, YYYY')}`;
+    return `${startDate.format("MMM D, YYYY")} - ${endDate.format("MMM D, YYYY")}`;
   };
 
   return (
-    <Card 
+    <Card
       sx={{
         border: isActive ? 2 : 1,
-        borderColor: isActive ? 'success.main' : 'divider',
+        borderColor: isActive ? "success.main" : "divider",
       }}
     >
       <CardContent>
         {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}
+        >
           <Box sx={{ flex: 1 }}>
             <Typography variant="h6" gutterBottom>
               {t("Schedule Period")}
@@ -81,22 +71,15 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
               {getDateRangeDisplay()}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             {getStatusChip()}
             <Box>
               {onEdit && (
-                <IconButton 
-                  size="small" 
-                  onClick={() => onEdit(schedule.id)}
-                >
+                <IconButton size="small" onClick={() => onEdit(schedule.id)}>
                   <EditIcon fontSize="small" />
                 </IconButton>
               )}
-              <IconButton 
-                size="small" 
-                onClick={() => onDelete(schedule.id)}
-                color="error"
-              >
+              <IconButton size="small" onClick={() => onDelete(schedule.id)} color="error">
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Box>
@@ -116,24 +99,24 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
           <Typography variant="subtitle2" gutterBottom>
             {t("Schedule Summary")}
           </Typography>
-          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 0.5 }}>
             {schedule.scheduleRules.length > 0 ? (
               <>
-                <Chip 
-                  label={`${schedule.scheduleRules.length} ${t("time slots")}`} 
-                  size="small" 
-                  variant="outlined" 
+                <Chip
+                  label={`${schedule.scheduleRules.length} ${t("time slots")}`}
+                  size="small"
+                  variant="outlined"
                 />
-                <Chip 
-                  label={`${new Set(schedule.scheduleRules.map(r => r.day)).size} ${t("days")}`} 
-                  size="small" 
-                  variant="outlined" 
+                <Chip
+                  label={`${new Set(schedule.scheduleRules.map((r) => r.day)).size} ${t("days")}`}
+                  size="small"
+                  variant="outlined"
                 />
-                {schedule.scheduleRules.some(r => r.groupName) && (
-                  <Chip 
-                    label={`${new Set(schedule.scheduleRules.filter(r => r.groupName).map(r => r.groupName)).size} ${t("groups")}`} 
-                    size="small" 
-                    variant="outlined" 
+                {schedule.scheduleRules.some((r) => r.groupName) && (
+                  <Chip
+                    label={`${new Set(schedule.scheduleRules.filter((r) => r.groupName).map((r) => r.groupName)).size} ${t("groups")}`}
+                    size="small"
+                    variant="outlined"
                   />
                 )}
               </>

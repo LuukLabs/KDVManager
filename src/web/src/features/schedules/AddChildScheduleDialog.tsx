@@ -25,41 +25,41 @@ type AddChildScheduleDialogProps = {
 
 export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogProps>(
   ({ childId }) => {
-  const { t } = useTranslation();
-  const modal = useModal();
-  const mutate = useAddSchedule();
-  const queryClient = useQueryClient();
-  const formContext = useForm<AddScheduleCommand>({ defaultValues: { scheduleRules: [] } });
+    const { t } = useTranslation();
+    const modal = useModal();
+    const mutate = useAddSchedule();
+    const queryClient = useQueryClient();
+    const formContext = useForm<AddScheduleCommand>({ defaultValues: { scheduleRules: [] } });
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { isValid, isDirty, isSubmitting },
-  } = formContext;
-  const { enqueueSnackbar } = useSnackbar();
+    const {
+      control,
+      handleSubmit,
+      reset,
+      setError,
+      formState: { isValid, isDirty, isSubmitting },
+    } = formContext;
+    const { enqueueSnackbar } = useSnackbar();
 
-  const handleOnCancelClick = () => {
-    modal.remove();
-    reset();
-  };
-
-  const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
-    // Filter out schedule rules that don't have a timeslot or group selected
-    const filteredScheduleRules =
-      data.scheduleRules?.filter((rule) => rule && rule.timeSlotId && rule.groupId) || [];
-
-    const submitData = {
-      ...data,
-      scheduleRules: filteredScheduleRules,
+    const handleOnCancelClick = () => {
+      modal.remove();
+      reset();
     };
 
-    await mutate.mutateAsync(
-      { data: { childId: childId, ...submitData } },
-      { onSuccess: onMutateSuccess, onError: onMutateError },
-    );
-  };
+    const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
+      // Filter out schedule rules that don't have a timeslot or group selected
+      const filteredScheduleRules =
+        data.scheduleRules?.filter((rule) => rule && rule.timeSlotId && rule.groupId) || [];
+
+      const submitData = {
+        ...data,
+        scheduleRules: filteredScheduleRules,
+      };
+
+      await mutate.mutateAsync(
+        { data: { childId: childId, ...submitData } },
+        { onSuccess: onMutateSuccess, onError: onMutateError },
+      );
+    };
 
     const onMutateSuccess = () => {
       void queryClient.invalidateQueries({
@@ -88,22 +88,25 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     ];
 
     const renderWeeklySchedule = () => (
-      <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2 }}>
+      <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 2, p: 2 }}>
         {weekdays.map((day, index) => (
-          <Box key={day.key} sx={{ 
-            mb: index === weekdays.length - 1 ? 0 : 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            py: 1
-          }}>
-            <Typography 
-              variant="body2" 
-              fontWeight="medium" 
-              sx={{ 
+          <Box
+            key={day.key}
+            sx={{
+              mb: index === weekdays.length - 1 ? 0 : 1.5,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              py: 1,
+            }}
+          >
+            <Typography
+              variant="body2"
+              fontWeight="medium"
+              sx={{
                 minWidth: 80,
-                color: 'text.secondary',
-                fontSize: '0.875rem'
+                color: "text.secondary",
+                fontSize: "0.875rem",
               }}
             >
               {day.label}
@@ -130,9 +133,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                   render={({ field }) => (
                     <GroupAutocomplete
                       size="small"
-                      onChange={(_, newValue) =>
-                        field.onChange(newValue ? newValue.id : null)
-                      }
+                      onChange={(_, newValue) => field.onChange(newValue ? newValue.id : null)}
                     />
                   )}
                 />
@@ -157,7 +158,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: '0.875rem' }}>
+          <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
             {t("To add a schedule, please enter the details below.")}
           </DialogContentText>
           <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
@@ -165,31 +166,31 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
               {/* Left Column - Date Range */}
               <Grid size={4}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Typography variant="h6" gutterBottom color="primary" sx={{ fontSize: '1.1rem' }}>
+                  <Typography variant="h6" gutterBottom color="primary" sx={{ fontSize: "1.1rem" }}>
                     {t("Schedule Period")}
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid size={12}>
-                      <DatePickerElement 
-                        label={t("Start Date")} 
+                      <DatePickerElement
+                        label={t("Start Date")}
                         name="startDate"
                         slotProps={{
                           textField: {
                             size: "small",
-                            fullWidth: true
-                          }
+                            fullWidth: true,
+                          },
                         }}
                       />
                     </Grid>
                     <Grid size={12}>
-                      <DatePickerElement 
-                        label={t("End date")} 
+                      <DatePickerElement
+                        label={t("End date")}
                         name="endDate"
                         slotProps={{
                           textField: {
                             size: "small",
-                            fullWidth: true
-                          }
+                            fullWidth: true,
+                          },
                         }}
                       />
                     </Grid>
@@ -200,10 +201,14 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
               {/* Right Column - Weekly Schedule */}
               <Grid size={8}>
                 <Box>
-                  <Typography variant="h6" color="primary" gutterBottom sx={{ fontSize: '1.1rem' }}>
+                  <Typography variant="h6" color="primary" gutterBottom sx={{ fontSize: "1.1rem" }}>
                     {t("Weekly Schedule")}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: '0.875rem' }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 2, fontSize: "0.875rem" }}
+                  >
                     {t("Select the days and time slots for this schedule")}
                   </Typography>
 

@@ -3,6 +3,7 @@ using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,8 @@ public static class ConfigureServices
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         services.AddHttpContextAccessor();
+
+        services.AddHealthChecks();
 
         services.AddControllers();
         services.AddSwaggerGen(options =>
@@ -37,8 +40,6 @@ public static class ConfigureServices
             });
         });
 
-        services.AddHealthChecks();
-
         string domain = $"https://{configuration["Auth0:Domain"]}/";
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,6 +47,38 @@ public static class ConfigureServices
             {
                 options.Authority = domain;
                 options.Audience = configuration["Auth0:Audience"];
+
+                // Production security settings
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = false; // Don't store tokens in AuthenticationProperties for security
+                options.IncludeErrorDetails = false; // Don't include detailed error info in production
+
+                // Token validation parameters
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.FromMinutes(5), // Allow 5 minutes clock skew
+                    RequireExpirationTime = true,
+                    RequireSignedTokens = true
+                };
+
+                // Optional: Add custom event handlers for monitoring
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        // Log authentication failures (implement logging as needed)
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        // Optional: Add custom claims validation
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddScoped<ITenantService, TenantService>();

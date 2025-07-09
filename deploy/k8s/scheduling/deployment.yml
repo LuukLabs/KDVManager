@@ -2,10 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduling-api
-  namespace: kdvmanager-prod
-  labels:
-    app: scheduling-api
-    release: production
 spec:
   replicas: 1
   strategy:
@@ -16,7 +12,6 @@ spec:
   selector:
     matchLabels:
       app: scheduling-api
-      release: production
   template:
     metadata:
       labels:

@@ -2,10 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: data-migration-cronjob
-  namespace: kdvmanager-prod
-  labels:
-    app: data-migration
-    release: production
 spec:
   # Run every day at 2:00 AM UTC
   schedule: "0 2 * * *"

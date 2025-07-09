@@ -2,10 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: envoy
-  namespace: kdvmanager-prod
-  labels:
-    app: envoy
-    release: production
 spec:
   replicas: 1
   strategy:
@@ -16,12 +12,10 @@ spec:
   selector:
     matchLabels:
       app: envoy
-      release: production
   template:
     metadata:
       labels:
         app: envoy
-        release: production
     spec:
       serviceAccountName: kdvmanager-sa
       securityContext:

@@ -2,10 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
-  namespace: kdvmanager-prod
-  labels:
-    app: web
-    release: production
 spec:
   replicas: 1
   revisionHistoryLimit: 1

@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kdvmanager-ingress
-  namespace: kdvmanager-prod
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-hostname: "kdvmanager.nl"
     service.beta.kubernetes.io/do-loadbalancer-protocol: "http"

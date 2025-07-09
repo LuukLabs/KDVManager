@@ -7,7 +7,6 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
@@ -50,7 +49,17 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <Box
+              component="img"
+              src="/favicon-32x32.png"
+              alt="KDVManager"
+              sx={{ 
+                display: { xs: "none", md: "flex" }, 
+                mr: 1,
+                width: 32,
+                height: 32
+              }} 
+            />
             <Typography
               variant="h6"
               noWrap
@@ -105,7 +114,17 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 ))}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <Box
+              component="img"
+              src="/favicon-32x32.png"
+              alt="KDVManager"
+              sx={{ 
+                display: { xs: "flex", md: "none" }, 
+                mr: 1,
+                width: 24,
+                height: 24
+              }} 
+            />
             <Typography
               variant="h5"
               noWrap
@@ -163,10 +182,11 @@ export default withAuthenticationRequired(MainNavbar, {
     >
       <Box
         component="img"
-        src="/logo.jpeg"
+        src="/logo.png"
+        alt="KDVManager Logo"
         sx={{
           maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
-          maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
+          maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive height
           height: "auto",
         }}
       />

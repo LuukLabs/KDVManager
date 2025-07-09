@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -23,11 +23,26 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  
+  // Define navigation items for better maintainability
+  const navigationItems = [
+    { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
+    { key: "children", label: t("Children"), path: "/children" },
+    { key: "groups", label: t("Groups"), path: "/groups" },
+    { key: "people", label: t("People"), path: "/people" },
+  ];
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+  
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    handleCloseNavMenu();
   };
 
   return (
@@ -83,11 +98,11 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {/* {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))} */}
+                {navigationItems.map((item) => (
+                  <MenuItem key={item.key} onClick={() => handleNavigation(item.path)}>
+                    <Typography textAlign="center">{item.label}</Typography>
+                  </MenuItem>
+                ))}
               </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -110,38 +125,15 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
               {t("LOGO")}
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => {
-                  navigate("/schedule");
-                }}
-              >
-                {t("Schedule Overview")}
-              </Button>
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => {
-                  navigate("/children");
-                }}
-              >
-                {t("Children")}
-              </Button>
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => {
-                  navigate("/groups");
-                }}
-              >
-                {t("Groups")}
-              </Button>
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => {
-                  navigate("/people");
-                }}
-              >
-                {t("People")}
-              </Button>
+              {navigationItems.map((item) => (
+                <Button
+                  key={item.key}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                  onClick={() => navigate(item.path)}
+                >
+                  {item.label}
+                </Button>
+              ))}
             </Box>
             <AccountMenu />
           </Toolbar>

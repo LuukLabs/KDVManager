@@ -1,30 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
 
-public class ListGroupsQueryHandler : IRequestHandler<ListGroupsQuery, PagedList<GroupListVM>>
+public class ListGroupsQueryHandler
 {
     private readonly IGroupRepository _groupRepository;
-    private readonly IMapper _mapper;
 
-    public ListGroupsQueryHandler(IMapper mapper, IGroupRepository groupRepository)
+    public ListGroupsQueryHandler(IGroupRepository groupRepository)
     {
         _groupRepository = groupRepository;
-        _mapper = mapper;
     }
 
-    public async Task<PagedList<GroupListVM>> Handle(ListGroupsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedList<GroupListVM>> Handle(ListGroupsQuery request)
     {
         var groups = await _groupRepository.PagedAsync(request);
         var count = await _groupRepository.CountAsync();
 
-        List<GroupListVM> groupListVMs = _mapper.Map<List<GroupListVM>>(groups);
+        List<GroupListVM> groupListVMs = groups.Select(group => new GroupListVM
+        {
+            Id = group.Id,
+            Name = group.Name
+        }).ToList();
 
         return new PagedList<GroupListVM>(groupListVMs, count);
     }

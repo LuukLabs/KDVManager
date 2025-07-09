@@ -1,9 +1,8 @@
 ﻿using System;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.People.Commands.AddPerson
 {
-    public class AddPersonCommand : IRequest<Guid>
+    public class AddPersonCommand
     {
         public string GivenName { get; set; }
 

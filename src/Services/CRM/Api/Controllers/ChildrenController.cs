@@ -1,7 +1,6 @@
 ﻿using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
-using MediatR;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
@@ -14,19 +13,33 @@ namespace KDVManager.Services.CRM.Api.Controllers;
 [Route("v1/[controller]")]
 public class ChildrenController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly ILogger<ChildrenController> _logger;
+    private readonly GetChildListQueryHandler _getChildListQueryHandler;
+    private readonly GetChildDetailQueryHandler _getChildDetailQueryHandler;
+    private readonly CreateChildCommandHandler _createChildCommandHandler;
+    private readonly UpdateChildCommandHandler _updateChildCommandHandler;
+    private readonly DeleteChildCommandHandler _deleteChildCommandHandler;
 
-    public ChildrenController(IMediator mediator, ILogger<ChildrenController> logger)
+    public ChildrenController(
+        ILogger<ChildrenController> logger,
+        GetChildListQueryHandler getChildListQueryHandler,
+        GetChildDetailQueryHandler getChildDetailQueryHandler,
+        CreateChildCommandHandler createChildCommandHandler,
+        UpdateChildCommandHandler updateChildCommandHandler,
+        DeleteChildCommandHandler deleteChildCommandHandler)
     {
         _logger = logger;
-        _mediator = mediator;
+        _getChildListQueryHandler = getChildListQueryHandler;
+        _getChildDetailQueryHandler = getChildDetailQueryHandler;
+        _createChildCommandHandler = createChildCommandHandler;
+        _updateChildCommandHandler = updateChildCommandHandler;
+        _deleteChildCommandHandler = deleteChildCommandHandler;
     }
 
     [HttpGet("", Name = "GetAllChildren")]
     public async Task<ActionResult<PagedList<ChildListVM>>> GetAllChildren([FromQuery] GetChildListQuery getChildListQuery)
     {
-        var dtos = await _mediator.Send(getChildListQuery);
+        var dtos = await _getChildListQueryHandler.Handle(getChildListQuery);
         Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
@@ -36,14 +49,14 @@ public class ChildrenController : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<ChildDetailVM>> GetChildById([FromRoute] GetChildDetailQuery getChildByIdQuery)
     {
-        var dto = await _mediator.Send(getChildByIdQuery);
+        var dto = await _getChildDetailQueryHandler.Handle(getChildByIdQuery);
         return Ok(dto);
     }
 
     [HttpPost(Name = "CreateChild")]
     public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
     {
-        var id = await _mediator.Send(createChildCommand);
+        var id = await _createChildCommandHandler.Handle(createChildCommand);
         return Ok(id);
     }
 
@@ -55,15 +68,16 @@ public class ChildrenController : ControllerBase
         // Set the route id to the command
         updateChildCommand.Id = Id;
 
-        await _mediator.Send(updateChildCommand);
+        await _updateChildCommandHandler.Handle(updateChildCommand);
         return NoContent();
     }
 
     [HttpDelete("{Id:guid}", Name = "DeleteChild")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    public async Task<ActionResult<Guid>> DeleteChild([FromRoute] DeleteChildCommand deleteChildCommand)
+    public async Task<ActionResult> DeleteChild([FromRoute] Guid Id)
     {
-        await _mediator.Send(deleteChildCommand);
+        var deleteChildCommand = new DeleteChildCommand { Id = Id };
+        await _deleteChildCommandHandler.Handle(deleteChildCommand);
         return NoContent();
     }
 }

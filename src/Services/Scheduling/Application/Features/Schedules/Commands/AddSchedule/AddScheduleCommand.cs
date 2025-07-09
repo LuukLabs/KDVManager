@@ -1,9 +1,8 @@
 ﻿using System;
-using MediatR;
 using System.Collections.Generic;
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 
-public class AddScheduleCommand : IRequest<Guid>
+public class AddScheduleCommand
 {
     public Guid ChildId { get; set; }
 

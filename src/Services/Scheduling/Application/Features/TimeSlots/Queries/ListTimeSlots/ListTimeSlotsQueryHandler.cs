@@ -1,30 +1,32 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
 
-public class ListTimeSlotsQueryHandler : IRequestHandler<ListTimeSlotsQuery, PagedList<TimeSlotListVM>>
+public class ListTimeSlotsQueryHandler
 {
     private readonly ITimeSlotRepository _timeSlotRepository;
-    private readonly IMapper _mapper;
 
-    public ListTimeSlotsQueryHandler(IMapper mapper, ITimeSlotRepository timeSlotRepository)
+    public ListTimeSlotsQueryHandler(ITimeSlotRepository timeSlotRepository)
     {
         _timeSlotRepository = timeSlotRepository;
-        _mapper = mapper;
     }
 
-    public async Task<PagedList<TimeSlotListVM>> Handle(ListTimeSlotsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedList<TimeSlotListVM>> Handle(ListTimeSlotsQuery request)
     {
-        var groups = await _timeSlotRepository.PagedAsync(request);
+        var timeSlots = await _timeSlotRepository.PagedAsync(request);
         var count = await _timeSlotRepository.CountAsync();
 
-        List<TimeSlotListVM> timeSlotListVMs = _mapper.Map<List<TimeSlotListVM>>(groups);
+        List<TimeSlotListVM> timeSlotListVMs = timeSlots.Select(timeSlot => new TimeSlotListVM
+        {
+            Id = timeSlot.Id,
+            Name = timeSlot.Name,
+            StartTime = timeSlot.StartTime,
+            EndTime = timeSlot.EndTime
+        }).ToList();
 
         return new PagedList<TimeSlotListVM>(timeSlotListVMs, count);
     }

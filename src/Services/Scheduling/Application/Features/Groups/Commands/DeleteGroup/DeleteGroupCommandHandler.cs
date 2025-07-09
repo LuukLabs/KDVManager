@@ -1,25 +1,20 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Exceptions;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
 
-public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
+public class DeleteGroupCommandHandler
 {
     private readonly IGroupRepository _groupRepository;
-    private readonly IMapper _mapper;
 
-    public DeleteGroupCommandHandler(IGroupRepository childRepository, IMapper mapper)
+    public DeleteGroupCommandHandler(IGroupRepository groupRepository)
     {
-        _groupRepository = childRepository;
-        _mapper = mapper;
+        _groupRepository = groupRepository;
     }
 
-    public async Task Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteGroupCommand request)
     {
         var groupToDelete = await _groupRepository.GetByIdAsync(request.Id);
 

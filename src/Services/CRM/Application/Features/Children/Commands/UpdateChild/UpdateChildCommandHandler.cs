@@ -1,24 +1,19 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild
 {
-    public class UpdateChildCommandHandler : IRequestHandler<UpdateChildCommand>
+    public class UpdateChildCommandHandler
     {
         private readonly IChildRepository _childRepository;
-        private readonly IMapper _mapper;
 
-        public UpdateChildCommandHandler(IChildRepository childRepository, IMapper mapper)
+        public UpdateChildCommandHandler(IChildRepository childRepository)
         {
             _childRepository = childRepository;
-            _mapper = mapper;
         }
 
-        public async Task Handle(UpdateChildCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateChildCommand request)
         {
             // Retrieve the existing child entity
             var child = await _childRepository.GetByIdAsync(request.Id);
@@ -33,7 +28,11 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             if (!validationResult.IsValid)
                 throw new Exceptions.ValidationException(validationResult);
 
-            _mapper.Map(request, child);
+            // Manually map properties
+            child.GivenName = request.GivenName;
+            child.FamilyName = request.FamilyName;
+            child.DateOfBirth = request.DateOfBirth;
+            child.CID = request.CID;
 
             await _childRepository.UpdateAsync(child);
         }

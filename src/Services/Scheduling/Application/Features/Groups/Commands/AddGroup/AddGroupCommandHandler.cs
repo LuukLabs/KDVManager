@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
 
-public class AddGroupCommandHandler : IRequestHandler<AddGroupCommand, Guid>
+public class AddGroupCommandHandler
 {
     private readonly IGroupRepository _groupRepository;
-    private readonly IMapper _mapper;
 
-    public AddGroupCommandHandler(IGroupRepository groupRepository, IMapper mapper)
+    public AddGroupCommandHandler(IGroupRepository groupRepository)
     {
         _groupRepository = groupRepository;
-        _mapper = mapper;
     }
 
-    public async Task<Guid> Handle(AddGroupCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddGroupCommand request)
     {
         var validator = new AddGroupCommandValidator(_groupRepository);
         var validationResult = await validator.ValidateAsync(request);
@@ -27,7 +22,12 @@ public class AddGroupCommandHandler : IRequestHandler<AddGroupCommand, Guid>
         if (!validationResult.IsValid)
             throw new Exceptions.ValidationException(validationResult);
 
-        var group = _mapper.Map<Group>(request);
+        var group = new Group
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+        };
 
         group = await _groupRepository.AddAsync(group);
 

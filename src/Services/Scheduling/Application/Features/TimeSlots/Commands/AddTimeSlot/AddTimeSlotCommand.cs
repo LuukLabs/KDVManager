@@ -1,9 +1,8 @@
 ﻿using System;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.AddTimeSlot;
 
-public class AddTimeSlotCommand : IRequest<Guid>
+public class AddTimeSlotCommand
 {
     public string Name { get; set; }
 

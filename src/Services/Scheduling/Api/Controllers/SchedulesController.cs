@@ -1,5 +1,4 @@
 ﻿using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
@@ -14,19 +13,30 @@ namespace KDVManager.Services.Scheduling.Api.Controllers;
 [Route("v1/[controller]")]
 public class SchedulesController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly GetChildSchedulesQueryHandler _getChildSchedulesQueryHandler;
+    private readonly GetSchedulesByDateQueryHandler _getSchedulesByDateQueryHandler;
+    private readonly AddScheduleCommandHandler _addScheduleCommandHandler;
+    private readonly DeleteScheduleCommandHandler _deleteScheduleCommandHandler;
     private readonly ILogger<SchedulesController> _logger;
 
-    public SchedulesController(IMediator mediator, ILogger<SchedulesController> logger)
+    public SchedulesController(
+        GetChildSchedulesQueryHandler getChildSchedulesQueryHandler,
+        GetSchedulesByDateQueryHandler getSchedulesByDateQueryHandler,
+        AddScheduleCommandHandler addScheduleCommandHandler,
+        DeleteScheduleCommandHandler deleteScheduleCommandHandler,
+        ILogger<SchedulesController> logger)
     {
+        _getChildSchedulesQueryHandler = getChildSchedulesQueryHandler;
+        _getSchedulesByDateQueryHandler = getSchedulesByDateQueryHandler;
+        _addScheduleCommandHandler = addScheduleCommandHandler;
+        _deleteScheduleCommandHandler = deleteScheduleCommandHandler;
         _logger = logger;
-        _mediator = mediator;
     }
 
     [HttpGet("", Name = "GetChildSchedules")]
-    public async Task<ActionResult<PagedList<ChildScheduleListVM>>> ListScheduleItems([FromQuery] GetChildSchedulesQuery getChildSchedulesQuery)
+    public async Task<ActionResult<List<ChildScheduleListVM>>> ListScheduleItems([FromQuery] GetChildSchedulesQuery getChildSchedulesQuery)
     {
-        var dtos = await _mediator.Send(getChildSchedulesQuery);
+        var dtos = await _getChildSchedulesQueryHandler.Handle(getChildSchedulesQuery);
         return Ok(dtos);
     }
 
@@ -34,7 +44,7 @@ public class SchedulesController : ControllerBase
     [ProducesResponseType(typeof(List<ScheduleByDateVM>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<List<ScheduleByDateVM>>> GetSchedulesByDateRange([FromQuery] GetSchedulesByDateQuery getSchedulesByDateQuery)
     {
-        var schedules = await _mediator.Send(getSchedulesByDateQuery);
+        var schedules = await _getSchedulesByDateQueryHandler.Handle(getSchedulesByDateQuery);
         return Ok(schedules);
     }
 
@@ -43,7 +53,7 @@ public class SchedulesController : ControllerBase
     [ProducesResponseType(typeof(UnprocessableEntityResponse), (int)HttpStatusCode.UnprocessableEntity)]
     public async Task<ActionResult<Guid>> AddScheduleItem([FromBody] AddScheduleCommand addScheduleCommand)
     {
-        var id = await _mediator.Send(addScheduleCommand);
+        var id = await _addScheduleCommandHandler.Handle(addScheduleCommand);
         return Ok(id);
     }
 
@@ -57,7 +67,7 @@ public class SchedulesController : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult> DeleteSchedule([FromRoute] DeleteScheduleCommand deleteScheduleCommand)
     {
-        await _mediator.Send(deleteScheduleCommand);
+        await _deleteScheduleCommandHandler.Handle(deleteScheduleCommand);
         return NoContent();
     }
 }

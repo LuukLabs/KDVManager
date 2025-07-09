@@ -1,6 +1,5 @@
 ﻿using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using System.Net;
@@ -12,19 +11,27 @@ namespace KDVManager.Services.Scheduling.Api.Controllers;
 [Route("v1/[controller]")]
 public class GroupsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ListGroupsQueryHandler _listGroupsQueryHandler;
+    private readonly AddGroupCommandHandler _addGroupCommandHandler;
+    private readonly DeleteGroupCommandHandler _deleteGroupCommandHandler;
     private readonly ILogger<GroupsController> _logger;
 
-    public GroupsController(IMediator mediator, ILogger<GroupsController> logger)
+    public GroupsController(
+        ListGroupsQueryHandler listGroupsQueryHandler,
+        AddGroupCommandHandler addGroupCommandHandler,
+        DeleteGroupCommandHandler deleteGroupCommandHandler,
+        ILogger<GroupsController> logger)
     {
+        _listGroupsQueryHandler = listGroupsQueryHandler;
+        _addGroupCommandHandler = addGroupCommandHandler;
+        _deleteGroupCommandHandler = deleteGroupCommandHandler;
         _logger = logger;
-        _mediator = mediator;
     }
 
     [HttpGet("", Name = "ListGroups")]
     public async Task<ActionResult<PagedList<GroupListVM>>> ListGroups([FromQuery] ListGroupsQuery listGroupsQuery)
     {
-        var dtos = await _mediator.Send(listGroupsQuery);
+        var dtos = await _listGroupsQueryHandler.Handle(listGroupsQuery);
         Response.Headers.Append("x-Total", dtos.TotalCount.ToString());
         return Ok(dtos);
     }
@@ -34,7 +41,7 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(typeof(UnprocessableEntityResponse), (int)HttpStatusCode.UnprocessableEntity)]
     public async Task<ActionResult<Guid>> AddGroup([FromBody] AddGroupCommand addGroupCommand)
     {
-        var id = await _mediator.Send(addGroupCommand);
+        var id = await _addGroupCommandHandler.Handle(addGroupCommand);
         return Ok(id);
     }
 
@@ -48,7 +55,7 @@ public class GroupsController : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult> DeleteGroup([FromRoute] DeleteGroupCommand deleteGroupCommand)
     {
-        await _mediator.Send(deleteGroupCommand);
+        await _deleteGroupCommandHandler.Handle(deleteGroupCommand);
         return NoContent();
     }
 }

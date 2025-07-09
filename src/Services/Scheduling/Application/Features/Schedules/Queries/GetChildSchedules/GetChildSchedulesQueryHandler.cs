@@ -1,35 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
 
-public class GetChildSchedulesQueryHandler : IRequestHandler<GetChildSchedulesQuery, List<ChildScheduleListVM>>
+public class GetChildSchedulesQueryHandler
 {
     private readonly IScheduleRepository _scheduleRepository;
-    private readonly IMapper _mapper;
 
-    public GetChildSchedulesQueryHandler(
-        IMapper mapper,
-        IScheduleRepository scheduleRepository)
+    public GetChildSchedulesQueryHandler(IScheduleRepository scheduleRepository)
     {
         _scheduleRepository = scheduleRepository;
-        _mapper = mapper;
     }
 
-    public async Task<List<ChildScheduleListVM>> Handle(GetChildSchedulesQuery request, CancellationToken cancellationToken)
+    public async Task<List<ChildScheduleListVM>> Handle(GetChildSchedulesQuery request)
     {
         var schedules = await _scheduleRepository.GetSchedulesByChildIdAsync(request.ChildId);
 
-        // Map schedules to view models (group names will be mapped automatically through navigation properties)
-        var childScheduleListVMs = _mapper.Map<List<ChildScheduleListVM>>(schedules);
+        // Map schedules to view models manually
+        var childScheduleListVMs = schedules.Select(schedule => new ChildScheduleListVM
+        {
+            Id = schedule.Id,
+            ChildId = schedule.ChildId,
+            StartDate = schedule.StartDate,
+            EndDate = schedule.EndDate,
+            ScheduleRules = schedule.ScheduleRules?.Select(rule => new ChildScheduleListVM.ChildScheduleListVMScheduleRule
+            {
+                Day = rule.Day,
+                TimeSlotId = rule.TimeSlotId,
+                TimeSlotName = rule.TimeSlot?.Name ?? string.Empty,
+                StartTime = rule.TimeSlot?.StartTime ?? TimeOnly.MinValue,
+                EndTime = rule.TimeSlot?.EndTime ?? TimeOnly.MinValue,
+                GroupId = rule.GroupId,
+                GroupName = rule.Group?.Name ?? string.Empty
+            }).ToList() ?? new List<ChildScheduleListVM.ChildScheduleListVMScheduleRule>()
+        }).ToList();
 
         return childScheduleListVMs;
     }

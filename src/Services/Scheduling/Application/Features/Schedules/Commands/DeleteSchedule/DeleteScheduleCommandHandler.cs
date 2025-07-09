@@ -1,25 +1,20 @@
-using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Exceptions;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
 
-public class DeleteScheduleCommandHandler : IRequestHandler<DeleteScheduleCommand>
+public class DeleteScheduleCommandHandler
 {
     private readonly IScheduleRepository _scheduleRepository;
-    private readonly IMapper _mapper;
 
-    public DeleteScheduleCommandHandler(IScheduleRepository scheduleRepository, IMapper mapper)
+    public DeleteScheduleCommandHandler(IScheduleRepository scheduleRepository)
     {
         _scheduleRepository = scheduleRepository;
-        _mapper = mapper;
     }
 
-    public async Task Handle(DeleteScheduleCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteScheduleCommand request)
     {
         var scheduleToDelete = await _scheduleRepository.GetByIdAsync(request.Id);
 

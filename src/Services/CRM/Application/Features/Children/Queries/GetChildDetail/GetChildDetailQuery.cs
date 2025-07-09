@@ -1,10 +1,9 @@
 ﻿using System;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail
 {
-    public class GetChildDetailQuery: IRequest<ChildDetailVM>
+    public class GetChildDetailQuery
     {
-         public Guid Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

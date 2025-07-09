@@ -1,25 +1,20 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Application.Exceptions;
 using KDVManager.Services.CRM.Domain.Entities;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 
-public class DeleteChildCommandHandler : IRequestHandler<DeleteChildCommand>
+public class DeleteChildCommandHandler
 {
     private readonly IChildRepository _childRepository;
-    private readonly IMapper _mapper;
 
-    public DeleteChildCommandHandler(IChildRepository childRepository, IMapper mapper)
+    public DeleteChildCommandHandler(IChildRepository childRepository)
     {
         _childRepository = childRepository;
-        _mapper = mapper;
     }
 
-    public async Task Handle(DeleteChildCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteChildCommand request)
     {
         var childToDelete = await _childRepository.GetByIdAsync(request.Id);
 

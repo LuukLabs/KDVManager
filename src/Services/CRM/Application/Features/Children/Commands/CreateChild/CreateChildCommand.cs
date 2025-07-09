@@ -1,9 +1,8 @@
 ﻿using System;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild
 {
-    public class CreateChildCommand : IRequest<Guid>
+    public class CreateChildCommand
     {
         public string GivenName { get; set; }
 

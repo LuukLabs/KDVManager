@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using MediatR;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild
 {
-    public class UpdateChildCommand : IRequest
+    public class UpdateChildCommand
     {
         [JsonIgnore]
         public Guid Id { get; set; }

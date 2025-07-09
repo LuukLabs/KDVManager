@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ErrorPage from "./components/ErrorPage";
 import MainLayout from "./components/AuthProviderLayout";
@@ -18,6 +18,10 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
         },
       },
       children: [
+        {
+          index: true,
+          element: <Navigate to="/schedule" replace />,
+        },
         {
           path: "schedule",
           lazy: () => import("./pages/ScheduleOverviewPage"),

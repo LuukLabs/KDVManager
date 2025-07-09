@@ -141,7 +141,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
                 textDecoration: "none",
               }}
             >
-              {t("LOGO")}
+              {t("KDVManager")}
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {navigationItems.map((item) => (
@@ -182,7 +182,7 @@ export default withAuthenticationRequired(MainNavbar, {
     >
       <Box
         component="img"
-        src="/logo.png"
+        src="/logo_transparent.png"
         alt="KDVManager Logo"
         sx={{
           maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width

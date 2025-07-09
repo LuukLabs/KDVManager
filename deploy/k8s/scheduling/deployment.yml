@@ -31,15 +31,18 @@ spec:
           httpGet:
             port: 80
             path: /healthz
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 2
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             port: 80
             path: /healthz
-          initialDelaySeconds: 10
-          periodSeconds: 3
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         resources:
           limits:
             memory: 100Mi
@@ -73,7 +76,7 @@ spec:
           - name: POSTGRES_DATABASE
             value: "KDVManagerSchedulingDB"
           - name: ConnectionStrings__KDVManagerSchedulingConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require"
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require; Maximum Pool Size=5; Minimum Pool Size=1; Connection Idle Lifetime=300; Connection Pruning Interval=10"
       initContainers:
       - name: scheduling-migration
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
@@ -93,4 +96,4 @@ spec:
           - name: POSTGRES_DATABASE
             value: "KDVManagerSchedulingDB"
           - name: ConnectionStrings__KDVManagerSchedulingConnectionString
-            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require"
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require; Maximum Pool Size=2; Minimum Pool Size=1; Connection Idle Lifetime=300; Connection Pruning Interval=10"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -8,24 +8,28 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Print as PrintIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
 import { useTranslation } from "react-i18next";
 import { useGetChildSchedules } from "@api/endpoints/schedules/schedules";
 import { ScheduleCard } from "./ScheduleCard";
+import { PrintScheduleDialog } from "./PrintScheduleDialog";
 
 type ChildScheduleCardsProps = {
   childId: string;
+  childName?: string;
 };
 
-export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId }) => {
+export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId, childName }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data, isLoading, isFetching } = useGetChildSchedules({
     childId: childId,
   });
+  const deleteScheduleMutation = useDeleteSchedule();
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
@@ -33,6 +37,10 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   const handleEditSchedule = (scheduleId: string) => {
     // TODO: Implement edit functionality
     console.log("Edit schedule:", scheduleId);
+  };
+
+  const handlePrintSchedules = () => {
+    setPrintDialogOpen(true);
   };
 
   if (isLoading) {
@@ -45,6 +53,27 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
 
   return (
     <Box>
+      {/* Print Dialog */}
+      <PrintScheduleDialog
+        open={printDialogOpen}
+        onClose={() => setPrintDialogOpen(false)}
+        schedules={data || []}
+        childName={childName}
+      />
+
+      {/* Action Buttons */}
+      {data && data.length > 0 && (
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={handlePrintSchedules}
+            startIcon={<PrintIcon />}
+          >
+            {t("Print Schedules")}
+          </Button>
+        </Box>
+      )}
+
       {/* Loading state */}
       {isFetching && !isLoading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
@@ -71,6 +100,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
                 scheduleRules: schedule.scheduleRules ?? [],
               }}
               onEdit={handleEditSchedule}
+              childName={childName}
             />
           ))}
         </Box>
@@ -108,3 +138,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
     </Box>
   );
 };
+function useDeleteSchedule() {
+  throw new Error("Function not implemented.");
+}
+

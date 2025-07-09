@@ -307,7 +307,7 @@ const UpdateChildPage = () => {
               </Typography>
             </Box>
 
-            <ChildScheduleView childId={childId} />
+            <ChildScheduleView childId={childId} childName={getFullName()} />
           </CardContent>
         </Card>
       </Grid>

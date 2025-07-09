@@ -36,7 +36,7 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
           lazy: () => import("./pages/children/UpdateChildPage"),
           loader: updateChildPageLoader(queryClient),
           handle: {
-            crumb: (data: any) => {
+            crumb: (data: Awaited<ReturnType<ReturnType<typeof updateChildPageLoader>>>) => {
               return data?.givenName && data?.familyName 
                 ? `${data.givenName} ${data.familyName}`
                 : t("Child");

@@ -16,16 +16,6 @@ static_resources:
       - name: envoy.http_connection_manager
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          tracing:
-            provider:
-              name: envoy.tracers.opentelemetry
-              typed_config:
-                "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
-                grpc_service:
-                  envoy_grpc:
-                    cluster_name: otel-collector
-                  timeout: 0.25s
-                service_name: kdvmanager-envoy
           stat_prefix: ingress_http
           upgrade_configs:
           - upgrade_type: websocket
@@ -61,39 +51,6 @@ static_resources:
           - name: envoy.filters.http.cors
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
-          - name: envoy.filters.http.jwt_authn
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
-              providers:
-                auth0_provider:
-                  issuer: https://kdvmanager-development.eu.auth0.com/
-                  audiences:
-                  - https://api.kdvmanager.com
-                  - https://kdvmanager-development.eu.auth0.com/userinfo
-                  remote_jwks:
-                    http_uri:
-                      uri: https://kdvmanager-development.eu.auth0.com/.well-known/jwks.json
-                      cluster: kdvmanager.eu.auth0.com|443
-                      timeout: 5s
-                    cache_duration: 300s
-                  from_headers:
-                  - name: Authorization
-                    value_prefix: "Bearer "
-                  forward: true
-                  payload_in_metadata: jwt_payload
-              rules:
-              - match:
-                  prefix: /crm/openapi/
-              - match:
-                  prefix: /scheduling/swagger/
-              - match:
-                  prefix: /crm/
-                requires:
-                  provider_name: auth0_provider
-              - match:
-                  prefix: /scheduling/
-                requires:
-                  provider_name: auth0_provider
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -117,24 +74,6 @@ static_resources:
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
         sni: kdvmanager.eu.auth0.com
-  - name: otel-collector
-    connect_timeout: 0.25s
-    type: strict_dns
-    lb_policy: round_robin
-    typed_extension_protocol_options:
-      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
-        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
-        explicit_http_config:
-          http2_protocol_options: {}
-    load_assignment:
-      cluster_name: otel-collector
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: otel-collector
-                port_value: 4317
   - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns

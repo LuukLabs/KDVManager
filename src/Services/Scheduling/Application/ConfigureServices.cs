@@ -19,6 +19,8 @@ using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Command
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.DeleteClosurePeriod;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriods;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriodYears;
+using KDVManager.Services.Scheduling.Application.Features.Attendance.Queries.GetAttendanceList;
+using KDVManager.Services.Scheduling.Application.Features.Attendance.Queries.GetGroupsWithScheduling;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -47,6 +49,8 @@ public static class ConfigureServices
         services.AddScoped<DeleteClosurePeriodCommandHandler>();
         services.AddScoped<ListClosurePeriodsQueryHandler>();
         services.AddScoped<ListClosurePeriodYearsQueryHandler>();
+        services.AddScoped<GetAttendanceListQueryHandler>();
+        services.AddScoped<GetGroupsWithSchedulingQueryHandler>();
 
         return services;
     }

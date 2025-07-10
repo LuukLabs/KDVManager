@@ -8,59 +8,33 @@
     },
     "version": "v1"
   },
-  "servers": [
-    {
-      "url": "http://localhost:5200/"
-    }
-  ],
-  "tags": [
-    {
-      "name": "children"
-    }
-  ],
   "paths": {
     "/crm/v1/children": {
       "get": {
-        "tags": ["children"],
-        "operationId": "ListChildren",
+        "tags": ["Children"],
+        "operationId": "GetAllChildren",
         "parameters": [
           {
-            "name": "search",
+            "name": "Search",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "archived",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
-            "name": "pageNumber",
+            "name": "PageSize",
             "in": "query",
-            "required": true,
             "schema": {
-              "maximum": 2147483647,
-              "minimum": 1,
               "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maximum": 100,
-              "minimum": 1,
-              "type": "integer",
-              "format": "int32",
-              "default": 25
+              "format": "int32"
             }
           }
         ],
@@ -68,7 +42,23 @@
           "200": {
             "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChildListVM"
+                  }
+                }
+              },
               "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChildListVM"
+                  }
+                }
+              },
+              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -81,36 +71,47 @@
         }
       },
       "post": {
-        "tags": ["children"],
-        "operationId": "AddChild",
+        "tags": ["Children"],
+        "operationId": "CreateChild",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddChildCommand"
+                "$ref": "#/components/schemas/CreateChildCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChildCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChildCommand"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
               "application/json": {
                 "schema": {
                   "type": "string",
                   "format": "uuid"
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
+              },
+              "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "type": "string",
+                  "format": "uuid"
                 }
               }
             }
@@ -118,13 +119,13 @@
         }
       }
     },
-    "/crm/v1/children/{id}": {
+    "/crm/v1/children/{Id}": {
       "get": {
-        "tags": ["children"],
+        "tags": ["Children"],
         "operationId": "GetChildById",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -147,11 +148,11 @@
         }
       },
       "put": {
-        "tags": ["children"],
+        "tags": ["Children"],
         "operationId": "UpdateChild",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -166,18 +167,37 @@
               "schema": {
                 "$ref": "#/components/schemas/UpdateChildCommand"
               }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChildCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChildCommand"
+              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
             "description": "No Content"
           },
           "422": {
-            "description": "Unprocessable Entity",
+            "description": "Unprocessable Content",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              },
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              },
+              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
@@ -187,11 +207,11 @@
         }
       },
       "delete": {
-        "tags": ["children"],
+        "tags": ["Children"],
         "operationId": "DeleteChild",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -207,40 +227,25 @@
         }
       }
     },
-    "/crm/v1/children/{id}/archive": {
-      "post": {
-        "tags": ["children"],
-        "operationId": "ArchiveChild",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/scheduling/v1/children/{childId}/absences": {
+    "/crm/v1/people": {
       "get": {
-        "tags": ["Absences"],
-        "operationId": "GetAbsencesByChildId",
+        "tags": ["People"],
+        "operationId": "GetAllPeople",
         "parameters": [
           {
-            "name": "childId",
-            "in": "path",
-            "required": true,
+            "name": "PageNumber",
+            "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -252,7 +257,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
+                    "$ref": "#/components/schemas/PersonListVM"
                   }
                 }
               },
@@ -260,7 +265,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
+                    "$ref": "#/components/schemas/PersonListVM"
                   }
                 }
               },
@@ -268,7 +273,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
+                    "$ref": "#/components/schemas/PersonListVM"
                   }
                 }
               }
@@ -277,181 +282,23 @@
         }
       },
       "post": {
-        "tags": ["Absences"],
-        "operationId": "AddAbsence",
-        "parameters": [
-          {
-            "name": "childId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
+        "tags": ["People"],
+        "operationId": "AddPerson",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddAbsenceCommand"
+                "$ref": "#/components/schemas/AddPersonCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddAbsenceCommand"
+                "$ref": "#/components/schemas/AddPersonCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AddAbsenceCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Content",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/scheduling/v1/absences/{Id}": {
-      "delete": {
-        "tags": ["Absences"],
-        "operationId": "DeleteAbsence",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/scheduling/v1/closure-periods": {
-      "get": {
-        "tags": ["ClosurePeriods"],
-        "operationId": "ListClosurePeriods",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClosurePeriod"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClosurePeriod"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClosurePeriod"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["ClosurePeriods"],
-        "operationId": "AddClosurePeriod",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddClosurePeriodCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddClosurePeriodCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddClosurePeriodCommand"
+                "$ref": "#/components/schemas/AddPersonCommand"
               }
             }
           }
@@ -483,24 +330,119 @@
         }
       }
     },
-    "/scheduling/v1/closure-periods/{id}": {
-      "delete": {
-        "tags": ["ClosurePeriods"],
-        "operationId": "DeleteClosurePeriod",
+    "/scheduling/v1/attendance/list": {
+      "get": {
+        "tags": ["Attendance"],
+        "operationId": "GetAttendanceList",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "year",
+            "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "dayOfWeek",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceListVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceListVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceListVM"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduling/v1/attendance/groups": {
+      "get": {
+        "tags": ["Attendance"],
+        "operationId": "GetGroupsWithScheduling",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupWithSchedulingVM"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupWithSchedulingVM"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupWithSchedulingVM"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -511,7 +453,7 @@
         "operationId": "ListGroups",
         "parameters": [
           {
-            "name": "pageNumber",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -519,7 +461,7 @@
             }
           },
           {
-            "name": "pageSize",
+            "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -610,17 +552,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               }
             }
@@ -634,7 +576,7 @@
         "operationId": "DeleteGroup",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -656,16 +598,6 @@
                 }
               }
             }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
           }
         }
       }
@@ -676,7 +608,7 @@
         "operationId": "GetChildSchedules",
         "parameters": [
           {
-            "name": "childId",
+            "name": "ChildId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -767,17 +699,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               }
             }
@@ -791,7 +723,7 @@
         "operationId": "GetSchedulesByDate",
         "parameters": [
           {
-            "name": "date",
+            "name": "Date",
             "in": "query",
             "schema": {
               "type": "string",
@@ -799,7 +731,7 @@
             }
           },
           {
-            "name": "groupId",
+            "name": "GroupId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -833,52 +765,6 @@
                   "items": {
                     "$ref": "#/components/schemas/ScheduleByDateVM"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/scheduling/v1/schedules/group-summary": {
-      "get": {
-        "tags": ["Schedules"],
-        "operationId": "GetGroupSummary",
-        "parameters": [
-          {
-            "name": "groupId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GroupSummaryVM"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GroupSummaryVM"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GroupSummaryVM"
                 }
               }
             }
@@ -892,7 +778,7 @@
         "operationId": "DeleteSchedule",
         "parameters": [
           {
-            "name": "id",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -924,7 +810,7 @@
         "operationId": "ListTimeSlots",
         "parameters": [
           {
-            "name": "pageNumber",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -932,7 +818,7 @@
             }
           },
           {
-            "name": "pageSize",
+            "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1023,17 +909,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
               }
             }
@@ -1044,8 +930,7 @@
   },
   "components": {
     "schemas": {
-      "AddChildCommand": {
-        "required": ["givenName", "familyName", "dateOfBirth"],
+      "AddPersonCommand": {
         "type": "object",
         "properties": {
           "givenName": {
@@ -1058,17 +943,24 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date",
+            "format": "date-time"
+          },
+          "email": {
+            "type": "string",
             "nullable": true
           },
-          "cid": {
+          "bsn": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ChildDetailVM": {
-        "required": ["givenName", "familyName"],
         "type": "object",
         "properties": {
           "id": {
@@ -1076,28 +968,26 @@
             "format": "uuid"
           },
           "givenName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "familyName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date"
+            "format": "date-time",
+            "nullable": true
           },
           "cid": {
             "type": "string",
             "nullable": true
-          },
-          "archivedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ChildListVM": {
-        "required": ["id", "fullName", "dateOfBirth"],
         "type": "object",
         "properties": {
           "id": {
@@ -1105,21 +995,72 @@
             "format": "uuid"
           },
           "fullName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "archivedAt": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "CreateChildCommand": {
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cid": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonListVM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "bsn": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "UnprocessableEntityResponse": {
-        "required": ["status", "errors"],
+        "required": ["errors", "status"],
         "type": "object",
         "properties": {
           "status": {
@@ -1132,16 +1073,12 @@
               "$ref": "#/components/schemas/ValidationError"
             }
           }
-        }
+        },
+        "additionalProperties": false
       },
       "UpdateChildCommand": {
-        "required": ["id", "givenName", "familyName", "dateOfBirth"],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "givenName": {
             "type": "string",
             "nullable": true
@@ -1152,89 +1089,31 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "cid": {
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ValidationError": {
-        "required": ["property", "code", "title"],
+        "required": ["code", "property", "title"],
         "type": "object",
         "properties": {
           "property": {
+            "minLength": 1,
             "type": "string"
           },
           "code": {
+            "minLength": 1,
             "type": "string"
           },
           "title": {
+            "minLength": 1,
             "type": "string"
-          }
-        }
-      },
-      "AbsenceListByChildIdVM": {
-        "required": ["endDate", "id", "reason", "startDate"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "reason": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddAbsenceCommand": {
-        "type": "object",
-        "properties": {
-          "childId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "reason": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddClosurePeriodCommand": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "reason": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1258,11 +1137,11 @@
           },
           "startDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "endDate": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "scheduleRules": {
@@ -1310,16 +1189,114 @@
         },
         "additionalProperties": false
       },
-      "AgeGroupSummary": {
+      "AttendanceChildVM": {
         "type": "object",
         "properties": {
-          "ageRange": {
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
             "type": "string",
             "nullable": true
           },
-          "childCount": {
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "age": {
             "type": "integer",
             "format": "int32"
+          },
+          "beginTime": {
+            "type": "string",
+            "format": "time",
+            "example": "14:30:00"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time",
+            "example": "14:30:00"
+          },
+          "schedules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttendanceScheduleVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AttendanceListVM": {
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthName": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dayOfWeek": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "nullable": true
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttendanceChildVM"
+            },
+            "nullable": true
+          },
+          "isEmpty": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AttendanceScheduleVM": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isScheduled": {
+            "type": "boolean"
+          },
+          "beginTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true,
+            "example": "14:30:00"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true,
+            "example": "14:30:00"
           }
         },
         "additionalProperties": false
@@ -1337,11 +1314,11 @@
           },
           "startDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "endDate": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "scheduleRules": {
@@ -1387,32 +1364,6 @@
         },
         "additionalProperties": false
       },
-      "ClosurePeriod": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "reason": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "DayOfWeek": {
         "enum": [0, 1, 2, 3, 4, 5, 6],
         "type": "integer",
@@ -1432,33 +1383,18 @@
         },
         "additionalProperties": false
       },
-      "GroupSummaryVM": {
-        "required": ["date", "groupId", "groupName", "timeBlocks"],
+      "GroupWithSchedulingVM": {
         "type": "object",
         "properties": {
-          "groupId": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "groupName": {
+          "name": {
             "type": "string",
             "nullable": true
           },
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "timeBlocks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TimeBlockSummary"
-            }
-          },
-          "requiredProfessionals": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "numberOfChildren": {
+          "groupNumber": {
             "type": "integer",
             "format": "int32"
           }
@@ -1503,6 +1439,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "childFullName": {
+            "type": "string",
+            "nullable": true
+          },
           "timeSlotName": {
             "type": "string",
             "nullable": true
@@ -1519,55 +1459,8 @@
             "type": "string",
             "format": "uuid"
           },
-          "dateOfBirth": {
+          "groupName": {
             "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "age": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TimeBlockSummary": {
-        "required": [
-          "ageGroups",
-          "endTime",
-          "requiredProfessionals",
-          "startTime",
-          "timeSlotName",
-          "totalChildren"
-        ],
-        "type": "object",
-        "properties": {
-          "startTime": {
-            "type": "string",
-            "format": "time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "time"
-          },
-          "timeSlotName": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalChildren": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "requiredProfessionals": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ageGroups": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AgeGroupSummary"
-            },
             "nullable": true
           }
         },
@@ -1591,42 +1484,6 @@
           "endTime": {
             "type": "string",
             "format": "time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UnprocessableEntityResponse1": {
-        "required": ["errors", "status"],
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationError1"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "ValidationError1": {
-        "required": ["code", "property", "title"],
-        "type": "object",
-        "properties": {
-          "property": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "code": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": {
-            "minLength": 1,
-            "type": "string"
           }
         },
         "additionalProperties": false

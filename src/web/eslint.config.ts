@@ -86,6 +86,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
               "toLocaleDateString",
               "toLocaleString",
               "format",
+              "isSame"
             ],
           },
         },

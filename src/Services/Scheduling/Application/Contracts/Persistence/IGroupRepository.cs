@@ -8,6 +8,7 @@ namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 
 public interface IGroupRepository : IAsyncRepository<Group>
 {
+    Task<IReadOnlyList<Group>> GetAllAsync();
     Task<IReadOnlyList<Group>> PagedAsync(IPaginationFilter paginationFilter);
     Task<int> CountAsync();
 

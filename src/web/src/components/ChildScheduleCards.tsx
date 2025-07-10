@@ -63,12 +63,8 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId,
 
       {/* Action Buttons */}
       {data && data.length > 0 && (
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={handlePrintSchedules}
-            startIcon={<PrintIcon />}
-          >
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+          <Button variant="outlined" onClick={handlePrintSchedules} startIcon={<PrintIcon />}>
             {t("Print Schedules")}
           </Button>
         </Box>

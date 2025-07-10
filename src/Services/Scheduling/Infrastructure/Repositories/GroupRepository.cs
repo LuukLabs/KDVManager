@@ -15,6 +15,13 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
     {
     }
 
+    public async Task<IReadOnlyList<Group>> GetAllAsync()
+    {
+        return await _dbContext.Set<Group>()
+        .OrderBy(group => group.Name)
+        .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Group>> PagedAsync(IPaginationFilter paginationFilter)
     {
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;

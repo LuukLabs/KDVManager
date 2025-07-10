@@ -1,6 +1,7 @@
 import { type RequestConfig } from "./requestConfig";
 import { determineUrl } from "./determineUrl";
-import { getAuthToken } from "@lib/auth/auth";
+import { authInterceptor } from "../interceptors/authInterceptor";
+import { authErrorHandler } from "../interceptors/authErrorHandler";
 
 export type ListRecord<RecordType> = {
   value: RecordType;
@@ -15,21 +16,37 @@ export const executeFetchPaginated = async <T>(
   requestConfig: RequestConfig,
 ): Promise<ListRecord<T>> => {
   const { data, method, params, url, signal, headers } = requestConfig;
-  const token = await getAuthToken();
 
-  const fetchHeaders = {
-    ...headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  const fetchConfig = {
+    url: determineUrl(url, params),
+    headers: {
+      ...headers,
+    },
+    method: method.toUpperCase(),
+    signal,
+    ...(data ? { body: JSON.stringify(data) } : {}),
   };
 
-  const fetchUrl = determineUrl(url, params);
+  // Apply auth interceptor
+  const configWithAuth = await authInterceptor.intercept(fetchConfig);
 
-  const response = await fetch(fetchUrl, {
-    headers: fetchHeaders,
-    signal,
-    method,
-    ...(data ? { body: JSON.stringify(data) } : {}),
+  const response = await fetch(configWithAuth.url, {
+    headers: configWithAuth.headers,
+    method: configWithAuth.method,
+    signal: configWithAuth.signal,
+    body: configWithAuth.body,
   });
+
+  // Handle authentication errors
+  if (authErrorHandler.shouldHandleError(response)) {
+    await authErrorHandler.handleAuthError(response);
+    // Return a rejected promise with auth error info
+    return Promise.reject({
+      status: 401,
+      message: "Authentication required",
+      redirected: true,
+    });
+  }
 
   const json = (await response.json()) as T;
 

@@ -6,8 +6,11 @@ import {
   CircularProgress,
   Avatar,
   CardActionArea,
+  Chip,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { Schedule } from "@mui/icons-material";
+import { Schedule, AccessTime, Person } from "@mui/icons-material";
 import { useGetChildById } from "@api/endpoints/children/children";
 import type { ScheduleByDateVM } from "@api/models/scheduleByDateVM";
 import dayjs from "dayjs";
@@ -23,6 +26,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
   const { data: childDetails, isLoading: isLoadingChild } = useGetChildById(childId);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const calculateAge = (dateOfBirth: string | null) => {
     if (!dateOfBirth) return t("N/A");
@@ -34,7 +39,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
     if (childDetails?.givenName && childDetails?.familyName) {
       return `${childDetails.givenName} ${childDetails.familyName}`.trim();
     }
-    return schedule.childFullName;
+    return schedule.childFullName || t("Unknown Child");
   };
 
   const getInitials = () => {
@@ -48,7 +53,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
         ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
         : fullName[0].toUpperCase();
     }
-    return "C";
+    return "?";
   };
 
   const formatTime = (time: string) => {
@@ -60,111 +65,140 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
     navigate(`/children/${childId}`);
   };
 
+  const getAvatarColor = () => {
+    // Generate consistent color based on child ID
+    const colors = ['#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#c2185b', '#00796b'];
+    let hash = 0;
+    for (let i = 0; i < childId.length; i++) {
+      hash = ((hash << 5) - hash + childId.charCodeAt(i)) & 0xffffffff;
+    }
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   return (
     <Card
       sx={{
         transition: "all 0.2s ease-in-out",
+        border: '1px solid',
+        borderColor: 'divider',
         "&:hover": {
           boxShadow: 2,
+          transform: 'translateY(-1px)',
           cursor: "pointer",
+          borderColor: 'primary.main',
         },
+        borderRadius: 1,
+        overflow: 'hidden'
       }}
     >
       <CardActionArea onClick={handleCardClick}>
-        <CardContent sx={{ p: 0.75, "&:last-child": { pb: 0.75 } }}>
+        <CardContent sx={{ p: { xs: 1, sm: 1.5 }, "&:last-child": { pb: { xs: 1, sm: 1.5 } } }}>
           {isLoadingChild ? (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <CircularProgress size={14} />
-              <Typography variant="body2" fontSize="0.7rem">
-                Loading...
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, minHeight: 48 }}>
+              <CircularProgress size={16} />
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.8rem" }}>
+                {t("Loading child details...")}
               </Typography>
             </Box>
           ) : (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {/* Avatar */}
-              <Avatar
-                sx={{
-                  width: 28,
-                  height: 28,
-                  bgcolor: "primary.main",
-                  fontSize: "0.75rem",
-                  fontWeight: "bold",
-                  flexShrink: 0,
-                }}
-              >
-                {getInitials()}
-              </Avatar>
-
-              {/* Name and age */}
-              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                <Typography
-                  variant="body2"
+            <Box sx={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 1 }}>
+              {/* Left section - Avatar and Name */}
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1, minWidth: 0 }}>
+                <Avatar
                   sx={{
-                    fontWeight: 600,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    lineHeight: 1.1,
-                    fontSize: "0.85rem",
+                    width: { xs: 32, sm: 36 },
+                    height: { xs: 32, sm: 36 },
+                    bgcolor: getAvatarColor(),
+                    fontSize: { xs: "0.75rem", sm: "0.85rem" },
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                    boxShadow: 1,
                   }}
                 >
-                  {getFullName()}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontSize: "0.7rem", lineHeight: 1 }}
-                >
-                  {calculateAge(childDetails?.dateOfBirth || null)}
-                </Typography>
-              </Box>
+                  {getInitials()}
+                </Avatar>
 
-              {/* Time slot info with improved visualization */}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: 1,
-                  bgcolor: "primary.50",
-                  border: "1px solid",
-                  borderColor: "primary.100",
-                  flexShrink: 0,
-                  minWidth: 0,
-                }}
-              >
-                <Schedule sx={{ fontSize: 14, color: "primary.main" }} />
-                <Box sx={{ minWidth: 0 }}>
+                <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                   <Typography
-                    variant="caption"
+                    variant="subtitle2"
                     sx={{
                       fontWeight: 600,
-                      color: "primary.dark",
-                      lineHeight: 1.1,
-                      fontSize: "0.75rem",
-                      display: "block",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      lineHeight: 1.2,
+                      fontSize: { xs: "0.85rem", sm: "0.9rem" },
+                      color: 'text.primary',
+                      mb: 0.25,
                     }}
                   >
-                    {schedule.timeSlotName}
+                    {getFullName()}
                   </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 0.25,
-                      mt: 0.25,
+                  <Typography
+                    variant="caption"
+                    sx={{ 
+                      fontSize: { xs: "0.7rem", sm: "0.75rem" }, 
+                      color: 'text.secondary',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.25
                     }}
                   >
+                    <Person sx={{ fontSize: 12 }} />
+                    {calculateAge(childDetails?.dateOfBirth || null)}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Right section - Schedule Info */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: isMobile ? "row" : "column",
+                  alignItems: isMobile ? "center" : "flex-end",
+                  gap: 0.75,
+                  minWidth: 0,
+                  flex: isMobile ? 1 : "0 0 auto",
+                }}
+              >
+                {/* Time Slot Badge */}
+                <Chip
+                  icon={<Schedule sx={{ fontSize: 14 }} />}
+                  label={schedule.timeSlotName || t("No time slot")}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'primary.50',
+                    color: 'primary.dark',
+                    borderColor: 'primary.200',
+                    border: '1px solid',
+                    fontWeight: 600,
+                    fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                    height: { xs: 24, sm: 28 },
+                    maxWidth: { xs: "auto", sm: 120 },
+                  }}
+                />
+
+                {/* Time Display */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.25,
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 1,
+                    backgroundColor: 'grey.50',
+                    border: '1px solid',
+                    borderColor: 'grey.200',
+                  }}
+                >
+                  <AccessTime sx={{ fontSize: 12, color: 'text.secondary' }} />
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
                     <Typography
                       variant="caption"
                       sx={{
                         fontWeight: 600,
-                        fontSize: "0.65rem",
+                        fontSize: { xs: "0.65rem", sm: "0.7rem" },
                         color: "success.main",
                         fontFamily: "monospace",
                       }}
@@ -174,9 +208,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                     <Typography
                       variant="caption"
                       sx={{
-                        fontSize: "0.6rem",
+                        fontSize: { xs: "0.6rem", sm: "0.65rem" },
                         color: "text.secondary",
-                        mx: 0.25,
                       }}
                     >
                       →
@@ -185,7 +218,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       variant="caption"
                       sx={{
                         fontWeight: 600,
-                        fontSize: "0.65rem",
+                        fontSize: { xs: "0.65rem", sm: "0.7rem" },
                         color: "error.main",
                         fontFamily: "monospace",
                       }}

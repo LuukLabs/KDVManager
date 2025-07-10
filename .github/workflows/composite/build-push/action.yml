@@ -40,14 +40,13 @@ runs:
 
   - name: Compose build ${{ inputs.service }}
     shell: bash
-    run: sudo -E docker compose build ${{ inputs.service }}
+    run: sudo -E docker compose  -f docker-compose.yml build ${{ inputs.service }}
     working-directory: ./src
     env:
       TAG: ${{ env.BRANCH }}
       REGISTRY: ${{ inputs.registry_endpoint }}
-      VITE_API_BASE_URL: https://api.kdvmanager.nl
 
-  - name: Compose push ${{ inputs.service }}
+  - name: Compose push  -f docker-compose.yml ${{ inputs.service }}
     shell: bash
     run: sudo -E docker compose push ${{ inputs.service }}
     working-directory: ./src

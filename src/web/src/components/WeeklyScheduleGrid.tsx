@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 type WeeklyScheduleGridProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
+  isMobile?: boolean;
 };
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -32,7 +33,7 @@ const getGroupColor = (groupName: string | null | undefined): string => {
   return GROUP_COLORS[Math.abs(hash) % GROUP_COLORS.length];
 };
 
-export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ scheduleRules }) => {
+export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ scheduleRules, isMobile = false }) => {
   const { t } = useTranslation();
 
   if (!scheduleRules || scheduleRules.length === 0) {
@@ -65,58 +66,54 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ schedule
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ display: "flex", gap: 1 }}>
-        {DAY_NAMES.map((dayName, dayIndex) => (
-          <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
-            <Paper
-              variant="outlined"
-              sx={{
-                p: 1,
-                minHeight: 80,
-                backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "transparent",
-              }}
-            >
-              <Typography
-                variant="caption"
+      {isMobile ? (
+        // Mobile: Stack days vertically
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          {DAY_NAMES.map((dayName, dayIndex) => {
+            const dayRules = rulesByDay[dayIndex];
+            if (!dayRules || dayRules.length === 0) return null;
+            
+            return (
+              <Paper
+                key={dayIndex}
+                variant="outlined"
                 sx={{
-                  fontWeight: "medium",
-                  display: "block",
-                  textAlign: "center",
-                  mb: 0.5,
+                  p: 2,
+                  backgroundColor: "action.hover",
                 }}
               >
-                {dayName}
-              </Typography>
-
-              {rulesByDay[dayIndex] && (
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-                  {rulesByDay[dayIndex].map((rule, index) => (
-                    <Box key={index}>
-                      <Chip
-                        label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
-                        size="small"
-                        sx={{
-                          fontSize: "0.6rem",
-                          height: 16,
-                          width: "100%",
-                          backgroundColor: getGroupColor(rule.groupName),
-                          color: "white",
-                          "& .MuiChip-label": {
-                            px: 0.5,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          },
-                        }}
-                      />
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: "medium",
+                    mb: 1,
+                    color: "text.primary",
+                  }}
+                >
+                  {dayName}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {dayRules.map((rule, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        p: 1,
+                        borderRadius: 1,
+                        backgroundColor: getGroupColor(rule.groupName),
+                        color: "white",
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ fontWeight: "medium", minWidth: "fit-content" }}>
+                        {rule.startTime?.slice(0, 5)} - {rule.endTime?.slice(0, 5)}
+                      </Typography>
                       {rule.groupName && (
                         <Typography
-                          variant="caption"
+                          variant="body2"
                           sx={{
-                            fontSize: "0.55rem",
-                            color: "text.secondary",
-                            display: "block",
-                            textAlign: "center",
-                            mt: 0.25,
+                            opacity: 0.9,
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
@@ -128,11 +125,81 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ schedule
                     </Box>
                   ))}
                 </Box>
-              )}
-            </Paper>
-          </Box>
-        ))}
-      </Box>
+              </Paper>
+            );
+          })}
+        </Box>
+      ) : (
+        // Desktop: Grid layout
+        <Box sx={{ display: "flex", gap: 1 }}>
+          {DAY_NAMES.map((dayName, dayIndex) => (
+            <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 1,
+                  minHeight: 80,
+                  backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "transparent",
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontWeight: "medium",
+                    display: "block",
+                    textAlign: "center",
+                    mb: 0.5,
+                  }}
+                >
+                  {dayName}
+                </Typography>
+
+                {rulesByDay[dayIndex] && (
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+                    {rulesByDay[dayIndex].map((rule, index) => (
+                      <Box key={index}>
+                        <Chip
+                          label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
+                          size="small"
+                          sx={{
+                            fontSize: "0.6rem",
+                            height: 16,
+                            width: "100%",
+                            backgroundColor: getGroupColor(rule.groupName),
+                            color: "white",
+                            "& .MuiChip-label": {
+                              px: 0.5,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            },
+                          }}
+                        />
+                        {rule.groupName && (
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              fontSize: "0.55rem",
+                              color: "text.secondary",
+                              display: "block",
+                              textAlign: "center",
+                              mt: 0.25,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {rule.groupName}
+                          </Typography>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Paper>
+            </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

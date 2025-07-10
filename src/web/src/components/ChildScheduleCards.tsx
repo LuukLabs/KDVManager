@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Typography, CircularProgress, Paper } from "@mui/material";
+import { Box, Button, Typography, CircularProgress, Paper, useTheme, useMediaQuery } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
@@ -21,6 +21,8 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { data, isLoading, isFetching } = useGetChildSchedules({
     ChildId: childId,
   });
@@ -57,7 +59,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   }
 
   return (
-    <Box>
+    <Box sx={{ px: isMobile ? 1 : 0 }}>
       {/* Loading state */}
       {isFetching && !isLoading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
@@ -71,7 +73,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: isMobile ? 1.5 : 2,
           }}
         >
           {data.map((schedule) => (
@@ -93,14 +95,15 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
           elevation={0}
           sx={{
             textAlign: "center",
-            py: 6,
+            py: isMobile ? 4 : 6,
+            px: isMobile ? 2 : 3,
             backgroundColor: "grey.50",
             border: "2px dashed",
             borderColor: "grey.300",
             borderRadius: 2,
           }}
         >
-          <Typography variant="h6" gutterBottom color="text.secondary">
+          <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom color="text.secondary">
             {t("No schedules found")}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -110,6 +113,9 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
             variant="contained"
             onClick={onAddChildScheduleClickHandler}
             startIcon={<AddIcon />}
+            size={isMobile ? "medium" : "large"}
+            fullWidth={isMobile}
+            sx={{ maxWidth: isMobile ? "100%" : "auto" }}
           >
             {t("Add Schedule")}
           </Button>

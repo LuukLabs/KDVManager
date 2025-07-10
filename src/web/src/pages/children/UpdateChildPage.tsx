@@ -104,7 +104,7 @@ const UpdateChildPage = () => {
   const calculateAge = () => {
     if (!child?.dateOfBirth) return t("N/A");
     const years = dayjs().diff(dayjs(child.dateOfBirth), "year");
-    return years === 1 ? `${years} ${t("year")}` : `${years} ${t("years")}`;
+    return `${years} ${t("years")}`;
   };
 
   if (!childId) {

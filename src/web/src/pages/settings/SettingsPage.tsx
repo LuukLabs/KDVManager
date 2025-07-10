@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { SettingsCard } from "../../features/settings/SettingsCard";
 import Grid from "@mui/material/Grid";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
+import GroupsIcon from "@mui/icons-material/Groups";
 import React from "react";
 
 const SettingsPage = () => {
@@ -13,6 +14,12 @@ const SettingsPage = () => {
       description: t("Manage groups and timeslots."),
       navigateTo: "/settings/scheduling",
       icon: <CalendarMonth fontSize="large" />,
+    },
+    {
+      title: t("Groups"),
+      description: t("Manage groups."),
+      navigateTo: "/groups",
+      icon: <GroupsIcon fontSize="large" />,
     },
   ];
 

@@ -4,6 +4,7 @@ metadata:
   name: scheduling-api
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:

@@ -301,8 +301,8 @@ public class SchedulingDataMigrator
                     {
                         Id = scheduleId,
                         ChildId = childId,
-                        StartDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc),
-                        EndDate = endDate.HasValue ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) : null,
+                        StartDate = DateOnly.FromDateTime(startDate),
+                        EndDate = endDate.HasValue ? DateOnly.FromDateTime(endDate.Value) : null,
                         TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
                     };
 
@@ -339,13 +339,13 @@ public class SchedulingDataMigrator
                 DayOfWeek dayOfWeek;
                 switch (day)
                 {
-                    case 1: dayOfWeek = DayOfWeek.Sunday; break;
-                    case 2: dayOfWeek = DayOfWeek.Monday; break;
-                    case 3: dayOfWeek = DayOfWeek.Tuesday; break;
-                    case 4: dayOfWeek = DayOfWeek.Wednesday; break;
-                    case 5: dayOfWeek = DayOfWeek.Thursday; break;
-                    case 6: dayOfWeek = DayOfWeek.Friday; break;
-                    case 7: dayOfWeek = DayOfWeek.Saturday; break;
+                    case 0: dayOfWeek = DayOfWeek.Sunday; break;
+                    case 1: dayOfWeek = DayOfWeek.Monday; break;
+                    case 2: dayOfWeek = DayOfWeek.Tuesday; break;
+                    case 3: dayOfWeek = DayOfWeek.Wednesday; break;
+                    case 4: dayOfWeek = DayOfWeek.Thursday; break;
+                    case 5: dayOfWeek = DayOfWeek.Friday; break;
+                    case 6: dayOfWeek = DayOfWeek.Saturday; break;
                     default:
                         Console.WriteLine($"Warning: Invalid day value {day}. Skipping rule.");
                         skippedCount++;

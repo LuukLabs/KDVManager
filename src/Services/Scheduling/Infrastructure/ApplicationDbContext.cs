@@ -37,6 +37,12 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(sr => sr.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Schedule>(entity =>
+        {
+            entity.Property(e => e.StartDate).HasColumnType("date");
+            entity.Property(e => e.EndDate).HasColumnType("date");
+        });
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
@@ -53,21 +59,7 @@ public class ApplicationDbContext : DbContext
             }
         }
 
-        // Ensure all DateTime properties are UTC before saving
-        foreach (var entry in ChangeTracker.Entries<Schedule>())
-        {
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-            {
-                if (entry.Entity.StartDate.Kind != DateTimeKind.Utc)
-                {
-                    entry.Entity.StartDate = DateTime.SpecifyKind(entry.Entity.StartDate, DateTimeKind.Utc);
-                }
-                if (entry.Entity.EndDate.HasValue && entry.Entity.EndDate.Value.Kind != DateTimeKind.Utc)
-                {
-                    entry.Entity.EndDate = DateTime.SpecifyKind(entry.Entity.EndDate.Value, DateTimeKind.Utc);
-                }
-            }
-        }
+        // Remove DateTimeKind/UTC logic for DateOnly
 
         var result = await base.SaveChangesAsync(cancellationToken);
         return result;

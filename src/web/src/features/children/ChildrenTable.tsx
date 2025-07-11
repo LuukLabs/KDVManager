@@ -7,16 +7,18 @@ import { usePagination } from "@hooks/usePagination";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
-import { Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 
 export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
   const { t } = useTranslation();
   const { apiPagination, muiPagination } = usePagination();
-  const { data, isLoading, isFetching } = useGetAllChildren({ ...apiPagination, Archived: showArchived }, {
-    query: { placeholderData: keepPreviousData },
-  });
+  const { data, isLoading, isFetching } = useGetAllChildren(
+    { ...apiPagination, Archived: showArchived },
+    {
+      query: { placeholderData: keepPreviousData },
+    },
+  );
 
   const columns: GridColDef[] = useMemo(
     () => [

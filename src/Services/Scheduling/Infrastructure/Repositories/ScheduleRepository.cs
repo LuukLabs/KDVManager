@@ -31,12 +31,11 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
     public async Task<IReadOnlyList<Schedule>> GetSchedulesByDateAsync(DateOnly date, Guid groupId)
     {
         var dayOfWeek = date.DayOfWeek;
-        var dateUtc = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
-
+        // DateOnly is already date-only, so use as is for comparisons
         return await _dbContext.Schedules
             .Where(s =>
-                s.StartDate <= dateUtc &&
-                (!s.EndDate.HasValue || s.EndDate >= dateUtc)
+                s.StartDate <= date &&
+                (!s.EndDate.HasValue || s.EndDate >= date)
             )
             .Include(s => s.ScheduleRules.Where(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
                 .ThenInclude(sr => sr.TimeSlot)

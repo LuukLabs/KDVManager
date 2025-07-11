@@ -157,7 +157,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container maxWidth={false} >
+      <Container maxWidth={false}>
         <Box display="flex" alignItems="center" marginY={1}>
           <RouterBreadcrumbs />
         </Box>

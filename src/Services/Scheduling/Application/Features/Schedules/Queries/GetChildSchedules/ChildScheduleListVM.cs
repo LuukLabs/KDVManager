@@ -7,8 +7,8 @@ public class ChildScheduleListVM
 {
     public Guid Id { get; set; }
     public Guid ChildId { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
+    public DateOnly StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
 
     // Collection of nested schedules
     public ICollection<ChildScheduleListVMScheduleRule> ScheduleRules { get; set; } = new List<ChildScheduleListVMScheduleRule>();

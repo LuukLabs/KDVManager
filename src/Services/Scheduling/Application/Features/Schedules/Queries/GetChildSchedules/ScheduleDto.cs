@@ -10,7 +10,7 @@ public class ScheduleDto
     public Guid ChildId { get; set; }
     public Guid GroupId { get; set; }
     public string GroupName { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
+    public DateOnly StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public ICollection<ScheduleRule> ScheduleRules { get; set; }
 }

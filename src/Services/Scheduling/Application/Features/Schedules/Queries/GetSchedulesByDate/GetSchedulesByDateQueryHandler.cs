@@ -25,13 +25,12 @@ public class GetSchedulesByDateQueryHandler
         var scheduleByDateVMs = allScheduleRules.Select(rule => new ScheduleByDateVM
         {
             ScheduleId = rule.ScheduleId,
-            ChildId = rule.Schedule?.ChildId ?? Guid.Empty,
-            ChildFullName = string.Empty, // This would need to be populated from an external service
-            TimeSlotName = rule.TimeSlot?.Name ?? string.Empty,
-            StartTime = rule.TimeSlot?.StartTime ?? TimeOnly.MinValue,
-            EndTime = rule.TimeSlot?.EndTime ?? TimeOnly.MinValue,
+            ChildId = rule.Schedule.ChildId,
+            TimeSlotName = rule.TimeSlot.Name,
+            StartTime = rule.TimeSlot.StartTime,
+            EndTime = rule.TimeSlot.EndTime,
             GroupId = rule.GroupId,
-            GroupName = rule.Group?.Name ?? string.Empty
+            GroupName = rule.Group.Name
         }).ToList();
 
         return scheduleByDateVMs;

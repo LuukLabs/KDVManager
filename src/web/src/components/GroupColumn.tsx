@@ -78,7 +78,7 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
           </Typography>
           {!isLoading && (
             <Chip
-              label={`${childrenCount} ${t(childrenCount === 1 ? "child" : "children")}`}
+              label={`${childrenCount} ${childrenCount === 1 ? t("child") : t("children")}`}
               size="small"
               color="primary"
               variant="outlined"

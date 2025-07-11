@@ -275,7 +275,7 @@ const ScheduleOverviewPage = () => {
                 >
                   <GroupColumn
                     group={{ id: group.id || "", name: group.name || "" }}
-                    selectedDate={selectedDate.utc()}
+                    selectedDate={selectedDate}
                   />
                 </Box>
               ))}

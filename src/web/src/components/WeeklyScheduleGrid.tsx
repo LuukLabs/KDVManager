@@ -6,9 +6,38 @@ import { useTranslation } from "react-i18next";
 type WeeklyScheduleGridProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
   isMobile?: boolean;
+  weekStartsOnMonday?: boolean; // New prop to control week start
 };
 
-const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// Enum for days of the week
+export enum DayOfWeek {
+  Sunday = 0,
+  Monday = 1,
+  Tuesday = 2,
+  Wednesday = 3,
+  Thursday = 4,
+  Friday = 5,
+  Saturday = 6,
+}
+
+const DAY_INDEX_MAP_SUN = [
+  DayOfWeek.Sunday,
+  DayOfWeek.Monday,
+  DayOfWeek.Tuesday,
+  DayOfWeek.Wednesday,
+  DayOfWeek.Thursday,
+  DayOfWeek.Friday,
+  DayOfWeek.Saturday,
+]; // Sunday to Saturday
+const DAY_INDEX_MAP_MON = [
+  DayOfWeek.Monday,
+  DayOfWeek.Tuesday,
+  DayOfWeek.Wednesday,
+  DayOfWeek.Thursday,
+  DayOfWeek.Friday,
+  DayOfWeek.Saturday,
+  DayOfWeek.Sunday,
+]; // Monday to Sunday
 
 // Color palette for different groups
 const GROUP_COLORS = [
@@ -36,8 +65,20 @@ const getGroupColor = (groupName: string | null | undefined): string => {
 export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   scheduleRules,
   isMobile = false,
+  weekStartsOnMonday = false,
 }) => {
   const { t } = useTranslation();
+
+  // Translated day names
+  const translatedDayNames = [
+    t("dayNames.sun"),
+    t("dayNames.mon"),
+    t("dayNames.tue"),
+    t("dayNames.wed"),
+    t("dayNames.thu"),
+    t("dayNames.fri"),
+    t("dayNames.sat"),
+  ];
 
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
@@ -47,38 +88,42 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
     );
   }
 
-  // Group rules by day
+  // Group rules by day (using DayOfWeek enum)
   const rulesByDay = scheduleRules.reduce(
     (acc, rule) => {
-      const day = rule.day ?? 0;
+      const day = (rule.day ?? DayOfWeek.Sunday) as DayOfWeek;
       if (!acc[day]) acc[day] = [];
       acc[day].push(rule);
       return acc;
     },
-    {} as Record<number, ChildScheduleListVMScheduleRule[]>,
+    {} as Record<DayOfWeek, ChildScheduleListVMScheduleRule[]>,
   );
 
   // Sort rules within each day by start time
   Object.keys(rulesByDay).forEach((day) => {
-    rulesByDay[parseInt(day)].sort((a, b) => {
-      const timeA = a.startTime || "00:00";
-      const timeB = b.startTime || "00:00";
-      return timeA.localeCompare(timeB);
-    });
+    const dayKey = Number(day) as DayOfWeek;
+    rulesByDay[dayKey].sort(
+      (a: ChildScheduleListVMScheduleRule, b: ChildScheduleListVMScheduleRule) => {
+        const timeA = a.startTime || "00:00";
+        const timeB = b.startTime || "00:00";
+        return timeA.localeCompare(timeB);
+      },
+    );
   });
+
+  const DAY_INDEX_MAP = weekStartsOnMonday ? DAY_INDEX_MAP_MON : DAY_INDEX_MAP_SUN;
 
   return (
     <Box sx={{ width: "100%" }}>
       {isMobile ? (
         // Mobile: Stack days vertically
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {DAY_NAMES.map((dayName, dayIndex) => {
-            const dayRules = rulesByDay[dayIndex];
+          {DAY_INDEX_MAP.map((dayIdx) => {
+            const dayRules = rulesByDay[dayIdx as DayOfWeek];
             if (!dayRules || dayRules.length === 0) return null;
-
             return (
               <Paper
-                key={dayIndex}
+                key={dayIdx}
                 variant="outlined"
                 sx={{
                   p: 2,
@@ -93,10 +138,10 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                     color: "text.primary",
                   }}
                 >
-                  {dayName}
+                  {translatedDayNames[dayIdx]}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  {dayRules.map((rule, index) => (
+                  {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => (
                     <Box
                       key={index}
                       sx={{
@@ -138,72 +183,75 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
       ) : (
         // Desktop: Grid layout
         <Box sx={{ display: "flex", gap: 1 }}>
-          {DAY_NAMES.map((dayName, dayIndex) => (
-            <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
-              <Paper
-                variant="outlined"
-                sx={{
-                  p: 1,
-                  minHeight: 80,
-                  backgroundColor: rulesByDay[dayIndex] ? "action.hover" : "transparent",
-                }}
-              >
-                <Typography
-                  variant="caption"
+          {translatedDayNames.map((dayName, dayIndex) => {
+            const dayRules = rulesByDay[dayIndex as DayOfWeek];
+            return (
+              <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
+                <Paper
+                  variant="outlined"
                   sx={{
-                    fontWeight: "medium",
-                    display: "block",
-                    textAlign: "center",
-                    mb: 0.5,
+                    p: 1,
+                    minHeight: 80,
+                    backgroundColor: dayRules ? "action.hover" : "transparent",
                   }}
                 >
-                  {dayName}
-                </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: "medium",
+                      display: "block",
+                      textAlign: "center",
+                      mb: 0.5,
+                    }}
+                  >
+                    {dayName}
+                  </Typography>
 
-                {rulesByDay[dayIndex] && (
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-                    {rulesByDay[dayIndex].map((rule, index) => (
-                      <Box key={index}>
-                        <Chip
-                          label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
-                          size="small"
-                          sx={{
-                            fontSize: "0.6rem",
-                            height: 16,
-                            width: "100%",
-                            backgroundColor: getGroupColor(rule.groupName),
-                            color: "white",
-                            "& .MuiChip-label": {
-                              px: 0.5,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            },
-                          }}
-                        />
-                        {rule.groupName && (
-                          <Typography
-                            variant="caption"
+                  {dayRules && (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+                      {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => (
+                        <Box key={index}>
+                          <Chip
+                            label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
+                            size="small"
                             sx={{
-                              fontSize: "0.55rem",
-                              color: "text.secondary",
-                              display: "block",
-                              textAlign: "center",
-                              mt: 0.25,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                              fontSize: "0.6rem",
+                              height: 16,
+                              width: "100%",
+                              backgroundColor: getGroupColor(rule.groupName),
+                              color: "white",
+                              "& .MuiChip-label": {
+                                px: 0.5,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              },
                             }}
-                          >
-                            {rule.groupName}
-                          </Typography>
-                        )}
-                      </Box>
-                    ))}
-                  </Box>
-                )}
-              </Paper>
-            </Box>
-          ))}
+                          />
+                          {rule.groupName && (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                fontSize: "0.55rem",
+                                color: "text.secondary",
+                                display: "block",
+                                textAlign: "center",
+                                mt: 0.25,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {rule.groupName}
+                            </Typography>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Paper>
+              </Box>
+            );
+          })}
         </Box>
       )}
     </Box>

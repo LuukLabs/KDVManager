@@ -12,11 +12,6 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
       path: "/",
       element: <MainLayout />,
       errorElement: <ErrorPage />,
-      handle: {
-        crumb: () => {
-          return t("Home");
-        },
-      },
       children: [
         {
           index: true,
@@ -32,25 +27,34 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
           },
         },
         {
-          path: "children/:childId",
-          lazy: () => import("./pages/children/UpdateChildPage"),
-          loader: updateChildPageLoader(queryClient),
-          handle: {
-            crumb: (data: Awaited<ReturnType<ReturnType<typeof updateChildPageLoader>>>) => {
-              return data?.givenName && data?.familyName
-                ? `${data.givenName} ${data.familyName}`
-                : t("Child");
-            },
-          },
-        },
-        {
           path: "children",
-          lazy: () => import("./pages/children/IndexChildPage"),
           handle: {
             crumb: () => {
               return t("Children");
             },
           },
+          children: [
+            {
+              index: true,
+              lazy: () => import("./pages/children/IndexChildPage"),
+            },
+            {
+              path: ":childId",
+              lazy: () => import("./pages/children/UpdateChildPage"),
+              loader: updateChildPageLoader(queryClient),
+              handle: {
+                crumb: (data: Awaited<ReturnType<ReturnType<typeof updateChildPageLoader>>>) => {
+                  return data?.givenName && data?.familyName
+                    ? `${data.givenName} ${data.familyName}`
+                    : t("Child");
+                },
+              },
+            },
+            {
+              path: "new",
+              lazy: () => import("./pages/children/NewChildPage"),
+            },
+          ],
         },
         {
           path: "people",
@@ -60,10 +64,6 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
               return t("People");
             },
           },
-        },
-        {
-          path: "children/new",
-          lazy: () => import("./pages/children/NewChildPage"),
         },
         {
           path: "groups",

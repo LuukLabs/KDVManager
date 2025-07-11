@@ -98,9 +98,12 @@ public class ChildrenDataMigrator
                     FamilyName = familyName?.Trim(),
                     CID = cid?.Trim(),
                     DateOfBirth = dateOfBirth,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f"),
-                    ArchivedAt = isOlderThanFive ? DateTime.UtcNow : null
+                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
                 };
+
+                // Archive if older than 5 years
+                if (isOlderThanFive)
+                    child.Archive();
 
                 _context.Children.Add(child);
 

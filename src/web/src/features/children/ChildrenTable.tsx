@@ -11,10 +11,10 @@ import { Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 
-export const ChildrenTable = () => {
+export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
   const { t } = useTranslation();
   const { apiPagination, muiPagination } = usePagination();
-  const { data, isLoading, isFetching } = useGetAllChildren(apiPagination, {
+  const { data, isLoading, isFetching } = useGetAllChildren({ ...apiPagination, Archived: showArchived }, {
     query: { placeholderData: keepPreviousData },
   });
 
@@ -36,23 +36,6 @@ export const ChildrenTable = () => {
         disableColumnMenu: true,
         disableReorder: true,
         valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
-      },
-      {
-        field: "archivedAt",
-        headerName: "Archived",
-        flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderCell: (params: GridRenderCellParams<any, string>) =>
-          params.value ? (
-            <Chip
-              label={t("archived", "Archived")}
-              color="warning"
-              size="small"
-              sx={{ fontWeight: 600 }}
-            />
-          ) : null,
       },
       {
         field: "id",

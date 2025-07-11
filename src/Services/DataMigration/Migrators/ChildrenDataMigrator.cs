@@ -90,6 +90,7 @@ public class ChildrenDataMigrator
                         : $"{infixes} {lastName}";
 
                 var childId = Guid.NewGuid();
+                var isOlderThanFive = dateOfBirth.HasValue && dateOfBirth.Value.AddYears(5) < DateTime.UtcNow;
                 var child = new Child
                 {
                     Id = childId,
@@ -97,7 +98,8 @@ public class ChildrenDataMigrator
                     FamilyName = familyName?.Trim(),
                     CID = cid?.Trim(),
                     DateOfBirth = dateOfBirth,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f"),
+                    ArchivedAt = isOlderThanFive ? DateTime.UtcNow : null
                 };
 
                 _context.Children.Add(child);

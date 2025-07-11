@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Button, Typography, CircularProgress, Paper, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+  Paper,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
@@ -22,7 +30,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data, isLoading, isFetching } = useGetChildSchedules({
     ChildId: childId,
   });

@@ -33,7 +33,10 @@ const getGroupColor = (groupName: string | null | undefined): string => {
   return GROUP_COLORS[Math.abs(hash) % GROUP_COLORS.length];
 };
 
-export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ scheduleRules, isMobile = false }) => {
+export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
+  scheduleRules,
+  isMobile = false,
+}) => {
   const { t } = useTranslation();
 
   if (!scheduleRules || scheduleRules.length === 0) {
@@ -72,7 +75,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ schedule
           {DAY_NAMES.map((dayName, dayIndex) => {
             const dayRules = rulesByDay[dayIndex];
             if (!dayRules || dayRules.length === 0) return null;
-            
+
             return (
               <Paper
                 key={dayIndex}
@@ -106,7 +109,10 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({ schedule
                         color: "white",
                       }}
                     >
-                      <Typography variant="body2" sx={{ fontWeight: "medium", minWidth: "fit-content" }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontWeight: "medium", minWidth: "fit-content" }}
+                      >
                         {rule.startTime?.slice(0, 5)} - {rule.endTime?.slice(0, 5)}
                       </Typography>
                       {rule.groupName && (

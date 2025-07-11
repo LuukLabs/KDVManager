@@ -227,6 +227,28 @@
         }
       }
     },
+    "/crm/v1/children/{Id}/archive": {
+      "post": {
+        "tags": ["Children"],
+        "operationId": "ArchiveChild",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/crm/v1/people": {
       "get": {
         "tags": ["People"],
@@ -866,6 +888,11 @@
           "cid": {
             "type": "string",
             "nullable": true
+          },
+          "archivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -882,6 +909,11 @@
             "nullable": true
           },
           "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archivedAt": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -1018,10 +1050,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "groupId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "startDate": {
             "type": "string",
             "format": "date-time"
@@ -1048,6 +1076,10 @@
             "$ref": "#/components/schemas/DayOfWeek"
           },
           "timeSlotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupId": {
             "type": "string",
             "format": "uuid"
           }
@@ -1092,14 +1124,6 @@
             "format": "date-time",
             "nullable": true
           },
-          "groupId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "groupName": {
-            "type": "string",
-            "nullable": true
-          },
           "scheduleRules": {
             "type": "array",
             "items": {
@@ -1131,6 +1155,14 @@
           "endTime": {
             "type": "string",
             "format": "time"
+          },
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1207,6 +1239,14 @@
           "endTime": {
             "type": "string",
             "format": "time"
+          },
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

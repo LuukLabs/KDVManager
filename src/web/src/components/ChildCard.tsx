@@ -27,7 +27,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const calculateAge = (dateOfBirth: string | null) => {
     if (!dateOfBirth) return t("N/A");
@@ -67,7 +67,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
 
   const getAvatarColor = () => {
     // Generate consistent color based on child ID
-    const colors = ['#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#c2185b', '#00796b'];
+    const colors = ["#1976d2", "#388e3c", "#f57c00", "#7b1fa2", "#c2185b", "#00796b"];
     let hash = 0;
     for (let i = 0; i < childId.length; i++) {
       hash = ((hash << 5) - hash + childId.charCodeAt(i)) & 0xffffffff;
@@ -79,16 +79,16 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
     <Card
       sx={{
         transition: "all 0.2s ease-in-out",
-        border: '1px solid',
-        borderColor: 'divider',
+        border: "1px solid",
+        borderColor: "divider",
         "&:hover": {
           boxShadow: 2,
-          transform: 'translateY(-1px)',
+          transform: "translateY(-1px)",
           cursor: "pointer",
-          borderColor: 'primary.main',
+          borderColor: "primary.main",
         },
         borderRadius: 1,
-        overflow: 'hidden'
+        overflow: "hidden",
       }}
     >
       <CardActionArea onClick={handleCardClick}>
@@ -128,7 +128,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       whiteSpace: "nowrap",
                       lineHeight: 1.2,
                       fontSize: { xs: "0.85rem", sm: "0.9rem" },
-                      color: 'text.primary',
+                      color: "text.primary",
                       mb: 0.25,
                     }}
                   >
@@ -136,12 +136,12 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                   </Typography>
                   <Typography
                     variant="caption"
-                    sx={{ 
-                      fontSize: { xs: "0.7rem", sm: "0.75rem" }, 
-                      color: 'text.secondary',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 0.25
+                    sx={{
+                      fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                      color: "text.secondary",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.25,
                     }}
                   >
                     <Person sx={{ fontSize: 12 }} />
@@ -167,10 +167,10 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                   label={schedule.timeSlotName || t("No time slot")}
                   size="small"
                   sx={{
-                    backgroundColor: 'primary.50',
-                    color: 'primary.dark',
-                    borderColor: 'primary.200',
-                    border: '1px solid',
+                    backgroundColor: "primary.50",
+                    color: "primary.dark",
+                    borderColor: "primary.200",
+                    border: "1px solid",
                     fontWeight: 600,
                     fontSize: { xs: "0.65rem", sm: "0.7rem" },
                     height: { xs: 24, sm: 28 },
@@ -187,12 +187,12 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                     px: 0.75,
                     py: 0.25,
                     borderRadius: 1,
-                    backgroundColor: 'grey.50',
-                    border: '1px solid',
-                    borderColor: 'grey.200',
+                    backgroundColor: "grey.50",
+                    border: "1px solid",
+                    borderColor: "grey.200",
                   }}
                 >
-                  <AccessTime sx={{ fontSize: 12, color: 'text.secondary' }} />
+                  <AccessTime sx={{ fontSize: 12, color: "text.secondary" }} />
                   <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
                     <Typography
                       variant="caption"

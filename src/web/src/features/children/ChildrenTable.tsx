@@ -7,45 +7,69 @@ import { usePagination } from "@hooks/usePagination";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
-
-const columns: GridColDef[] = [
-  {
-    field: "fullName",
-    headerName: "Fullname",
-    flex: 1,
-    sortable: false,
-    disableColumnMenu: true,
-    disableReorder: true,
-  },
-  {
-    field: "dateOfBirth",
-    headerName: "Birthdate",
-    flex: 1,
-    sortable: false,
-    disableColumnMenu: true,
-    disableReorder: true,
-    valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
-  },
-  {
-    field: "id",
-    headerName: "Actions",
-    sortable: false,
-    disableColumnMenu: true,
-    disableReorder: true,
-    renderCell: (params: GridRenderCellParams<any, string>) => (
-      <>
-        <DeleteChildButton id={params.value!} fullName={params.row.fullName} />
-        <EditChildButton id={params.value!} />
-      </>
-    ),
-  },
-];
+import { Chip } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
 
 export const ChildrenTable = () => {
+  const { t } = useTranslation();
   const { apiPagination, muiPagination } = usePagination();
   const { data, isLoading, isFetching } = useGetAllChildren(apiPagination, {
     query: { placeholderData: keepPreviousData },
   });
+
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: "fullName",
+        headerName: "Fullname",
+        flex: 1,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+      },
+      {
+        field: "dateOfBirth",
+        headerName: "Birthdate",
+        flex: 1,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+        valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
+      },
+      {
+        field: "archivedAt",
+        headerName: "Archived",
+        flex: 1,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+        renderCell: (params: GridRenderCellParams<any, string>) =>
+          params.value ? (
+            <Chip
+              label={t("archived", "Archived")}
+              color="warning"
+              size="small"
+              sx={{ fontWeight: 600 }}
+            />
+          ) : null,
+      },
+      {
+        field: "id",
+        headerName: "Actions",
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+        renderCell: (params: GridRenderCellParams<any, string>) => (
+          <>
+            <DeleteChildButton id={params.value!} fullName={params.row.fullName} />
+            <EditChildButton id={params.value!} />
+          </>
+        ),
+      },
+    ],
+    [t],
+  );
 
   return (
     <DataGrid<ChildListVM>

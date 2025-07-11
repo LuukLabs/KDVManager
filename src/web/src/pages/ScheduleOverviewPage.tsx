@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { 
-  Box, 
-  Paper, 
-  Typography, 
-  Grid, 
-  useTheme, 
+import {
+  Box,
+  Paper,
+  Typography,
+  Grid,
+  useTheme,
   useMediaQuery,
   Fab,
   Drawer,
@@ -13,7 +13,7 @@ import {
   Toolbar,
   Button,
   Stack,
-  Chip
+  Chip,
 } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import {
@@ -22,7 +22,7 @@ import {
   Today as TodayIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Groups as GroupsIcon
+  Groups as GroupsIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -37,7 +37,7 @@ const ScheduleOverviewPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // Get date from URL parameter or default to today
@@ -82,11 +82,11 @@ const ScheduleOverviewPage = () => {
 
   // Date navigation helpers
   const goToPreviousDay = () => {
-    handleDateChange(selectedDate.subtract(1, 'day'));
+    handleDateChange(selectedDate.subtract(1, "day"));
   };
 
   const goToNextDay = () => {
-    handleDateChange(selectedDate.add(1, 'day'));
+    handleDateChange(selectedDate.add(1, "day"));
   };
 
   const goToToday = () => {
@@ -111,25 +111,27 @@ const ScheduleOverviewPage = () => {
 
   if (isLoadingGroups) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
         <Typography variant="h6">{t("Loading groups...")}</Typography>
       </Box>
     );
   }
 
-  const todayIsSelected = selectedDate.isSame(dayjs(), 'day');
+  const todayIsSelected = selectedDate.isSame(dayjs(), "day");
 
   return (
     <Box sx={{ pb: isMobile ? 2 : 0 }}>
       {/* Mobile Header with Date Controls */}
       {isMobile && (
         <Paper sx={{ mb: 2, p: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}
+          >
             <IconButton onClick={goToPreviousDay} size="small">
               <ChevronLeftIcon />
             </IconButton>
-            
-            <Box sx={{ textAlign: 'center', flex: 1 }}>
+
+            <Box sx={{ textAlign: "center", flex: 1 }}>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {selectedDate.locale(i18n.language).format("dddd")}
               </Typography>
@@ -137,21 +139,16 @@ const ScheduleOverviewPage = () => {
                 {selectedDate.locale(i18n.language).format("MMMM D, YYYY")}
               </Typography>
               {todayIsSelected && (
-                <Chip 
-                  label={t("Today")} 
-                  size="small" 
-                  color="primary" 
-                  sx={{ mt: 0.5 }}
-                />
+                <Chip label={t("Today")} size="small" color="primary" sx={{ mt: 0.5 }} />
               )}
             </Box>
-            
+
             <IconButton onClick={goToNextDay} size="small">
               <ChevronRightIcon />
             </IconButton>
           </Box>
-          
-          <Stack direction="row" spacing={1} sx={{ justifyContent: 'center' }}>
+
+          <Stack direction="row" spacing={1} sx={{ justifyContent: "center" }}>
             <Button
               variant="outlined"
               size="small"
@@ -179,7 +176,14 @@ const ScheduleOverviewPage = () => {
         {!isMobile && (
           <Grid size={12}>
             <Paper sx={{ p: 2, mb: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h4" sx={{ fontWeight: 600 }}>
                   {t("Schedule Overview")}
                 </Typography>
@@ -192,26 +196,21 @@ const ScheduleOverviewPage = () => {
                   {t("Today")}
                 </Button>
               </Box>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
                 <IconButton onClick={goToPreviousDay}>
                   <ChevronLeftIcon />
                 </IconButton>
-                
-                <Box sx={{ textAlign: 'center', minWidth: 300 }}>
+
+                <Box sx={{ textAlign: "center", minWidth: 300 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     {selectedDate.locale(i18n.language).format("dddd, MMMM D, YYYY")}
                   </Typography>
                   {todayIsSelected && (
-                    <Chip 
-                      label={t("Today")} 
-                      size="small" 
-                      color="primary" 
-                      sx={{ mt: 1 }}
-                    />
+                    <Chip label={t("Today")} size="small" color="primary" sx={{ mt: 1 }} />
                   )}
                 </Box>
-                
+
                 <IconButton onClick={goToNextDay}>
                   <ChevronRightIcon />
                 </IconButton>
@@ -223,18 +222,15 @@ const ScheduleOverviewPage = () => {
         {/* Groups Section */}
         <Grid size={{ xs: 12, lg: 9 }}>
           {!groups || groups.length === 0 ? (
-            <Paper sx={{ p: 4, textAlign: 'center' }}>
-              <GroupsIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+            <Paper sx={{ p: 4, textAlign: "center" }}>
+              <GroupsIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
               <Typography variant="h6" gutterBottom color="text.secondary">
                 {t("No groups found")}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 {t("Create groups to start managing schedules")}
               </Typography>
-              <Button 
-                variant="contained" 
-                startIcon={<GroupsIcon />}
-              >
+              <Button variant="contained" startIcon={<GroupsIcon />}>
                 {t("Create Group")}
               </Button>
             </Paper>
@@ -246,20 +242,26 @@ const ScheduleOverviewPage = () => {
                 gap: isMobile ? 2 : 3,
                 overflowX: isMobile ? "visible" : "auto",
                 pb: isMobile ? 0 : 1,
-                "&::-webkit-scrollbar": !isMobile ? {
-                  height: 8,
-                } : undefined,
-                "&::-webkit-scrollbar-track": !isMobile ? {
-                  backgroundColor: "grey.100",
-                  borderRadius: 4,
-                } : undefined,
-                "&::-webkit-scrollbar-thumb": !isMobile ? {
-                  backgroundColor: "grey.400",
-                  borderRadius: 4,
-                  "&:hover": {
-                    backgroundColor: "grey.500",
-                  },
-                } : undefined,
+                "&::-webkit-scrollbar": !isMobile
+                  ? {
+                      height: 8,
+                    }
+                  : undefined,
+                "&::-webkit-scrollbar-track": !isMobile
+                  ? {
+                      backgroundColor: "grey.100",
+                      borderRadius: 4,
+                    }
+                  : undefined,
+                "&::-webkit-scrollbar-thumb": !isMobile
+                  ? {
+                      backgroundColor: "grey.400",
+                      borderRadius: 4,
+                      "&:hover": {
+                        backgroundColor: "grey.500",
+                      },
+                    }
+                  : undefined,
               }}
             >
               {groups.map((group) => (
@@ -271,9 +273,9 @@ const ScheduleOverviewPage = () => {
                     flexShrink: 0,
                   }}
                 >
-                  <GroupColumn 
-                    group={{ id: group.id || '', name: group.name || '' }} 
-                    selectedDate={selectedDate.utc()} 
+                  <GroupColumn
+                    group={{ id: group.id || "", name: group.name || "" }}
+                    selectedDate={selectedDate.utc()}
                   />
                 </Box>
               ))}
@@ -284,8 +286,8 @@ const ScheduleOverviewPage = () => {
         {/* Desktop Calendar */}
         {!isMobile && (
           <Grid size={{ xs: 12, lg: 3 }}>
-            <Paper sx={{ p: 2, position: 'sticky', top: 20 }}>
-              <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+            <Paper sx={{ p: 2, position: "sticky", top: 20 }}>
+              <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
                 {t("Calendar")}
               </Typography>
               <DateCalendar
@@ -304,9 +306,9 @@ const ScheduleOverviewPage = () => {
         open={isCalendarOpen}
         onClose={handleCloseCalendar}
         sx={{
-          '& .MuiDrawer-paper': {
-            borderRadius: '16px 16px 0 0',
-            maxHeight: '80vh',
+          "& .MuiDrawer-paper": {
+            borderRadius: "16px 16px 0 0",
+            maxHeight: "80vh",
           },
         }}
       >
@@ -320,7 +322,7 @@ const ScheduleOverviewPage = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
           <DateCalendar
             value={selectedDate}
             onChange={handleCalendarDateChange}
@@ -333,13 +335,13 @@ const ScheduleOverviewPage = () => {
       {isMobile && (
         <Fab
           color="primary"
-          aria-label="open calendar"
+          aria-label={t("open calendar")}
           onClick={handleOpenCalendar}
           sx={{
-            position: 'fixed',
+            position: "fixed",
             bottom: 24,
             right: 24,
-            display: { xs: 'flex', md: 'none' },
+            display: { xs: "flex", md: "none" },
             zIndex: 1000,
           }}
         >

@@ -23,6 +23,7 @@ import {
   useUpdateChild,
   useGetChildById,
   getGetChildByIdQueryOptions,
+  useArchiveChild,
 } from "@api/endpoints/children/children";
 import { useParams, useLoaderData } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -47,6 +48,7 @@ const UpdateChildPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const { mutateAsync } = useUpdateChild();
+  const { mutateAsync: archiveChildAsync, isLoading: isArchiving } = useArchiveChild();
 
   const formContext = useForm<UpdateChildCommand>({
     defaultValues: {
@@ -140,8 +142,41 @@ const UpdateChildPage = () => {
                   {child?.cid && (
                     <Chip label={`CID: ${child.cid}`} size="small" variant="outlined" />
                   )}
+                  {child?.archivedAt && (
+                    <Chip
+                      label={
+                        t("Archived") +
+                        (child.archivedAt ? `: ${dayjs(child.archivedAt).format("LL")}` : "")
+                      }
+                      color="warning"
+                      size="small"
+                      variant="filled"
+                      sx={{ fontWeight: 600 }}
+                    />
+                  )}
                 </Stack>
               </Box>
+              {/* Archive Button */}
+              <Button
+                variant="outlined"
+                color="warning"
+                onClick={async () => {
+                  try {
+                    await archiveChildAsync({ id: childId });
+                    enqueueSnackbar(t("Child archived"), { variant: "success" });
+                    void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+                    void queryClient.invalidateQueries({
+                      queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                    });
+                  } catch {
+                    enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
+                  }
+                }}
+                sx={{ ml: 2 }}
+                disabled={isArchiving || !!child?.archivedAt}
+              >
+                {t("Archive Child")}
+              </Button>
             </Box>
           </CardContent>
         </Card>

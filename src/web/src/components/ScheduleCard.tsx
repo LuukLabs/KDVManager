@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, Card, CardContent, Typography, Chip, IconButton, Stack, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  IconButton,
+  Stack,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
@@ -20,7 +30,7 @@ type ScheduleCardProps = {
 export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, onEdit }) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const now = dayjs();
   const startDate = dayjs(schedule.startDate);
   const endDate = dayjs(schedule.endDate);
@@ -63,10 +73,10 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, 
       <CardContent sx={{ p: isMobile ? 2 : 3, "&:last-child": { pb: isMobile ? 2 : 3 } }}>
         {/* Header */}
         <Box
-          sx={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "flex-start", 
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
             mb: 2,
             flexDirection: isMobile ? "column" : "row",
             gap: isMobile ? 1 : 0,
@@ -80,13 +90,15 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, 
               {getDateRangeDisplay()}
             </Typography>
           </Box>
-          <Box sx={{ 
-            display: "flex", 
-            gap: 1, 
-            alignItems: "center",
-            alignSelf: isMobile ? "stretch" : "auto",
-            justifyContent: isMobile ? "space-between" : "flex-end",
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              alignSelf: isMobile ? "stretch" : "auto",
+              justifyContent: isMobile ? "space-between" : "flex-end",
+            }}
+          >
             {getStatusChip()}
             <Box>
               {onEdit && (
@@ -114,15 +126,15 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, 
           <Typography variant="subtitle2" gutterBottom>
             {t("Schedule Summary")}
           </Typography>
-          <Stack 
-            direction="row" 
-            spacing={1} 
-            sx={{ 
-              flexWrap: "wrap", 
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              flexWrap: "wrap",
               gap: 0.5,
               "& > *": {
                 flexShrink: 0,
-              }
+              },
             }}
           >
             {schedule.scheduleRules.length > 0 ? (

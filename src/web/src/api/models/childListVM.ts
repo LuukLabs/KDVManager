@@ -11,4 +11,6 @@ export type ChildListVM = {
   fullName?: string | null;
   /** @nullable */
   dateOfBirth?: string | null;
+  /** @nullable */
+  archivedAt?: string | null;
 };

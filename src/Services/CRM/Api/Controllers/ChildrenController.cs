@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
+using KDVManager.Services.CRM.Application.Features.Children.Commands.ArchiveChild;
 
 namespace KDVManager.Services.CRM.Api.Controllers;
 
@@ -19,6 +20,7 @@ public class ChildrenController : ControllerBase
     private readonly CreateChildCommandHandler _createChildCommandHandler;
     private readonly UpdateChildCommandHandler _updateChildCommandHandler;
     private readonly DeleteChildCommandHandler _deleteChildCommandHandler;
+    private readonly ArchiveChildCommandHandler _archiveChildCommandHandler;
 
     public ChildrenController(
         ILogger<ChildrenController> logger,
@@ -26,7 +28,8 @@ public class ChildrenController : ControllerBase
         GetChildDetailQueryHandler getChildDetailQueryHandler,
         CreateChildCommandHandler createChildCommandHandler,
         UpdateChildCommandHandler updateChildCommandHandler,
-        DeleteChildCommandHandler deleteChildCommandHandler)
+        DeleteChildCommandHandler deleteChildCommandHandler,
+        ArchiveChildCommandHandler archiveChildCommandHandler)
     {
         _logger = logger;
         _getChildListQueryHandler = getChildListQueryHandler;
@@ -34,6 +37,7 @@ public class ChildrenController : ControllerBase
         _createChildCommandHandler = createChildCommandHandler;
         _updateChildCommandHandler = updateChildCommandHandler;
         _deleteChildCommandHandler = deleteChildCommandHandler;
+        _archiveChildCommandHandler = archiveChildCommandHandler;
     }
 
     [HttpGet("", Name = "GetAllChildren")]
@@ -78,6 +82,15 @@ public class ChildrenController : ControllerBase
     {
         var deleteChildCommand = new DeleteChildCommand { Id = Id };
         await _deleteChildCommandHandler.Handle(deleteChildCommand);
+        return NoContent();
+    }
+
+    [HttpPost("{Id:guid}/archive", Name = "ArchiveChild")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<ActionResult> ArchiveChild([FromRoute] Guid Id)
+    {
+        var archiveChildCommand = new ArchiveChildCommand { Id = Id };
+        await _archiveChildCommandHandler.Handle(archiveChildCommand);
         return NoContent();
     }
 }

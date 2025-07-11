@@ -36,10 +36,4 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
     {
         return await _dbContext.Set<Child>().CountAsync();
     }
-
-    public async Task ArchiveAsync(Child child)
-    {
-        child.ArchivedAt = DateTime.UtcNow;
-        await UpdateAsync(child);
-    }
 }

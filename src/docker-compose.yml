@@ -17,6 +17,9 @@ services:
     image: ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: ./web
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
+        - node:22-slim
       args:
         VITE_APP_AUTH0_DOMAIN: kdvmanager.eu.auth0.com
         VITE_APP_AUTH0_CLIENT_ID: ITepsevBBZNElNNrVmZjgkwaVCsmmKWc
@@ -27,6 +30,10 @@ services:
     build:
       context: .
       dockerfile: Services/CRM/Api/Dockerfile
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/crm.api:${PLATFORM:-linux}-${TAG:-latest}
+        - mcr.microsoft.com/dotnet/aspnet:9.0
+        - mcr.microsoft.com/dotnet/sdk:9.0
     depends_on:
       - postgres
 
@@ -35,6 +42,10 @@ services:
     build:
       context: .
       dockerfile: Services/CRM/Infrastructure/Dockerfile
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/crm.migrator:${PLATFORM:-linux}-${TAG:-latest}
+        - mcr.microsoft.com/dotnet/aspnet:9.0
+        - mcr.microsoft.com/dotnet/sdk:9.0
     depends_on:
       - postgres
 
@@ -43,6 +54,10 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Api/Dockerfile
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/scheduling.api:${PLATFORM:-linux}-${TAG:-latest}
+        - mcr.microsoft.com/dotnet/aspnet:9.0
+        - mcr.microsoft.com/dotnet/sdk:9.0
     depends_on:
       - postgres
 
@@ -51,6 +66,10 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Infrastructure/Dockerfile
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/scheduling.migrator:${PLATFORM:-linux}-${TAG:-latest}
+        - mcr.microsoft.com/dotnet/aspnet:9.0
+        - mcr.microsoft.com/dotnet/sdk:9.0
     depends_on:
       - postgres
 
@@ -59,6 +78,10 @@ services:
     build:
       context: .
       dockerfile: Services/DataMigration/Dockerfile
+      cache_from:
+        - ${REGISTRY:-kdvmanager}/data.migration:${PLATFORM:-linux}-${TAG:-latest}
+        - mcr.microsoft.com/dotnet/runtime:9.0
+        - mcr.microsoft.com/dotnet/sdk:9.0
     depends_on:
       - postgres
       - crm-api

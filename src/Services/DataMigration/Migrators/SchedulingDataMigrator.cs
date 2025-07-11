@@ -73,11 +73,13 @@ public class SchedulingDataMigrator
             if (beginTime == new TimeOnly(8, 0) && endTime == new TimeOnly(13, 0))
             {
                 timeSlotName = "Ochtend";
+                beginTime = TimeOnly.FromTimeSpan(new TimeSpan(8, 30, 0));
                 Console.WriteLine($"Creating time slot: {timeSlotName} (08:00-13:00)");
             }
             else if (beginTime == new TimeOnly(8, 0) && endTime == new TimeOnly(18, 0))
             {
                 timeSlotName = "Hele dag";
+                beginTime = TimeOnly.FromTimeSpan(new TimeSpan(8, 30, 0));
                 Console.WriteLine($"Creating time slot: {timeSlotName} (08:00-18:00)");
             }
             else if (beginTime == new TimeOnly(13, 0) && endTime == new TimeOnly(18, 0))
@@ -143,7 +145,7 @@ public class SchedulingDataMigrator
             var group = new Group
             {
                 Id = Guid.NewGuid(),
-                Name = $"Group {groupId}",
+                Name = $"Groep {groupId}",
                 TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
             };
 

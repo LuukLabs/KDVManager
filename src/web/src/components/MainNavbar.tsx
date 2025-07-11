@@ -46,7 +46,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl">
+        <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box
               component="img"
@@ -157,7 +157,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Container maxWidth="xl">
+      <Container maxWidth={false} >
         <Box display="flex" alignItems="center" marginY={1}>
           <RouterBreadcrumbs />
         </Box>

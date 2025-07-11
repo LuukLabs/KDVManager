@@ -9,4 +9,5 @@ public interface IChildRepository : IAsyncRepository<Child>
 {
     Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter, string search = "");
     Task<int> CountAsync();
+    Task ArchiveAsync(Child child);
 }

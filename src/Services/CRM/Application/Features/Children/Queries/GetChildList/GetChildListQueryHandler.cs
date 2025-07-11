@@ -17,8 +17,8 @@ public class GetChildListQueryHandler
 
     public async Task<PagedList<ChildListVM>> Handle(GetChildListQuery request)
     {
-        var children = await _childRepository.PagedAsync(request, request.Search);
-        var count = await _childRepository.CountAsync();
+        var children = await _childRepository.PagedAsync(request, request.Search, request.Archived);
+        var count = await _childRepository.CountAsync(request.Archived);
 
         List<ChildListVM> childListVMs = children.Select(child => new ChildListVM
         {

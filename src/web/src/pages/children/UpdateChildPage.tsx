@@ -11,6 +11,8 @@ import {
   Avatar,
   Chip,
   Stack,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
@@ -49,6 +51,8 @@ const UpdateChildPage = () => {
   const queryClient = useQueryClient();
   const { mutateAsync } = useUpdateChild();
   const { mutateAsync: archiveChildAsync, isLoading: isArchiving } = useArchiveChild();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const formContext = useForm<UpdateChildCommand>({
     defaultValues: {
@@ -123,7 +127,14 @@ const UpdateChildPage = () => {
       <Grid size={12}>
         <Card sx={{ mb: 3 }}>
           <CardContent>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: 2,
+                flexDirection: isMobile ? "column" : "row",
+              }}
+            >
               <Avatar
                 sx={{
                   width: 56,
@@ -133,11 +144,11 @@ const UpdateChildPage = () => {
               >
                 {getInitials()}
               </Avatar>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 1, width: "100%" }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                   {getFullName()}
                 </Typography>
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
                   <Chip icon={<CalendarIcon />} label={calculateAge()} size="small" />
                   {child?.cid && (
                     <Chip label={`CID: ${child.cid}`} size="small" variant="outlined" />
@@ -156,28 +167,61 @@ const UpdateChildPage = () => {
                   )}
                 </Stack>
               </Box>
-              {/* Archive Button */}
-              <Button
-                variant="outlined"
-                color="warning"
-                onClick={async () => {
-                  try {
-                    await archiveChildAsync({ id: childId });
-                    enqueueSnackbar(t("Child archived"), { variant: "success" });
-                    void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
-                    void queryClient.invalidateQueries({
-                      queryKey: getGetChildByIdQueryOptions(childId).queryKey,
-                    });
-                  } catch {
-                    enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
-                  }
-                }}
-                sx={{ ml: 2 }}
-                disabled={isArchiving || !!child?.archivedAt}
-              >
-                {t("Archive Child")}
-              </Button>
+              {/* Archive Button - Responsive Placement */}
+              {isMobile ? null : (
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  onClick={async () => {
+                    try {
+                      await archiveChildAsync({ id: childId });
+                      enqueueSnackbar(t("Child archived"), { variant: "success" });
+                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+                      void queryClient.invalidateQueries({
+                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                      });
+                    } catch {
+                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
+                    }
+                  }}
+                  sx={{ ml: 2 }}
+                  disabled={isArchiving || !!child?.archivedAt}
+                >
+                  {t("Archive Child")}
+                </Button>
+              )}
             </Box>
+            {/* Archive Button for Mobile - below header */}
+            {isMobile && (
+              <Box
+                sx={{
+                  width: "100%",
+                  mt: 2,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  onClick={async () => {
+                    try {
+                      await archiveChildAsync({ id: childId });
+                      enqueueSnackbar(t("Child archived"), { variant: "success" });
+                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+                      void queryClient.invalidateQueries({
+                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                      });
+                    } catch {
+                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
+                    }
+                  }}
+                  disabled={isArchiving || !!child?.archivedAt}
+                >
+                  {t("Archive Child")}
+                </Button>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </Grid>

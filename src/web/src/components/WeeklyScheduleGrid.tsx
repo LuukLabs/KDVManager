@@ -79,6 +79,16 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
     t("dayNames.fri"),
     t("dayNames.sat"),
   ];
+  // Long day names for mobile
+  const translatedDayLongNames = [
+    t("dayNamesLong.sunday"),
+    t("dayNamesLong.monday"),
+    t("dayNamesLong.tuesday"),
+    t("dayNamesLong.wednesday"),
+    t("dayNamesLong.thursday"),
+    t("dayNamesLong.friday"),
+    t("dayNamesLong.saturday"),
+  ];
 
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
@@ -138,7 +148,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                     color: "text.primary",
                   }}
                 >
-                  {translatedDayNames[dayIdx]}
+                  {translatedDayLongNames[dayIdx]}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => (

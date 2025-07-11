@@ -21,5 +21,11 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/dist
+**/coverage
+**/.nuget
+**/.cache
+**/.temp
+**/.tmp
 LICENSE
 README.md

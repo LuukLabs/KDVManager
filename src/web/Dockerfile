@@ -3,13 +3,19 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g corepack@0.31
 RUN corepack enable
-COPY . /app
 WORKDIR /app
 
+FROM base AS deps
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
 FROM base AS prod-deps
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-FROM base AS build
+FROM deps AS build
 
 # Setup build args
 ARG VITE_APP_AUTH0_DOMAIN
@@ -19,7 +25,8 @@ ARG VITE_API_BASE_URL
 # Set environment variables for the build
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Copy source code after dependencies are installed
+COPY . .
 RUN pnpm run build
 
 FROM base AS development

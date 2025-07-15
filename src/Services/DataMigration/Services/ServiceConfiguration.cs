@@ -31,8 +31,5 @@ public static class ServiceConfiguration
         // Add migrators
         services.AddScoped<ChildrenDataMigrator>();
         services.AddScoped<SchedulingDataMigrator>();
-        
-        // Add query services
-        services.AddScoped<FindChildQuery>();
     }
 }

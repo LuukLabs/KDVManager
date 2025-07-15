@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import {
   Grid,
@@ -14,7 +14,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   Person as PersonIcon,
   Save as SaveIcon,
@@ -36,6 +35,7 @@ import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import { type updateChildPageLoader } from "./updateChildPage.loader";
 import { ChildScheduleView } from "../../features/schedules/ChildScheduleView";
+import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -246,26 +246,19 @@ const UpdateChildPage = () => {
                   <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
                 </Grid>
                 <Grid size={12}>
-                  <Controller
-                    control={formContext.control}
+                  <DatePickerElement
+                    label={t("Date of birth")}
                     name="dateOfBirth"
-                    render={({ field }) => {
-                      return (
-                        <DatePicker
-                          label={t("Date of birth")}
-                          value={field.value ? dayjs(field.value) : undefined}
-                          defaultValue={field.value ? dayjs(field.value) : undefined}
-                          inputRef={field.ref}
-                          onChange={(date) => {
-                            field.onChange(date);
-                          }}
-                          slotProps={{
-                            textField: {
-                              fullWidth: true,
-                            },
-                          }}
-                        />
-                      );
+                    transform={{
+                      output: (value) => {
+                        return value ? value.format("YYYY-MM-DD") : null;
+                      },
+                    }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        fullWidth: true,
+                      },
                     }}
                   />
                 </Grid>

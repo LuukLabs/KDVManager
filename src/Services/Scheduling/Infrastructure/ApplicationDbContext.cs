@@ -21,10 +21,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<TimeSlot> TimeSlots { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<ScheduleRule> ScheduleRules { get; set; }
+    public DbSet<Child> Children { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
@@ -37,12 +39,6 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(sr => sr.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Schedule>(entity =>
-        {
-            entity.Property(e => e.StartDate).HasColumnType("date");
-            entity.Property(e => e.EndDate).HasColumnType("date");
-        });
-
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
@@ -53,7 +49,6 @@ public class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                case EntityState.Modified:
                     entry.Entity.TenantId = _tenantService.Tenant;
                     break;
             }

@@ -15,7 +15,7 @@ namespace KDVManager.Services.CRM.Domain.Entities
 
         public string CID { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public DateTime? ArchivedAt { get; private set; }
 

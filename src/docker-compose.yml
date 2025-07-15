@@ -18,6 +18,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   web:
     image: ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
@@ -69,5 +74,3 @@ services:
       dockerfile: Services/DataMigration/Dockerfile
     depends_on:
       - postgres
-      - crm-api
-      - scheduling-api

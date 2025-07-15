@@ -10,22 +10,28 @@ using Schedule = KDVManager.Services.Scheduling.Domain.Entities.Schedule;
 using ScheduleRule = KDVManager.Services.Scheduling.Domain.Entities.ScheduleRule;
 using TimeSlot = KDVManager.Services.Scheduling.Domain.Entities.TimeSlot;
 using Group = KDVManager.Services.Scheduling.Domain.Entities.Group;
+using CRMContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 
 namespace KDVManager.Services.DataMigration.Migrators;
 
 public class SchedulingDataMigrator
 {
     private readonly SchedulingContext _context;
+    private readonly CRMContext _crmContext; // Add CRM context
     private readonly IConfiguration _configuration;
 
-    public SchedulingDataMigrator(SchedulingContext context, IConfiguration configuration)
+    public SchedulingDataMigrator(SchedulingContext context, CRMContext crmContext, IConfiguration configuration)
     {
         _context = context;
+        _crmContext = crmContext; // Initialize CRM context
         _configuration = configuration;
     }
 
     public async Task MigrateAsync(Dictionary<int, Guid> childIdMapping)
     {
+        // Insert children into Scheduling service
+        await InsertChildrenIntoSchedulingServiceAsync();
+
         // First, create TimeSlots for unique begin_time and end_time combinations
         var timeSlotMapping = await MigrateTimeSlotsAsync();
 
@@ -388,5 +394,30 @@ public class SchedulingDataMigrator
         }
 
         Console.WriteLine($"Scheduling migration completed: {migratedScheduleCount} schedules and {migratedRuleCount} schedule rules migrated, {skippedCount} skipped");
+    }
+
+    private async Task InsertChildrenIntoSchedulingServiceAsync()
+    {
+        Console.WriteLine("Inserting children into Scheduling service...");
+
+        // Retrieve all children from the CRM service
+        var crmChildren = await _crmContext.Children
+            .Select(c => new { c.Id, c.DateOfBirth })
+            .ToListAsync();
+
+        // Insert children into the Scheduling service
+        foreach (var child in crmChildren)
+        {
+            var schedulingChild = new KDVManager.Services.Scheduling.Domain.Entities.Child
+            {
+                Id = child.Id,
+                BirthDate = child.DateOfBirth
+            };
+
+            _context.Children.Add(schedulingChild);
+        }
+
+        await _context.SaveChangesAsync();
+        Console.WriteLine("Children successfully inserted into Scheduling service.");
     }
 }

@@ -43,16 +43,13 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
 
             await _childRepository.UpdateAsync(child);
 
-            // Only publish event if birthdate changed
-            if (originalDateOfBirth != child.DateOfBirth)
+            await _publishEndpoint.Publish(new ChildUpdatedEvent
             {
-                await _publishEndpoint.Publish(new ChildUpdatedEvent
-                {
-                    ChildId = child.Id,
-                    DateOfBirth = child.DateOfBirth,
-                    TenantId = child.TenantId
-                });
-            }
+                ChildId = child.Id,
+                DateOfBirth = child.DateOfBirth,
+                TenantId = child.TenantId
+            });
+
         }
     }
 }

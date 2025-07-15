@@ -9,8 +9,7 @@ export type ChildListVM = {
   id?: string;
   /** @nullable */
   fullName?: string | null;
-  /** @nullable */
-  dateOfBirth?: string | null;
+  dateOfBirth?: string;
   /** @nullable */
   archivedAt?: string | null;
 };

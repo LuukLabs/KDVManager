@@ -15,6 +15,7 @@ public static class ConfigureServices
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
+        services.AddScoped<IChildRepository, ChildRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();

@@ -8,7 +8,7 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
 
         public string FamilyName { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public string CID { get; set; }
         public DateTime? ArchivedAt { get; set; }

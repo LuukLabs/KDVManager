@@ -180,6 +180,11 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                             fullWidth: true,
                           },
                         }}
+                        transform={{
+                          output: (value) => {
+                            return value ? value.format("YYYY-MM-DD") : null;
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid size={12}>
@@ -190,6 +195,11 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
                           textField: {
                             size: "small",
                             fullWidth: true,
+                          },
+                        }}
+                        transform={{
+                          output: (value) => {
+                            return value ? value.format("YYYY-MM-DD") : null;
                           },
                         }}
                       />

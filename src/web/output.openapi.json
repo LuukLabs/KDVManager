@@ -899,8 +899,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date"
           },
           "cid": {
             "type": "string",
@@ -927,8 +926,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date"
           },
           "archivedAt": {
             "type": "string",
@@ -951,8 +949,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date"
           },
           "cid": {
             "type": "string",
@@ -1021,8 +1018,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date"
           },
           "cid": {
             "type": "string",

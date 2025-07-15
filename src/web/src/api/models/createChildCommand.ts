@@ -10,8 +10,7 @@ export type CreateChildCommand = {
   givenName?: string | null;
   /** @nullable */
   familyName?: string | null;
-  /** @nullable */
-  dateOfBirth?: string | null;
+  dateOfBirth?: string;
   /** @nullable */
   cid?: string | null;
 };

@@ -21,18 +21,22 @@ public class ChildUpdatedEventConsumer : IConsumer<ChildUpdatedEvent>
 
         _logger.LogInformation("Processing ChildUpdatedEvent for ChildId: {ChildId}", childEvent.ChildId);
 
-        if (childEvent.DateOfBirth.HasValue)
+        var age = DateTime.Today.Year - childEvent.DateOfBirth.Year;
+        if (DateTime.Today.DayOfYear < childEvent.DateOfBirth.DayOfYear)
+            age--;
+
+        _logger.LogInformation("Child {ChildId} age updated to {Age} years", childEvent.ChildId, age);
+
+        if (age > 5)
         {
-            var age = DateTime.Now.Year - childEvent.DateOfBirth.Value.Year;
-            if (DateTime.Now.DayOfYear < childEvent.DateOfBirth.Value.DayOfYear)
-                age--;
+            _logger.LogInformation("Child {ChildId} is older than 5 years, consider archiving schedules", childEvent.ChildId);
+        }
 
-            _logger.LogInformation("Child {ChildId} age updated to {Age} years", childEvent.ChildId, age);
+        _logger.LogInformation("Child {ChildId} age updated to {Age} years", childEvent.ChildId, age);
 
-            if (age > 5)
-            {
-                _logger.LogInformation("Child {ChildId} is older than 5 years, consider archiving schedules", childEvent.ChildId);
-            }
+        if (age > 5)
+        {
+            _logger.LogInformation("Child {ChildId} is older than 5 years, consider archiving schedules", childEvent.ChildId);
         }
     }
 }

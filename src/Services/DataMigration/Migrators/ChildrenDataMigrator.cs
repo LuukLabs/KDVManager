@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using KDVManager.Services.DataMigration.Utilities;
+using KDVManager.Services.CRM.Application.Contracts.Services;
 using CrmContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using Child = KDVManager.Services.CRM.Domain.Entities.Child;
 
@@ -16,21 +17,32 @@ public class ChildrenDataMigrator
 {
     private readonly CrmContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ITenantService _tenantService;
 
-    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration)
+    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenantService tenantService)
     {
         _context = context;
         _configuration = configuration;
+        _tenantService = tenantService;
+    }
+
+    private async Task DeleteChildrenForTenantAsync(Guid tenantId)
+    {
+        Console.WriteLine($"Deleting children for tenant {tenantId}...");
+        await _context.Database.ExecuteSqlRawAsync(
+            "DELETE FROM \"Children\" WHERE \"TenantId\" = {0};",
+            tenantId
+        );
+        Console.WriteLine($"Children for tenant {tenantId} deleted.");
     }
 
     public async Task<Dictionary<int, Guid>> MigrateAsync()
     {
         var childIdMapping = new Dictionary<int, Guid>();
 
-        // Truncate the Children table before importing
-        Console.WriteLine("Truncating Children table...");
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Children\" RESTART IDENTITY CASCADE;");
-        Console.WriteLine("Children table truncated.");
+        // Retrieve tenant ID from TenantService
+        var tenantId = _tenantService.Tenant;
+        await DeleteChildrenForTenantAsync(tenantId);
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
 
@@ -58,7 +70,7 @@ public class ChildrenDataMigrator
         while (await reader.ReadAsync())
         {
             string firstName = null, lastName = null, infixes = null, cid = null;
-            DateTime? dateOfBirth = null;
+            DateOnly dateOfBirth = DateOnly.MinValue; // Changed to DateOnly
             int? externalChildId = null;
 
             try
@@ -68,11 +80,10 @@ public class ChildrenDataMigrator
                 infixes = DatabaseHelper.GetSafeString(reader, "infixes");
                 cid = DatabaseHelper.GetSafeString(reader, "cid");
                 externalChildId = reader.IsDBNull("external_child_id") ? null : reader.GetInt32("external_child_id");
-                dateOfBirth = null;
                 if (!reader.IsDBNull("dateofbirth"))
                 {
                     var dob = reader.GetDateTime("dateofbirth");
-                    dateOfBirth = DateTime.SpecifyKind(dob, DateTimeKind.Utc);
+                    dateOfBirth = DateOnly.FromDateTime(dob); // Convert DateTime to DateOnly
                 }
 
                 // Skip if essential data is missing
@@ -90,7 +101,7 @@ public class ChildrenDataMigrator
                         : $"{infixes} {lastName}";
 
                 var childId = Guid.NewGuid();
-                var isOlderThanFive = dateOfBirth.HasValue && dateOfBirth.Value.AddYears(5) < DateTime.UtcNow;
+                var isOlderThanFive = dateOfBirth.AddYears(5) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
                 var child = new Child
                 {
                     Id = childId,
@@ -98,7 +109,7 @@ public class ChildrenDataMigrator
                     FamilyName = familyName?.Trim(),
                     CID = cid?.Trim(),
                     DateOfBirth = dateOfBirth,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                    TenantId = tenantId
                 };
 
                 // Archive if older than 5 years

@@ -19,6 +19,14 @@ services:
     ports:
       - "5433:5432"
 
+  rabbitmq:
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   web:
     image: ${REGISTRY:-kdvmanager}/web:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -44,6 +52,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=7g3xqiiedLGmDrvAXNy8
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
     ports:
       - "80"
       - "443"
@@ -62,6 +71,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
     ports:
       - "80"
       - "443"

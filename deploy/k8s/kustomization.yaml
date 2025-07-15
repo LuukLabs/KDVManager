@@ -13,6 +13,7 @@ resources:
 - web/
 - envoy/
 - data-migration/
+- rabbitmq/
 
 namespace: kdvmanager-prod
 

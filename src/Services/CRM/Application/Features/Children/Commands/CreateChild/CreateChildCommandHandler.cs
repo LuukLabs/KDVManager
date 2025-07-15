@@ -2,16 +2,20 @@
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
+using KDVManager.Services.Shared.Events;
+using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild
 {
     public class CreateChildCommandHandler
     {
         private readonly IChildRepository _childRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public CreateChildCommandHandler(IChildRepository childRepository)
+        public CreateChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint)
         {
             _childRepository = childRepository;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<Guid> Handle(CreateChildCommand request)
@@ -33,6 +37,14 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateC
             };
 
             child = await _childRepository.AddAsync(child);
+
+            // Publish event
+            await _publishEndpoint.Publish(new ChildCreatedEvent
+            {
+                ChildId = child.Id,
+                DateOfBirth = child.DateOfBirth,
+                TenantId = child.TenantId
+            });
 
             return child.Id;
         }

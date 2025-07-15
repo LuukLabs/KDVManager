@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
+using KDVManager.Services.Shared.Events;
+using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild
 {
     public class UpdateChildCommandHandler
     {
         private readonly IChildRepository _childRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public UpdateChildCommandHandler(IChildRepository childRepository)
+        public UpdateChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint)
         {
             _childRepository = childRepository;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task Handle(UpdateChildCommand request)
@@ -28,6 +32,9 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             if (!validationResult.IsValid)
                 throw new Exceptions.ValidationException(validationResult);
 
+            // Store original birthdate to check if it changed
+            var originalDateOfBirth = child.DateOfBirth;
+
             // Manually map properties
             child.GivenName = request.GivenName;
             child.FamilyName = request.FamilyName;
@@ -35,6 +42,17 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             child.CID = request.CID;
 
             await _childRepository.UpdateAsync(child);
+
+            // Only publish event if birthdate changed
+            if (originalDateOfBirth != child.DateOfBirth)
+            {
+                await _publishEndpoint.Publish(new ChildUpdatedEvent
+                {
+                    ChildId = child.Id,
+                    DateOfBirth = child.DateOfBirth,
+                    TenantId = child.TenantId
+                });
+            }
         }
     }
 }

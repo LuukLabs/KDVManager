@@ -7,6 +7,8 @@ using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.People.Commands.AddPerson;
 using KDVManager.Services.CRM.Application.Features.People.Queries.GetPersonList;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +26,20 @@ public static class ConfigureServices
         services.AddScoped<AddPersonCommandHandler>();
         services.AddScoped<GetPersonListQueryHandler>();
 
+        return services;
+    }
+    
+    public static IServiceCollection AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration.GetConnectionString("RabbitMQ"));
+                cfg.ConfigureEndpoints(context);
+            });
+        });
+        
         return services;
     }
 }

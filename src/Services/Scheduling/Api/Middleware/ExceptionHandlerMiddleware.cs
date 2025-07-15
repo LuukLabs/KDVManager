@@ -43,6 +43,9 @@ public class ExceptionHandlerMiddleware
                 httpStatusCode = HttpStatusCode.UnprocessableEntity;
                 result = JsonSerializer.Serialize(new UnprocessableEntityResponse((int)httpStatusCode, validationException), jsonSerializerOptions);
                 break;
+            case ConflictException conflictException:
+                httpStatusCode = HttpStatusCode.Conflict;
+                break;
             case BadRequestException badRequestException:
                 httpStatusCode = HttpStatusCode.BadRequest;
                 break;

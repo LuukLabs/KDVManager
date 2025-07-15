@@ -42,4 +42,12 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
             .Where(g => ids.Contains(g.Id))
             .ToListAsync();
     }
+
+    public async Task<bool> IsGroupUsedAsync(Guid groupId)
+    {
+        // Check if the group is referenced in any schedule rules
+        var isUsedInRules = await _dbContext.ScheduleRules.AnyAsync(sr => sr.GroupId == groupId);
+
+        return isUsedInRules;
+    }
 }

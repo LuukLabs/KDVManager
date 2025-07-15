@@ -11,4 +11,5 @@ public interface IScheduleRepository : IAsyncRepository<Schedule>
 {
     Task<IReadOnlyList<Schedule>> GetSchedulesByChildIdAsync(Guid childId);
     Task<IReadOnlyList<Schedule>> GetSchedulesByDateAsync(DateOnly date, Guid groupId);
+    Task<bool> IsGroupUsedAsync(Guid groupId);
 }

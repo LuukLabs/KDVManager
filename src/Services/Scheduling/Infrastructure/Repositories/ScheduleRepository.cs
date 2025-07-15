@@ -44,4 +44,9 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             .Where(s => s.ScheduleRules.Any(sr => sr.Day == dayOfWeek && sr.GroupId == groupId))
             .ToListAsync();
     }
+
+    public async Task<bool> IsGroupUsedAsync(Guid groupId)
+    {
+        return await _dbContext.ScheduleRules.AnyAsync(sr => sr.GroupId == groupId);
+    }
 }

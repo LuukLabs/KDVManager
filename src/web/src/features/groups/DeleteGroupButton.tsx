@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { type ProblemDetails } from "@api/models/problemDetails";
 
 type DeleteGroupButtonProps = {
   id: string;
@@ -24,9 +26,14 @@ export const DeleteGroupButton: React.FC<DeleteGroupButtonProps> = ({ id }) => {
     enqueueSnackbar(t("Group deleted"), { variant: "success" });
   };
 
-  const onMutateError = (error: any) => {
-    enqueueSnackbar(t("Error occurred while deleting group"), { variant: "error" });
-    console.error("Error deleting group:", error);
+  const onMutateError = (error: ProblemDetails | UnprocessableEntityResponse) => {
+    if ((error as ProblemDetails).status === 409) {
+      enqueueSnackbar(t("Group in use"), { variant: "warning" });
+    } else if ((error as ProblemDetails).status === 404) {
+      enqueueSnackbar(t("Group not found"), { variant: "error" });
+    } else {
+      enqueueSnackbar(t("Unknown error occurred"), { variant: "error" });
+    }
   };
 
   return (

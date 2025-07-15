@@ -52,6 +52,7 @@ public class GroupsController : ControllerBase
     [HttpDelete("{Id:guid}", Name = "DeleteGroup")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
     [Produces("application/json")]
     public async Task<ActionResult> DeleteGroup([FromRoute] DeleteGroupCommand deleteGroupCommand)
     {

@@ -29,6 +29,9 @@ public class SchedulingDataMigrator
 
     public async Task MigrateAsync(Dictionary<int, Guid> childIdMapping)
     {
+        // Clear all data for the tenant before migration
+        await ClearTenantDataAsync();
+
         // Insert children into Scheduling service
         await InsertChildrenIntoSchedulingServiceAsync();
 
@@ -42,12 +45,22 @@ public class SchedulingDataMigrator
         await MigrateSchedulesAsync(childIdMapping, timeSlotMapping, groupMapping);
     }
 
+    private async Task ClearTenantDataAsync()
+    {
+        Console.WriteLine("Clearing all data for the tenant...");
+
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ScheduleRules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Schedules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+
+        Console.WriteLine("All data for the tenant has been cleared.");
+    }
+
     private async Task<Dictionary<string, Guid>> MigrateTimeSlotsAsync()
     {
         Console.WriteLine("Migrating TimeSlots...");
-
-        // Truncate TimeSlots table
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"TimeSlots\" RESTART IDENTITY CASCADE;");
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
         var timeSlotMapping = new Dictionary<string, Guid>();
@@ -106,7 +119,7 @@ public class SchedulingDataMigrator
                 Name = timeSlotName,
                 StartTime = beginTime,
                 EndTime = endTime,
-                TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                TenantId = _context._tenantService.Tenant
             };
 
             _context.TimeSlots.Add(timeSlot);
@@ -123,9 +136,6 @@ public class SchedulingDataMigrator
     private async Task<Dictionary<int, Guid>> MigrateGroupsAsync()
     {
         Console.WriteLine("Migrating Groups...");
-
-        // Truncate Groups table
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Groups\" RESTART IDENTITY CASCADE;");
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
         var groupMapping = new Dictionary<int, Guid>();
@@ -152,7 +162,7 @@ public class SchedulingDataMigrator
             {
                 Id = Guid.NewGuid(),
                 Name = $"Groep {groupId}",
-                TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                TenantId = _context._tenantService.Tenant
             };
 
             _context.Groups.Add(group);
@@ -168,12 +178,6 @@ public class SchedulingDataMigrator
 
     private async Task MigrateSchedulesAsync(Dictionary<int, Guid> childIdMapping, Dictionary<string, Guid> timeSlotMapping, Dictionary<int, Guid> groupMapping)
     {
-        // Truncate both tables before importing
-        Console.WriteLine("Truncating Schedules and ScheduleRules tables...");
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"ScheduleRules\" RESTART IDENTITY CASCADE;");
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Schedules\" RESTART IDENTITY CASCADE;");
-        Console.WriteLine("Tables truncated.");
-
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
 
         if (string.IsNullOrEmpty(mssqlConnectionString))
@@ -411,7 +415,8 @@ public class SchedulingDataMigrator
             var schedulingChild = new KDVManager.Services.Scheduling.Domain.Entities.Child
             {
                 Id = child.Id,
-                BirthDate = child.DateOfBirth
+                BirthDate = child.DateOfBirth,
+                TenantId = _context._tenantService.Tenant
             };
 
             _context.Children.Add(schedulingChild);

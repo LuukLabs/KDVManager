@@ -1,38 +1,39 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using KDVManager.Services.Scheduling.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.Shared.Events;
-using KDVManager.Services.Scheduling.Application.Commands.CreateChild;
+
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace KDVManager.Services.Scheduling.Application.Events;
 
-public class ChildCreatedEventConsumer : IConsumer<ChildCreatedEvent>
+public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
 {
-    private readonly ILogger<ChildCreatedEventConsumer> _logger;
-    private readonly CreateChildCommandHandler _createChildCommandHandler;
+    private readonly ILogger<ChildAddedEventConsumer> _logger;
+    private readonly AddChildCommandHandler _addChildCommandHandler;
 
-    public ChildCreatedEventConsumer(ILogger<ChildCreatedEventConsumer> logger, CreateChildCommandHandler createChildCommandHandler)
+    public ChildAddedEventConsumer(ILogger<ChildAddedEventConsumer> logger, AddChildCommandHandler addChildCommandHandler)
     {
         _logger = logger;
-        _createChildCommandHandler = createChildCommandHandler;
+        _addChildCommandHandler = addChildCommandHandler;
     }
 
-    public async Task Consume(ConsumeContext<ChildCreatedEvent> context)
+    public async Task Consume(ConsumeContext<ChildAddedEvent> context)
     {
         var childEvent = context.Message;
 
-        _logger.LogInformation("Processing ChildCreatedEvent for ChildId: {ChildId}", childEvent.ChildId);
+        _logger.LogInformation("Processing ChildAddedEvent for ChildId: {ChildId}", childEvent.ChildId);
 
-        var command = new CreateChildCommand
+        var command = new AddChildCommand
         {
             Id = childEvent.ChildId,
             BirthDate = childEvent.DateOfBirth
         };
 
-        await _createChildCommandHandler.Handle(command);
+        await _addChildCommandHandler.Handle(command);
 
-        _logger.LogInformation("Child {ChildId} created in scheduling service", childEvent.ChildId);
+        _logger.LogInformation("Child {ChildId} added in scheduling service", childEvent.ChildId);
     }
 }

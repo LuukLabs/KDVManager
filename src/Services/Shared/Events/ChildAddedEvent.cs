@@ -2,7 +2,7 @@ using System;
 
 namespace KDVManager.Services.Shared.Events;
 
-public class ChildCreatedEvent
+public class ChildAddedEvent
 {
     public Guid ChildId { get; set; }
     public DateOnly DateOfBirth { get; set; }

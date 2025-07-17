@@ -5,7 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export type CreateChildCommand = {
+export type AddChildCommand = {
   /** @nullable */
   givenName?: string | null;
   /** @nullable */

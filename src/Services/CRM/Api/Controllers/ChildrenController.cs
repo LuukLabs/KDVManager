@@ -1,4 +1,4 @@
-﻿using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
+﻿using KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using System.Net;
@@ -17,7 +17,7 @@ public class ChildrenController : ControllerBase
     private readonly ILogger<ChildrenController> _logger;
     private readonly GetChildListQueryHandler _getChildListQueryHandler;
     private readonly GetChildDetailQueryHandler _getChildDetailQueryHandler;
-    private readonly CreateChildCommandHandler _createChildCommandHandler;
+    private readonly AddChildCommandHandler _addChildCommandHandler;
     private readonly UpdateChildCommandHandler _updateChildCommandHandler;
     private readonly DeleteChildCommandHandler _deleteChildCommandHandler;
     private readonly ArchiveChildCommandHandler _archiveChildCommandHandler;
@@ -26,7 +26,7 @@ public class ChildrenController : ControllerBase
         ILogger<ChildrenController> logger,
         GetChildListQueryHandler getChildListQueryHandler,
         GetChildDetailQueryHandler getChildDetailQueryHandler,
-        CreateChildCommandHandler createChildCommandHandler,
+        AddChildCommandHandler addChildCommandHandler,
         UpdateChildCommandHandler updateChildCommandHandler,
         DeleteChildCommandHandler deleteChildCommandHandler,
         ArchiveChildCommandHandler archiveChildCommandHandler)
@@ -34,7 +34,7 @@ public class ChildrenController : ControllerBase
         _logger = logger;
         _getChildListQueryHandler = getChildListQueryHandler;
         _getChildDetailQueryHandler = getChildDetailQueryHandler;
-        _createChildCommandHandler = createChildCommandHandler;
+        _addChildCommandHandler = addChildCommandHandler;
         _updateChildCommandHandler = updateChildCommandHandler;
         _deleteChildCommandHandler = deleteChildCommandHandler;
         _archiveChildCommandHandler = archiveChildCommandHandler;
@@ -57,10 +57,10 @@ public class ChildrenController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpPost(Name = "CreateChild")]
-    public async Task<ActionResult<Guid>> CreateChild([FromBody] CreateChildCommand createChildCommand)
+    [HttpPost(Name = "AddChild")]
+    public async Task<ActionResult<Guid>> AddChild([FromBody] AddChildCommand addChildCommand)
     {
-        var id = await _createChildCommandHandler.Handle(createChildCommand);
+        var id = await _addChildCommandHandler.Handle(addChildCommand);
         return Ok(id);
     }
 

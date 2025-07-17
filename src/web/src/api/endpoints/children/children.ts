@@ -20,11 +20,11 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
+import type { AddChildCommand } from "../../models/addChildCommand";
+
 import type { ChildDetailVM } from "../../models/childDetailVM";
 
 import type { ChildListVM } from "../../models/childListVM";
-
-import type { CreateChildCommand } from "../../models/createChildCommand";
 
 import type { GetAllChildrenParams } from "../../models/getAllChildrenParams";
 
@@ -142,30 +142,30 @@ export function useGetAllChildren<
   return query;
 }
 
-export const createChild = (createChildCommand: CreateChildCommand, signal?: AbortSignal) => {
+export const addChild = (addChildCommand: AddChildCommand, signal?: AbortSignal) => {
   return executeFetch<string>({
     url: `/crm/v1/children`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    data: createChildCommand,
+    data: addChildCommand,
     signal,
   });
 };
 
-export const getCreateChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const getAddChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createChild>>,
+    Awaited<ReturnType<typeof addChild>>,
     TError,
-    { data: CreateChildCommand },
+    { data: AddChildCommand },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof createChild>>,
+  Awaited<ReturnType<typeof addChild>>,
   TError,
-  { data: CreateChildCommand },
+  { data: AddChildCommand },
   TContext
 > => {
-  const mutationKey = ["createChild"];
+  const mutationKey = ["addChild"];
   const { mutation: mutationOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
@@ -173,38 +173,38 @@ export const getCreateChildMutationOptions = <TError = unknown, TContext = unkno
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createChild>>,
-    { data: CreateChildCommand }
+    Awaited<ReturnType<typeof addChild>>,
+    { data: AddChildCommand }
   > = (props) => {
     const { data } = props ?? {};
 
-    return createChild(data);
+    return addChild(data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type CreateChildMutationResult = NonNullable<Awaited<ReturnType<typeof createChild>>>;
-export type CreateChildMutationBody = CreateChildCommand;
-export type CreateChildMutationError = unknown;
+export type AddChildMutationResult = NonNullable<Awaited<ReturnType<typeof addChild>>>;
+export type AddChildMutationBody = AddChildCommand;
+export type AddChildMutationError = unknown;
 
-export const useCreateChild = <TError = unknown, TContext = unknown>(
+export const useAddChild = <TError = unknown, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createChild>>,
+      Awaited<ReturnType<typeof addChild>>,
       TError,
-      { data: CreateChildCommand },
+      { data: AddChildCommand },
       TContext
     >;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof createChild>>,
+  Awaited<ReturnType<typeof addChild>>,
   TError,
-  { data: CreateChildCommand },
+  { data: AddChildCommand },
   TContext
 > => {
-  const mutationOptions = getCreateChildMutationOptions(options);
+  const mutationOptions = getAddChildMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

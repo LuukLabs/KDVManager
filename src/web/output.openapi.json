@@ -79,22 +79,22 @@
       },
       "post": {
         "tags": ["Children"],
-        "operationId": "CreateChild",
+        "operationId": "AddChild",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateChildCommand"
+                "$ref": "#/components/schemas/AddChildCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateChildCommand"
+                "$ref": "#/components/schemas/AddChildCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateChildCommand"
+                "$ref": "#/components/schemas/AddChildCommand"
               }
             }
           }
@@ -852,6 +852,28 @@
   },
   "components": {
     "schemas": {
+      "AddChildCommand": {
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "cid": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AddPersonCommand": {
         "type": "object",
         "properties": {
@@ -931,28 +953,6 @@
           "archivedAt": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateChildCommand": {
-        "type": "object",
-        "properties": {
-          "givenName": {
-            "type": "string",
-            "nullable": true
-          },
-          "familyName": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "cid": {
-            "type": "string",
             "nullable": true
           }
         },

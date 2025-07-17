@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
+namespace KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
 
-public class CreateChildCommandValidator : AbstractValidator<CreateChildCommand>
+public class AddChildCommandValidator : AbstractValidator<AddChildCommand>
 {
-    public CreateChildCommandValidator()
+    public AddChildCommandValidator()
     {
         RuleFor(p => p.GivenName)
             .NotEmpty()

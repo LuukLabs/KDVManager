@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.ArchiveChild;
-using KDVManager.Services.CRM.Application.Features.Children.Commands.CreateChild;
+using KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
@@ -18,7 +18,7 @@ public static class ConfigureServices
     {
         // Register handlers
         services.AddScoped<ArchiveChildCommandHandler>();
-        services.AddScoped<CreateChildCommandHandler>();
+        services.AddScoped<AddChildCommandHandler>();
         services.AddScoped<UpdateChildCommandHandler>();
         services.AddScoped<DeleteChildCommandHandler>();
         services.AddScoped<GetChildListQueryHandler>();
@@ -28,7 +28,7 @@ public static class ConfigureServices
 
         return services;
     }
-    
+
     public static IServiceCollection AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMassTransit(x =>
@@ -39,7 +39,7 @@ public static class ConfigureServices
                 cfg.ConfigureEndpoints(context);
             });
         });
-        
+
         return services;
     }
 }

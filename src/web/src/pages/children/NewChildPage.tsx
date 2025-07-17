@@ -1,10 +1,10 @@
-import { type CreateChildCommand } from "@api/models/createChildCommand";
+import { type AddChildCommand } from "@api/models/addChildCommand";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { getGetAllChildrenQueryKey, useCreateChild } from "@api/endpoints/children/children";
+import { getGetAllChildrenQueryKey, useAddChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -13,9 +13,9 @@ import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 const NewChildPage = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { mutate } = useCreateChild();
+  const { mutate } = useAddChild();
   const navigate = useNavigate();
-  const formContext = useForm<CreateChildCommand>({
+  const formContext = useForm<AddChildCommand>({
     defaultValues: {
       givenName: "",
     },
@@ -23,7 +23,7 @@ const NewChildPage = () => {
 
   const handleSubmit = formContext.handleSubmit;
 
-  const onSubmit = (data: CreateChildCommand) => {
+  const onSubmit = (data: AddChildCommand) => {
     mutate({ data: data }, { onSuccess: onSuccess });
   };
 

@@ -30,14 +30,21 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant).HasMany(si => si.ScheduleRules);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
 
-        // Configure ScheduleRule relationships
+        modelBuilder.Entity<Schedule>()
+            .HasMany(si => si.ScheduleRules);
+
         modelBuilder.Entity<ScheduleRule>()
             .HasOne(sr => sr.Group)
             .WithMany()
-            .HasForeignKey(sr => sr.GroupId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(sr => sr.GroupId);
+
+        // Define foreign key constraint between Child and Schedule without navigation properties
+        modelBuilder.Entity<Schedule>()
+            .HasOne<Child>()
+            .WithMany()
+            .HasForeignKey(s => s.ChildId);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

@@ -2,6 +2,8 @@
 using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Services.Scheduling.Infrastructure.Repositories;
 using KDVManager.Services.Scheduling.Application.Events;
+using KDVManager.Shared.Infrastructure.Extensions;
+using KDVManager.Shared.Infrastructure.MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
@@ -20,6 +22,20 @@ public static class ConfigureServices
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
+        // Add tenant services from shared infrastructure
+        services.AddTenantServices();
+
+        // Add MassTransit infrastructure services
+        services.AddMassTransitInfrastructureServices();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMassTransitInfrastructureServices(this IServiceCollection services)
+    {
+        // Register tenant-aware filters
+        services.AddScoped<TenantPublishFilter>();
+        
         return services;
     }
 
@@ -33,6 +49,9 @@ public static class ConfigureServices
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("RabbitMQ"));
+
+                // Apply tenant resolution middleware globally
+                cfg.UseTenantResolution(context);
 
                 cfg.ReceiveEndpoint("scheduling-child-events", e =>
                 {

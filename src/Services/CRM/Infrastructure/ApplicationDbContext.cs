@@ -1,5 +1,5 @@
 ﻿using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.CRM.Application.Contracts.Services;
+using KDVManager.Shared.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
@@ -21,8 +21,8 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
+        modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
             {
                 case EntityState.Added:
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _tenantService.Tenant;
+                    entry.Entity.TenantId = _tenantService.CurrentTenant;
                     break;
             }
         }

@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.Shared.Events;
+using KDVManager.Shared.Contracts.Events;
+using KDVManager.Shared.Domain.Services;
 using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild
@@ -10,11 +11,13 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
     {
         private readonly IChildRepository _childRepository;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ITenantService _tenantService;
 
-        public UpdateChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint)
+        public UpdateChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint, ITenantService tenantService)
         {
             _childRepository = childRepository;
             _publishEndpoint = publishEndpoint;
+            _tenantService = tenantService;
         }
 
         public async Task Handle(UpdateChildCommand request)
@@ -43,13 +46,12 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
 
             await _childRepository.UpdateAsync(child);
 
+            // Publish event - tenant headers automatically added by infrastructure filter
             await _publishEndpoint.Publish(new ChildUpdatedEvent
             {
                 ChildId = child.Id,
-                DateOfBirth = child.DateOfBirth,
-                TenantId = child.TenantId
+                DateOfBirth = child.DateOfBirth
             });
-
         }
     }
 }

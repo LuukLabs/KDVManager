@@ -1,5 +1,5 @@
 ﻿using KDVManager.Services.Scheduling.Domain.Entities;
-using KDVManager.Services.Scheduling.Application.Contracts.Services;
+using KDVManager.Shared.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
@@ -26,11 +26,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
+        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
+        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
+        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.CurrentTenant);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -56,7 +56,7 @@ public class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.TenantId = _tenantService.Tenant;
+                    entry.Entity.TenantId = _tenantService.CurrentTenant;
                     break;
             }
         }

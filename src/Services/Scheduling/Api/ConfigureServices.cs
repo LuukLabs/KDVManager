@@ -1,5 +1,5 @@
-using KDVManager.Services.Scheduling.Api.Services;
-using KDVManager.Services.Scheduling.Application.Contracts.Services;
+using KDVManager.Shared.Domain.Services;
+using KDVManager.Shared.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
@@ -81,7 +81,7 @@ public static class ConfigureServices
                 };
             });
 
-        services.AddScoped<ITenantService, TenantService>();
+        services.AddTenantServices(); // Uses shared tenant infrastructure
 
         return services;
     }

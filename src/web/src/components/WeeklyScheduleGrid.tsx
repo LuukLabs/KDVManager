@@ -10,7 +10,7 @@ type WeeklyScheduleGridProps = {
 };
 
 // Enum for days of the week
-export enum DayOfWeek {
+enum DayOfWeek {
   Sunday = 0,
   Monday = 1,
   Tuesday = 2,
@@ -65,7 +65,7 @@ const getGroupColor = (groupName: string | null | undefined): string => {
 export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   scheduleRules,
   isMobile = false,
-  weekStartsOnMonday = false,
+  weekStartsOnMonday = true,
 }) => {
   const { t } = useTranslation();
 
@@ -193,10 +193,10 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
       ) : (
         // Desktop: Grid layout
         <Box sx={{ display: "flex", gap: 1 }}>
-          {translatedDayNames.map((dayName, dayIndex) => {
-            const dayRules = rulesByDay[dayIndex as DayOfWeek];
+          {DAY_INDEX_MAP.map((dayIdx) => {
+            const dayRules = rulesByDay[dayIdx as DayOfWeek];
             return (
-              <Box key={dayIndex} sx={{ flex: 1, minWidth: 0 }}>
+              <Box key={dayIdx} sx={{ flex: 1, minWidth: 0 }}>
                 <Paper
                   variant="outlined"
                   sx={{
@@ -214,7 +214,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                       mb: 0.5,
                     }}
                   >
-                    {dayName}
+                    {translatedDayNames[dayIdx]}
                   </Typography>
 
                   {dayRules && (

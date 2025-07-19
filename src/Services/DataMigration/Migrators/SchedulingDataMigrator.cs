@@ -415,7 +415,7 @@ public class SchedulingDataMigrator
             var schedulingChild = new KDVManager.Services.Scheduling.Domain.Entities.Child
             {
                 Id = child.Id,
-                BirthDate = child.DateOfBirth,
+                DateOfBirth = child.DateOfBirth,
                 TenantId = _context._tenantService.Tenant
             };
 

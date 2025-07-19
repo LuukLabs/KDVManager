@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.AddChild;
-using KDVManager.Services.Shared.Events;
-
+using KDVManager.Shared.Contracts.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +12,9 @@ public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
     private readonly ILogger<ChildAddedEventConsumer> _logger;
     private readonly AddChildCommandHandler _addChildCommandHandler;
 
-    public ChildAddedEventConsumer(ILogger<ChildAddedEventConsumer> logger, AddChildCommandHandler addChildCommandHandler)
+    public ChildAddedEventConsumer(
+        ILogger<ChildAddedEventConsumer> logger,
+        AddChildCommandHandler addChildCommandHandler)
     {
         _logger = logger;
         _addChildCommandHandler = addChildCommandHandler;
@@ -24,16 +24,18 @@ public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
     {
         var childEvent = context.Message;
 
-        _logger.LogInformation("Processing ChildAddedEvent for ChildId: {ChildId}", childEvent.ChildId);
+        _logger.LogInformation("Processing ChildAddedEvent for ChildId: {ChildId}",
+            childEvent.ChildId);
 
         var command = new AddChildCommand
         {
             Id = childEvent.ChildId,
-            BirthDate = childEvent.DateOfBirth
+            DateOfBirth = childEvent.DateOfBirth
         };
 
         await _addChildCommandHandler.Handle(command);
 
-        _logger.LogInformation("Child {ChildId} added in scheduling service", childEvent.ChildId);
+        _logger.LogInformation("Child {ChildId} added in scheduling service",
+            childEvent.ChildId);
     }
 }

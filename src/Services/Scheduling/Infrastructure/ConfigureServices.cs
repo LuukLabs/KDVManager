@@ -28,6 +28,7 @@ public static class ConfigureServices
         services.AddMassTransit(x =>
         {
             x.AddConsumer<ChildAddedEventConsumer>();
+            x.AddConsumer<ChildDeletedEventConsumer>();
             x.AddConsumer<ChildUpdatedEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
@@ -37,6 +38,7 @@ public static class ConfigureServices
                 cfg.ReceiveEndpoint("scheduling-child-events", e =>
                 {
                     e.ConfigureConsumer<ChildAddedEventConsumer>(context);
+                    e.ConfigureConsumer<ChildDeletedEventConsumer>(context);
                     e.ConfigureConsumer<ChildUpdatedEventConsumer>(context);
                 });
             });

@@ -19,7 +19,7 @@ public class AddChildCommandHandler
         var child = new Child
         {
             Id = command.Id,
-            BirthDate = command.BirthDate
+            DateOfBirth = command.DateOfBirth
         };
 
         await _childRepository.AddAsync(child);

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.Shared.Events;
+using KDVManager.Shared.Contracts.Events;
 using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
@@ -42,8 +42,7 @@ public class AddChildCommandHandler
         await _publishEndpoint.Publish(new ChildAddedEvent
         {
             ChildId = child.Id,
-            DateOfBirth = child.DateOfBirth,
-            TenantId = child.TenantId
+            DateOfBirth = child.DateOfBirth
         });
 
         return child.Id;

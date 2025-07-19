@@ -7,6 +7,6 @@ namespace KDVManager.Services.Scheduling.Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid TenantId { get; set; }
-        public DateOnly BirthDate { get; set; }
+        public DateOnly DateOfBirth { get; set; }
     }
 }

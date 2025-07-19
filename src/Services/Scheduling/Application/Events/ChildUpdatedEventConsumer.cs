@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using KDVManager.Services.Shared.Events;
+using KDVManager.Shared.Contracts.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 

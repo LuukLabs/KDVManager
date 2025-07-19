@@ -5,6 +5,8 @@ using KDVManager.Services.Scheduling.Application.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
+using KDVManager.Shared.Contracts.Tenancy;
+using KDVManager.Shared.Infrastructure.Tenancy;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,9 @@ public static class ConfigureServices
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
+
+        services.AddScoped<ITenancyResolver, JwtTenancyResolver>();
+        services.AddScoped<ITenancyContext, DefaultTenancyContext>();
 
         return services;
     }

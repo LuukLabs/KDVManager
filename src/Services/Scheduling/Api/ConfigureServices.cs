@@ -1,4 +1,3 @@
-using KDVManager.Services.Scheduling.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
@@ -80,8 +79,6 @@ public static class ConfigureServices
                     }
                 };
             });
-
-        services.AddScoped<ITenancyContext, TenantService>();
 
         return services;
     }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KDVManager.Shared.Contracts.Tenancy;
+﻿namespace KDVManager.Shared.Contracts.Tenancy;
 
 public interface ITenancyContext
 {

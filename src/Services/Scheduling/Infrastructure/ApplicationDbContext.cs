@@ -1,20 +1,20 @@
 ﻿using KDVManager.Services.Scheduling.Domain.Entities;
-using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
 using KDVManager.Services.Scheduling.Domain.Interfaces;
 using System.Reflection;
+using KDVManager.Shared.Contracts.Tenancy;
 using System;
 
 namespace KDVManager.Services.Scheduling.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ITenantService _tenantService;
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenantService tenantService) : base(options)
+    public ITenancyContext _tenancyContext;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContext tenancyContext) : base(options)
     {
-        _tenantService = tenantService;
+        _tenancyContext = tenancyContext;
     }
 
     public DbSet<Group> Groups { get; set; }
@@ -26,11 +26,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
-        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenantService.Tenant);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -56,12 +56,10 @@ public class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.TenantId = _tenantService.Tenant;
+                    entry.Entity.TenantId = _tenancyContext.TenantId;
                     break;
             }
         }
-
-        // Remove DateTimeKind/UTC logic for DateOnly
 
         var result = await base.SaveChangesAsync(cancellationToken);
         return result;

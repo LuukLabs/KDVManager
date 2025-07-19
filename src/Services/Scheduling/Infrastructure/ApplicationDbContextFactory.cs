@@ -1,8 +1,8 @@
 using System;
-using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.Scheduling.Infrastructure;
 
@@ -14,13 +14,13 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         optionsBuilder.UseNpgsql("Server=127.0.0.1; port=5432; database=KDVManagerSchedulingDB; pooling=true;");
 
         // Create a dummy tenant provider with a default tenant ID
-        ITenantService tenantService = new DummyTenantService { Tenant = Guid.NewGuid() };
+        ITenancyContext tenancyContext = new DummyTenantService { TenantId = Guid.NewGuid() };
 
-        return new ApplicationDbContext(optionsBuilder.Options, tenantService);
+        return new ApplicationDbContext(optionsBuilder.Options, tenancyContext);
     }
 }
 
-public class DummyTenantService : ITenantService
+public class DummyTenantService : ITenancyContext
 {
-    public Guid Tenant { get; set; }
+    public Guid TenantId { get; set; }
 }

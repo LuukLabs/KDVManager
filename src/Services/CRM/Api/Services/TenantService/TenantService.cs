@@ -1,9 +1,10 @@
-using KDVManager.Services.CRM.Application.Contracts.Services;
+
 using KDVManager.Services.CRM.Application.Exceptions;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.CRM.Api.Services;
 
-public class TenantService : ITenantService
+public class TenantService : ITenancyContext
 {
     private IHttpContextAccessor _httpContextAccessor;
 
@@ -24,7 +25,7 @@ public class TenantService : ITenantService
         return false;
     }
 
-    public Guid Tenant
+    public Guid TenantId
     {
         get
         {

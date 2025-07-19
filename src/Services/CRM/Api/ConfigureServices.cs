@@ -1,7 +1,7 @@
 using KDVManager.Services.CRM.Api.Services;
-using KDVManager.Services.CRM.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -39,7 +39,7 @@ public static class ConfigureServices
                     options.Audience = configuration["Auth0:Audience"];
                 });
 
-        services.AddScoped<ITenantService, TenantService>();
+        services.AddScoped<ITenancyContext, TenantService>();
 
         return services;
     }

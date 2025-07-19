@@ -11,6 +11,7 @@ using ScheduleRule = KDVManager.Services.Scheduling.Domain.Entities.ScheduleRule
 using TimeSlot = KDVManager.Services.Scheduling.Domain.Entities.TimeSlot;
 using Group = KDVManager.Services.Scheduling.Domain.Entities.Group;
 using CRMContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.DataMigration.Migrators;
 
@@ -19,12 +20,14 @@ public class SchedulingDataMigrator
     private readonly SchedulingContext _context;
     private readonly CRMContext _crmContext; // Add CRM context
     private readonly IConfiguration _configuration;
+    private readonly ITenancyContext _tenancyContext; // Add tenancy context
 
-    public SchedulingDataMigrator(SchedulingContext context, CRMContext crmContext, IConfiguration configuration)
+    public SchedulingDataMigrator(SchedulingContext context, CRMContext crmContext, IConfiguration configuration, ITenancyContext tenancyContext)
     {
         _context = context;
         _crmContext = crmContext; // Initialize CRM context
         _configuration = configuration;
+        _tenancyContext = tenancyContext; // Initialize tenancy context
     }
 
     public async Task MigrateAsync(Dictionary<int, Guid> childIdMapping)
@@ -49,11 +52,11 @@ public class SchedulingDataMigrator
     {
         Console.WriteLine("Clearing all data for the tenant...");
 
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ScheduleRules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Schedules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ScheduleRules\" WHERE \"TenantId\" = {0};", _tenancyContext.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Schedules\" WHERE \"TenantId\" = {0};", _tenancyContext.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _tenancyContext.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _tenancyContext.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _tenancyContext.TenantId);
 
         Console.WriteLine("All data for the tenant has been cleared.");
     }
@@ -119,7 +122,7 @@ public class SchedulingDataMigrator
                 Name = timeSlotName,
                 StartTime = beginTime,
                 EndTime = endTime,
-                TenantId = _context._tenantService.Tenant
+                TenantId = _tenancyContext.TenantId
             };
 
             _context.TimeSlots.Add(timeSlot);
@@ -162,7 +165,7 @@ public class SchedulingDataMigrator
             {
                 Id = Guid.NewGuid(),
                 Name = $"Groep {groupId}",
-                TenantId = _context._tenantService.Tenant
+                TenantId = _tenancyContext.TenantId
             };
 
             _context.Groups.Add(group);
@@ -416,7 +419,7 @@ public class SchedulingDataMigrator
             {
                 Id = child.Id,
                 DateOfBirth = child.DateOfBirth,
-                TenantId = _context._tenantService.Tenant
+                TenantId = _tenancyContext.TenantId
             };
 
             _context.Children.Add(schedulingChild);

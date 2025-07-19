@@ -1,9 +1,9 @@
 using KDVManager.Services.Scheduling.Api.Services;
-using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
 using Microsoft.IdentityModel.Tokens;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -81,7 +81,7 @@ public static class ConfigureServices
                 };
             });
 
-        services.AddScoped<ITenantService, TenantService>();
+        services.AddScoped<ITenancyContext, TenantService>();
 
         return services;
     }

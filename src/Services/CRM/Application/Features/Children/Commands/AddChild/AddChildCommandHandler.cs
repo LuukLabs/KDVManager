@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.Shared.Events;
+using KDVManager.Shared.Contracts.Events;
+using KDVManager.Shared.Domain.Services;
 using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
@@ -11,11 +12,13 @@ public class AddChildCommandHandler
 {
     private readonly IChildRepository _childRepository;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ITenantService _tenantService;
 
-    public AddChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint)
+    public AddChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint, ITenantService tenantService)
     {
         _childRepository = childRepository;
         _publishEndpoint = publishEndpoint;
+        _tenantService = tenantService;
     }
 
     public async Task<Guid> Handle(AddChildCommand request)
@@ -33,17 +36,16 @@ public class AddChildCommandHandler
             FamilyName = request.FamilyName,
             DateOfBirth = request.DateOfBirth,
             CID = request.CID,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            TenantId = _tenantService.CurrentTenant
         };
 
         child = await _childRepository.AddAsync(child);
 
-        // Publish event
+        // Publish event - tenant headers automatically added by infrastructure filter
         await _publishEndpoint.Publish(new ChildAddedEvent
         {
             ChildId = child.Id,
-            DateOfBirth = child.DateOfBirth,
-            TenantId = child.TenantId
+            DateOfBirth = child.DateOfBirth
         });
 
         return child.Id;

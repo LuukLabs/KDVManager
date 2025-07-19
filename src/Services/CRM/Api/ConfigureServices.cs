@@ -1,5 +1,4 @@
-using KDVManager.Services.CRM.Api.Services;
-using KDVManager.Services.CRM.Application.Contracts.Services;
+using KDVManager.Shared.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -39,7 +38,7 @@ public static class ConfigureServices
                     options.Audience = configuration["Auth0:Audience"];
                 });
 
-        services.AddScoped<ITenantService, TenantService>();
+        services.AddTenantServices(); // Uses shared tenant infrastructure
 
         return services;
     }

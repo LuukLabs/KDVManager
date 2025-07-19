@@ -1,30 +1,34 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.AddChild;
-using KDVManager.Services.Shared.Events;
-
+using KDVManager.Shared.Contracts.Events;
+using KDVManager.Shared.Application.MassTransit;
+using KDVManager.Shared.Domain.Services;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace KDVManager.Services.Scheduling.Application.Events;
 
-public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
+public class ChildAddedEventConsumer : TenantAwareConsumerBase<ChildAddedEvent>
 {
-    private readonly ILogger<ChildAddedEventConsumer> _logger;
     private readonly AddChildCommandHandler _addChildCommandHandler;
 
-    public ChildAddedEventConsumer(ILogger<ChildAddedEventConsumer> logger, AddChildCommandHandler addChildCommandHandler)
+    public ChildAddedEventConsumer(
+        ILogger<ChildAddedEventConsumer> logger,
+        ITenantService tenantService,
+        AddChildCommandHandler addChildCommandHandler)
+        : base(logger, tenantService)
     {
-        _logger = logger;
         _addChildCommandHandler = addChildCommandHandler;
     }
 
-    public async Task Consume(ConsumeContext<ChildAddedEvent> context)
+    protected override async Task ConsumeMessage(ConsumeContext<ChildAddedEvent> context)
     {
         var childEvent = context.Message;
+        var tenantId = GetCurrentTenantId();
 
-        _logger.LogInformation("Processing ChildAddedEvent for ChildId: {ChildId}", childEvent.ChildId);
+        Logger.LogInformation("Processing ChildAddedEvent for ChildId: {ChildId} in tenant {TenantId}",
+            childEvent.ChildId, tenantId);
 
         var command = new AddChildCommand
         {
@@ -34,6 +38,7 @@ public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
 
         await _addChildCommandHandler.Handle(command);
 
-        _logger.LogInformation("Child {ChildId} added in scheduling service", childEvent.ChildId);
+        Logger.LogInformation("Child {ChildId} added in scheduling service for tenant {TenantId}",
+            childEvent.ChildId, tenantId);
     }
 }

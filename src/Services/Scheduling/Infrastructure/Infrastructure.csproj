@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />       
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    <ProjectReference Include="../../../Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />

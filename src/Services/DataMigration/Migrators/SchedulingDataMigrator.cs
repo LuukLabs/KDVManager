@@ -49,11 +49,11 @@ public class SchedulingDataMigrator
     {
         Console.WriteLine("Clearing all data for the tenant...");
 
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ScheduleRules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Schedules\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _context._tenantService.Tenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ScheduleRules\" WHERE \"TenantId\" = {0};", _context._tenantService.CurrentTenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Schedules\" WHERE \"TenantId\" = {0};", _context._tenantService.CurrentTenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _context._tenantService.CurrentTenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _context._tenantService.CurrentTenant);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _context._tenantService.CurrentTenant);
 
         Console.WriteLine("All data for the tenant has been cleared.");
     }
@@ -119,7 +119,7 @@ public class SchedulingDataMigrator
                 Name = timeSlotName,
                 StartTime = beginTime,
                 EndTime = endTime,
-                TenantId = _context._tenantService.Tenant
+                TenantId = _context._tenantService.CurrentTenant
             };
 
             _context.TimeSlots.Add(timeSlot);
@@ -162,7 +162,7 @@ public class SchedulingDataMigrator
             {
                 Id = Guid.NewGuid(),
                 Name = $"Groep {groupId}",
-                TenantId = _context._tenantService.Tenant
+                TenantId = _context._tenantService.CurrentTenant
             };
 
             _context.Groups.Add(group);
@@ -416,7 +416,7 @@ public class SchedulingDataMigrator
             {
                 Id = child.Id,
                 BirthDate = child.DateOfBirth,
-                TenantId = _context._tenantService.Tenant
+                TenantId = _context._tenantService.CurrentTenant
             };
 
             _context.Children.Add(schedulingChild);

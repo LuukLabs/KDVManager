@@ -7,9 +7,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using KDVManager.Services.DataMigration.Utilities;
-using KDVManager.Services.CRM.Application.Contracts.Services;
 using CrmContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using Child = KDVManager.Services.CRM.Domain.Entities.Child;
+using KDVManager.Shared.Domain.Services;
 
 namespace KDVManager.Services.DataMigration.Migrators;
 
@@ -41,7 +41,7 @@ public class ChildrenDataMigrator
         var childIdMapping = new Dictionary<int, Guid>();
 
         // Retrieve tenant ID from TenantService
-        var tenantId = _tenantService.Tenant;
+        var tenantId = _tenantService.CurrentTenant;
         await DeleteChildrenForTenantAsync(tenantId);
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");

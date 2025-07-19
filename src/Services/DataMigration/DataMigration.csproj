@@ -27,8 +27,9 @@
     <ProjectReference Include="..\Scheduling\Application\Application.csproj" />
     <ProjectReference Include="..\Scheduling\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
-
-
+  <ItemGroup>
+    <ProjectReference Include="../../Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">

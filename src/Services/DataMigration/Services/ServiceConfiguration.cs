@@ -2,10 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using KDVManager.Services.DataMigration.Migrators;
-using CrmTenantService = KDVManager.Services.CRM.Application.Contracts.Services.ITenantService;
-using SchedulingTenantService = KDVManager.Services.Scheduling.Application.Contracts.Services.ITenantService;
 using CrmContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using SchedulingContext = KDVManager.Services.Scheduling.Infrastructure.ApplicationDbContext;
+using KDVManager.Shared.Domain.Services;
 
 namespace KDVManager.Services.DataMigration.Services;
 
@@ -25,8 +24,7 @@ public static class ServiceConfiguration
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
         // Add tenant service with a default tenant for migration
-        services.AddScoped<CrmTenantService, MigrationTenantService>();
-        services.AddScoped<SchedulingTenantService, MigrationSchedulingTenantService>();
+        services.AddScoped<ITenantService, MigrationTenantService>();
 
         // Add migrators
         services.AddScoped<ChildrenDataMigrator>();

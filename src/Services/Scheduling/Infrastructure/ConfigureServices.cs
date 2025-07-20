@@ -22,8 +22,7 @@ public static class ConfigureServices
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
-        services.AddScoped<ITenancyResolver, JwtTenancyResolver>();
-        services.AddScoped<ITenancyContext, DefaultTenancyContext>();
+        services.AddTenancy();
 
         return services;
     }
@@ -39,13 +38,6 @@ public static class ConfigureServices
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("RabbitMQ"));
-
-                cfg.ReceiveEndpoint("scheduling-child-events", e =>
-                {
-                    e.ConfigureConsumer<ChildAddedEventConsumer>(context);
-                    e.ConfigureConsumer<ChildDeletedEventConsumer>(context);
-                    e.ConfigureConsumer<ChildUpdatedEventConsumer>(context);
-                });
             });
         });
 

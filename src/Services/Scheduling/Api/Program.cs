@@ -1,4 +1,5 @@
 ﻿using KDVManager.Services.Scheduling.Api.Middleware;
+using KDVManager.Shared.Infrastructure.Tenancy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ app.UseCustomExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<TenancyMiddleware>();
 
 app.MapHealthChecks("/healthz");
 

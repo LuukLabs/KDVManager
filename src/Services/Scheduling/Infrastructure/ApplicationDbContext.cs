@@ -11,10 +11,10 @@ namespace KDVManager.Services.Scheduling.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ITenancyContext _tenancyContext;
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContext tenancyContext) : base(options)
+    public ITenancyContextAccessor _tenancyContextAccessor;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options)
     {
-        _tenancyContext = tenancyContext;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public DbSet<Group> Groups { get; set; }
@@ -26,11 +26,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
-        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
-        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
-        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
-        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<Group>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -56,7 +56,7 @@ public class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.TenantId = _tenancyContext.TenantId;
+                    entry.Entity.TenantId = _tenancyContextAccessor.Current.TenantId;
                     break;
             }
         }

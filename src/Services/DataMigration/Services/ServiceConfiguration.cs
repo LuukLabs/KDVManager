@@ -24,7 +24,7 @@ public static class ServiceConfiguration
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
         // Add tenant service with a default tenant for migration
-        services.AddScoped<ITenancyContext, MigrationTenancyContext>();
+        services.AddScoped<ITenancyContextAccessor, MigrationTenancyContextAccessor>();
 
         // Add migrators
         services.AddScoped<ChildrenDataMigrator>();

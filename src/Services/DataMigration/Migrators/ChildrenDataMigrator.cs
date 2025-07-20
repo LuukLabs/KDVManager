@@ -17,13 +17,13 @@ public class ChildrenDataMigrator
 {
     private readonly CrmContext _context;
     private readonly IConfiguration _configuration;
-    private readonly ITenancyContext _tenancyContext;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
-    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContext tenancyContext)
+    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor)
     {
         _context = context;
         _configuration = configuration;
-        _tenancyContext = tenancyContext;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     private async Task DeleteChildrenForTenantAsync(Guid tenantId)
@@ -41,7 +41,7 @@ public class ChildrenDataMigrator
         var childIdMapping = new Dictionary<int, Guid>();
 
         // Retrieve tenant ID from TenantService
-        var tenantId = _tenancyContext.TenantId;
+        var tenantId = _tenancyContextAccessor.Current.TenantId;
         await DeleteChildrenForTenantAsync(tenantId);
 
         var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");

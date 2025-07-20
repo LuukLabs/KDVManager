@@ -18,8 +18,7 @@ public static class ConfigureServices
         services.AddScoped<IChildRepository, ChildRepository>();
         services.AddScoped<IPersonRepository, PersonRepository>();
 
-        services.AddScoped<ITenancyResolver, JwtTenancyResolver>();
-        services.AddScoped<ITenancyContext, DefaultTenancyContext>();
+        services.AddTenancy();
 
         return services;
     }

@@ -9,10 +9,10 @@ namespace KDVManager.Services.CRM.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ITenancyContext _tenancyContext;
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContext tenancyContext) : base(options)
+    public ITenancyContextAccessor _tenancyContextAccessor;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options)
     {
-        _tenancyContext = tenancyContext;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public DbSet<Child> Children { get; set; }
@@ -21,8 +21,8 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
-        modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenancyContext.TenantId);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
             {
                 case EntityState.Added:
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _tenancyContext.TenantId;
+                    entry.Entity.TenantId = _tenancyContextAccessor.Current.TenantId;
                     break;
             }
         }

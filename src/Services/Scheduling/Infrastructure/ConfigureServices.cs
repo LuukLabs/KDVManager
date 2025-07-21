@@ -38,10 +38,14 @@ public static class ConfigureServices
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("RabbitMQ"));
+                cfg.ConfigureEndpoints(context);
+
+                cfg.UseConsumeFilter(typeof(MassTransitTenancyConsumeFilter<>), context);
+                cfg.UseSendFilter(typeof(MassTransitTenancySendFilter<>), context);
+                cfg.UsePublishFilter(typeof(MassTransitTenancyPublishFilter<>), context);
             });
         });
 
         return services;
     }
 }
-

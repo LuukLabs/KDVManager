@@ -3,16 +3,19 @@ using System.Threading.Tasks;
 using KDVManager.Shared.Contracts.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using KDVManager.Services.Scheduling.Application.Features.Children.Commands.UpdateChild;
 
 namespace KDVManager.Services.Scheduling.Application.Events;
 
 public class ChildUpdatedEventConsumer : IConsumer<ChildUpdatedEvent>
 {
     private readonly ILogger<ChildUpdatedEventConsumer> _logger;
+    private readonly UpdateChildCommandHandler _updateChildCommandHandler;
 
-    public ChildUpdatedEventConsumer(ILogger<ChildUpdatedEventConsumer> logger)
+    public ChildUpdatedEventConsumer(ILogger<ChildUpdatedEventConsumer> logger, UpdateChildCommandHandler updateChildCommandHandler)
     {
         _logger = logger;
+        _updateChildCommandHandler = updateChildCommandHandler;
     }
 
     public async Task Consume(ConsumeContext<ChildUpdatedEvent> context)
@@ -21,22 +24,14 @@ public class ChildUpdatedEventConsumer : IConsumer<ChildUpdatedEvent>
 
         _logger.LogInformation("Processing ChildUpdatedEvent for ChildId: {ChildId}", childEvent.ChildId);
 
-        var age = DateTime.Today.Year - childEvent.DateOfBirth.Year;
-        if (DateTime.Today.DayOfYear < childEvent.DateOfBirth.DayOfYear)
-            age--;
-
-        _logger.LogInformation("Child {ChildId} age updated to {Age} years", childEvent.ChildId, age);
-
-        if (age > 5)
+        var command = new UpdateChildCommand
         {
-            _logger.LogInformation("Child {ChildId} is older than 5 years, consider archiving schedules", childEvent.ChildId);
-        }
+            Id = childEvent.ChildId,
+            DateOfBirth = childEvent.DateOfBirth
+        };
 
-        _logger.LogInformation("Child {ChildId} age updated to {Age} years", childEvent.ChildId, age);
+        await _updateChildCommandHandler.Handle(command);
 
-        if (age > 5)
-        {
-            _logger.LogInformation("Child {ChildId} is older than 5 years, consider archiving schedules", childEvent.ChildId);
-        }
+        _logger.LogInformation("Child {ChildId} updated in scheduling service", childEvent.ChildId);
     }
 }

@@ -9,6 +9,8 @@ using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.Del
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.AddChild;
+using KDVManager.Services.Scheduling.Application.Features.Children.Commands.DeleteChild;
+using KDVManager.Services.Scheduling.Application.Features.Children.Commands.UpdateChild;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +29,8 @@ public static class ConfigureServices
         services.AddScoped<GetChildSchedulesQueryHandler>();
         services.AddScoped<GetSchedulesByDateQueryHandler>();
         services.AddScoped<AddChildCommandHandler>();
+        services.AddScoped<DeleteChildCommandHandler>();
+        services.AddScoped<UpdateChildCommandHandler>();
 
         return services;
     }

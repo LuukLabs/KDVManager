@@ -49,4 +49,17 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
     {
         return await _dbContext.ScheduleRules.AnyAsync(sr => sr.GroupId == groupId);
     }
+
+    public async Task DeleteSchedulesByChildIdAsync(Guid childId)
+    {
+        var schedulesToDelete = await _dbContext.Schedules
+            .Where(s => s.ChildId == childId)
+            .ToListAsync();
+
+        if (schedulesToDelete.Any())
+        {
+            _dbContext.Schedules.RemoveRange(schedulesToDelete);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

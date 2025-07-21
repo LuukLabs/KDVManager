@@ -412,9 +412,14 @@ public class SchedulingDataMigrator
             .Select(c => new { c.Id, c.DateOfBirth })
             .ToListAsync();
 
-        // Insert children into the Scheduling service
         foreach (var child in crmChildren)
         {
+            if (child.Id == Guid.Empty || child.DateOfBirth == null)
+            {
+                Console.WriteLine($"Skipping invalid child data: Id={child.Id}, DateOfBirth={child.DateOfBirth}");
+                continue;
+            }
+
             var schedulingChild = new KDVManager.Services.Scheduling.Domain.Entities.Child
             {
                 Id = child.Id,
@@ -425,7 +430,19 @@ public class SchedulingDataMigrator
             _context.Children.Add(schedulingChild);
         }
 
-        await _context.SaveChangesAsync();
-        Console.WriteLine("Children successfully inserted into Scheduling service.");
+        try
+        {
+            await _context.SaveChangesAsync();
+            Console.WriteLine("Children successfully inserted into Scheduling service.");
+        }
+        catch (DbUpdateException ex)
+        {
+            Console.WriteLine($"Error saving children: {ex.Message}");
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+            }
+            throw;
+        }
     }
 }

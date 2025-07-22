@@ -80,11 +80,11 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     };
 
     const weekdays = [
-      { key: "monday", value: 0, label: t("Monday") },
-      { key: "tuesday", value: 1, label: t("Tuesday") },
-      { key: "wednesday", value: 2, label: t("Wednesday") },
-      { key: "thursday", value: 3, label: t("Thursday") },
-      { key: "friday", value: 4, label: t("Friday") },
+      { key: "monday", value: 1, label: t("Monday") },
+      { key: "tuesday", value: 2, label: t("Tuesday") },
+      { key: "wednesday", value: 3, label: t("Wednesday") },
+      { key: "thursday", value: 4, label: t("Thursday") },
+      { key: "friday", value: 5, label: t("Friday") },
     ];
 
     const renderWeeklySchedule = () => (

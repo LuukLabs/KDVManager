@@ -132,7 +132,9 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                     }}
                   >
                     <Person sx={{ fontSize: 12 }} />
-                    {typeof schedule.age === 'number' ? t("{{age}} year", { age: schedule.age }) : t("N/A")}
+                    {typeof schedule.age === "number"
+                      ? t("{{age}} year", { age: schedule.age })
+                      : t("N/A")}
                   </Typography>
                 </Box>
               </Box>

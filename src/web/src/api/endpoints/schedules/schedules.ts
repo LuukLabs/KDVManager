@@ -26,7 +26,11 @@ import type { ChildScheduleListVM } from "../../models/childScheduleListVM";
 
 import type { GetChildSchedulesParams } from "../../models/getChildSchedulesParams";
 
+import type { GetGroupSummaryParams } from "../../models/getGroupSummaryParams";
+
 import type { GetSchedulesByDateParams } from "../../models/getSchedulesByDateParams";
+
+import type { GroupSummaryVM } from "../../models/groupSummaryVM";
 
 import type { ProblemDetails } from "../../models/problemDetails";
 
@@ -315,6 +319,113 @@ export function useGetSchedulesByDate<
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetSchedulesByDateQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGroupSummary = (params?: GetGroupSummaryParams, signal?: AbortSignal) => {
+  return executeFetch<GroupSummaryVM>({
+    url: `/scheduling/v1/schedules/group-summary`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getGetGroupSummaryQueryKey = (params?: GetGroupSummaryParams) => {
+  return [`/scheduling/v1/schedules/group-summary`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetGroupSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGroupSummary>>,
+  TError = unknown,
+>(
+  params?: GetGroupSummaryParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getGroupSummary>>, TError, TData>>;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetGroupSummaryQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGroupSummary>>> = ({ signal }) =>
+    getGroupSummary(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGroupSummary>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetGroupSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupSummary>>>;
+export type GetGroupSummaryQueryError = unknown;
+
+export function useGetGroupSummary<
+  TData = Awaited<ReturnType<typeof getGroupSummary>>,
+  TError = unknown,
+>(
+  params: undefined | GetGroupSummaryParams,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getGroupSummary>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getGroupSummary>>,
+          TError,
+          Awaited<ReturnType<typeof getGroupSummary>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetGroupSummary<
+  TData = Awaited<ReturnType<typeof getGroupSummary>>,
+  TError = unknown,
+>(
+  params?: GetGroupSummaryParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getGroupSummary>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getGroupSummary>>,
+          TError,
+          Awaited<ReturnType<typeof getGroupSummary>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetGroupSummary<
+  TData = Awaited<ReturnType<typeof getGroupSummary>>,
+  TError = unknown,
+>(
+  params?: GetGroupSummaryParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getGroupSummary>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetGroupSummary<
+  TData = Awaited<ReturnType<typeof getGroupSummary>>,
+  TError = unknown,
+>(
+  params?: GetGroupSummaryParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getGroupSummary>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetGroupSummaryQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

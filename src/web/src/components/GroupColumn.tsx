@@ -10,6 +10,7 @@ import {
 import { type Dayjs } from "dayjs";
 import { useGetSchedulesByDate } from "@api/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
+import GroupSummary from "./GroupSummary";
 import { useTranslation } from "react-i18next";
 import { Groups as GroupsIcon, EventBusy as EventBusyIcon } from "@mui/icons-material";
 
@@ -97,6 +98,9 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
           {selectedDate.format("dddd, MMMM D")}
         </Typography>
       </Box>
+
+      {/* Group Summary */}
+      <GroupSummary groupId={group.id} selectedDate={selectedDate} />
 
       {/* Content */}
       {isLoading ? (

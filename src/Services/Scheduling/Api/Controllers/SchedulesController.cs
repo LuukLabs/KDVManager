@@ -6,6 +6,7 @@ using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
+using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -15,6 +16,7 @@ public class SchedulesController : ControllerBase
 {
     private readonly GetChildSchedulesQueryHandler _getChildSchedulesQueryHandler;
     private readonly GetSchedulesByDateQueryHandler _getSchedulesByDateQueryHandler;
+    private readonly GetGroupSummaryQueryHandler _getGroupSummaryQueryHandler;
     private readonly AddScheduleCommandHandler _addScheduleCommandHandler;
     private readonly DeleteScheduleCommandHandler _deleteScheduleCommandHandler;
     private readonly ILogger<SchedulesController> _logger;
@@ -22,12 +24,14 @@ public class SchedulesController : ControllerBase
     public SchedulesController(
         GetChildSchedulesQueryHandler getChildSchedulesQueryHandler,
         GetSchedulesByDateQueryHandler getSchedulesByDateQueryHandler,
+        GetGroupSummaryQueryHandler getGroupSummaryQueryHandler,
         AddScheduleCommandHandler addScheduleCommandHandler,
         DeleteScheduleCommandHandler deleteScheduleCommandHandler,
         ILogger<SchedulesController> logger)
     {
         _getChildSchedulesQueryHandler = getChildSchedulesQueryHandler;
         _getSchedulesByDateQueryHandler = getSchedulesByDateQueryHandler;
+        _getGroupSummaryQueryHandler = getGroupSummaryQueryHandler;
         _addScheduleCommandHandler = addScheduleCommandHandler;
         _deleteScheduleCommandHandler = deleteScheduleCommandHandler;
         _logger = logger;
@@ -46,6 +50,14 @@ public class SchedulesController : ControllerBase
     {
         var schedules = await _getSchedulesByDateQueryHandler.Handle(getSchedulesByDateQuery);
         return Ok(schedules);
+    }
+
+    [HttpGet("group-summary", Name = "GetGroupSummary")]
+    [ProducesResponseType(typeof(GroupSummaryVM), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<GroupSummaryVM>> GetGroupSummary([FromQuery] GetGroupSummaryQuery getGroupSummaryQuery)
+    {
+        var summary = await _getGroupSummaryQueryHandler.Handle(getGroupSummaryQuery);
+        return Ok(summary);
     }
 
     [HttpPost(Name = "AddSchedule")]

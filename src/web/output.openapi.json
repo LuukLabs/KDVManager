@@ -694,6 +694,52 @@
         }
       }
     },
+    "/scheduling/v1/schedules/group-summary": {
+      "get": {
+        "tags": ["Schedules"],
+        "operationId": "GetGroupSummary",
+        "parameters": [
+          {
+            "name": "GroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSummaryVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSummaryVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSummaryVM"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/scheduling/v1/schedules/{Id}": {
       "delete": {
         "tags": ["Schedules"],
@@ -1117,6 +1163,20 @@
         },
         "additionalProperties": false
       },
+      "AgeGroupSummary": {
+        "type": "object",
+        "properties": {
+          "ageRange": {
+            "type": "string",
+            "nullable": true
+          },
+          "childCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChildScheduleListVM": {
         "type": "object",
         "properties": {
@@ -1199,6 +1259,31 @@
         },
         "additionalProperties": false
       },
+      "GroupSummaryVM": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "timeBlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeBlockSummary"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -1261,6 +1346,39 @@
           "age": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TimeBlockSummary": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "timeSlotName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalChildren": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredSupervisors": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgeGroupSummary"
+            },
             "nullable": true
           }
         },

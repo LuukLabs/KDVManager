@@ -67,7 +67,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   }
 
   return (
-    <Box sx={{ px: isMobile ? 1 : 0 }}>
+    <Box>
       {/* Loading state */}
       {isFetching && !isLoading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>

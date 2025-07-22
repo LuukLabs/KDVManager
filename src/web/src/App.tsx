@@ -66,15 +66,6 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
           },
         },
         {
-          path: "groups",
-          lazy: () => import("./pages/groups/ListGroupsPage"),
-          handle: {
-            crumb: () => {
-              return t("Groups");
-            },
-          },
-        },
-        {
           path: "settings",
           handle: {
             crumb: () => {
@@ -92,6 +83,15 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
               handle: {
                 crumb: () => {
                   return t("Scheduling");
+                },
+              },
+            },
+            {
+              path: "groups",
+              lazy: () => import("./pages/groups/ListGroupsPage"),
+              handle: {
+                crumb: () => {
+                  return t("Groups");
                 },
               },
             },

@@ -18,7 +18,7 @@ const SettingsPage = () => {
     {
       title: t("Groups"),
       description: t("Manage groups."),
-      navigateTo: "/groups",
+      navigateTo: "/settings/groups",
       icon: <GroupsIcon fontSize="large" />,
     },
   ];

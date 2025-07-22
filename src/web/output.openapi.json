@@ -1237,10 +1237,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "childFullName": {
-            "type": "string",
-            "nullable": true
-          },
           "timeSlotName": {
             "type": "string",
             "nullable": true
@@ -1257,8 +1253,14 @@
             "type": "string",
             "format": "uuid"
           },
-          "groupName": {
+          "dateOfBirth": {
             "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

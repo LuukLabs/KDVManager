@@ -1,4 +1,5 @@
 {
+  "{{age}} year": "{{age}} jaar",
   "{{fullName}} has been deleted": "{{fullName}} is verwijderd",
   "account of current user": "Account van huidige gebruiker",
   "Account settings": "Accountinstellingen",
@@ -29,7 +30,6 @@
   "Create Group": "Groep aanmaken",
   "Create groups to start managing schedules": "Maak groepen aan om planningen te beheren.",
   "Create your first schedule to get started": "Maak je eerste planning aan om te beginnen",
-  "Date": "Datum",
   "Date of birth": "Geboortedatum",
   "dayNames.fri": "Vr",
   "dayNames.mon": "Ma",

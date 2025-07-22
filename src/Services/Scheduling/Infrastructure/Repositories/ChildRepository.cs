@@ -14,4 +14,11 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
     public ChildRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
+
+    public async Task<List<Child>> GetChildrenByIdsAsync(List<Guid> childIds)
+    {
+        return await _dbContext.Children
+            .Where(c => childIds.Contains(c.Id))
+            .ToListAsync();
+    }
 }

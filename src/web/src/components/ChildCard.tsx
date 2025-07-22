@@ -29,29 +29,16 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const calculateAge = (dateOfBirth: string | null) => {
-    if (!dateOfBirth) return t("N/A");
-    const years = dayjs().diff(dayjs(dateOfBirth), "year");
-    return years === 1 ? `${years} ${t("year")}` : `${years} ${t("years")}`;
-  };
-
   const getFullName = () => {
     if (childDetails?.givenName && childDetails?.familyName) {
       return `${childDetails.givenName} ${childDetails.familyName}`.trim();
     }
-    return schedule.childFullName || t("Unknown Child");
+    return t("Unknown Child");
   };
 
   const getInitials = () => {
     if (childDetails?.givenName && childDetails?.familyName) {
       return `${childDetails.givenName[0]}${childDetails.familyName[0]}`.toUpperCase();
-    }
-    const fullName = schedule.childFullName;
-    if (fullName) {
-      const names = fullName.split(" ");
-      return names.length > 1
-        ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
-        : fullName[0].toUpperCase();
     }
     return "?";
   };
@@ -145,7 +132,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                     }}
                   >
                     <Person sx={{ fontSize: 12 }} />
-                    {calculateAge(childDetails?.dateOfBirth || null)}
+                    {typeof schedule.age === 'number' ? t("{{age}} year", { age: schedule.age }) : t("N/A")}
                   </Typography>
                 </Box>
               </Box>

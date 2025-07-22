@@ -190,77 +190,77 @@ public class SchedulingDataMigrator
 
         var query = @"
             WITH ScheduleWithGroup AS (
-                SELECT
-                    s.Id AS SchedulingId,
-                    s.ChildId,
-                    s.[Date] AS StartDate,
-                    sr.Id AS ScheduleRuleId,
-                    sr.[group] AS GroupId,
-                    sr.day,
-                    CAST(sr.begintime AS TIME) AS BeginTime,
-                    CAST(sr.endtime AS TIME) AS EndTime
-                FROM
-                    Scheduling s
-                JOIN
-                    SchedulingRule sr ON s.Id = sr.SchedulingId
-                WHERE sr.begintime IS NOT NULL 
-                    AND sr.endtime IS NOT NULL 
-                    AND sr.[group] IS NOT NULL
-                    AND sr.day IS NOT NULL
+            SELECT
+                s.Id AS SchedulingId,
+                s.ChildId,
+                s.[Date] AS StartDate,
+                sr.Id AS ScheduleRuleId,
+                sr.[group] AS GroupId,
+                sr.day,
+                CAST(sr.begintime AS TIME) AS BeginTime,
+                CAST(sr.endtime AS TIME) AS EndTime
+            FROM
+                Scheduling s
+            JOIN
+                SchedulingRule sr ON s.Id = sr.SchedulingId
+            WHERE sr.begintime IS NOT NULL 
+                AND sr.endtime IS NOT NULL 
+                AND sr.[group] IS NOT NULL
+                AND sr.day IS NOT NULL
             ),
             OrderedSchedules AS (
-                SELECT
-                    *,
-                    ROW_NUMBER() OVER (PARTITION BY ChildId ORDER BY StartDate, SchedulingId) AS RowNum
-                FROM ScheduleWithGroup
+            SELECT
+                *,
+                ROW_NUMBER() OVER (PARTITION BY ChildId ORDER BY StartDate, SchedulingId) AS RowNum
+            FROM ScheduleWithGroup
             ),
             SchedulingWithPotentialNext AS (
-                SELECT
-                    curr.SchedulingId,
-                    curr.ChildId,
-                    curr.StartDate,
-                    curr.ScheduleRuleId,
-                    curr.GroupId,
-                    curr.day,
-                    curr.BeginTime,
-                    curr.EndTime,
-                    next.StartDate AS PotentialEndDate
-                FROM
-                    OrderedSchedules curr
-                LEFT JOIN OrderedSchedules next
-                    ON curr.ChildId = next.ChildId
-                    AND next.RowNum > curr.RowNum
-                    AND next.SchedulingId != curr.SchedulingId
+            SELECT
+                curr.SchedulingId,
+                curr.ChildId,
+                curr.StartDate,
+                curr.ScheduleRuleId,
+                curr.GroupId,
+                curr.day,
+                curr.BeginTime,
+                curr.EndTime,
+                next.StartDate AS PotentialEndDate
+            FROM
+                OrderedSchedules curr
+            LEFT JOIN OrderedSchedules next
+                ON curr.ChildId = next.ChildId
+                AND next.RowNum > curr.RowNum
+                AND next.SchedulingId != curr.SchedulingId
             ),
             NextEndDates AS (
-                SELECT
-                    SchedulingId,
-                    ChildId,
-                    StartDate,
-                    ScheduleRuleId,
-                    GroupId,
-                    day,
-                    BeginTime,
-                    EndTime,
-                    MIN(PotentialEndDate) AS EndDate
-                FROM SchedulingWithPotentialNext
-                GROUP BY SchedulingId, ChildId, StartDate, ScheduleRuleId, GroupId, day, BeginTime, EndTime
+            SELECT
+                SchedulingId,
+                ChildId,
+                StartDate,
+                ScheduleRuleId,
+                GroupId,
+                day,
+                BeginTime,
+                EndTime,
+                MIN(DATEADD(DAY, -1, PotentialEndDate)) AS EndDate
+            FROM SchedulingWithPotentialNext
+            GROUP BY SchedulingId, ChildId, StartDate, ScheduleRuleId, GroupId, day, BeginTime, EndTime
             ),
             FinalWithFallback AS (
-                SELECT
-                    nd.SchedulingId,
-                    nd.ChildId,
-                    nd.StartDate,
-                    nd.ScheduleRuleId,
-                    nd.GroupId,
-                    nd.day,
-                    nd.BeginTime,
-                    nd.EndTime,
-                    ISNULL(nd.EndDate, DATEADD(YEAR, 4, c.dateofbirth)) AS EndDate
-                FROM
-                    NextEndDates nd
-                JOIN
-                    Person c ON c.Id = nd.ChildId
+            SELECT
+                nd.SchedulingId,
+                nd.ChildId,
+                nd.StartDate,
+                nd.ScheduleRuleId,
+                nd.GroupId,
+                nd.day,
+                nd.BeginTime,
+                nd.EndTime,
+                ISNULL(nd.EndDate, DATEADD(DAY, -1, DATEADD(YEAR, 4, c.dateofbirth))) AS EndDate
+            FROM
+                NextEndDates nd
+            JOIN
+                Person c ON c.Id = nd.ChildId
             )
             SELECT *
             FROM FinalWithFallback

@@ -1,23 +1,36 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dotnet-tools
+
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
 WORKDIR /src
 COPY ["Services/Scheduling/Api/Api.csproj", "Services/Scheduling/Api/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]
 COPY ["Services/Scheduling/Domain/Domain.csproj", "Services/Scheduling/Domain/"]
 COPY ["Services/Scheduling/Infrastructure/Infrastructure.csproj", "Services/Scheduling/Infrastructure/"]
+
+# Shared projects
+COPY ["Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj", "Shared/KDVManager.Shared.Contracts/"]
+COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared/KDVManager.Shared.Domain/"]
+COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
+
 RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
-COPY . .
-WORKDIR "/src/Services/Scheduling/Infrastructure"
+
+FROM restore as build
+
+COPY Services/Scheduling Services/Scheduling
+COPY Shared Shared
+
+WORKDIR "/src/Services/Scheduling"
+
+FROM build as build-migrator
 
 RUN dotnet tool install -g dotnet-ef --version 9.0.6
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "../Api" --context ApplicationDbContext
+RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "./Api"
 
-FROM ubuntu:24.04 AS migrator
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0 as migrator-runtime
 
-RUN apt-get update && apt-get install -qqq libicu-dev libssl-dev
+COPY --from=build-migrator /src/Services/Scheduling/efbundle .
 
-WORKDIR /migrator
-COPY --from=build /src/Services/Scheduling/Infrastructure/efbundle .
-
-ENTRYPOINT [ "/bin/bash", "-c", "./efbundle --verbose --connection \"${ConnectionStrings__KDVManagerSchedulingConnectionString}\" " ]
+ENTRYPOINT [ "/bin/bash", "-c", "./efbundle --connection \"${ConnectionStrings__KDVManagerSchedulingConnectionString}\" " ]

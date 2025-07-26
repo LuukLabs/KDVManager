@@ -26,7 +26,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: envoy
-        image: envoyproxy/envoy:v1.31-latest
+        image: envoyproxy/envoy:v1.34-latest
         imagePullPolicy: IfNotPresent
         ports:
           - name: http

@@ -116,6 +116,16 @@ static_resources:
               socket_address:
                 address: crm-api
                 port_value: 80
+    health_checks:
+    - timeout: 1s
+      interval: 5s
+      unhealthy_threshold: 2
+      healthy_threshold: 1
+      http_health_check:
+        path: /healthz
+        expected_statuses:
+          - start: 200
+            end: 299
   - name: scheduling-api
     connect_timeout: 0.25s
     type: strict_dns
@@ -129,3 +139,13 @@ static_resources:
               socket_address:
                 address: scheduling-api
                 port_value: 80
+    health_checks:
+    - timeout: 1s
+      interval: 5s
+      unhealthy_threshold: 2
+      healthy_threshold: 1
+      http_health_check:
+        path: /healthz
+        expected_statuses:
+          - start: 200
+            end: 299

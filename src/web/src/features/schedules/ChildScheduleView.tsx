@@ -5,6 +5,8 @@ import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "./AddChildScheduleDialog";
 import { useTranslation } from "react-i18next";
 import { ChildScheduleCards } from "../../components/ChildScheduleCards";
+import { AbsenceList } from "../absence/AbsenceList";
+import { AddAbsenceDialog } from "../absence/AddAbsenceDialog";
 
 type ChildScheduleViewProps = {
   childId: string;
@@ -15,6 +17,9 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
+
+  const onAddAbsenceClickHandler = () =>
+    void NiceModal.show(AddAbsenceDialog, { childId: childId });
 
   return (
     <Box>
@@ -37,8 +42,14 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
         >
           {t("Add Schedule")}
         </Button>
+        <Button variant="outlined" onClick={onAddAbsenceClickHandler} size="medium">
+          {t("Add Absence")}
+        </Button>
       </Box>
-      <ChildScheduleCards childId={childId} />
+      <AbsenceList childId={childId} />
+      <Box sx={{ mt: 3 }}>
+        <ChildScheduleCards childId={childId} />
+      </Box>
     </Box>
   );
 };

@@ -12,6 +12,9 @@ using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.G
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.Scheduling.Application.Features.Children.Commands.UpdateChild;
+using KDVManager.Services.Scheduling.Application.Features.Absences.Commands.AddAbsence;
+using KDVManager.Services.Scheduling.Application.Features.Absences.Commands.DeleteAbsence;
+using KDVManager.Services.Scheduling.Application.Features.Absences.Queries.GetAbsencesByChildId;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +36,9 @@ public static class ConfigureServices
         services.AddScoped<AddChildCommandHandler>();
         services.AddScoped<DeleteChildCommandHandler>();
         services.AddScoped<UpdateChildCommandHandler>();
+        services.AddScoped<AddAbsenceCommandHandler>();
+        services.AddScoped<GetAbsencesByChildIdQueryHandler>();
+        services.AddScoped<DeleteAbsenceCommandHandler>();
 
         return services;
     }

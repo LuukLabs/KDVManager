@@ -50,7 +50,6 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
         transition: "all 0.2s ease-in-out",
         "&:hover": {
           boxShadow: 3,
-          transform: "translateY(-1px)",
         },
       }}
     >

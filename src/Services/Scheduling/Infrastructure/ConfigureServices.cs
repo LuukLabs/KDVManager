@@ -21,6 +21,7 @@ public static class ConfigureServices
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
+        services.AddScoped<IAbsenceRepository, AbsenceRepository>();
 
         services.AddTenancy();
 

@@ -22,6 +22,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<ScheduleRule> ScheduleRules { get; set; }
     public DbSet<Child> Children { get; set; }
+    public DbSet<Absence> Absences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +32,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<TimeSlot>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
         modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<Absence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -45,6 +47,11 @@ public class ApplicationDbContext : DbContext
             .HasOne<Child>()
             .WithMany()
             .HasForeignKey(s => s.ChildId);
+
+        modelBuilder.Entity<Absence>()
+            .HasOne<Child>()
+            .WithMany()
+            .HasForeignKey(a => a.ChildId);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

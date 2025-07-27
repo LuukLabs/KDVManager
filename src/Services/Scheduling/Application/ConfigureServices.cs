@@ -15,6 +15,10 @@ using KDVManager.Services.Scheduling.Application.Features.Children.Commands.Upda
 using KDVManager.Services.Scheduling.Application.Features.Absences.Commands.AddAbsence;
 using KDVManager.Services.Scheduling.Application.Features.Absences.Commands.DeleteAbsence;
 using KDVManager.Services.Scheduling.Application.Features.Absences.Queries.GetAbsencesByChildId;
+using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.AddClosurePeriod;
+using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.DeleteClosurePeriod;
+using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriods;
+using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriodYears;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +43,10 @@ public static class ConfigureServices
         services.AddScoped<AddAbsenceCommandHandler>();
         services.AddScoped<GetAbsencesByChildIdQueryHandler>();
         services.AddScoped<DeleteAbsenceCommandHandler>();
+        services.AddScoped<AddClosurePeriodCommandHandler>();
+        services.AddScoped<DeleteClosurePeriodCommandHandler>();
+        services.AddScoped<ListClosurePeriodsQueryHandler>();
+        services.AddScoped<ListClosurePeriodYearsQueryHandler>();
 
         return services;
     }

@@ -23,6 +23,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ScheduleRule> ScheduleRules { get; set; }
     public DbSet<Child> Children { get; set; }
     public DbSet<Absence> Absences { get; set; }
+    public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
         modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
         modelBuilder.Entity<Absence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<ClosurePeriod>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -52,6 +54,9 @@ public class ApplicationDbContext : DbContext
             .HasOne<Child>()
             .WithMany()
             .HasForeignKey(a => a.ChildId);
+
+        modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.StartDate);
+        modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.EndDate);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

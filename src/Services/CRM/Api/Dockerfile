@@ -5,19 +5,35 @@ COPY ["Services/CRM/Api/Api.csproj", "Services/CRM/Api/"]
 COPY ["Services/CRM/Application/Application.csproj", "Services/CRM/Application/"]
 COPY ["Services/CRM/Domain/Domain.csproj", "Services/CRM/Domain/"]
 COPY ["Services/CRM/Infrastructure/Infrastructure.csproj", "Services/CRM/Infrastructure/"]
+
+# Shared projects
 COPY ["Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj", "Shared/KDVManager.Shared.Contracts/"]
+COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared/KDVManager.Shared.Domain/"]
 COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
+
 RUN dotnet restore "Services/CRM/Api/Api.csproj"
 
-FROM restore as publish
+FROM restore as build
 
-COPY . .
+COPY Services/CRM Services/CRM
+COPY Shared Shared
 
-WORKDIR "/src/Services/CRM/Api"
+WORKDIR "/src/Services/CRM"
 
-RUN dotnet publish "Api.csproj" --no-restore -c Release -o /app/publish
+RUN dotnet build "Api/Api.csproj" -c Release \
+    --verbosity minimal \
+    --no-restore \
+    --no-incremental
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM build as publish
+
+RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
+    --verbosity minimal \
+    --no-restore \
+    --no-build \
+    /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 as runtime
 
 EXPOSE 80
 EXPOSE 443

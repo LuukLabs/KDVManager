@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
@@ -7,11 +8,8 @@ import { usePagination } from "@hooks/usePagination";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
 
 export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
-  const { t } = useTranslation();
   const { apiPagination, muiPagination } = usePagination();
   const { data, isLoading, isFetching } = useGetAllChildren(
     { ...apiPagination, Archived: showArchived },
@@ -53,17 +51,17 @@ export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean
         ),
       },
     ],
-    [t],
+    [],
   );
 
   return (
     <DataGrid<ChildListVM>
       autoHeight
       pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total || 0}
-      loading={isLoading || isFetching}
+      rowCount={data?.meta.total ?? 0}
+      loading={isLoading ?? isFetching}
       columns={columns}
-      rows={data?.value || []}
+      rows={data?.value ?? []}
       disableRowSelectionOnClick
       {...muiPagination}
     />

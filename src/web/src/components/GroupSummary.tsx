@@ -362,8 +362,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedTimeBlock?.ageGroups &&
-                  selectedTimeBlock.ageGroups.map((ageGroup, index) => (
+                {selectedTimeBlock?.ageGroups?.map((ageGroup, index) => (
                     <TableRow
                       key={index}
                       sx={{

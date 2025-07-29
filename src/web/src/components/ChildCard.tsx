@@ -153,7 +153,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                 {/* Time Slot Badge */}
                 <Chip
                   icon={<Schedule sx={{ fontSize: 14 }} />}
-                  label={schedule.timeSlotName || t("No time slot")}
+                  label={schedule.timeSlotName ?? t("No time slot")}
                   size="small"
                   sx={{
                     backgroundColor: "primary.50",
@@ -192,7 +192,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                         fontFamily: "monospace",
                       }}
                     >
-                      {formatTime(schedule.startTime || "")}
+                      {formatTime(schedule.startTime ?? "")}
                     </Typography>
                     <Typography
                       variant="caption"
@@ -212,7 +212,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                         fontFamily: "monospace",
                       }}
                     >
-                      {formatTime(schedule.endTime || "")}
+                      {formatTime(schedule.endTime ?? "")}
                     </Typography>
                   </Box>
                 </Box>

@@ -56,10 +56,10 @@ const UpdateChildPage = () => {
 
   const formContext = useForm<UpdateChildCommand>({
     defaultValues: {
-      givenName: child?.givenName || "",
-      familyName: child?.familyName || "",
-      dateOfBirth: child?.dateOfBirth || "",
-      cid: child?.cid || "",
+      givenName: child?.givenName ?? "",
+      familyName: child?.familyName ?? "",
+      dateOfBirth: child?.dateOfBirth ?? "",
+      cid: child?.cid ?? "",
     },
   });
 
@@ -185,7 +185,7 @@ const UpdateChildPage = () => {
                     }
                   }}
                   sx={{ ml: 2 }}
-                  disabled={isArchiving || !!child?.archivedAt}
+                  disabled={isArchiving ?? !!child?.archivedAt}
                 >
                   {t("Archive Child")}
                 </Button>
@@ -216,7 +216,7 @@ const UpdateChildPage = () => {
                       enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
                     }
                   }}
-                  disabled={isArchiving || !!child?.archivedAt}
+                  disabled={isArchiving ?? !!child?.archivedAt}
                 >
                   {t("Archive Child")}
                 </Button>

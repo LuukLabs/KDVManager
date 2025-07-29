@@ -114,8 +114,8 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
     const dayKey = Number(day) as DayOfWeek;
     rulesByDay[dayKey].sort(
       (a: ChildScheduleListVMScheduleRule, b: ChildScheduleListVMScheduleRule) => {
-        const timeA = a.startTime || "00:00";
-        const timeB = b.startTime || "00:00";
+        const timeA = a.startTime ?? "00:00";
+        const timeB = b.startTime ?? "00:00";
         return timeA.localeCompare(timeB);
       },
     );

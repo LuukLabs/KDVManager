@@ -88,10 +88,10 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
             <ScheduleCard
               key={schedule.id}
               schedule={{
-                id: schedule.id || "",
-                startDate: schedule.startDate || "",
-                endDate: schedule.endDate || "",
-                scheduleRules: schedule.scheduleRules || [],
+                id: schedule.id ?? "",
+                startDate: schedule.startDate ?? "",
+                endDate: schedule.endDate ?? "",
+                scheduleRules: schedule.scheduleRules ?? [],
               }}
               onDelete={handleDeleteSchedule}
               onEdit={handleEditSchedule}

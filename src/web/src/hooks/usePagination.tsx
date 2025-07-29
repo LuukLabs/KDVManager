@@ -36,7 +36,7 @@ export const usePagination = () => {
         pageSize: pagination.pageSize,
       },
     }),
-    [pagination],
+    [pagination, onPaginationModelChange],
   );
 
   return { apiPagination, muiPagination };

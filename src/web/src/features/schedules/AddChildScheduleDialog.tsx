@@ -48,7 +48,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
       // Filter out schedule rules that don't have a timeslot or group selected
       const filteredScheduleRules =
-        data.scheduleRules?.filter((rule) => rule && rule.timeSlotId && rule.groupId) || [];
+        data.scheduleRules?.filter((rule) => rule?.timeSlotId && rule.groupId) ?? [];
 
       const submitData = {
         ...data,

@@ -33,7 +33,7 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
     GroupId: group.id,
   });
 
-  const childrenCount = schedules?.length || 0;
+  const childrenCount = schedules?.length ?? 0;
 
   return (
     <Paper
@@ -119,7 +119,7 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
             schedules.map((schedule) => (
               <ChildCard
                 key={schedule.scheduleId}
-                childId={schedule.childId || ""}
+                childId={schedule.childId ?? ""}
                 schedule={schedule}
               />
             ))

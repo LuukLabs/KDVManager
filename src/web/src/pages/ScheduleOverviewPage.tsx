@@ -78,7 +78,7 @@ const ScheduleOverviewPage = () => {
   }, [searchParams]);
 
   const { data, isLoading: isLoadingGroups } = useListGroups();
-  const groups = data?.value || [];
+  const groups = data?.value ?? [];
 
   // Date navigation helpers
   const goToPreviousDay = () => {
@@ -274,7 +274,7 @@ const ScheduleOverviewPage = () => {
                   }}
                 >
                   <GroupColumn
-                    group={{ id: group.id || "", name: group.name || "" }}
+                    group={{ id: group.id ?? "", name: group.name ?? "" }}
                     selectedDate={selectedDate}
                   />
                 </Box>

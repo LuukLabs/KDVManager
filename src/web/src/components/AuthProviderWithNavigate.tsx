@@ -12,7 +12,7 @@ const AuthProviderWithNavigate: React.FC<AuthProviderWithNavigateProps> = ({ chi
   const clientId = (import.meta.env.VITE_APP_AUTH0_CLIENT_ID as string) || "";
 
   const onRedirectCallback = (appState?: AppState) => {
-    navigate(appState?.returnTo || window.location.pathname);
+    navigate(appState?.returnTo ?? window.location.pathname);
   };
 
   return (

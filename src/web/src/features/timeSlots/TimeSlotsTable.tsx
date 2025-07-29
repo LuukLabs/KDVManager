@@ -46,10 +46,10 @@ const TimeSlotsTable = () => {
     <DataGrid<GroupListVM>
       autoHeight
       pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total || 0}
-      loading={isLoading || isFetching}
+      rowCount={data?.meta.total ?? 0}
+      loading={isLoading ?? isFetching}
       columns={columns}
-      rows={data?.value || []}
+      rows={data?.value ?? []}
       disableRowSelectionOnClick
       {...muiPagination}
     />

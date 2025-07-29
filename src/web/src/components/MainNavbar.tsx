@@ -8,7 +8,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import { withAuthenticationRequired } from "@auth0/auth0-react";
 import { AppBar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AccountMenu from "./AccountMenu";
@@ -18,7 +17,7 @@ type MainNavbarProps = {
   children: React.ReactNode;
 };
 
-const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
+const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -166,29 +165,5 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }) => {
     </>
   );
 };
-export default withAuthenticationRequired(MainNavbar, {
-  onRedirecting: () => (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        textAlign: "center",
-        p: 2, // padding for better spacing on small screens
-      }}
-    >
-      <Box
-        component="img"
-        src="/logo_transparent.png"
-        alt="KDVManager Logo" // eslint-disable-line i18next/no-literal-string
-        sx={{
-          maxWidth: { xs: "90%", sm: "70%", md: "80%" }, // responsive width
-          maxHeight: { xs: "90%", sm: "70%", md: "80%" }, // responsive height
-          height: "auto",
-        }}
-      />
-    </Box>
-  ),
-});
+
+export default MainNavbar;

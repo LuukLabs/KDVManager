@@ -14,6 +14,14 @@ public class ClosurePeriodRepository : BaseRepository<ClosurePeriod>, IClosurePe
     {
     }
 
+    public new async Task<IReadOnlyList<ClosurePeriod>> ListAllAsync()
+    {
+        return await _dbContext.Set<ClosurePeriod>()
+            .OrderBy(cp => cp.StartDate)
+            .ThenBy(cp => cp.EndDate)
+            .ToListAsync();
+    }
+
     public async Task<List<ClosurePeriod>> ListByYearAsync(int year)
     {
         return await _dbContext.ClosurePeriods

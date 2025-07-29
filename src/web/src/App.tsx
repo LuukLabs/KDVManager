@@ -95,6 +95,15 @@ const router = (queryClient: QueryClient, t: TFunction<"translation", undefined>
                 },
               },
             },
+            {
+              path: "closure-periods",
+              lazy: () => import("./pages/settings/ClosurePeriodsSettingsPage"),
+              handle: {
+                crumb: () => {
+                  return t("Closure Periods");
+                },
+              },
+            },
           ],
         },
       ],

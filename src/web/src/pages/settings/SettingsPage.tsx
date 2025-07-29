@@ -21,6 +21,12 @@ const SettingsPage = () => {
       navigateTo: "/settings/groups",
       icon: <GroupsIcon fontSize="large" />,
     },
+    {
+      title: t("Closure Periods"),
+      description: t("Manage closure periods for scheduling."),
+      navigateTo: "/settings/closure-periods",
+      icon: <CalendarMonth fontSize="large" />,
+    },
   ];
 
   return (

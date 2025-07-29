@@ -46,6 +46,9 @@ public class SchedulingDataMigrator
 
         // Finally, migrate Schedules and ScheduleRules together
         await MigrateSchedulesAsync(childIdMapping, timeSlotMapping, groupMapping);
+
+        // Create closure dates
+        await CreateClosureDatesAsync();
     }
 
     private async Task ClearTenantDataAsync()
@@ -57,6 +60,7 @@ public class SchedulingDataMigrator
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Groups\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ClosurePeriods\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
 
         Console.WriteLine("All data for the tenant has been cleared.");
     }
@@ -444,5 +448,130 @@ public class SchedulingDataMigrator
             }
             throw;
         }
+    }
+
+    private async Task CreateClosureDatesAsync()
+    {
+        Console.WriteLine("Creating closure dates...");
+
+
+        // Closure dates for 2025 (Nederlandse feestdagen) with reasons
+        var closureDates = new List<KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod>
+        {
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 1, 1),
+                EndDate = new DateOnly(2025, 1, 1),
+                Reason = "Nieuwjaarsdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 4, 18),
+                EndDate = new DateOnly(2025, 4, 18),
+                Reason = "Goede Vrijdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 4, 20),
+                EndDate = new DateOnly(2025, 4, 20),
+                Reason = "Eerste Paasdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 4, 21),
+                EndDate = new DateOnly(2025, 4, 21),
+                Reason = "Tweede Paasdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 4, 26),
+                EndDate = new DateOnly(2025, 4, 26),
+                Reason = "Koningsdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 5, 5),
+                EndDate = new DateOnly(2025, 5, 5),
+                Reason = "Bevrijdingsdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 5, 29),
+                EndDate = new DateOnly(2025, 5, 29),
+                Reason = "Hemelvaartsdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 6, 8),
+                EndDate = new DateOnly(2025, 6, 8),
+                Reason = "Eerste Pinksterdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 6, 9),
+                EndDate = new DateOnly(2025, 6, 9),
+                Reason = "Tweede Pinksterdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            // Zomersluiting: 21 juli t/m 1 augustus 2025
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 7, 21),
+                EndDate = new DateOnly(2025, 8, 1),
+                Reason = "Zomersluiting",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            // Wintersluiting: 25 december 2025 t/m 1 januari 2026
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 12, 25),
+                EndDate = new DateOnly(2026, 1, 1),
+                Reason = "Wintersluiting",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 12, 25),
+                EndDate = new DateOnly(2025, 12, 25),
+                Reason = "Eerste Kerstdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            },
+            new KDVManager.Services.Scheduling.Domain.Entities.ClosurePeriod
+            {
+                Id = Guid.NewGuid(),
+                StartDate = new DateOnly(2025, 12, 26),
+                EndDate = new DateOnly(2025, 12, 26),
+                Reason = "Tweede Kerstdag",
+                TenantId = _tenancyContextAccessor.Current.TenantId
+            }
+        };
+
+        foreach (var closurePeriod in closureDates)
+        {
+            _context.ClosurePeriods.Add(closurePeriod);
+        }
+
+        await _context.SaveChangesAsync();
+        Console.WriteLine("Closure dates created successfully.");
     }
 }

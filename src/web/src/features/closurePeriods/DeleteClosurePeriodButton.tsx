@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { useQueryClient } from "@tanstack/react-query";
 
-interface DeleteClosurePeriodButtonProps {
+type DeleteClosurePeriodButtonProps = {
   id: string;
 }
 

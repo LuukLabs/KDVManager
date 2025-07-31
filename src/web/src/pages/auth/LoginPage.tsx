@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { Box, Typography, CircularProgress, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

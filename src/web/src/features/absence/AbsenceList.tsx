@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useDeleteAbsence, useGetAbsencesByChildId } from "@api/endpoints/absences/absences";
 import { useQueryClient } from "@tanstack/react-query";
 
-export type AbsenceListProps = {
+type AbsenceListProps = {
   childId: string;
 };
 

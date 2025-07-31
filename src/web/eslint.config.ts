@@ -1,22 +1,17 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import { globalIgnores } from 'eslint/config'
-import react from 'eslint-plugin-react'
-import i18next from 'eslint-plugin-i18next'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
+import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
+import { globalIgnores } from "eslint/config";
+import react from "eslint-plugin-react";
+import i18next from "eslint-plugin-i18next";
 
 const config: FlatConfig.ConfigArray = tseslint.config([
-  globalIgnores([
-    'dist',
-    'eslint.config.ts',
-    'i18next-parser.config.ts',
-    'orval.config.ts',
-  ]),
+  globalIgnores(["dist", "eslint.config.ts", "i18next-parser.config.ts", "orval.config.ts"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     plugins: {
       react,
     },
@@ -25,29 +20,29 @@ const config: FlatConfig.ConfigArray = tseslint.config([
       tseslint.configs.recommended,
       tseslint.configs.strict,
       tseslint.configs.stylisticTypeChecked,
-      reactHooks.configs['recommended-latest'],
+      reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.browser,
       parserOptions: {
-        project: './tsconfig.app.json',
+        project: "./tsconfig.app.json",
         tsconfigRootDir: __dirname,
       },
     },
     rules: {
       // Common rules from your previous config
-      'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 1 }],
-      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      'no-restricted-imports': ['error', { patterns: ['@mui/*/*/*'] }],
+      "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 1 }],
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-restricted-imports": ["error", { patterns: ["@mui/*/*/*"] }],
     },
   },
   {
-    ...(i18next.configs['flat/recommended'] as FlatConfig.Config),
+    ...(i18next.configs["flat/recommended"] as FlatConfig.Config),
     rules: {
       "i18next/no-literal-string": [
         "error",
@@ -98,12 +93,12 @@ const config: FlatConfig.ConfigArray = tseslint.config([
     },
   },
   {
-    files: ['src/api/endpoints/**/*.{ts,tsx}'],
+    files: ["src/api/endpoints/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/no-invalid-void-type": "off",
-      '@typescript-eslint/unified-signatures': 'off',
+      "@typescript-eslint/unified-signatures": "off",
     },
   },
-])
+]);
 
-export default config
+export default config;

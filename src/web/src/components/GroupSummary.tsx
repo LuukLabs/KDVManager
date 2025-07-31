@@ -363,30 +363,30 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
               </TableHead>
               <TableBody>
                 {selectedTimeBlock?.ageGroups?.map((ageGroup, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "&:hover": { backgroundColor: "grey.50" },
-                        "&:last-child td": { border: 0 },
-                      }}
-                    >
-                      <TableCell>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                          <ChildCare sx={{ fontSize: 16, color: "primary.main" }} />
-                          {ageGroup.ageRange}
-                        </Box>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          label={ageGroup.childCount}
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          sx={{ fontWeight: 600, minWidth: 40 }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:hover": { backgroundColor: "grey.50" },
+                      "&:last-child td": { border: 0 },
+                    }}
+                  >
+                    <TableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <ChildCare sx={{ fontSize: 16, color: "primary.main" }} />
+                        {ageGroup.ageRange}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        label={ageGroup.childCount}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        sx={{ fontWeight: 600, minWidth: 40 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </DialogContent>

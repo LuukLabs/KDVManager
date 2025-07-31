@@ -1,33 +1,28 @@
 import { type RequestConfig } from "./requestConfig";
 import { determineUrl } from "./determineUrl";
-import { authInterceptor } from "../interceptors/authInterceptor";
+import { getAuthToken } from "@lib/auth/auth";
 
 export const executeFetch = async <T>(requestConfig: RequestConfig): Promise<T> => {
   const { data, method, params, url, headers, signal } = requestConfig;
+  const token = await getAuthToken();
 
-  const fetchConfig = {
-    url: determineUrl(url, params),
-    headers: {
-      ...headers,
-    },
-    signal,
-    method: method,
-    ...(data ? { body: JSON.stringify(data) } : {}),
+  const fetchHeaders = {
+    ...headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  // Apply auth interceptor
-  const configWithAuth = await authInterceptor.intercept(fetchConfig);
+  const fetchUrl = determineUrl(url, params);
 
-  const response = await fetch(configWithAuth.url, {
-    headers: configWithAuth.headers,
-    signal: configWithAuth.signal,
-    method: configWithAuth.method,
-    body: configWithAuth.body,
+  const response = await fetch(fetchUrl, {
+    headers: fetchHeaders,
+    signal,
+    method,
+    ...(data ? { body: JSON.stringify(data) } : {}),
   });
 
   // If server responds with no content don't try to parse the response
   if (response.status === 204) {
-    return undefined as T;
+    return null as T;
   }
 
   const json = (await response.json()) as T;

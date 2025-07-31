@@ -1,5 +1,5 @@
 import { type LoaderFunctionArgs } from "react-router-dom";
-import { getGetChildByIdQueryOptions } from "../../api/endpoints/children/children";
+import { getGetChildByIdQueryOptions } from "@api/endpoints/children/children";
 import { type QueryClient } from "@tanstack/react-query";
 
 export const updateChildPageLoader =

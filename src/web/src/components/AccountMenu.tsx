@@ -25,7 +25,7 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
   const navigate = useNavigate();
-  const { logout, user, isAuthenticated } = useAuth0();
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const { t } = useTranslation();
 
   return (
@@ -93,7 +93,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           {t("Settings")}
         </MenuItem>
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <MenuItem
             key="Logout"
             onClick={() => {
@@ -104,6 +104,18 @@ export default function AccountMenu() {
               <Logout fontSize="small" />
             </ListItemIcon>
             <Typography textAlign="center">{t("Logout")}</Typography>
+          </MenuItem>
+        ) : (
+          <MenuItem
+            key="Logout"
+            onClick={() => {
+              void loginWithRedirect();
+            }}
+          >
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            <Typography textAlign="center">{t("Login")}</Typography>
           </MenuItem>
         )}
       </Menu>

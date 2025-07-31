@@ -45,5 +45,3 @@ export const SettingsCard: React.FC<SettingsCardProps> = ({
     </Card>
   );
 };
-
-export default SettingsCard;

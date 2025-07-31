@@ -94,6 +94,7 @@ const router = (t: TFunction<"translation">) =>
             },
             {
               path: "settings",
+              loader: requireAuth,
               handle: {
                 crumb: () => {
                   return t("Settings");

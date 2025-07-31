@@ -20,26 +20,46 @@ log_success() {
     echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
 }
 
-log "Refreshing KDVManager images..."
-
-# Force image pull by restarting deployments
-log "Restarting deployments to force image pulls..."
-kubectl rollout restart deployment/crm-api -n "$NAMESPACE"
-kubectl rollout status deployment/crm-api -n "$NAMESPACE" --timeout=300s
+log "Starting KDVManager image refresh process..."
 
 kubectl rollout restart deployment/scheduling-api -n "$NAMESPACE"
 kubectl rollout status deployment/scheduling-api -n "$NAMESPACE" --timeout=300s
+kubectl rollout restart deployment/web -n "$NAMESPACE"
+kubectl rollout status deployment/web -n "$NAMESPACE" --timeout=300s
+kubectl rollout restart deployment/envoy -n "$NAMESPACE"
+kubectl rollout status deployment/envoy -n "$NAMESPACE" --timeout=300s
+log "Restarting deployments to force image pulls..."
 
+log "Restarting crm-api deployment..."
+kubectl rollout restart deployment/crm-api -n "$NAMESPACE"
+kubectl rollout status deployment/crm-api -n "$NAMESPACE" --timeout=300s
+
+log "Restarting scheduling-api deployment..."
+kubectl rollout restart deployment/scheduling-api -n "$NAMESPACE"
+kubectl rollout status deployment/scheduling-api -n "$NAMESPACE" --timeout=300s
+
+log "Restarting web deployment..."
 kubectl rollout restart deployment/web -n "$NAMESPACE"
 kubectl rollout status deployment/web -n "$NAMESPACE" --timeout=300s
 
+log "Restarting envoy deployment..."
 kubectl rollout restart deployment/envoy -n "$NAMESPACE"
 kubectl rollout status deployment/envoy -n "$NAMESPACE" --timeout=300s
 
-log "Waiting for rollouts to complete..."
+log "Refreshing data-migration cronjob to force image pull..."
+kubectl patch cronjob data-migration-cronjob \
+  -n "$NAMESPACE" \
+  -p "{\"spec\": {\"jobTemplate\": {\"metadata\": {\"annotations\": {\"kubectl.kubernetes.io/restartedAt\": \"$(date +%FT%T%z)\"}}}}}"
 
-log_success "All deployments refreshed successfully!"
+log "Running data-migration cronjob immediately..."
+kubectl create job --from=cronjob/data-migration-cronjob data-migration-manual-$(date +%s) -n "$NAMESPACE"
 
-# Show current pod status
+log "Waiting for all rollouts and jobs to complete..."
+
+log_success "All deployments and the data-migration cronjob refreshed and triggered successfully!"
+
+# Show current pod and cronjob status
 log "Current pod status:"
 kubectl get pods -n "$NAMESPACE" -o wide
+log "Current cronjob status:"
+kubectl get cronjobs -n "$NAMESPACE"

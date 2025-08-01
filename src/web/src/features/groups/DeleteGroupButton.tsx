@@ -1,47 +1,66 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { getListGroupsQueryKey, useDeleteGroup } from "@api/endpoints/groups/groups";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { useSnackbar } from "notistack";
-import IconButton from "@mui/material/IconButton";
+import { createDeleteTexts } from "../../utils/createDeleteTexts";
+import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
-import { type ProblemDetails } from "@api/models/problemDetails";
 
 type DeleteGroupButtonProps = {
   id: string;
+  displayName?: string;
 };
 
-export const DeleteGroupButton: React.FC<DeleteGroupButtonProps> = ({ id }) => {
+export const DeleteGroupButton: React.FC<DeleteGroupButtonProps> = ({ id, displayName }) => {
   const { t } = useTranslation();
-  const mutate = useDeleteGroup();
+  const mutation = useDeleteGroup();
   const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
-  const handleOnDeleteClick = async () => {
-    await mutate.mutateAsync({ id: id }, { onSuccess: onMutateSuccess, onError: onMutateError });
-  };
-
-  const onMutateSuccess = () => {
+  const handleSuccess = () => {
     queryClient.invalidateQueries({ queryKey: getListGroupsQueryKey() });
-    enqueueSnackbar(t("Group deleted"), { variant: "success" });
   };
 
-  const onMutateError = (error: ProblemDetails | UnprocessableEntityResponse) => {
-    if ((error as ProblemDetails).status === 409) {
-      enqueueSnackbar(t("Group in use"), { variant: "warning" });
-    } else if ((error as ProblemDetails).status === 404) {
-      enqueueSnackbar(t("Group not found"), { variant: "error" });
-    } else {
-      enqueueSnackbar(t("Unknown error occurred"), { variant: "error" });
-    }
+  const config = {
+    id,
+    texts: createDeleteTexts(t, {
+      entityName: t("group"),
+      customTexts: {
+        confirmation: displayName
+          ? {
+              title: t("delete.group.title", {
+                name: displayName,
+                defaultValue: `Remove group '{{name}}'`,
+              }),
+              message: t("delete.group.message", {
+                name: displayName,
+                defaultValue:
+                  "Are you sure you want to permanently remove the group '{{name}}'? This action cannot be undone and all related data will be lost.",
+              }),
+            }
+          : undefined,
+        errors: displayName
+          ? {
+              conflict: t("delete.group.errors.conflict", {
+                name: displayName,
+                defaultValue:
+                  "Unable to remove group '{{name}}' because it is currently used in the planning. Please remove all dependencies before deleting.",
+              }),
+            }
+          : undefined,
+        success: displayName
+          ? t("delete.group.success", {
+              name: displayName,
+              defaultValue: "Group '{{name}}' was successfully removed.",
+            })
+          : undefined,
+      },
+    }),
+    onSuccess: handleSuccess,
   };
 
   return (
-    <IconButton
-      aria-label={t("delete", { ns: "common", context: "aria-label" })}
-      onClick={handleOnDeleteClick}
-    >
+    <IconDeleteButton mutation={mutation} config={config} size="small">
       <DeleteIcon />
-    </IconButton>
+    </IconDeleteButton>
   );
 };

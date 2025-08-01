@@ -215,7 +215,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
 
         {/* Time Blocks */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {summary.timeBlocks.map((block: TimeBlockSummary, index: number) => (
+          {summary.timeBlocks?.map((block: TimeBlockSummary, index: number) => (
             <Box
               key={index}
               sx={{

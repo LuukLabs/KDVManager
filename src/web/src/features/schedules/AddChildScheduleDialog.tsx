@@ -239,7 +239,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             onClick={handleSubmit(onSubmit)}
             size="medium"
           >
-            <span>{t("Add Schedule", { ns: "common" })}</span>
+            <span>{t("Add Schedule")}</span>
           </Button>
         </DialogActions>
       </Dialog>

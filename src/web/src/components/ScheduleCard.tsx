@@ -10,11 +10,12 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
+import { DeleteScheduleButton } from "../features/schedules/DeleteScheduleButton";
 
 type ScheduleCardProps = {
   schedule: {
@@ -23,11 +24,10 @@ type ScheduleCardProps = {
     endDate: string;
     scheduleRules: ChildScheduleListVMScheduleRule[];
   };
-  onDelete: (scheduleId: string) => void;
   onEdit?: (scheduleId: string) => void;
 };
 
-export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, onEdit }) => {
+export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -106,9 +106,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onDelete, 
                   <EditIcon fontSize="small" />
                 </IconButton>
               )}
-              <IconButton size="small" onClick={() => onDelete(schedule.id)} color="error">
-                <DeleteIcon fontSize="small" />
-              </IconButton>
+              <DeleteScheduleButton id={schedule.id} />
             </Box>
           </Box>
         </Box>

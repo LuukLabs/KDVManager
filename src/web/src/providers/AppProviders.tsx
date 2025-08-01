@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/nl";
 import { I18nextProvider } from "react-i18next";
 import i18n from "@lib/i18n/i18n";
+import { SnackbarProvider } from "notistack";
 
 type AppProvidersProps = PropsWithChildren & {
   enableRouter?: boolean;
@@ -19,25 +20,28 @@ type AppProvidersProps = PropsWithChildren & {
 
 export const AppProviders = ({ children, enableRouter = true }: AppProvidersProps) => {
   return (
-    <AuthProvider>
-      <I18nextProvider i18n={i18n}>
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+
+      <AuthProvider>
+        <I18nextProvider i18n={i18n}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
             <QueryClientProvider>
-              <NiceModal.Provider>
-                {enableRouter ? (
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <RouterProvider />
-                  </Suspense>
-                ) : (
-                  children
-                )}
-              </NiceModal.Provider>
+              <SnackbarProvider>
+                <NiceModal.Provider>
+                  {enableRouter ? (
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <RouterProvider />
+                    </Suspense>
+                  ) : (
+                    children
+                  )}
+                </NiceModal.Provider>
+              </SnackbarProvider>
             </QueryClientProvider>
-          </ThemeProvider>
-        </LocalizationProvider>
-      </I18nextProvider>
-    </AuthProvider>
+          </LocalizationProvider>
+        </I18nextProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };

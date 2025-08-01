@@ -1,9 +1,11 @@
 {
   "Add": "Toevoegen",
-  "Add Schedule": "Schema toevoegen",
+  "cancel": "Annuleren",
   "Cancel": "Annuleren",
+  "delete": "Verwijderen",
   "delete_aria-label": "verwijderen",
+  "deleting": "Verwijderen...",
   "edit_aria-label": "wijzigen",
   "Save": "Opslaan",
-  "Save Changes": "Wijgigingen opslaan"
+  "Save Changes": "Wijzigingen opslaan"
 }

@@ -1,44 +1,65 @@
-import { useQueryClient } from "@tanstack/react-query";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSnackbar } from "notistack";
-import IconButton from "@mui/material/IconButton";
+import { useQueryClient } from "@tanstack/react-query";
+import { createDeleteTexts } from "../../utils/createDeleteTexts";
+import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useDeleteChild, getGetAllChildrenQueryKey } from "@api/endpoints/children/children";
+import { getGetAllChildrenQueryKey, useDeleteChild } from "@api/endpoints/children/children";
 
-type DeleteChildButtonProps = {
+type DeleteChildButton = {
   id: string;
-  fullName?: string;
+  displayName: string;
 };
 
-export const DeleteChildButton: React.FC<DeleteChildButtonProps> = ({ id, fullName }) => {
+export const DeleteChildButton: React.FC<DeleteChildButton> = ({ id, displayName }) => {
   const { t } = useTranslation();
-  const mutate = useDeleteChild();
+  const mutation = useDeleteChild();
   const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
-  const handleOnDeleteClick = async () => {
-    await mutate.mutateAsync({ id: id }, { onSuccess: onMutateSuccess, onError: onMutateError });
-  };
-
-  const onMutateSuccess = () => {
+  const handleSuccess = () => {
     queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
-    const message = fullName
-      ? t("{{fullName}} has been deleted", { fullName })
-      : t("Child has been deleted");
-    enqueueSnackbar(message, { variant: "success" });
   };
 
-  const onMutateError = (error: any) => {
-    enqueueSnackbar(t("Error occurred while deleting child"), { variant: "error" });
-    console.error("Error deleting child:", error);
+  const config = {
+    id,
+    texts: createDeleteTexts(t, {
+      entityName: t("child"),
+      customTexts: {
+        confirmation: displayName
+          ? {
+              title: t("delete.child.title", {
+                name: displayName,
+                defaultValue: `Remove child '{{name}}'`,
+              }),
+              message: t("delete.child.message", {
+                name: displayName,
+                defaultValue:
+                  "Are you sure you want to permanently remove the child '{{name}}'? This action cannot be undone and all related data will be lost.",
+              }),
+            }
+          : undefined,
+        errors: displayName
+          ? {
+              conflict: t("delete.child.errors.conflict", {
+                name: displayName,
+                defaultValue: "Unable to remove child '{{name}}'.",
+              }),
+            }
+          : undefined,
+        success: displayName
+          ? t("delete.child.success", {
+              name: displayName,
+              defaultValue: "Child '{{name}}' was successfully removed.",
+            })
+          : undefined,
+      },
+    }),
+    onSuccess: handleSuccess,
   };
 
   return (
-    <IconButton
-      aria-label={t("delete", { ns: "common", context: "aria-label" })}
-      onClick={handleOnDeleteClick}
-    >
+    <IconDeleteButton mutation={mutation} config={config} size="small">
       <DeleteIcon />
-    </IconButton>
+    </IconDeleteButton>
   );
 };

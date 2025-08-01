@@ -1,8 +1,10 @@
 {
   "Add": "Add",
-  "Add Schedule": "Add Schedule",
+  "cancel": "Cancel",
   "Cancel": "Cancel",
+  "delete": "Delete",
   "delete_aria-label": "delete",
+  "deleting": "Deleting...",
   "edit_aria-label": "edit",
   "Save": "Save",
   "Save Changes": ""

@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     renderCell: (params: GridRenderCellParams<any, string>) => (
-      <DeleteGroupButton id={params.value!} />
+      <DeleteGroupButton id={params.value!} displayName={params.row.name} />
     ),
   },
 ];

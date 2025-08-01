@@ -50,7 +50,7 @@ const UpdateChildPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const { mutateAsync } = useUpdateChild();
-  const { mutateAsync: archiveChildAsync, isLoading: isArchiving } = useArchiveChild();
+  const { mutateAsync: archiveChildAsync, isPending: isArchiving } = useArchiveChild();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 

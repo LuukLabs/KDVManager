@@ -42,7 +42,7 @@
     "lint:fix": "eslint --fix",
     "translations:extract": "i18next -c ./i18next-parser.config.ts",
     "typecheck": "tsc",
-    "reset": "openapi-merge-cli --config ./openapi-merge.json && orval --clean && eslint --fix && prettier --write ."
+    "reset": "openapi-merge-cli --config ./openapi-merge.json && orval --clean && eslint --fix ./src/api && prettier --write ./src/api"
   },
   "browserslist": {
     "production": [

@@ -36,7 +36,7 @@ const NewChildPage = () => {
     <>
       <div className="t1">{t("Single user Creation")}</div>
       <Paper style={{ padding: 16 }}>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
           <Grid container alignItems="flex-start" spacing={2}>
             <Grid size={12}>
               <TextFieldElement name="givenName" label={t("Voornaam")} required fullWidth />
@@ -65,7 +65,13 @@ const NewChildPage = () => {
               <TextFieldElement name="CID" label={t("CID")} fullWidth />
             </Grid>
           </Grid>
-          <Button onClick={handleSubmit(onSubmit)}>{t("Save", { ns: "common" })}</Button>
+          <Button
+            onClick={() => {
+              void handleSubmit(onSubmit)();
+            }}
+          >
+            {t("Save", { ns: "common" })}
+          </Button>
         </FormContainer>
       </Paper>
     </>

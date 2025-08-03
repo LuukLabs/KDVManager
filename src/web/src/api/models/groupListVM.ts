@@ -6,7 +6,7 @@
  */
 
 export type GroupListVM = {
-  id?: string;
-  /** @nullable */
-  name?: string | null;
+  id: string;
+  /** @minLength 1 */
+  name: string;
 };

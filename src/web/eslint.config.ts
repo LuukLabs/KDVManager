@@ -38,7 +38,9 @@ const config: FlatConfig.ConfigArray = tseslint.config([
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-misused-promises": "error",
       "no-restricted-imports": ["error", { patterns: ["@mui/*/*/*"] }],
+      semi: ["error", "always"],
     },
   },
   {
@@ -93,7 +95,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
     },
   },
   {
-    files: ["src/api/endpoints/**/*.{ts,tsx}"],
+    files: ["src/api/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/unified-signatures": "off",

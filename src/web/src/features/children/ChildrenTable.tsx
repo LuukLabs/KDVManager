@@ -43,9 +43,9 @@ export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
-        renderCell: (params: GridRenderCellParams<any, string>) => (
+        renderCell: (params: GridRenderCellParams<ChildListVM, string>) => (
           <>
-            <DeleteChildButton id={params.value!} displayName={params.row.fullName} />
+            <DeleteChildButton id={params.value!} displayName={params.row.fullName!} />
             <EditChildButton id={params.value!} />
           </>
         ),

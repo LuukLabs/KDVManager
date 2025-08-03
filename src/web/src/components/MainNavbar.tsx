@@ -106,7 +106,12 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                 }}
               >
                 {navigationItems.map((item) => (
-                  <MenuItem key={item.key} onClick={() => handleNavigation(item.path)}>
+                  <MenuItem
+                    key={item.key}
+                    onClick={() => {
+                      void handleNavigation(item.path);
+                    }}
+                  >
                     <Typography textAlign="center">{item.label}</Typography>
                   </MenuItem>
                 ))}
@@ -146,7 +151,9 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                 <Button
                   key={item.key}
                   sx={{ my: 2, color: "white", display: "block" }}
-                  onClick={() => navigate(item.path)}
+                  onClick={() => {
+                    void navigate(item.path);
+                  }}
                 >
                   {item.label}
                 </Button>

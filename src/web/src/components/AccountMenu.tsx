@@ -87,7 +87,11 @@ export default function AccountMenu() {
           </Stack>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => navigate("/settings")}>
+        <MenuItem
+          onClick={() => {
+            void navigate("/settings");
+          }}
+        >
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

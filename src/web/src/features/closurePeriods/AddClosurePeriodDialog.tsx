@@ -68,11 +68,16 @@ export const AddClosurePeriodDialog = NiceModal.create(() => {
   };
 
   return (
-    <Dialog open={modal.visible} onClose={modal.hide}>
+    <Dialog open={modal.visible} onClose={void modal.hide}>
       <DialogTitle>{t("Add Closure Period")}</DialogTitle>
 
       <DialogContent>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer
+          formContext={formContext}
+          handleSubmit={(e) => {
+            handleSubmit(onSubmit)(e);
+          }}
+        >
           <TextFieldElement name="reason" label={t("Reason")} fullWidth margin="normal" />
           <DatePickerElement
             label={t("Start Date")}
@@ -114,7 +119,9 @@ export const AddClosurePeriodDialog = NiceModal.create(() => {
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            handleSubmit(onSubmit)();
+          }}
         >
           <span>{t("Add", { ns: "common" })}</span>
         </Button>

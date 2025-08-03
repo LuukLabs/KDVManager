@@ -161,7 +161,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
           <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
             {t("To add a schedule, please enter the details below.")}
           </DialogContentText>
-          <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+          <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
               {/* Left Column - Date Range */}
               <Grid size={4}>
@@ -236,7 +236,9 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             variant="contained"
             disabled={!isDirty || !isValid}
             loading={isSubmitting}
-            onClick={handleSubmit(onSubmit)}
+            onClick={() => {
+              handleSubmit(onSubmit)();
+            }}
             size="medium"
           >
             <span>{t("Add Schedule")}</span>

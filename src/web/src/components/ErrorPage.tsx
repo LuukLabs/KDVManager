@@ -43,7 +43,13 @@ export default function ErrorPage() {
           {t("error.notFound")}
         </Typography>
       </Box>
-      <Button variant="contained" onClick={() => navigate("/")} sx={{ mt: 2 }}>
+      <Button
+        variant="contained"
+        onClick={() => {
+          void navigate("/");
+        }}
+        sx={{ mt: 2 }}
+      >
         {t("Go to Home")}
       </Button>
     </Box>

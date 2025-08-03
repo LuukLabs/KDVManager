@@ -78,7 +78,9 @@ export const DeleteConfirmationModal = NiceModal.create<DeleteConfirmationModalP
               {cancelButton}
             </Button>
             <Button
-              onClick={handleConfirm}
+              onClick={() => {
+                void handleConfirm();
+              }}
               color="error"
               variant="contained"
               disabled={isDeleting}

@@ -7,15 +7,15 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { DeleteGroupButton } from "./DeleteGroupButton";
 import { usePagination } from "@hooks/usePagination";
 
-const columns: GridColDef[] = [
+const columns: GridColDef<GroupListVM>[] = [
   { field: "name", headerName: "Groep", flex: 1, sortable: false, disableColumnMenu: true },
   {
     field: "id",
     headerName: "Actions",
     sortable: false,
     disableColumnMenu: true,
-    renderCell: (params: GridRenderCellParams<any, string>) => (
-      <DeleteGroupButton id={params.value!} displayName={params.row.name} />
+    renderCell: (params: GridRenderCellParams<GroupListVM, string>) => (
+      <DeleteGroupButton id={params.value} displayName={params.row.name} />
     ),
   },
 ];

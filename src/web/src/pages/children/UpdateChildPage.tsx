@@ -172,17 +172,21 @@ const UpdateChildPage = () => {
                 <Button
                   variant="outlined"
                   color="warning"
-                  onClick={async () => {
-                    try {
-                      await archiveChildAsync({ id: childId });
-                      enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
-                      void queryClient.invalidateQueries({
-                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
-                      });
-                    } catch {
-                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
-                    }
+                  onClick={() => {
+                    void (async () => {
+                      try {
+                        await archiveChildAsync({ id: childId });
+                        enqueueSnackbar(t("Child archived"), { variant: "success" });
+                        void queryClient.invalidateQueries({
+                          queryKey: getGetAllChildrenQueryKey(),
+                        });
+                        void queryClient.invalidateQueries({
+                          queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                        });
+                      } catch {
+                        enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
+                      }
+                    })();
                   }}
                   sx={{ ml: 2 }}
                   disabled={isArchiving ?? !!child?.archivedAt}
@@ -204,17 +208,21 @@ const UpdateChildPage = () => {
                 <Button
                   variant="outlined"
                   color="warning"
-                  onClick={async () => {
-                    try {
-                      await archiveChildAsync({ id: childId });
-                      enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
-                      void queryClient.invalidateQueries({
-                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
-                      });
-                    } catch {
-                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
-                    }
+                  onClick={() => {
+                    void (async () => {
+                      try {
+                        await archiveChildAsync({ id: childId });
+                        enqueueSnackbar(t("Child archived"), { variant: "success" });
+                        void queryClient.invalidateQueries({
+                          queryKey: getGetAllChildrenQueryKey(),
+                        });
+                        void queryClient.invalidateQueries({
+                          queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                        });
+                      } catch {
+                        enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
+                      }
+                    })();
                   }}
                   disabled={isArchiving ?? !!child?.archivedAt}
                 >
@@ -237,7 +245,7 @@ const UpdateChildPage = () => {
               </Typography>
             </Box>
 
-            <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+            <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
               <Grid container spacing={3}>
                 <Grid size={12}>
                   <TextFieldElement name="givenName" label={t("First name")} required fullWidth />
@@ -276,7 +284,9 @@ const UpdateChildPage = () => {
                       variant="contained"
                       disabled={!isDirty || !isValid}
                       loading={isSubmitting}
-                      onClick={handleSubmit(onSubmit)}
+                      onClick={() => {
+                        handleSubmit(onSubmit)();
+                      }}
                       startIcon={<SaveIcon />}
                     >
                       {t("Save Changes", { ns: "common" })}

@@ -107,7 +107,7 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
         <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
           {t("To add an absence, please enter the details below.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
           <DatePickerElement
             label={t("Start Date")}
             name="startDate"
@@ -163,7 +163,9 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            handleSubmit(onSubmit)();
+          }}
         >
           <span>{t("Add", { ns: "common" })}</span>
         </Button>

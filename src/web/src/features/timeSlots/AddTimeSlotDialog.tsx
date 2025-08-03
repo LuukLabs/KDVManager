@@ -67,7 +67,7 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
         <DialogContentText>
           {t("To add a time slot, please specify the name here and start and end times.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
           <TextFieldElement
             autoFocus
             name="name"
@@ -121,7 +121,9 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            void handleSubmit(onSubmit)();
+          }}
         >
           <span>{t("Add", { ns: "common" })}</span>
         </Button>

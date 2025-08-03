@@ -53,17 +53,19 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
             <IconButton
               size="small"
               color="error"
-              onClick={async () => {
-                if (window.confirm(t("Are you sure you want to delete this absence?"))) {
-                  await deleteAbsenceMutation.mutateAsync(
-                    { id: absence.id! },
-                    {
-                      onSuccess: () => {
-                        queryClient.invalidateQueries();
+              onClick={() => {
+                void (async () => {
+                  if (window.confirm(t("Are you sure you want to delete this absence?"))) {
+                    await deleteAbsenceMutation.mutateAsync(
+                      { id: absence.id! },
+                      {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries();
+                        },
                       },
-                    },
-                  );
-                }
+                    );
+                  }
+                })();
               }}
             >
               <DeleteIcon fontSize="small" />

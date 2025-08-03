@@ -64,7 +64,7 @@ export const AddGroupDialog = NiceModal.create(() => {
         <DialogContentText>
           {t("To add a group, please enter the group name here.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <FormContainer formContext={formContext} handleSubmit={void handleSubmit(onSubmit)}>
           <TextFieldElement
             autoFocus
             name="name"
@@ -84,7 +84,9 @@ export const AddGroupDialog = NiceModal.create(() => {
           variant="contained"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
-          onClick={handleSubmit(onSubmit)}
+          onClick={() => {
+            handleSubmit(onSubmit)();
+          }}
         >
           <span>{t("Add", { ns: "common" })}</span>
         </Button>

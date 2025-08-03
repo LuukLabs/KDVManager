@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <AssemblyName>KDVManager.Services.Scheduling.Domain</AssemblyName>
     <RootNamespace>KDVManager.Services.Scheduling.Domain</RootNamespace>
   </PropertyGroup>

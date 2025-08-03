@@ -1618,6 +1618,7 @@
         "format": "int32"
       },
       "GroupListVM": {
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -1625,8 +1626,8 @@
             "format": "uuid"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

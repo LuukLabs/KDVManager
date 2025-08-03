@@ -12,7 +12,7 @@ import { EditChildButton } from "./EditChildButton";
 export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
   const { apiPagination, muiPagination } = usePagination();
   const { data, isLoading, isFetching } = useGetAllChildren(
-    { ...apiPagination, Archived: showArchived },
+    { ...apiPagination, archived: showArchived },
     {
       query: { placeholderData: keepPreviousData },
     },

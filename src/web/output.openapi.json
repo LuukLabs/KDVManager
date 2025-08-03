@@ -15,21 +15,21 @@
         "operationId": "GetAllChildren",
         "parameters": [
           {
-            "name": "Search",
+            "name": "search",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Archived",
+            "name": "archived",
             "in": "query",
             "schema": {
               "type": "boolean"
             }
           },
           {
-            "name": "PageNumber",
+            "name": "pageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -37,7 +37,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -132,7 +132,7 @@
         "operationId": "GetChildById",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -159,7 +159,7 @@
         "operationId": "UpdateChild",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -218,7 +218,7 @@
         "operationId": "DeleteChild",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -240,7 +240,7 @@
         "operationId": "ArchiveChild",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -262,7 +262,7 @@
         "operationId": "GetAllPeople",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "pageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -270,7 +270,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -492,7 +492,7 @@
         "operationId": "DeleteAbsence",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -641,7 +641,7 @@
         "operationId": "ListGroups",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "pageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -649,7 +649,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -764,7 +764,7 @@
         "operationId": "DeleteGroup",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -806,7 +806,7 @@
         "operationId": "GetChildSchedules",
         "parameters": [
           {
-            "name": "ChildId",
+            "name": "childId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -921,7 +921,7 @@
         "operationId": "GetSchedulesByDate",
         "parameters": [
           {
-            "name": "Date",
+            "name": "date",
             "in": "query",
             "schema": {
               "type": "string",
@@ -929,7 +929,7 @@
             }
           },
           {
-            "name": "GroupId",
+            "name": "groupId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -976,7 +976,7 @@
         "operationId": "GetGroupSummary",
         "parameters": [
           {
-            "name": "GroupId",
+            "name": "groupId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -984,7 +984,7 @@
             }
           },
           {
-            "name": "Date",
+            "name": "date",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1022,7 +1022,7 @@
         "operationId": "DeleteSchedule",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1054,7 +1054,7 @@
         "operationId": "ListTimeSlots",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "pageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1062,7 +1062,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1632,6 +1632,7 @@
         "additionalProperties": false
       },
       "GroupSummaryVM": {
+        "required": ["date", "groupId", "groupName", "timeBlocks"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -1650,8 +1651,7 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TimeBlockSummary"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1724,6 +1724,14 @@
         "additionalProperties": false
       },
       "TimeBlockSummary": {
+        "required": [
+          "ageGroups",
+          "endTime",
+          "requiredSupervisors",
+          "startTime",
+          "timeSlotName",
+          "totalChildren"
+        ],
         "type": "object",
         "properties": {
           "startTime": {

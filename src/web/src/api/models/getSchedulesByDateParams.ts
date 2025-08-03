@@ -6,6 +6,6 @@
  */
 
 export type GetSchedulesByDateParams = {
-  Date?: string;
-  GroupId?: string;
+  date?: string;
+  groupId?: string;
 };

@@ -1,24 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
 
 public class GroupSummaryVM
 {
-    public Guid GroupId { get; set; }
-    public string GroupName { get; set; } = string.Empty;
-    public DateOnly Date { get; set; }
-    public List<TimeBlockSummary> TimeBlocks { get; set; } = new List<TimeBlockSummary>();
+    public required Guid GroupId { get; set; }
+    public required string GroupName { get; set; } = string.Empty;
+    public required DateOnly Date { get; set; }
+
+    [Required]
+    public required List<TimeBlockSummary> TimeBlocks { get; set; } = new List<TimeBlockSummary>();
 }
 
 public class TimeBlockSummary
 {
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
-    public string TimeSlotName { get; set; } = string.Empty;
-    public int TotalChildren { get; set; }
-    public int RequiredSupervisors { get; set; }
-    public List<AgeGroupSummary> AgeGroups { get; set; } = new List<AgeGroupSummary>();
+    public required TimeOnly StartTime { get; set; }
+    public required TimeOnly EndTime { get; set; }
+    public required string TimeSlotName { get; set; } = string.Empty;
+    public required int TotalChildren { get; set; }
+    public required int RequiredSupervisors { get; set; }
+    public required List<AgeGroupSummary> AgeGroups { get; set; } = new List<AgeGroupSummary>();
 }
 
 public class AgeGroupSummary

@@ -30,6 +30,8 @@ public static class ConfigureServices
                 },
             });
 
+            options.DescribeAllParametersInCamelCase();
+
             // Add a custom schema filter to handle TimeSpan as string with time format
             options.MapType<TimeSpan>(() => new OpenApiSchema
             {

@@ -30,8 +30,8 @@ export const PeopleTable = () => {
 
   const { data, isLoading, isFetching } = useGetAllPeople(
     {
-      PageNumber: paginationModel.page,
-      PageSize: paginationModel.pageSize,
+      pageNumber: paginationModel.page,
+      pageSize: paginationModel.pageSize,
     },
     { query: { placeholderData: keepPreviousData } },
   );

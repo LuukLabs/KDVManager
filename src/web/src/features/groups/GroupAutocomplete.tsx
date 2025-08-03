@@ -18,7 +18,7 @@ const GroupAutocomplete: React.FC<GroupAutocompleteProps> = (props) => {
   const { data, isLoading, isFetching } = useListGroups();
 
   return (
-    <Autocomplete<GroupListVM>
+    <Autocomplete
       {...props}
       options={data?.value ?? []}
       loading={isLoading || isFetching}

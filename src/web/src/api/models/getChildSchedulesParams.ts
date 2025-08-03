@@ -6,5 +6,5 @@
  */
 
 export type GetChildSchedulesParams = {
-  ChildId?: string;
+  childId?: string;
 };

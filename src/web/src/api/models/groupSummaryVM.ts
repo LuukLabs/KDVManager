@@ -7,10 +7,9 @@
 import type { TimeBlockSummary } from "./timeBlockSummary";
 
 export type GroupSummaryVM = {
-  groupId?: string;
+  groupId: string;
   /** @nullable */
-  groupName?: string | null;
-  date?: string;
-  /** @nullable */
-  timeBlocks?: TimeBlockSummary[] | null;
+  groupName: string | null;
+  date: string;
+  timeBlocks: TimeBlockSummary[];
 };

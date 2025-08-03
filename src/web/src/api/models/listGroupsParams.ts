@@ -6,6 +6,6 @@
  */
 
 export type ListGroupsParams = {
-  PageNumber?: number;
-  PageSize?: number;
+  pageNumber?: number;
+  pageSize?: number;
 };

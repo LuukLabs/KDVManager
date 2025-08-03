@@ -6,8 +6,8 @@
  */
 
 export type GetAllChildrenParams = {
-  Search?: string;
-  Archived?: boolean;
-  PageNumber?: number;
-  PageSize?: number;
+  search?: string;
+  archived?: boolean;
+  pageNumber?: number;
+  pageSize?: number;
 };

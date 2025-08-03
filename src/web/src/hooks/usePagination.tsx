@@ -12,10 +12,10 @@ export const usePagination = () => {
     pageSize: 10,
   });
 
-  const apiPagination = useMemo(
+  const apiPagination = useMemo<Pagination>(
     () => ({
-      PageNumber: pagination.pageNumber,
-      PageSize: pagination.pageSize,
+      pageNumber: pagination.pageNumber,
+      pageSize: pagination.pageSize,
     }),
     [pagination],
   );

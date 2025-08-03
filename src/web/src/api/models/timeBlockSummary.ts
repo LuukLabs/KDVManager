@@ -7,12 +7,12 @@
 import type { AgeGroupSummary } from "./ageGroupSummary";
 
 export type TimeBlockSummary = {
-  startTime?: string;
-  endTime?: string;
+  startTime: string;
+  endTime: string;
   /** @nullable */
-  timeSlotName?: string | null;
-  totalChildren?: number;
-  requiredSupervisors?: number;
+  timeSlotName: string | null;
+  totalChildren: number;
+  requiredSupervisors: number;
   /** @nullable */
-  ageGroups?: AgeGroupSummary[] | null;
+  ageGroups: AgeGroupSummary[] | null;
 };

@@ -41,7 +41,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '24.x'
         cache: 'pnpm'
         cache-dependency-path: src/web/pnpm-lock.yaml
 
@@ -52,7 +52,7 @@ jobs:
       run: pnpm eslint
     
     - name: Run typecheck
-      run: pnpm tsc
+      run: pnpm tsc -b
 
   BuildContainersForPR_Linux:
     runs-on: ubuntu-latest

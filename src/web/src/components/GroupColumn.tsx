@@ -29,8 +29,8 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { data: schedules, isLoading } = useGetSchedulesByDate({
-    Date: selectedDate.format("YYYY-MM-DD"),
-    GroupId: group.id,
+    date: selectedDate.format("YYYY-MM-DD"),
+    groupId: group.id,
   });
 
   const childrenCount = schedules?.length ?? 0;

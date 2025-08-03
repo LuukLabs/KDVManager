@@ -6,6 +6,6 @@
  */
 
 export type ListTimeSlotsParams = {
-  PageNumber?: number;
-  PageSize?: number;
+  pageNumber?: number;
+  pageSize?: number;
 };

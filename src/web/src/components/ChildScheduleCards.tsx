@@ -24,7 +24,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data, isLoading, isFetching } = useGetChildSchedules({
-    ChildId: childId,
+    childId: childId,
   });
 
   const onAddChildScheduleClickHandler = () =>

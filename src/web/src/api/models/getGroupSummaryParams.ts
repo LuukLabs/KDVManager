@@ -6,6 +6,6 @@
  */
 
 export type GetGroupSummaryParams = {
-  GroupId?: string;
-  Date?: string;
+  groupId?: string;
+  date?: string;
 };

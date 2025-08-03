@@ -63,7 +63,7 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
 
     const onMutateSuccess = () => {
       void queryClient.invalidateQueries({
-        queryKey: getGetChildSchedulesQueryKey({ ChildId: childId }),
+        queryKey: getGetChildSchedulesQueryKey({ childId: childId }),
       });
       modal.remove();
       enqueueSnackbar(t("Schedule added"), { variant: "success" });

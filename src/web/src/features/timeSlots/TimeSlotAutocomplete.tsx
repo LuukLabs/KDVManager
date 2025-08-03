@@ -18,7 +18,7 @@ const TimeSlotAutocomplete: React.FC<TimeSlotAutocompleteProps> = (props) => {
   const { data, isLoading, isFetching } = useListTimeSlots();
 
   return (
-    <Autocomplete<TimeSlotListVM>
+    <Autocomplete
       {...props}
       options={data?.value ?? []}
       loading={isLoading || isFetching}

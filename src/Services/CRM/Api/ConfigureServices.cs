@@ -26,6 +26,8 @@ public static class ConfigureServices
                     Email = "admin@kdvmanager.nl",
                 },
             });
+
+            options.DescribeAllParametersInCamelCase();
         });
 
         string domain = $"https://{configuration["Auth0:Domain"]}/";

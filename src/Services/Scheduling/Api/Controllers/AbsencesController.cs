@@ -29,7 +29,7 @@ public class AbsencesController : ControllerBase
     }
 
     [HttpGet("/v1/children/{childId}/absences", Name = "GetAbsencesByChildId")]
-    public async Task<ActionResult<List<Absence>>> GetAbsencesByChildId([FromRoute] Guid childId)
+    public async Task<ActionResult<List<AbsenceListByChildIdVM>>> GetAbsencesByChildId([FromRoute] Guid childId)
     {
         var query = new GetAbsencesByChildIdQuery { ChildId = childId };
         var dtos = await _getAbsencesByChildIdQueryHandler.Handle(query);

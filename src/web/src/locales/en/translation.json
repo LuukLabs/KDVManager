@@ -1,6 +1,7 @@
 {
   "{{age}} year": "{{age}} year",
-  "Absence added": "",
+  "absence": "absence",
+  "Absence added": "Absence added",
   "Absences": "Absences",
   "account of current user": "account of current user",
   "Account settings": "Account settings",
@@ -16,7 +17,6 @@
   "Age Group Distribution": "",
   "Archive Child": "Archive child",
   "Archived": "Archived",
-  "Are you sure you want to delete this absence?": "Are you sure you want to delete this absence?",
   "breadcrumb": "breadcrumb",
   "Calendar": "Calendar",
   "child": "child",

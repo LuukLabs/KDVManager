@@ -25,6 +25,7 @@ const config: ReturnType<typeof defineConfig> = {
       target: "src/api/endpoints",
       schemas: "src/api/models",
       client: "react-query",
+      clean: true,
       prettier: true,
       indexFiles: false,
       override: {

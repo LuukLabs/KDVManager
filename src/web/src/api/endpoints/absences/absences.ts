@@ -20,7 +20,7 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { Absence } from "../../models/absence";
+import type { AbsenceListByChildIdVM } from "../../models/absenceListByChildIdVM";
 
 import type { AddAbsenceCommand } from "../../models/addAbsenceCommand";
 
@@ -31,7 +31,7 @@ import type { UnprocessableEntityResponse } from "../../models/unprocessableEnti
 import { executeFetch } from "../../mutator/executeFetch";
 
 export const getAbsencesByChildId = (childId: string, signal?: AbortSignal) => {
-  return executeFetch<Absence[]>({
+  return executeFetch<AbsenceListByChildIdVM[]>({
     url: `/scheduling/v1/children/${childId}/absences`,
     method: "GET",
     signal,

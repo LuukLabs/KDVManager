@@ -1,10 +1,9 @@
 import React from "react";
-import { Box, Typography, IconButton, Chip, Stack } from "@mui/material";
-import { Delete as DeleteIcon } from "@mui/icons-material";
+import { Box, Typography, Chip, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useDeleteAbsence, useGetAbsencesByChildId } from "@api/endpoints/absences/absences";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetAbsencesByChildId } from "@api/endpoints/absences/absences";
+import { DeleteAbsenceButton } from "./DeleteAbsenceButton";
 
 type AbsenceListProps = {
   childId: string;
@@ -13,8 +12,6 @@ type AbsenceListProps = {
 export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
   const { t } = useTranslation();
   const { data: absences, isLoading } = useGetAbsencesByChildId(childId);
-  const deleteAbsenceMutation = useDeleteAbsence();
-  const queryClient = useQueryClient();
 
   if (isLoading) {
     return <Typography>{t("Loading absences...")}</Typography>;
@@ -50,24 +47,7 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
               </Typography>
               {absence.reason && <Chip label={absence.reason} size="small" sx={{ mt: 0.5 }} />}
             </Box>
-            <IconButton
-              size="small"
-              color="error"
-              onClick={async () => {
-                if (window.confirm(t("Are you sure you want to delete this absence?"))) {
-                  await deleteAbsenceMutation.mutateAsync(
-                    { id: absence.id! },
-                    {
-                      onSuccess: () => {
-                        queryClient.invalidateQueries();
-                      },
-                    },
-                  );
-                }
-              }}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+            <DeleteAbsenceButton id={absence.id} childId={childId}/>
           </Box>
         ))}
       </Stack>

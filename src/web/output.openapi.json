@@ -382,7 +382,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Absence"
+                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
                   }
                 }
               },
@@ -390,7 +390,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Absence"
+                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
                   }
                 }
               },
@@ -398,7 +398,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Absence"
+                    "$ref": "#/components/schemas/AbsenceListByChildIdVM"
                   }
                 }
               }
@@ -1368,18 +1368,11 @@
         },
         "additionalProperties": false
       },
-      "Absence": {
+      "AbsenceListByChildIdVM": {
+        "required": ["endDate", "id", "reason", "startDate"],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "childId": {
             "type": "string",
             "format": "uuid"
           },

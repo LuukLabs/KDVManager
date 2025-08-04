@@ -15,8 +15,17 @@ public class GetAbsencesByChildIdQueryHandler
         _repository = repository;
     }
 
-    public async Task<List<Absence>> Handle(GetAbsencesByChildIdQuery query)
+    public async Task<List<AbsenceListByChildIdVM>> Handle(GetAbsencesByChildIdQuery query)
     {
-        return await _repository.GetByChildIdAsync(query.ChildId);
+        var absences = await _repository.GetByChildIdAsync(query.ChildId);
+        List<AbsenceListByChildIdVM> absenceListVMs = absences.Select(absence => new AbsenceListByChildIdVM
+        {
+            Id = absence.Id,
+            StartDate = absence.StartDate,
+            EndDate = absence.EndDate,
+            Reason = absence.Reason ?? string.Empty
+        }).ToList();
+
+        return absenceListVMs;
     }
 }

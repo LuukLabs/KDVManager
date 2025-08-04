@@ -148,9 +148,11 @@ public class GetGroupSummaryQueryHandler
 
         return new[]
         {
-            new AgeGroupSummary { AgeRange = "0-2 years", ChildCount = withAges.Count(a => a.Age <= 2) },
-            new AgeGroupSummary { AgeRange = "3-5 years", ChildCount = withAges.Count(a => a.Age >= 3 && a.Age <= 5) },
-            new AgeGroupSummary { AgeRange = "6+ years", ChildCount = withAges.Count(a => a.Age >= 6) }
+            new AgeGroupSummary { AgeRange = "0-1 years", ChildCount = withAges.Count(a => a.Age < 1) },
+            new AgeGroupSummary { AgeRange = "1-2 years", ChildCount = withAges.Count(a => a.Age >= 1 && a.Age < 2) },
+            new AgeGroupSummary { AgeRange = "2-3 years", ChildCount = withAges.Count(a => a.Age >= 2 && a.Age < 3) },
+            new AgeGroupSummary { AgeRange = "3-4 years", ChildCount = withAges.Count(a => a.Age >= 3 && a.Age < 4) },
+            new AgeGroupSummary { AgeRange = "4+ years", ChildCount = withAges.Count(a => a.Age >= 4) }
         }.Where(g => g.ChildCount > 0).ToList();
     }
 

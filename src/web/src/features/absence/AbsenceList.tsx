@@ -32,25 +32,33 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
   };
 
   const absences: Absence[] = Array.isArray(absencesRaw)
-    ? absencesRaw.map(a => ({
+    ? absencesRaw.map((a) => ({
         ...a,
-        reason: a.reason === null ? undefined : a.reason,
+        reason: a.reason ?? undefined,
       }))
     : [];
   const today = dayjs().startOf("day");
-  const futureAbsences: Absence[] = absences.filter((a: Absence) => dayjs(a.startDate).isSameOrAfter(today));
-  const pastAbsences: Absence[] = absences.filter((a: Absence) => dayjs(a.startDate).isBefore(today));
+  const futureAbsences: Absence[] = absences.filter((a: Absence) =>
+    dayjs(a.startDate).isSameOrAfter(today),
+  );
+  const pastAbsences: Absence[] = absences.filter((a: Absence) =>
+    dayjs(a.startDate).isBefore(today),
+  );
 
   // Helper to check if absence is within next 7 days
   function isUpcoming(absence: Absence) {
     const start = dayjs(absence.startDate);
-    return start.isSameOrAfter(today) && start.diff(today, 'day') <= 7;
+    return start.isSameOrAfter(today) && start.diff(today, "day") <= 7;
   }
 
   // Find next upcoming absence
-  const nextAbsence = futureAbsences.length > 0
-    ? futureAbsences.reduce((min, a) => dayjs(a.startDate).isBefore(dayjs(min.startDate)) ? a : min, futureAbsences[0])
-    : null;
+  const nextAbsence =
+    futureAbsences.length > 0
+      ? futureAbsences.reduce(
+          (min, a) => (dayjs(a.startDate).isBefore(dayjs(min.startDate)) ? a : min),
+          futureAbsences[0],
+        )
+      : null;
 
   // Count total future absences
   const totalFuture = futureAbsences.length;
@@ -67,18 +75,18 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
   const groupedAbsences = groupByYearMonth(showPast ? pastAbsences : futureAbsences);
 
   return (
-    <Box sx={{ background: '#f5f7fa', p: 3, borderRadius: 2, boxShadow: 1 }}>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: '#2d3a4b' }}>
+    <Box sx={{ background: "#f5f7fa", p: 3, borderRadius: 2, boxShadow: 1 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: "#2d3a4b" }}>
         {t("Absences")}
       </Typography>
       {/* Summary Section */}
-      <Box sx={{ mb: 3, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+      <Box sx={{ mb: 3, display: "flex", flexDirection: "row", alignItems: "center", gap: 3 }}>
         <Box>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {t("Total future absences")}: {totalFuture}
           </Typography>
           {nextAbsence && (
-            <Typography variant="body2" sx={{ color: '#1976d2', mt: 0.5 }}>
+            <Typography variant="body2" sx={{ color: "#1976d2", mt: 0.5 }}>
               {t("Next absence")}: {dayjs(nextAbsence.startDate).format("YYYY-MM-DD")}
               {nextAbsence.reason ? ` (${nextAbsence.reason})` : ""}
             </Typography>
@@ -100,8 +108,8 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
         Object.entries(groupedAbsences)
           .sort(([a], [b]) => (showPast ? b.localeCompare(a) : a.localeCompare(b)))
           .map(([ym, absences]) => (
-            <Box key={ym} sx={{ mb: 3, background: '#fff', borderRadius: 2, boxShadow: 0.5, p: 2 }}>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#1976d2' }}>
+            <Box key={ym} sx={{ mb: 3, background: "#fff", borderRadius: 2, boxShadow: 0.5, p: 2 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: "#1976d2" }}>
                 {dayjs(ym + "-01").format("MMMM YYYY")}
               </Typography>
               <Stack spacing={2}>
@@ -117,16 +125,23 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
                       borderRadius: 2,
                       background: isUpcoming(absence) ? "#e3f2fd" : "#fafafa",
                       boxShadow: isUpcoming(absence) ? 1 : 0,
-                      transition: 'border 0.2s, background 0.2s',
+                      transition: "border 0.2s, background 0.2s",
                     }}
                   >
                     <Box>
-                      <Typography variant="body1" sx={{ fontWeight: isUpcoming(absence) ? 600 : 400, color: isUpcoming(absence) ? '#1976d2' : 'inherit' }}>
-                        {dayjs(absence.startDate).format("YYYY-MM-DD")} - {dayjs(absence.endDate).format("YYYY-MM-DD")}
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: isUpcoming(absence) ? 600 : 400,
+                          color: isUpcoming(absence) ? "#1976d2" : "inherit",
+                        }}
+                      >
+                        {dayjs(absence.startDate).format("YYYY-MM-DD")} -{" "}
+                        {dayjs(absence.endDate).format("YYYY-MM-DD")}
                         {absence.reason ? ` (${absence.reason})` : ""}
                       </Typography>
                     </Box>
-                    <DeleteAbsenceButton id={absence.id} childId={childId}/>
+                    <DeleteAbsenceButton id={absence.id} childId={childId} />
                   </Box>
                 ))}
               </Stack>

@@ -14,10 +14,7 @@ type DeleteAbsenceButton = {
   childId: string;
 };
 
-export const DeleteAbsenceButton: React.FC<DeleteAbsenceButton> = ({
-  id,
-  childId,
-}) => {
+export const DeleteAbsenceButton: React.FC<DeleteAbsenceButton> = ({ id, childId }) => {
   const { t } = useTranslation();
   const mutation = useDeleteAbsence();
   const queryClient = useQueryClient();

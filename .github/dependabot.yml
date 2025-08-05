@@ -28,7 +28,13 @@ updates:
     open-pull-requests-limit: 5
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directories:
+      - "src/web"
+      - "src/Services/CRM/Api"
+      - "src/Services/CRM/Infrastructure"
+      - "src/Services/Scheduling/Api"
+      - "src/Services/Scheduling/Infrastructure"
+      - "src/Services/DataMigration"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3

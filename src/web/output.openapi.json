@@ -1645,6 +1645,14 @@
             "items": {
               "$ref": "#/components/schemas/TimeBlockSummary"
             }
+          },
+          "requiredProfessionals": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfChildren": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1720,7 +1728,7 @@
         "required": [
           "ageGroups",
           "endTime",
-          "requiredSupervisors",
+          "requiredProfessionals",
           "startTime",
           "timeSlotName",
           "totalChildren"
@@ -1743,7 +1751,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "requiredSupervisors": {
+          "requiredProfessionals": {
             "type": "integer",
             "format": "int32"
           },

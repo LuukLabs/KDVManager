@@ -55,6 +55,8 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Api/Dockerfile
+      args:
+        - NUGET_GITHUB_TOKEN=${NUGET_GITHUB_TOKEN}
     depends_on:
       - postgres
       - rabbitmq
@@ -64,6 +66,8 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Infrastructure/Dockerfile
+      args:
+        - NUGET_GITHUB_TOKEN=${NUGET_GITHUB_TOKEN}
     depends_on:
       - postgres
 
@@ -72,5 +76,7 @@ services:
     build:
       context: .
       dockerfile: Services/DataMigration/Dockerfile
+      args:
+        - NUGET_GITHUB_TOKEN=${NUGET_GITHUB_TOKEN}
     depends_on:
       - postgres

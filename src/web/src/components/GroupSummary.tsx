@@ -150,15 +150,6 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
     );
   }
 
-  const totalChildren = summary.timeBlocks.reduce(
-    (sum: number, block: TimeBlockSummary) => sum + block.totalChildren,
-    0,
-  );
-  const totalSupervisors = summary.timeBlocks.reduce(
-    (sum: number, block: TimeBlockSummary) => sum + block.requiredSupervisors,
-    0,
-  );
-
   return (
     <Card
       sx={{
@@ -194,7 +185,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
           <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2 }}>
             <Chip
               icon={<ChildCare />}
-              label={`${totalChildren} ${t("children")}`}
+              label={`${summary.numberOfChildren} ${t("children")}`}
               size="small"
               color="primary"
               variant="outlined"
@@ -202,7 +193,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
             />
             <Chip
               icon={<SupervisorAccount />}
-              label={`${totalSupervisors} ${t("supervisors")}`}
+              label={`${summary.requiredProfessionals} ${t("supervisors")}`}
               size="small"
               color="secondary"
               variant="outlined"
@@ -273,7 +264,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
                       }}
                     >
                       <SupervisorAccount sx={{ fontSize: 12 }} />
-                      {block.requiredSupervisors}
+                      {block.requiredProfessionals}
                     </Typography>
                   </Box>
                 </Box>
@@ -341,7 +332,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
                 />
                 <Chip
                   icon={<SupervisorAccount />}
-                  label={`${selectedTimeBlock?.requiredSupervisors} ${t("supervisors needed")}`}
+                  label={`${selectedTimeBlock?.requiredProfessionals} ${t("supervisors needed")}`}
                   color="secondary"
                   variant="outlined"
                 />

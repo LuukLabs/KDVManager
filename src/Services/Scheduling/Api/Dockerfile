@@ -11,6 +11,9 @@ COPY ["Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj", "
 COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared/KDVManager.Shared.Domain/"]
 COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
 
+ARG NUGET_GITHUB_TOKEN
+RUN dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$NUGET_GITHUB_TOKEN" --store-password-in-clear-text
+
 RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 
 FROM restore as build

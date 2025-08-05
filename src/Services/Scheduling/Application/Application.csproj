@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\..\Shared\KDVManager.Shared.Domain\KDVManager.Shared.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BKRCalculator" Version="0.3.0" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />

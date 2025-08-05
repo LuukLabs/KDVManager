@@ -13,6 +13,10 @@ COPY ["Services/Scheduling/Domain/Domain.csproj", "Services/Scheduling/Domain/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]
 COPY ["Services/Scheduling/Infrastructure/Infrastructure.csproj", "Services/Scheduling/Infrastructure/"]
 
+# Set up github source for NuGet packages
+ARG NUGET_GITHUB_TOKEN
+RUN dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$NUGET_GITHUB_TOKEN" --store-password-in-clear-text
+
 # Restore dependencies
 RUN dotnet restore "Services/DataMigration/DataMigration.csproj"
 

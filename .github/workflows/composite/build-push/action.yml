@@ -20,6 +20,9 @@ inputs:
   registry_password:
     description: "Registry password"
     required: true
+  nuget_github_token:
+    description: "GitHub NuGet token for private packages"
+    required: false
   
 runs:
   using: "composite"
@@ -45,6 +48,7 @@ runs:
     env:
       TAG: ${{ env.BRANCH }}
       REGISTRY: ${{ inputs.registry_endpoint }}
+      NUGET_GITHUB_TOKEN: ${{ inputs.nuget_github_token }}
 
   - name: Compose push  -f docker-compose.yml ${{ inputs.service }}
     shell: bash

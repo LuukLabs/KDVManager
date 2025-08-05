@@ -12,4 +12,6 @@ export type GroupSummaryVM = {
   groupName: string | null;
   date: string;
   timeBlocks: TimeBlockSummary[];
+  requiredProfessionals?: number;
+  numberOfChildren?: number;
 };

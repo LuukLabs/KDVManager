@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KDVManager.BKRCalculator;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
 
@@ -52,18 +53,16 @@ public class GetGroupSummaryQueryHandler
 
         timeBlocks = timeBlocks.OrderBy(tb => tb.StartTime).ToList();
 
-        Console.WriteLine("Calculated Time Blocks:");
-        foreach (var block in timeBlocks)
-        {
-            Console.WriteLine($"{block.StartTime} - {block.EndTime}: {block.TimeSlotName}, {block.TotalChildren} children, {block.RequiredSupervisors} supervisors");
-        }
+        var maxProfessionals = timeBlocks.Any() ? timeBlocks.Max(tb => tb.RequiredProfessionals) : 0;
 
         return new GroupSummaryVM
         {
             GroupId = request.GroupId,
             GroupName = group.Name,
             Date = request.Date,
-            TimeBlocks = timeBlocks
+            TimeBlocks = timeBlocks,
+            RequiredProfessionals = maxProfessionals,
+            NumberOfChildren = children.Count()
         };
     }
 
@@ -88,12 +87,6 @@ public class GetGroupSummaryQueryHandler
             .Distinct()
             .OrderBy(t => t)
             .ToList();
-
-        Console.WriteLine("TimePoints:");
-        foreach (var t in timePoints)
-        {
-            Console.WriteLine(t);
-        }
 
         var result = new List<(TimeOnly Start, TimeOnly End)>();
 
@@ -129,7 +122,7 @@ public class GetGroupSummaryQueryHandler
 
         var ageGroups = CalculateAgeGroups(childrenInBlock, date);
         var totalChildren = childrenInBlock.Count;
-        var supervisors = CalculateRequiredSupervisors(totalChildren, ageGroups);
+        var result = CalculateRequiredSupervisors(totalChildren, ageGroups);
 
         return new TimeBlockSummary
         {
@@ -137,7 +130,7 @@ public class GetGroupSummaryQueryHandler
             EndTime = end,
             TimeSlotName = timeSlotName,
             TotalChildren = totalChildren,
-            RequiredSupervisors = supervisors,
+            RequiredProfessionals = result.HasSolution ? result.Professionals : -1,
             AgeGroups = ageGroups
         };
     }
@@ -164,15 +157,17 @@ public class GetGroupSummaryQueryHandler
         return age;
     }
 
-    private static int CalculateRequiredSupervisors(int totalChildren, List<AgeGroupSummary> groups)
+    private static GroupAnalysisResult CalculateRequiredSupervisors(int totalChildren, List<AgeGroupSummary> groups)
     {
         int Count(string range) => groups.FirstOrDefault(g => g.AgeRange == range)?.ChildCount ?? 0;
 
-        var supervisors =
-            Math.Ceiling(Count("0-2 years") / 4.0) +
-            Math.Ceiling(Count("3-5 years") / 6.0) +
-            Math.Ceiling(Count("6+ years") / 8.0);
+        var ageGroupCounts = new AgeGroupCounts();
+        ageGroupCounts.Age0Count = Count("0-1 years");
+        ageGroupCounts.Age1Count = Count("1-2 years");
+        ageGroupCounts.Age2Count = Count("2-3 years");
+        ageGroupCounts.Age3Count = Count("3-4 years");
 
-        return totalChildren > 0 ? Math.Max(1, (int)supervisors) : 0;
+        var groupAnalyzer = new GroupAnalyzer();
+        return groupAnalyzer.CalculateBKR(ageGroupCounts);
     }
 }

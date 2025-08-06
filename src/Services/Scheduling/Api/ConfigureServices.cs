@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
-using Microsoft.IdentityModel.Tokens;
-using KDVManager.Shared.Contracts.Tenancy;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using MassTransit.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -80,6 +82,41 @@ public static class ConfigureServices
                         return Task.CompletedTask;
                     }
                 };
+            });
+
+
+        var otel = services.AddOpenTelemetry();
+        var otlpEndpoint = configuration["Otlp:Endpoint"];
+        otel.ConfigureResource(resource => resource.AddService(serviceName: "scheduling-api"));
+
+        otel.WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddSource(DiagnosticHeaders.DefaultListenerName);
+
+                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                {
+                    tracing.AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri(otlpEndpoint);
+                    });
+                }
+            });
+
+        otel.WithMetrics(metrics =>
+            {
+                metrics
+                    .AddAspNetCoreInstrumentation();
+
+                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                {
+                    metrics.AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri(otlpEndpoint);
+                    });
+                }
             });
 
         return services;

@@ -13,8 +13,6 @@ var app = builder.Build();
 
 app.UseSwagger();
 
-// app.UseHttpsRedirection();
-
 app.UseRouting();
 
 app.UseCustomExceptionHandler();

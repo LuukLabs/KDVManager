@@ -49,16 +49,13 @@ spec:
             cpu: 100m
         ports:
           - name: http
-            containerPort: 80
-            protocol: TCP
-          - name: https
-            containerPort: 443
+            containerPort: 8080
             protocol: TCP
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
           - name: ASPNETCORE_URLS
-            value: "http://+:80"
+            value: "http://0.0.0.0:8080"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER

@@ -1,5 +1,9 @@
+using MassTransit.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +42,41 @@ public static class ConfigureServices
                     options.Authority = domain;
                     options.Audience = configuration["Auth0:Audience"];
                 });
+
+        var otel = services.AddOpenTelemetry();
+        var otlpEndpoint = configuration["Otlp:Endpoint"];
+        otel.ConfigureResource(resource => resource.AddService(serviceName: "crm-api"));
+
+        otel.WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddSource(DiagnosticHeaders.DefaultListenerName);
+
+                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                {
+                    tracing.AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri(otlpEndpoint);
+                    });
+                }
+            });
+
+        otel.WithMetrics(metrics =>
+            {
+                metrics
+                    .AddAspNetCoreInstrumentation();
+
+                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                {
+                    metrics.AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri(otlpEndpoint);
+                    });
+                }
+            });
+
 
         return services;
     }

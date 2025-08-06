@@ -16,6 +16,16 @@ static_resources:
       - name: envoy.http_connection_manager
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          tracing:
+            provider:
+              name: envoy.tracers.opentelemetry
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
+                grpc_service:
+                  envoy_grpc:
+                    cluster_name: otel-collector
+                  timeout: 0.25s
+                service_name: kdvmanager-envoy
           stat_prefix: ingress_http
           upgrade_configs:
           - upgrade_type: websocket
@@ -107,6 +117,24 @@ static_resources:
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
         sni: kdvmanager.eu.auth0.com
+  - name: otel-collector
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
+    load_assignment:
+      cluster_name: otel-collector
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: otel-collector
+                port_value: 4317
   - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns

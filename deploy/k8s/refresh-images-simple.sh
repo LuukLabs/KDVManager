@@ -22,14 +22,6 @@ log_success() {
 
 log "Starting KDVManager image refresh process..."
 
-kubectl rollout restart deployment/scheduling-api -n "$NAMESPACE"
-kubectl rollout status deployment/scheduling-api -n "$NAMESPACE" --timeout=300s
-kubectl rollout restart deployment/web -n "$NAMESPACE"
-kubectl rollout status deployment/web -n "$NAMESPACE" --timeout=300s
-kubectl rollout restart deployment/envoy -n "$NAMESPACE"
-kubectl rollout status deployment/envoy -n "$NAMESPACE" --timeout=300s
-log "Restarting deployments to force image pulls..."
-
 log "Restarting crm-api deployment..."
 kubectl rollout restart deployment/crm-api -n "$NAMESPACE"
 kubectl rollout status deployment/crm-api -n "$NAMESPACE" --timeout=300s

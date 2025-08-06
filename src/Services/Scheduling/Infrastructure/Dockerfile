@@ -33,4 +33,4 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:9.0 as migrator-runtime
 
 COPY --from=build-migrator /src/Services/Scheduling/efbundle .
 
-ENTRYPOINT [ "/bin/bash", "-c", "./efbundle --connection \"${ConnectionStrings__KDVManagerSchedulingConnectionString}\" " ]
+ENTRYPOINT [ "/bin/bash", "-c", "./efbundle --verbose --connection \"${ConnectionStrings__KDVManagerSchedulingConnectionString}\" " ]

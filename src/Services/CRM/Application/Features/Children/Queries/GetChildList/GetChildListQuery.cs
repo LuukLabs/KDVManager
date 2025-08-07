@@ -4,7 +4,7 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
 {
     public class GetChildListQuery : PageParameters
     {
-        public string Search { get; set; }
+        public string? Search { get; set; }
         public bool Archived { get; set; } = false;
     }
 }

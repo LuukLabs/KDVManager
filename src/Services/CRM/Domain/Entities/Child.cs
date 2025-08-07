@@ -9,11 +9,11 @@ namespace KDVManager.Services.CRM.Domain.Entities
 
         public Guid TenantId { get; set; }
 
-        public string GivenName { get; set; }
+        public required string GivenName { get; set; }
 
-        public string FamilyName { get; set; }
+        public required string FamilyName { get; set; }
 
-        public string CID { get; set; }
+        public string? CID { get; set; }
 
         public DateOnly DateOfBirth { get; set; }
 

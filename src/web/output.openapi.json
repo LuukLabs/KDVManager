@@ -8,11 +8,21 @@
     },
     "version": "v1"
   },
+  "servers": [
+    {
+      "url": "http://localhost:5200/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "children"
+    }
+  ],
   "paths": {
     "/crm/v1/children": {
       "get": {
-        "tags": ["Children"],
-        "operationId": "GetAllChildren",
+        "tags": ["children"],
+        "operationId": "ListChildren",
         "parameters": [
           {
             "name": "search",
@@ -25,23 +35,32 @@
             "name": "archived",
             "in": "query",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": false
             }
           },
           {
             "name": "pageNumber",
             "in": "query",
+            "required": true,
             "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 1
             }
           },
           {
             "name": "pageSize",
             "in": "query",
+            "required": true,
             "schema": {
+              "maximum": 100,
+              "minimum": 1,
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 25
             }
           }
         ],
@@ -49,23 +68,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ChildListVM"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ChildListVM"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -78,7 +81,7 @@
         }
       },
       "post": {
-        "tags": ["Children"],
+        "tags": ["children"],
         "operationId": "AddChild",
         "requestBody": {
           "content": {
@@ -86,36 +89,15 @@
               "schema": {
                 "$ref": "#/components/schemas/AddChildCommand"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddChildCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddChildCommand"
-              }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "string",
                   "format": "uuid"
@@ -126,9 +108,9 @@
         }
       }
     },
-    "/crm/v1/children/{Id}": {
+    "/crm/v1/children/{id}": {
       "get": {
-        "tags": ["Children"],
+        "tags": ["children"],
         "operationId": "GetChildById",
         "parameters": [
           {
@@ -155,7 +137,7 @@
         }
       },
       "put": {
-        "tags": ["Children"],
+        "tags": ["children"],
         "operationId": "UpdateChild",
         "parameters": [
           {
@@ -174,37 +156,18 @@
               "schema": {
                 "$ref": "#/components/schemas/UpdateChildCommand"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateChildCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateChildCommand"
-              }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
             "description": "No Content"
           },
           "422": {
-            "description": "Unprocessable Content",
+            "description": "Unprocessable Entity",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnprocessableEntityResponse"
                 }
@@ -214,7 +177,7 @@
         }
       },
       "delete": {
-        "tags": ["Children"],
+        "tags": ["children"],
         "operationId": "DeleteChild",
         "parameters": [
           {
@@ -234,9 +197,9 @@
         }
       }
     },
-    "/crm/v1/children/{Id}/archive": {
+    "/crm/v1/children/{id}/archive": {
       "post": {
-        "tags": ["Children"],
+        "tags": ["children"],
         "operationId": "ArchiveChild",
         "parameters": [
           {
@@ -252,109 +215,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/crm/v1/people": {
-      "get": {
-        "tags": ["People"],
-        "operationId": "GetAllPeople",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PersonListVM"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PersonListVM"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PersonListVM"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["People"],
-        "operationId": "AddPerson",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddPersonCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddPersonCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddPersonCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            }
           }
         }
       }
@@ -468,17 +328,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               }
             }
@@ -740,17 +600,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               }
             }
@@ -897,17 +757,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               }
             }
@@ -1153,17 +1013,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse1"
                 }
               }
             }
@@ -1193,40 +1053,10 @@
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
-      },
-      "AddPersonCommand": {
-        "type": "object",
-        "properties": {
-          "givenName": {
-            "type": "string",
-            "nullable": true
-          },
-          "familyName": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "bsn": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        }
       },
       "ChildDetailVM": {
+        "required": ["givenName", "familyName"],
         "type": "object",
         "properties": {
           "id": {
@@ -1234,12 +1064,10 @@
             "format": "uuid"
           },
           "givenName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "familyName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "dateOfBirth": {
             "type": "string",
@@ -1254,10 +1082,10 @@
             "format": "date-time",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ChildListVM": {
+        "required": ["id", "fullName", "dateOfBirth"],
         "type": "object",
         "properties": {
           "id": {
@@ -1265,8 +1093,7 @@
             "format": "uuid"
           },
           "fullName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "dateOfBirth": {
             "type": "string",
@@ -1277,41 +1104,10 @@
             "format": "date-time",
             "nullable": true
           }
-        },
-        "additionalProperties": false
-      },
-      "PersonListVM": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "fullName": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "bsn": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        }
       },
       "UnprocessableEntityResponse": {
-        "required": ["errors", "status"],
+        "required": ["status", "errors"],
         "type": "object",
         "properties": {
           "status": {
@@ -1324,12 +1120,16 @@
               "$ref": "#/components/schemas/ValidationError"
             }
           }
-        },
-        "additionalProperties": false
+        }
       },
       "UpdateChildCommand": {
+        "required": ["id", "givenName", "familyName", "dateOfBirth"],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "givenName": {
             "type": "string",
             "nullable": true
@@ -1340,33 +1140,29 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "nullable": true
           },
           "cid": {
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ValidationError": {
-        "required": ["code", "property", "title"],
+        "required": ["property", "code", "title"],
         "type": "object",
         "properties": {
           "property": {
-            "minLength": 1,
             "type": "string"
           },
           "code": {
-            "minLength": 1,
             "type": "string"
           },
           "title": {
-            "minLength": 1,
             "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "AbsenceListByChildIdVM": {
         "required": ["endDate", "id", "reason", "startDate"],
@@ -1783,6 +1579,42 @@
           "endTime": {
             "type": "string",
             "format": "time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnprocessableEntityResponse1": {
+        "required": ["errors", "status"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError1"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationError1": {
+        "required": ["code", "property", "title"],
+        "type": "object",
+        "properties": {
+          "property": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

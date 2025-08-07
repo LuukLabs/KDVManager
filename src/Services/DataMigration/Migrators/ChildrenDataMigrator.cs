@@ -78,19 +78,11 @@ public class ChildrenDataMigrator
                 firstName = DatabaseHelper.GetSafeString(reader, "firstname");
                 lastName = DatabaseHelper.GetSafeString(reader, "lastname");
                 infixes = DatabaseHelper.GetSafeString(reader, "infixes");
-                cid = DatabaseHelper.GetSafeString(reader, "cid");
-                externalChildId = reader.IsDBNull("external_child_id") ? null : reader.GetInt32("external_child_id");
+                externalChildId = DatabaseHelper.GetSafeInt(reader, "external_child_id");
                 if (!reader.IsDBNull("dateofbirth"))
                 {
                     var dob = reader.GetDateTime("dateofbirth");
                     dateOfBirth = DateOnly.FromDateTime(dob); // Convert DateTime to DateOnly
-                }
-
-                // Skip if essential data is missing
-                if (string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
-                {
-                    skippedCount++;
-                    continue;
                 }
 
                 // Combine lastname and infixes for FamilyName
@@ -100,20 +92,31 @@ public class ChildrenDataMigrator
                         ? infixes
                         : $"{infixes} {lastName}";
 
+                Console.WriteLine($"FamilyName: {familyName}");
+
                 var childId = Guid.NewGuid();
+                var isOlderThanSix = dateOfBirth.AddYears(6) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
                 var isOlderThanFive = dateOfBirth.AddYears(5) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
+
+                // Skip if children older than 6 years
+                if (isOlderThanSix)
+                {
+                    Console.WriteLine($"Skipping child {firstName} {familyName} (older than 5 years)");
+                    skippedCount++;
+                    continue;
+                }
+
                 var child = new Child
                 {
                     Id = childId,
                     GivenName = firstName?.Trim(),
                     FamilyName = familyName?.Trim(),
-                    CID = cid?.Trim(),
                     DateOfBirth = dateOfBirth,
                     TenantId = tenantId
                 };
 
-                // Archive if older than 5 years
-                if (isOlderThanFive)
+                // Archive if older than 6 years
+                if (isOlderThanSix)
                     child.Archive();
 
                 _context.Children.Add(child);

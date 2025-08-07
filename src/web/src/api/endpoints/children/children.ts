@@ -26,7 +26,7 @@ import type { ChildDetailVM } from "../../models/childDetailVM";
 
 import type { ChildListVM } from "../../models/childListVM";
 
-import type { GetAllChildrenParams } from "../../models/getAllChildrenParams";
+import type { ListChildrenParams } from "../../models/listChildrenParams";
 
 import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
 
@@ -35,7 +35,7 @@ import type { UpdateChildCommand } from "../../models/updateChildCommand";
 import { executeFetchPaginated } from "../../mutator/executeFetchPaginated";
 import { executeFetch } from "../../mutator/executeFetch";
 
-export const getAllChildren = (params?: GetAllChildrenParams, signal?: AbortSignal) => {
+export const listChildren = (params: ListChildrenParams, signal?: AbortSignal) => {
   return executeFetchPaginated<ChildListVM[]>({
     url: `/crm/v1/children`,
     method: "GET",
@@ -44,94 +44,82 @@ export const getAllChildren = (params?: GetAllChildrenParams, signal?: AbortSign
   });
 };
 
-export const getGetAllChildrenQueryKey = (params?: GetAllChildrenParams) => {
+export const getListChildrenQueryKey = (params: ListChildrenParams) => {
   return [`/crm/v1/children`, ...(params ? [params] : [])] as const;
 };
 
-export const getGetAllChildrenQueryOptions = <
-  TData = Awaited<ReturnType<typeof getAllChildren>>,
+export const getListChildrenQueryOptions = <
+  TData = Awaited<ReturnType<typeof listChildren>>,
   TError = unknown,
 >(
-  params?: GetAllChildrenParams,
+  params: ListChildrenParams,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllChildren>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listChildren>>, TError, TData>>;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetAllChildrenQueryKey(params);
+  const queryKey = queryOptions?.queryKey ?? getListChildrenQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllChildren>>> = ({ signal }) =>
-    getAllChildren(params, signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listChildren>>> = ({ signal }) =>
+    listChildren(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getAllChildren>>,
+    Awaited<ReturnType<typeof listChildren>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetAllChildrenQueryResult = NonNullable<Awaited<ReturnType<typeof getAllChildren>>>;
-export type GetAllChildrenQueryError = unknown;
+export type ListChildrenQueryResult = NonNullable<Awaited<ReturnType<typeof listChildren>>>;
+export type ListChildrenQueryError = unknown;
 
-export function useGetAllChildren<
-  TData = Awaited<ReturnType<typeof getAllChildren>>,
-  TError = unknown,
->(
-  params: undefined | GetAllChildrenParams,
+export function useListChildren<TData = Awaited<ReturnType<typeof listChildren>>, TError = unknown>(
+  params: ListChildrenParams,
   options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllChildren>>, TError, TData>> &
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listChildren>>, TError, TData>> &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllChildren>>,
+          Awaited<ReturnType<typeof listChildren>>,
           TError,
-          Awaited<ReturnType<typeof getAllChildren>>
+          Awaited<ReturnType<typeof listChildren>>
         >,
         "initialData"
       >;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetAllChildren<
-  TData = Awaited<ReturnType<typeof getAllChildren>>,
-  TError = unknown,
->(
-  params?: GetAllChildrenParams,
+export function useListChildren<TData = Awaited<ReturnType<typeof listChildren>>, TError = unknown>(
+  params: ListChildrenParams,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllChildren>>, TError, TData>> &
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listChildren>>, TError, TData>> &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllChildren>>,
+          Awaited<ReturnType<typeof listChildren>>,
           TError,
-          Awaited<ReturnType<typeof getAllChildren>>
+          Awaited<ReturnType<typeof listChildren>>
         >,
         "initialData"
       >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetAllChildren<
-  TData = Awaited<ReturnType<typeof getAllChildren>>,
-  TError = unknown,
->(
-  params?: GetAllChildrenParams,
+export function useListChildren<TData = Awaited<ReturnType<typeof listChildren>>, TError = unknown>(
+  params: ListChildrenParams,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllChildren>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listChildren>>, TError, TData>>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetAllChildren<
-  TData = Awaited<ReturnType<typeof getAllChildren>>,
-  TError = unknown,
->(
-  params?: GetAllChildrenParams,
+export function useListChildren<TData = Awaited<ReturnType<typeof listChildren>>, TError = unknown>(
+  params: ListChildrenParams,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllChildren>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listChildren>>, TError, TData>>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAllChildrenQueryOptions(params, options);
+  const queryOptions = getListChildrenQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

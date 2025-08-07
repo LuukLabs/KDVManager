@@ -14,7 +14,7 @@ services:
     image: postgres:latest
   
   jaeger:
-    image: jaegertracing/all-in-one:latest
+    image: cr.jaegertracing.io/jaegertracing/jaeger:2.9.0
     ports:
       - "16686:16686"   # Jaeger UI
       - "14250:14250"   # gRPC for collector

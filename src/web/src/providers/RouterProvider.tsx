@@ -84,15 +84,6 @@ const router = (t: TFunction<"translation">) =>
               ],
             },
             {
-              path: "people",
-              lazy: () => import("@pages/people/IndexPersonPage"),
-              handle: {
-                crumb: () => {
-                  return t("People");
-                },
-              },
-            },
-            {
               path: "settings",
               loader: requireAuth,
               handle: {

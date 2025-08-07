@@ -26,7 +26,7 @@ import type { AddAbsenceCommand } from "../../models/addAbsenceCommand";
 
 import type { ProblemDetails } from "../../models/problemDetails";
 
-import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
+import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
 
 import { executeFetch } from "../../mutator/executeFetch";
 
@@ -163,7 +163,7 @@ export const addAbsence = (
 };
 
 export const getAddAbsenceMutationOptions = <
-  TError = UnprocessableEntityResponse,
+  TError = UnprocessableEntityResponse1,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -199,9 +199,9 @@ export const getAddAbsenceMutationOptions = <
 
 export type AddAbsenceMutationResult = NonNullable<Awaited<ReturnType<typeof addAbsence>>>;
 export type AddAbsenceMutationBody = AddAbsenceCommand;
-export type AddAbsenceMutationError = UnprocessableEntityResponse;
+export type AddAbsenceMutationError = UnprocessableEntityResponse1;
 
-export const useAddAbsence = <TError = UnprocessableEntityResponse, TContext = unknown>(
+export const useAddAbsence = <TError = UnprocessableEntityResponse1, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addAbsence>>,

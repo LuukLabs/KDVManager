@@ -26,7 +26,7 @@ import type { ListTimeSlotsParams } from "../../models/listTimeSlotsParams";
 
 import type { TimeSlotListVM } from "../../models/timeSlotListVM";
 
-import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
+import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
 
 import { executeFetchPaginated } from "../../mutator/executeFetchPaginated";
 import { executeFetch } from "../../mutator/executeFetch";
@@ -149,7 +149,7 @@ export const addTimeSlot = (addTimeSlotCommand: AddTimeSlotCommand, signal?: Abo
 };
 
 export const getAddTimeSlotMutationOptions = <
-  TError = UnprocessableEntityResponse,
+  TError = UnprocessableEntityResponse1,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -185,9 +185,9 @@ export const getAddTimeSlotMutationOptions = <
 
 export type AddTimeSlotMutationResult = NonNullable<Awaited<ReturnType<typeof addTimeSlot>>>;
 export type AddTimeSlotMutationBody = AddTimeSlotCommand;
-export type AddTimeSlotMutationError = UnprocessableEntityResponse;
+export type AddTimeSlotMutationError = UnprocessableEntityResponse1;
 
-export const useAddTimeSlot = <TError = UnprocessableEntityResponse, TContext = unknown>(
+export const useAddTimeSlot = <TError = UnprocessableEntityResponse1, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addTimeSlot>>,

@@ -29,9 +29,9 @@ public class AddChildCommandHandler
         var child = new Child
         {
             Id = Guid.NewGuid(),
-            GivenName = request.GivenName,
-            FamilyName = request.FamilyName,
-            DateOfBirth = request.DateOfBirth,
+            GivenName = request.GivenName!,
+            FamilyName = request.FamilyName!,
+            DateOfBirth = (DateOnly)request.DateOfBirth!,
             CID = request.CID,
             TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
         };

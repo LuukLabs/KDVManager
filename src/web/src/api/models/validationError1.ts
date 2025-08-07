@@ -5,8 +5,11 @@
  * OpenAPI spec version: v1
  */
 
-export type ValidationError = {
+export type ValidationError1 = {
+  /** @minLength 1 */
   property: string;
+  /** @minLength 1 */
   code: string;
+  /** @minLength 1 */
   title: string;
 };

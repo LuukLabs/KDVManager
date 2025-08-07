@@ -3,7 +3,7 @@ import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
 import { keepPreviousData } from "@tanstack/react-query";
-import { useGetAllChildren } from "@api/endpoints/children/children";
+import { useListChildren } from "@api/endpoints/children/children";
 import { usePagination } from "@hooks/usePagination";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
@@ -11,7 +11,7 @@ import { EditChildButton } from "./EditChildButton";
 
 export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
   const { apiPagination, muiPagination } = usePagination();
-  const { data, isLoading, isFetching } = useGetAllChildren(
+  const { data, isLoading, isFetching } = useListChildren(
     { ...apiPagination, archived: showArchived },
     {
       query: { placeholderData: keepPreviousData },

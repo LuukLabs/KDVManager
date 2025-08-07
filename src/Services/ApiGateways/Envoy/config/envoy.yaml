@@ -83,7 +83,7 @@ static_resources:
                   payload_in_metadata: jwt_payload
               rules:
               - match:
-                  prefix: /crm/swagger/
+                  prefix: /crm/openapi/
               - match:
                   prefix: /scheduling/swagger/
               - match:

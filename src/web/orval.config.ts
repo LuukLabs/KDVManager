@@ -31,7 +31,7 @@ const config: ReturnType<typeof defineConfig> = {
       override: {
         mutator: mutatorFetch,
         operations: {
-          GetAllChildren: queryPaginated,
+          ListChildren: queryPaginated,
           ListGroups: queryPaginated,
           ListTimeSlots: queryPaginated,
           GetAllPeople: queryPaginated,

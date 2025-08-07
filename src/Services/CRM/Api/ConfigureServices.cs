@@ -17,31 +17,57 @@ public static class ConfigureServices
 
         services.AddHealthChecks();
 
-        services.AddControllers();
-        services.AddSwaggerGen(options =>
+        services.AddOpenApi(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                Version = "v1",
-                Title = "KDVManager CRM API",
-                Contact = new OpenApiContact
+                document.Info = new()
                 {
-                    Name = "Luuk van Hulten",
-                    Email = "admin@kdvmanager.nl",
-                },
+                    Title = "KDVManager CRM API",
+                    Version = "v1",
+                    Contact = new()
+                    {
+                        Name = "Luuk van Hulten",
+                        Email = "admin@kdvmanager.nl"
+                    }
+                };
+                return Task.CompletedTask;
             });
+            options.AddSchemaTransformer((schema, context, cancellationToken) =>
+            {
+                if (schema.Properties != null)
+                {
+                    var newProperties = schema.Properties.ToDictionary(
+                        prop => Char.ToLowerInvariant(prop.Key[0]) + prop.Key.Substring(1),
+                        prop => prop.Value
+                    );
+                    schema.Properties = newProperties;
+                }
+                return Task.CompletedTask;
+            });
+            options.AddOperationTransformer((operation, context, cancellationToken) =>
+            {
+                if (operation.Parameters != null)
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        parameter.Name = Char.ToLowerInvariant(parameter.Name[0]) + parameter.Name[1..];
+                    }
+                }
 
-            options.DescribeAllParametersInCamelCase();
+                return Task.CompletedTask;
+            });
         });
 
         string domain = $"https://{configuration["Auth0:Domain"]}/";
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = domain;
-                    options.Audience = configuration["Auth0:Audience"];
-                });
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = domain;
+                        options.Audience = configuration["Auth0:Audience"];
+                    });
+        services.AddAuthorization();
 
         var otel = services.AddOpenTelemetry();
         var otlpEndpoint = configuration["Otlp:Endpoint"];

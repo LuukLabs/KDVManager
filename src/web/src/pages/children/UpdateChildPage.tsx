@@ -20,7 +20,7 @@ import {
   CalendarMonth as CalendarIcon,
 } from "@mui/icons-material";
 import {
-  getGetAllChildrenQueryKey,
+  getListChildrenQueryKey,
   useUpdateChild,
   useGetChildById,
   getGetChildByIdQueryOptions,
@@ -78,7 +78,7 @@ const UpdateChildPage = () => {
   };
 
   const onMutateSuccess = () => {
-    void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
     void queryClient.invalidateQueries({ queryKey: getGetChildByIdQueryOptions(childId).queryKey });
     enqueueSnackbar(t("Child updated"), { variant: "success" });
     reset({}, { keepValues: true });
@@ -176,7 +176,7 @@ const UpdateChildPage = () => {
                     try {
                       await archiveChildAsync({ id: childId });
                       enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+                      void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
                       void queryClient.invalidateQueries({
                         queryKey: getGetChildByIdQueryOptions(childId).queryKey,
                       });
@@ -208,7 +208,7 @@ const UpdateChildPage = () => {
                     try {
                       await archiveChildAsync({ id: childId });
                       enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+                      void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
                       void queryClient.invalidateQueries({
                         queryKey: getGetChildByIdQueryOptions(childId).queryKey,
                       });

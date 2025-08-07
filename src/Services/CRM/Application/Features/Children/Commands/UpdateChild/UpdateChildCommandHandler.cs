@@ -36,9 +36,9 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             var originalDateOfBirth = child.DateOfBirth;
 
             // Manually map properties
-            child.GivenName = request.GivenName;
-            child.FamilyName = request.FamilyName;
-            child.DateOfBirth = request.DateOfBirth;
+            child.GivenName = request.GivenName!;
+            child.FamilyName = request.FamilyName!;
+            child.DateOfBirth = (DateOnly)request.DateOfBirth!;
             child.CID = request.CID;
 
             await _childRepository.UpdateAsync(child);

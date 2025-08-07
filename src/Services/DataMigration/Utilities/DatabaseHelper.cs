@@ -13,4 +13,12 @@ public static class DatabaseHelper
         var value = reader.GetValue(columnName);
         return value?.ToString();
     }
+
+    public static int? GetSafeInt(SqlDataReader reader, string columnName)
+    {
+        if (reader.IsDBNull(columnName))
+            return null;
+
+        return reader.GetInt32(columnName);
+    }
 }

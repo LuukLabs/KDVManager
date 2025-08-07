@@ -7,10 +7,8 @@
 
 export type ChildDetailVM = {
   id?: string;
-  /** @nullable */
-  givenName?: string | null;
-  /** @nullable */
-  familyName?: string | null;
+  givenName: string;
+  familyName: string;
   dateOfBirth?: string;
   /** @nullable */
   cid?: string | null;

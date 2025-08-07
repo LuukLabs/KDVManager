@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createDeleteTexts } from "../../utils/createDeleteTexts";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getGetAllChildrenQueryKey, useDeleteChild } from "@api/endpoints/children/children";
+import { getListChildrenQueryKey, useDeleteChild } from "@api/endpoints/children/children";
 
 type DeleteChildButton = {
   id: string;
@@ -17,7 +17,7 @@ export const DeleteChildButton: React.FC<DeleteChildButton> = ({ id, displayName
   const queryClient = useQueryClient();
 
   const handleSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
   };
 
   const config = {

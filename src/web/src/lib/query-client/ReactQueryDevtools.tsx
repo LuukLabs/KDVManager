@@ -7,6 +7,8 @@ export const ReactQueryDevtools:
   ? () => null
   : React.lazy(() =>
       import("@tanstack/react-query-devtools").then((res) => ({
-        default: () => <res.ReactQueryDevtools initialIsOpen={false} />,
+        default: () => (
+          <res.ReactQueryDevtools initialIsOpen={false} buttonPosition={"bottom-left"} />
+        ),
       })),
     );

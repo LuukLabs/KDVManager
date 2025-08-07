@@ -6,11 +6,13 @@
  */
 
 export type UpdateChildCommand = {
+  id: string;
   /** @nullable */
-  givenName?: string | null;
+  givenName: string | null;
   /** @nullable */
-  familyName?: string | null;
-  dateOfBirth?: string;
+  familyName: string | null;
+  /** @nullable */
+  dateOfBirth: string | null;
   /** @nullable */
   cid?: string | null;
 };

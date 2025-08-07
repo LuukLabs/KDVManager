@@ -4,7 +4,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { getGetAllChildrenQueryKey, useAddChild } from "@api/endpoints/children/children";
+import { getListChildrenQueryKey, useAddChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -28,7 +28,7 @@ const NewChildPage = () => {
   };
 
   const onSuccess = () => {
-    void queryClient.invalidateQueries({ queryKey: getGetAllChildrenQueryKey() });
+    void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
     navigate("/children");
   };
 

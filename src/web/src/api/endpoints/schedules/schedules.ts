@@ -36,7 +36,7 @@ import type { ProblemDetails } from "../../models/problemDetails";
 
 import type { ScheduleByDateVM } from "../../models/scheduleByDateVM";
 
-import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
+import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
 
 import { executeFetch } from "../../mutator/executeFetch";
 
@@ -160,7 +160,7 @@ export const addSchedule = (addScheduleCommand: AddScheduleCommand, signal?: Abo
 };
 
 export const getAddScheduleMutationOptions = <
-  TError = UnprocessableEntityResponse,
+  TError = UnprocessableEntityResponse1,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -196,9 +196,9 @@ export const getAddScheduleMutationOptions = <
 
 export type AddScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof addSchedule>>>;
 export type AddScheduleMutationBody = AddScheduleCommand;
-export type AddScheduleMutationError = UnprocessableEntityResponse;
+export type AddScheduleMutationError = UnprocessableEntityResponse1;
 
-export const useAddSchedule = <TError = UnprocessableEntityResponse, TContext = unknown>(
+export const useAddSchedule = <TError = UnprocessableEntityResponse1, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addSchedule>>,

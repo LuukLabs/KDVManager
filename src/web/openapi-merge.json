@@ -1,7 +1,7 @@
 {
   "inputs": [
     {
-      "inputURL": "http://localhost:5200/crm/swagger/v1/swagger.json",
+      "inputURL": "http://localhost:5200/crm/openapi/v1.json",
       "pathModification": {
         "prepend": "/crm"
       }

@@ -5,9 +5,17 @@
  * OpenAPI spec version: v1
  */
 
-export type GetAllChildrenParams = {
+export type ListChildrenParams = {
   search?: string;
   archived?: boolean;
+  /**
+   * @minimum 1
+   * @maximum 2147483647
+   */
   pageNumber?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
   pageSize?: number;
 };

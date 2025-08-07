@@ -28,7 +28,7 @@ import type { ListGroupsParams } from "../../models/listGroupsParams";
 
 import type { ProblemDetails } from "../../models/problemDetails";
 
-import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
+import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
 
 import { executeFetchPaginated } from "../../mutator/executeFetchPaginated";
 import { executeFetch } from "../../mutator/executeFetch";
@@ -139,7 +139,7 @@ export const addGroup = (addGroupCommand: AddGroupCommand, signal?: AbortSignal)
 };
 
 export const getAddGroupMutationOptions = <
-  TError = UnprocessableEntityResponse,
+  TError = UnprocessableEntityResponse1,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -175,9 +175,9 @@ export const getAddGroupMutationOptions = <
 
 export type AddGroupMutationResult = NonNullable<Awaited<ReturnType<typeof addGroup>>>;
 export type AddGroupMutationBody = AddGroupCommand;
-export type AddGroupMutationError = UnprocessableEntityResponse;
+export type AddGroupMutationError = UnprocessableEntityResponse1;
 
-export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unknown>(
+export const useAddGroup = <TError = UnprocessableEntityResponse1, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addGroup>>,

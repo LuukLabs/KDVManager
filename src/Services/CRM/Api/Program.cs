@@ -11,7 +11,10 @@ builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseSwagger();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
 app.UseRouting();
 
@@ -24,6 +27,8 @@ app.UseMiddleware<TenancyMiddleware>();
 
 app.MapHealthChecks("/healthz");
 
-app.MapControllers().RequireAuthorization();
+// Map minimal API endpoints
+app.MapChildrenEndpoints();
+// app.MapPeopleEndpoints();
 
 app.Run();

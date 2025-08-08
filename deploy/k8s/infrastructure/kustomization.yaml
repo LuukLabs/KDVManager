@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kdvmanager-prod
+
+resources:
+- secrets/
+- envoy/
+- rabbitmq/
+
+labels:
+- pairs:
+    app.kubernetes.io/name: kdvmanager-infrastructure
+    app.kubernetes.io/part-of: kdvmanager
+    app.kubernetes.io/managed-by: kustomize
+    environment: production
+    component: infrastructure
+
+commonAnnotations:
+  argocd.argoproj.io/managed: "true"

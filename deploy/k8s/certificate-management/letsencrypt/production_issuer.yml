@@ -3,6 +3,13 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
   namespace: cert-manager
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/part-of: certificate-management
+    app.kubernetes.io/component: cluster-issuer
+    environment: production
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory

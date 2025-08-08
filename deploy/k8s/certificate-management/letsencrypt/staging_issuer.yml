@@ -2,6 +2,14 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
+  namespace: cert-manager
+  labels:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/part-of: certificate-management
+    app.kubernetes.io/component: cluster-issuer
+    environment: staging
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kdvmanager-prod
+
+resources:
+- crm/
+- scheduling/
+- web/
+- data-migration/
+
+labels:
+- pairs:
+    app.kubernetes.io/name: kdvmanager-applications
+    app.kubernetes.io/part-of: kdvmanager
+    app.kubernetes.io/managed-by: kustomize
+    environment: production
+    component: applications
+
+commonAnnotations:
+  argocd.argoproj.io/managed: "true"

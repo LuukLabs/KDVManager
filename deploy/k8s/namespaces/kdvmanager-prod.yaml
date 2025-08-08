@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kdvmanager-prod
+  labels:
+    name: kdvmanager-prod
+    environment: production
+    app.kubernetes.io/name: kdvmanager
+    app.kubernetes.io/part-of: kdvmanager
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"

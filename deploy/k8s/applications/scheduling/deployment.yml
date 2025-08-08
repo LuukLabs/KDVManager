@@ -52,6 +52,8 @@ spec:
             containerPort: 8080
             protocol: TCP
         env:
+          - name: OTEL_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
           - name: ASPNETCORE_URLS
@@ -88,6 +90,8 @@ spec:
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
         imagePullPolicy: Always
         env:
+          - name: OTEL_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER

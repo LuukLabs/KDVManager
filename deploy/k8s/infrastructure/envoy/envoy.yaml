@@ -4,6 +4,17 @@ admin:
       address: 0.0.0.0
       port_value: 8001
 
+stats_config:
+  stats_tags:
+    - tag_name: cluster_name
+      regex: "^cluster\\.((.+?)\\.).*"
+    - tag_name: virtual_host_name
+      regex: "^vhost\\.((.+?)\\.).*"
+    - tag_name: listener_address
+      regex: "^listener\\.((.+?)\\.).*"
+    - tag_name: http_conn_manager_prefix
+      regex: "^http\\.((.+?)\\.).*"
+
 static_resources:
   listeners:
   - name: listener_0
@@ -16,6 +27,16 @@ static_resources:
       - name: envoy.http_connection_manager
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          tracing:
+            provider:
+              name: envoy.tracers.opentelemetry
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
+                grpc_service:
+                  envoy_grpc:
+                    cluster_name: otel-collector
+                  timeout: 0.25s
+                service_name: envoy
           stat_prefix: ingress_http
           upgrade_configs:
           - upgrade_type: websocket
@@ -104,6 +125,24 @@ static_resources:
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
         sni: kdvmanager.eu.auth0.com
+  - name: otel-collector
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
+    load_assignment:
+      cluster_name: otel-collector
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: otel-collector.observability.svc.cluster.local
+                port_value: 4317
   - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns

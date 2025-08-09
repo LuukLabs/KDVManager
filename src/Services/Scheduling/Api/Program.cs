@@ -10,10 +10,12 @@ builder.Services.AddApplicationServices();
 builder.Services.AddMassTransitServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
-var otlpEndpoint = builder.Configuration["Otlp:Endpoint"];
-if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+var otelEndpoint = builder.Configuration["Otel:Endpoint"];
+if (!string.IsNullOrWhiteSpace(otelEndpoint))
 {
     builder.Logging.ClearProviders();
+    builder.Logging.AddConsole();
+    builder.Logging.AddDebug();
     builder.Logging.AddOpenTelemetry(options =>
     {
         options.IncludeScopes = true;
@@ -21,7 +23,7 @@ if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         options.ParseStateValues = true;
         options.AddOtlpExporter(o =>
         {
-            o.Endpoint = new Uri(otlpEndpoint);
+            o.Endpoint = new Uri(otelEndpoint);
         });
     });
 }

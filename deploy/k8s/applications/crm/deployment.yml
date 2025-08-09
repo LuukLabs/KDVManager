@@ -18,6 +18,10 @@ spec:
       labels:
         app: crm-api
         release: production
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: kdvmanager-sa
       containers:
@@ -55,7 +59,7 @@ spec:
             containerPort: 443
             protocol: TCP
         env:
-          - name: OTEL_ENDPOINT
+          - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
@@ -93,7 +97,7 @@ spec:
         image: ghcr.io/luuklabs/kdvmanager/crm.migrator:linux-main
         imagePullPolicy: Always
         env:
-          - name: OTEL_ENDPOINT
+          - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"

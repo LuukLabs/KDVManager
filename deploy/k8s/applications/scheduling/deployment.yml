@@ -18,6 +18,10 @@ spec:
       labels:
         app: scheduling-api
         release: production
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: kdvmanager-sa
       containers:
@@ -30,7 +34,7 @@ spec:
             path: /healthz
           initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
@@ -38,21 +42,21 @@ spec:
             path: /healthz
           initialDelaySeconds: 20
           periodSeconds: 5
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         resources:
           limits:
-            memory: 100Mi
+            memory: 200Mi
             cpu: 500m
           requests:
-            memory: 50Mi
+            memory: 10Mi
             cpu: 100m
         ports:
           - name: http
             containerPort: 8080
             protocol: TCP
         env:
-          - name: OTEL_ENDPOINT
+          - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
@@ -90,7 +94,7 @@ spec:
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
         imagePullPolicy: Always
         env:
-          - name: OTEL_ENDPOINT
+          - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"

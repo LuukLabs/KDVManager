@@ -70,7 +70,7 @@ public static class ConfigureServices
         services.AddAuthorization();
 
         var otel = services.AddOpenTelemetry();
-        var otlpEndpoint = configuration["Otlp:Endpoint"];
+        var otelEndpoint = configuration["Otel:Endpoint"];
         otel.ConfigureResource(resource => resource.AddService(serviceName: "crm-api"));
 
         otel.WithTracing(tracing =>
@@ -80,11 +80,11 @@ public static class ConfigureServices
                     .AddHttpClientInstrumentation()
                     .AddSource(DiagnosticHeaders.DefaultListenerName);
 
-                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                if (!string.IsNullOrWhiteSpace(otelEndpoint))
                 {
                     tracing.AddOtlpExporter(options =>
                     {
-                        options.Endpoint = new Uri(otlpEndpoint);
+                        options.Endpoint = new Uri(otelEndpoint);
                     });
                 }
             });
@@ -94,11 +94,11 @@ public static class ConfigureServices
                 metrics
                     .AddAspNetCoreInstrumentation();
 
-                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                if (!string.IsNullOrWhiteSpace(otelEndpoint))
                 {
                     metrics.AddOtlpExporter(options =>
                     {
-                        options.Endpoint = new Uri(otlpEndpoint);
+                        options.Endpoint = new Uri(otelEndpoint);
                     });
                 }
             });

@@ -25,6 +25,17 @@ data:
             - job_name: 'otel-collector'
               static_configs:
                 - targets: ['localhost:8889']
+      k8s_cluster:
+        auth_type: serviceAccount
+      kubeletstats:
+        collection_interval: 20s
+        auth_type: serviceAccount
+        endpoint: "https://${env:K8S_NODE_IP}:10250"
+        insecure_skip_verify: true
+        metric_groups:
+          - node
+          - pod
+          - container
     
     processors:
       batch:
@@ -41,16 +52,25 @@ data:
       memory_limiter:
         limit_mib: 512
         check_interval: 1s
+      filter:
+        metrics:
+          include:
+            match_type: regexp
+            metric_names:
+              - '^k8s.node.condition$'
+              - '^k8s.node.allocatable.*$'
 
     exporters:
       debug:
         verbosity: detailed
-      # otlp:
-      #   endpoint: "your-external-otel-endpoint:4317"
-      #   tls:
-      #     insecure: true
-      # prometheus:
-      #   endpoint: "0.0.0.0:8889"
+      otlp/jaeger:
+        endpoint: "jaeger.observability.svc.cluster.local:4317"
+        tls:
+          insecure: true
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+        metric_expiration: 180m
+        enable_open_metrics: true
         
     extensions:
       health_check:
@@ -66,12 +86,12 @@ data:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, resource, batch]
-          exporters: [debug] # otlp
+          exporters: [otlp/jaeger, debug]
         metrics:
-          receivers: [otlp, prometheus]
-          processors: [memory_limiter, resource, batch]
-          exporters: [debug] # prometheus, otlp
+          receivers: [otlp, prometheus, k8s_cluster, kubeletstats]
+          processors: [memory_limiter, resource, filter, batch]
+          exporters: [prometheus, debug]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, resource, batch]
-          exporters: [debug] # otlp
+          exporters: [debug]

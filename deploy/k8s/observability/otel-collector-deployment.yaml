@@ -23,6 +23,7 @@ spec:
         app.kubernetes.io/part-of: observability-stack
         app.kubernetes.io/component: telemetry-collector
     spec:
+      serviceAccountName: otel-collector
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest
@@ -34,6 +35,23 @@ spec:
               name: otlp-http
             - containerPort: 8889 # Prometheus metrics
               name: metrics
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: K8S_NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: K8S_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           resources:
             requests:
               cpu: 200m

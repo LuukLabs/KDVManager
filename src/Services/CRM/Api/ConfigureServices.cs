@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using KDVManager.Services.CRM.Api.Telemetry;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -76,8 +77,34 @@ public static class ConfigureServices
         otel.WithTracing(tracing =>
             {
                 tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
+                    .AddAspNetCoreInstrumentation(options =>
+                    {
+                        // Configure ASP.NET Core instrumentation for better error tracking
+                        options.RecordException = true;
+                        options.EnrichWithHttpRequest = (activity, httpRequest) =>
+                        {
+                            activity.SetTag("http.request.body.size", httpRequest.ContentLength);
+                            activity.SetTag("http.request.client_ip", httpRequest.HttpContext.Connection.RemoteIpAddress?.ToString());
+                        };
+                        options.EnrichWithHttpResponse = (activity, httpResponse) =>
+                        {
+                            activity.SetTag("http.response.body.size", httpResponse.ContentLength);
+                        };
+                        options.EnrichWithException = (activity, exception) =>
+                        {
+                            activity.SetTag("exception.type", exception.GetType().FullName);
+                            activity.SetTag("exception.stacktrace", exception.StackTrace);
+                        };
+                    })
+                    .AddHttpClientInstrumentation(options =>
+                    {
+                        options.RecordException = true;
+                        options.EnrichWithException = (activity, exception) =>
+                        {
+                            activity.SetTag("exception.type", exception.GetType().FullName);
+                            activity.SetTag("exception.message", exception.Message);
+                        };
+                    })
                     .AddSource(DiagnosticHeaders.DefaultListenerName);
 
                 if (!string.IsNullOrWhiteSpace(otelEndpoint))
@@ -92,7 +119,10 @@ public static class ConfigureServices
         otel.WithMetrics(metrics =>
             {
                 metrics
-                    .AddAspNetCoreInstrumentation();
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddMeter(CrmApiMetrics.Meter.Name); // Add custom metrics
 
                 if (!string.IsNullOrWhiteSpace(otelEndpoint))
                 {

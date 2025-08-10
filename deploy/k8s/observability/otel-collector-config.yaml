@@ -52,19 +52,21 @@ data:
       memory_limiter:
         limit_mib: 512
         check_interval: 1s
-      filter:
-        metrics:
-          include:
-            match_type: regexp
-            metric_names:
-              - '^k8s.node.condition$'
-              - '^k8s.node.allocatable.*$'
+      filter/ottl:
+        error_mode: ignore
+        traces:
+          span:
+            - 'attributes["http.route"] == "/healthz"'
 
     exporters:
       debug:
         verbosity: detailed
       otlp/jaeger:
         endpoint: "jaeger.observability.svc.cluster.local:4317"
+        tls:
+          insecure: true
+      otlp/signoz:
+        endpoint: "signoz-otel-collector.signoz.svc.cluster.local:4317"
         tls:
           insecure: true
       prometheus:
@@ -85,13 +87,13 @@ data:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resource, batch]
-          exporters: [otlp/jaeger, debug]
+          processors: [memory_limiter, resource, filter/ottl, batch]
+          exporters: [otlp/signoz, debug]
         metrics:
-          receivers: [otlp, prometheus, k8s_cluster, kubeletstats]
-          processors: [memory_limiter, resource, filter, batch]
-          exporters: [prometheus, debug]
+          receivers: [otlp, k8s_cluster, kubeletstats]
+          processors: [memory_limiter, resource, batch]
+          exporters: [otlp/signoz, debug]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, resource, batch]
-          exporters: [debug]
+          exporters: [otlp/signoz, debug]

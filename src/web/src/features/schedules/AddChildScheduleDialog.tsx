@@ -1,4 +1,4 @@
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import { FormContainer } from "react-hook-form-mui";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import Button from "@mui/material/Button";
@@ -13,11 +13,25 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
-import Grid from "@mui/material/Grid";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Paper,
+  Tooltip,
+  Stack,
+  useTheme,
+  useMediaQuery,
+  Chip,
+} from "@mui/material";
+import { AccessTime as AccessTimeIcon } from "@mui/icons-material";
 import GroupAutocomplete from "../groups/GroupAutocomplete";
 import TimeSlotAutocomplete from "../timeSlots/TimeSlotAutocomplete";
 import { getGetChildSchedulesQueryKey, useAddSchedule } from "@api/endpoints/schedules/schedules";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import GroupIcon from "@mui/icons-material/Group";
 
 type AddChildScheduleDialogProps = {
   childId: string;
@@ -29,7 +43,15 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     const modal = useModal();
     const mutate = useAddSchedule();
     const queryClient = useQueryClient();
-    const formContext = useForm<AddScheduleCommand>({ defaultValues: { scheduleRules: [] } });
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+    const formContext = useForm<AddScheduleCommand>({
+      defaultValues: {
+        scheduleRules: [],
+      },
+      mode: "onChange",
+    });
 
     const {
       control,
@@ -40,6 +62,8 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     } = formContext;
     const { enqueueSnackbar } = useSnackbar();
 
+    const { fields, append, remove } = useFieldArray({ control, name: "scheduleRules" });
+
     const handleOnCancelClick = () => {
       modal.remove();
       reset();
@@ -48,7 +72,9 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
       // Filter out schedule rules that don't have a timeslot or group selected
       const filteredScheduleRules =
-        data.scheduleRules?.filter((rule) => rule?.timeSlotId && rule.groupId) ?? [];
+        data.scheduleRules?.filter(
+          (rule) => rule?.timeSlotId && rule.groupId && rule.day !== undefined,
+        ) ?? [];
 
       const submitData = {
         ...data,
@@ -87,149 +113,319 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
       { key: "friday", value: 5, label: t("Friday") },
     ];
 
-    const renderWeeklySchedule = () => (
-      <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 2, p: 2 }}>
-        {weekdays.map((day, index) => (
+    const getDayRules = (dayValue: number) => {
+      return fields
+        .map((field, index) => ({ field, index }))
+        .filter(({ field }) => (field as any).day === dayValue);
+    };
+
+    const addRuleForDay = (dayValue: number) => {
+      append({ day: dayValue as any, timeSlotId: "", groupId: "" });
+    };
+
+    const renderDaySection = (day: { key: string; value: number; label: string }) => {
+      const dayRules = getDayRules(day.value);
+      const ruleCount = dayRules.length;
+
+      return (
+        <Paper
+          key={day.key}
+          elevation={0}
+          sx={{
+            border: "1px solid",
+            borderColor: ruleCount > 0 ? "primary.200" : "grey.200",
+            borderRadius: 2,
+            overflow: "hidden",
+            backgroundColor: ruleCount > 0 ? "primary.25" : "grey.25",
+            transition: "all 0.2s ease-in-out",
+            "&:hover": {
+              borderColor: "primary.main",
+              boxShadow: 1,
+            },
+          }}
+        >
+          {/* Day Header */}
           <Box
-            key={day.key}
             sx={{
-              mb: index === weekdays.length - 1 ? 0 : 1.5,
+              px: 2.5,
+              py: 1.5,
               display: "flex",
               alignItems: "center",
-              gap: 2,
-              py: 1,
+              justifyContent: "space-between",
+              backgroundColor: ruleCount > 0 ? "primary.50" : "transparent",
             }}
           >
-            <Typography
-              variant="body2"
-              fontWeight="medium"
-              sx={{
-                minWidth: 80,
-                color: "text.secondary",
-                fontSize: "0.875rem",
-              }}
-            >
-              {day.label}
-            </Typography>
-            <Grid container spacing={1.5} sx={{ flex: 1 }}>
-              <Grid size={6}>
-                <Controller
-                  name={`scheduleRules.${day.value}.timeSlotId`}
-                  control={control}
-                  render={({ field }) => (
-                    <TimeSlotAutocomplete
-                      size="small"
-                      onChange={(_, newValue) => {
-                        field.onChange(newValue ? newValue.id : null);
-                      }}
-                    />
-                  )}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: "0.95rem",
+                  color: ruleCount > 0 ? "primary.main" : "text.primary",
+                }}
+              >
+                {day.label}
+              </Typography>
+              {ruleCount > 0 && (
+                <Chip
+                  label={ruleCount}
+                  color="primary"
+                  size="small"
+                  sx={{
+                    fontWeight: 600,
+                    height: 20,
+                    minWidth: 20,
+                    "& .MuiChip-label": {
+                      px: 0.75,
+                      fontSize: "0.7rem",
+                    },
+                  }}
                 />
-              </Grid>
-              <Grid size={6}>
-                <Controller
-                  name={`scheduleRules.${day.value}.groupId`}
-                  control={control}
-                  render={({ field }) => (
-                    <GroupAutocomplete
-                      size="small"
-                      onChange={(_, newValue) => field.onChange(newValue ? newValue.id : null)}
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-            <Controller
-              name={`scheduleRules.${day.value}.day`}
-              control={control}
-              defaultValue={day.value as any}
-              render={() => <></>} // Hidden field
-            />
+              )}
+            </Box>
+            <Tooltip title={t("Add time slot") as string} arrow>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => addRuleForDay(day.value)}
+                sx={{
+                  width: 32,
+                  height: 32,
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                    transform: "scale(1.05)",
+                  },
+                  transition: "all 0.2s ease-in-out",
+                }}
+              >
+                <AddIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </Box>
-        ))}
-      </Box>
-    );
+
+          {/* Rules Content */}
+          {ruleCount > 0 && (
+            <Box sx={{ px: 2.5, pb: 2 }}>
+              <Stack spacing={1.5}>
+                {dayRules.map(({ field, index }, ruleIndex) => (
+                  <Box
+                    key={field.id}
+                    sx={{
+                      p: 2,
+                      backgroundColor: "white",
+                      borderRadius: 1.5,
+                      border: "1px solid",
+                      borderColor: "grey.200",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                      <AccessTimeIcon sx={{ fontSize: 16, color: "primary.main" }} />
+                      <Typography
+                        variant="caption"
+                        sx={{ fontWeight: 600, color: "text.secondary" }}
+                      >
+                        {t("Time Slot {number}", { number: ruleIndex + 1 })}
+                      </Typography>
+                      <Box sx={{ flexGrow: 1 }} />
+                      <Tooltip title={t("Remove") as string} arrow>
+                        <IconButton
+                          color="error"
+                          size="small"
+                          onClick={() => remove(index)}
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            backgroundColor: "error.50",
+                            "&:hover": {
+                              backgroundColor: "error.100",
+                              transform: "scale(1.1)",
+                            },
+                            transition: "all 0.2s ease-in-out",
+                          }}
+                        >
+                          <DeleteIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+
+                    <Stack spacing={1.5} direction={isMobile ? "column" : "row"}>
+                      <Controller
+                        name={`scheduleRules.${index}.timeSlotId`}
+                        control={control}
+                        render={({ field }) => (
+                          <TimeSlotAutocomplete
+                            size="small"
+                            fullWidth
+                            onChange={(_, newValue) =>
+                              field.onChange(newValue ? newValue.id : null)
+                            }
+                          />
+                        )}
+                      />
+                      <Controller
+                        name={`scheduleRules.${index}.groupId`}
+                        control={control}
+                        render={({ field }) => (
+                          <GroupAutocomplete
+                            size="small"
+                            fullWidth
+                            onChange={(_, newValue) =>
+                              field.onChange(newValue ? newValue.id : null)
+                            }
+                          />
+                        )}
+                      />
+                    </Stack>
+
+                    {/* Hidden field for day value */}
+                    <Controller
+                      name={`scheduleRules.${index}.day`}
+                      control={control}
+                      defaultValue={day.value as any}
+                      render={() => <></>}
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Paper>
+      );
+    };
 
     return (
-      <Dialog {...muiDialogV5(modal)} maxWidth="md" fullWidth>
-        <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h5" component="div">
-            {t("Add schedule")}
-          </Typography>
+      <Dialog
+        {...muiDialogV5(modal)}
+        maxWidth="md"
+        fullWidth
+        fullScreen={isMobile}
+        PaperProps={{
+          sx: {
+            borderRadius: isMobile ? 0 : 3,
+            maxHeight: isMobile ? "100vh" : "90vh",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            pb: 2,
+            borderBottom: "1px solid",
+            borderBottomColor: "divider",
+            backgroundColor: "white",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <CalendarTodayIcon sx={{ color: "primary.main", fontSize: 24 }} />
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ fontWeight: 600, color: "text.primary" }}
+            >
+              {t("Add schedule")}
+            </Typography>
+          </Box>
         </DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
-          <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
-            {t("To add a schedule, please enter the details below.")}
+
+        <DialogContent sx={{ pt: 3, pb: 2 }}>
+          <DialogContentText
+            sx={{ mb: 4, color: "text.secondary", fontSize: "0.95rem", lineHeight: 1.6 }}
+          >
+            {t(
+              "Create a weekly schedule by defining the date range and adding time slots for each weekday. You can add multiple time slots per day for different groups.",
+            )}
           </DialogContentText>
+
           <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={3}>
-              {/* Left Column - Date Range */}
-              <Grid size={4}>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Typography variant="h6" gutterBottom color="primary" sx={{ fontSize: "1.1rem" }}>
-                    {t("Schedule Period")}
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid size={12}>
-                      <DatePickerElement
-                        label={t("Start Date")}
-                        name="startDate"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                          },
-                        }}
-                        transform={{
-                          output: (value) => {
-                            return value ? value.format("YYYY-MM-DD") : null;
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid size={12}>
-                      <DatePickerElement
-                        label={t("End date")}
-                        name="endDate"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                          },
-                        }}
-                        transform={{
-                          output: (value) => {
-                            return value ? value.format("YYYY-MM-DD") : null;
-                          },
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
+            {/* Date Range Section */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                mb: 4,
+                backgroundColor: "grey.50",
+                border: "1px solid",
+                borderColor: "grey.200",
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                <CalendarTodayIcon sx={{ color: "primary.main", fontSize: 20 }} />
+                <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600 }}>
+                  {t("Schedule Period")}
+                </Typography>
+              </Box>
 
-              {/* Right Column - Weekly Schedule */}
-              <Grid size={8}>
-                <Box>
-                  <Typography variant="h6" color="primary" gutterBottom sx={{ fontSize: "1.1rem" }}>
-                    {t("Weekly Schedule")}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 2, fontSize: "0.875rem" }}
-                  >
-                    {t("Select the days and time slots for this schedule")}
-                  </Typography>
+              <Stack spacing={2} direction={isMobile ? "column" : "row"}>
+                <DatePickerElement
+                  label={t("Start Date")}
+                  name="startDate"
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      fullWidth: true,
+                    },
+                  }}
+                  transform={{
+                    output: (value) => (value ? value.format("YYYY-MM-DD") : null),
+                  }}
+                />
+                <DatePickerElement
+                  label={t("End date")}
+                  name="endDate"
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      fullWidth: true,
+                    },
+                  }}
+                  transform={{
+                    output: (value) => (value ? value.format("YYYY-MM-DD") : null),
+                  }}
+                />
+              </Stack>
+            </Paper>
 
-                  {renderWeeklySchedule()}
-                </Box>
-              </Grid>
-            </Grid>
+            {/* Weekly Schedule Section */}
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                <GroupIcon sx={{ color: "primary.main", fontSize: 20 }} />
+                <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600 }}>
+                  {t("Weekly Schedule")}
+                </Typography>
+              </Box>
+
+              <Stack spacing={2}>{weekdays.map((day) => renderDaySection(day))}</Stack>
+            </Box>
           </FormContainer>
         </DialogContent>
-        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
-          <Button variant="outlined" onClick={handleOnCancelClick} size="medium">
+
+        <DialogActions
+          sx={{
+            px: 3,
+            py: 3,
+            gap: 2,
+            borderTop: "1px solid",
+            borderTopColor: "divider",
+            backgroundColor: "white",
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={handleOnCancelClick}
+            size="large"
+            fullWidth={isMobile}
+            sx={{
+              borderColor: "grey.300",
+              color: "text.secondary",
+              "&:hover": {
+                borderColor: "grey.400",
+                backgroundColor: "grey.50",
+              },
+            }}
+          >
             {t("Cancel", { ns: "common" })}
           </Button>
           <Button
@@ -237,7 +433,15 @@ export const AddChildScheduleDialog = NiceModal.create<AddChildScheduleDialogPro
             disabled={!isDirty || !isValid}
             loading={isSubmitting}
             onClick={handleSubmit(onSubmit)}
-            size="medium"
+            size="large"
+            fullWidth={isMobile}
+            sx={{
+              minWidth: isMobile ? "auto" : 160,
+              boxShadow: 2,
+              "&:hover": {
+                boxShadow: 3,
+              },
+            }}
           >
             <span>{t("Add Schedule")}</span>
           </Button>

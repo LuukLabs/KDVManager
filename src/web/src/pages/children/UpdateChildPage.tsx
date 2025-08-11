@@ -36,6 +36,10 @@ import { useTranslation } from "react-i18next";
 import { type updateChildPageLoader } from "./updateChildPage.loader";
 import { ChildScheduleView } from "../../features/schedules/ChildScheduleView";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
+import { AbsenceList } from "../../features/absence/AbsenceList";
+import NiceModal from "@ebay/nice-modal-react";
+import { AddAbsenceDialog } from "../../features/absence/AddAbsenceDialog";
+import { Add as AddIcon } from "@mui/icons-material";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -62,6 +66,9 @@ const UpdateChildPage = () => {
       cid: child?.cid ?? "",
     },
   });
+
+  const onAddAbsenceClickHandler = () =>
+    void NiceModal.show(AddAbsenceDialog, { childId: childId });
 
   const {
     handleSubmit,
@@ -301,6 +308,39 @@ const UpdateChildPage = () => {
             </Box>
 
             <ChildScheduleView childId={childId} />
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid size={{ xs: 12, xl: 6 }}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+              <CalendarIcon color="primary" />
+              <Typography variant="h6" component="h2">
+                {t("Absence")}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+                flexWrap: "wrap",
+                gap: 1,
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={onAddAbsenceClickHandler}
+                startIcon={<AddIcon />}
+                size="medium"
+              >
+                {t("Add Absence")}
+              </Button>
+            </Box>
+            <AbsenceList childId={childId} />
           </CardContent>
         </Card>
       </Grid>

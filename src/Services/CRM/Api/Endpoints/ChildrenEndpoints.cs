@@ -29,7 +29,9 @@ public static class ChildrenEndpoints
         {
             var id = await handler.Handle(command);
             return Results.Ok(id);
-        }).WithName("AddChild").WithTags("children").Produces<Guid>(StatusCodes.Status200OK);
+        }).WithName("AddChild").WithTags("children")
+        .Produces<Guid>(StatusCodes.Status200OK)
+        .Produces<UnprocessableEntityResponse>(StatusCodes.Status422UnprocessableEntity);
 
         endpoints.MapPut("/v1/children/{id:guid}", async ([FromRoute] Guid id, [FromBody] UpdateChildCommand command, [FromServices] UpdateChildCommandHandler handler) =>
         {

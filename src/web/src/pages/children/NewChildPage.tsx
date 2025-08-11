@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
+import { UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 
 const NewChildPage = () => {
   const { t } = useTranslation();
@@ -21,15 +22,24 @@ const NewChildPage = () => {
     },
   });
 
-  const handleSubmit = formContext.handleSubmit;
+  const { handleSubmit, setError } = formContext;
 
   const onSubmit = (data: AddChildCommand) => {
-    mutate({ data: data }, { onSuccess: onSuccess });
+    mutate({ data: data }, { onSuccess: onSuccess, onError: onMutateError });
   };
 
   const onSuccess = () => {
     void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
     navigate("/children");
+  };
+
+  const onMutateError = (error: UnprocessableEntityResponse) => {
+    error.errors.forEach((propertyError) => {
+      setError(propertyError.property as any, {
+        type: "server",
+        message: propertyError.title,
+      });
+    });
   };
 
   return (

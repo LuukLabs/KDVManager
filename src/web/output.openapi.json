@@ -104,6 +104,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1035,6 +1045,7 @@
   "components": {
     "schemas": {
       "AddChildCommand": {
+        "required": ["givenName", "familyName", "dateOfBirth"],
         "type": "object",
         "properties": {
           "givenName": {
@@ -1047,7 +1058,8 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "nullable": true
           },
           "cid": {
             "type": "string",

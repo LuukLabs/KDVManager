@@ -140,7 +140,10 @@ export const addChild = (addChildCommand: AddChildCommand, signal?: AbortSignal)
   });
 };
 
-export const getAddChildMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+export const getAddChildMutationOptions = <
+  TError = UnprocessableEntityResponse,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addChild>>,
     TError,
@@ -174,9 +177,9 @@ export const getAddChildMutationOptions = <TError = unknown, TContext = unknown>
 
 export type AddChildMutationResult = NonNullable<Awaited<ReturnType<typeof addChild>>>;
 export type AddChildMutationBody = AddChildCommand;
-export type AddChildMutationError = unknown;
+export type AddChildMutationError = UnprocessableEntityResponse;
 
-export const useAddChild = <TError = unknown, TContext = unknown>(
+export const useAddChild = <TError = UnprocessableEntityResponse, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addChild>>,

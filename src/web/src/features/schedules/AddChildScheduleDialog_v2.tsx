@@ -47,21 +47,8 @@ type AddChildScheduleDialogProps = {
   childId: string;
 };
 
-// Mock data - replace with actual data from your API
-const mockGroups = [
-  { id: "1", name: "Math Group", color: "#FF6B6B", icon: "📚" },
-  { id: "2", name: "Science Lab", color: "#4ECDC4", icon: "🔬" },
-  { id: "3", name: "Art Class", color: "#45B7D1", icon: "🎨" },
-  { id: "4", name: "Sports", color: "#96CEB4", icon: "⚽" },
-  { id: "5", name: "Music", color: "#FFEAA7", icon: "🎵" },
-];
-
-const mockTimeSlots = [
-  { id: "1", name: "Morning", time: "09:00 - 10:30", color: "#FFE5B4" },
-  { id: "2", name: "Mid Morning", time: "10:45 - 12:15", color: "#D4F1F4" },
-  { id: "3", name: "Afternoon", time: "13:00 - 14:30", color: "#FCE4EC" },
-  { id: "4", name: "Late Afternoon", time: "14:45 - 16:15", color: "#E8F5E8" },
-];
+import { useListGroups } from "@api/endpoints/groups/groups";
+import { useListTimeSlots } from "@api/endpoints/time-slots/time-slots";
 
 export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogProps>(
   ({ childId }) => {
@@ -72,6 +59,24 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [editingRule, setEditingRule] = useState<number | null>(null);
+
+    // Fetch groups and timeslots from API
+    const { data: groupsData } = useListGroups(undefined, {});
+    const { data: timeSlotsData } = useListTimeSlots(undefined, {});
+
+    // Map API data to UI format
+    const groups = (groupsData?.value ?? []).map((g) => ({
+      id: g.id,
+      name: g.name,
+      color: "#4ECDC4", // fallback color, could be improved if API provides
+      icon: "👥", // fallback icon, could be improved if API provides
+    }));
+    const timeSlots = (timeSlotsData?.value ?? []).map((t) => ({
+      id: t.id,
+      name: t.name,
+      time: `${t.startTime} - ${t.endTime}`,
+      color: "#FFE5B4", // fallback color, could be improved if API provides
+    }));
 
     const formContext = useForm<AddScheduleCommand>({
       defaultValues: {
@@ -262,7 +267,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     // Time slot selector component
     const TimeSlotSelector = ({ ruleIndex }: { ruleIndex: number }) => {
       const currentRule = watchedRules?.[ruleIndex];
-
       return (
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "text.primary", mb: 2 }}>
@@ -275,7 +279,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               gap: isMobile ? 1 : 2,
             }}
           >
-            {mockTimeSlots.map((slot) => {
+            {timeSlots.map((slot) => {
               const isSelected = currentRule?.timeSlotId === slot.id;
               return (
                 <ButtonBase
@@ -331,7 +335,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     // Group selector component
     const GroupSelector = ({ ruleIndex }: { ruleIndex: number }) => {
       const currentRule = watchedRules?.[ruleIndex];
-
       return (
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "text.primary", mb: 2 }}>
@@ -344,7 +347,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               gap: isMobile ? 1 : 2,
             }}
           >
-            {mockGroups.map((group) => {
+            {groups.map((group) => {
               const isSelected = currentRule?.groupId === group.id;
               return (
                 <ButtonBase
@@ -403,8 +406,8 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
       const rule = watchedRules?.[index];
       const theme = useTheme();
       const dayInfo = weekdays.find((d) => d.value === rule?.day);
-      const groupInfo = mockGroups.find((g) => g.id === rule?.groupId);
-      const timeSlotInfo = mockTimeSlots.find((t) => t.id === rule?.timeSlotId);
+      const groupInfo = groups.find((g) => g.id === rule?.groupId);
+      const timeSlotInfo = timeSlots.find((t) => t.id === rule?.timeSlotId);
 
       return (
         <Card
@@ -503,6 +506,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       onClick={() => setEditingRule(null)}
                       fullWidth
                       sx={{ borderRadius: 2 }}
+                      disabled={!(rule?.day && rule?.timeSlotId && rule?.groupId)}
                     >
                       {t("Done")}
                     </Button>

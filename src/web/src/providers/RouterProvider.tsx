@@ -78,6 +78,20 @@ const router = (t: TFunction<"translation">) =>
                   },
                 },
                 {
+                  path: ":childId/planning",
+                  lazy: () => import("@pages/children/UpdateChildPageModernTabs"),
+                  loader: withAuth(updateChildPageLoader(queryClient)),
+                  handle: {
+                    crumb: (
+                      data: Awaited<ReturnType<ReturnType<typeof updateChildPageLoader>>>,
+                    ) => {
+                      return data?.givenName && data?.familyName
+                        ? `${data.givenName} ${data.familyName}`
+                        : t("Child");
+                    },
+                  },
+                },
+                {
                   path: "new",
                   lazy: () => import("@pages/children/NewChildPage"),
                 },

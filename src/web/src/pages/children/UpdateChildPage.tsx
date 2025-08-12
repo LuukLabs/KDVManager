@@ -13,6 +13,7 @@ import {
   Stack,
   useMediaQuery,
   useTheme,
+  Container,
 } from "@mui/material";
 import {
   Person as PersonIcon,
@@ -40,6 +41,7 @@ import { AbsenceList } from "../../features/absence/AbsenceList";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddAbsenceDialog } from "../../features/absence/AddAbsenceDialog";
 import { Add as AddIcon } from "@mui/icons-material";
+import { ChildHeader } from "@components/child";
 
 const UpdateChildPage = () => {
   const { childId } = useParams() as { childId: string };
@@ -100,25 +102,14 @@ const UpdateChildPage = () => {
     });
   };
 
-  const getFullName = () => {
-    if (child?.givenName && child?.familyName) {
-      return `${child.givenName} ${child.familyName}`.trim();
-    }
-    return t("Unknown Child");
-  };
-
-  const getInitials = () => {
-    if (child?.givenName && child?.familyName) {
-      return `${child.givenName[0]}${child.familyName[0]}`.toUpperCase();
-    }
-    return "?";
-  };
-
-  const calculateAge = () => {
-    if (!child?.dateOfBirth) return t("N/A");
-    const years = dayjs().diff(dayjs(child.dateOfBirth), "year");
-    return `${years} ${t("years")}`;
-  };
+  const archive = () => {
+    archiveChildAsync({ id: childId });
+                      enqueueSnackbar(t("Child archived"), { variant: "success" });
+                      void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
+                      void queryClient.invalidateQueries({
+                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
+                      });
+  }
 
   if (!childId) {
     return <Alert severity="error">{t("Child ID is required")}</Alert>;
@@ -129,110 +120,18 @@ const UpdateChildPage = () => {
   }
 
   return (
-    <Grid container spacing={3}>
+    <>
       {/* Header Section */}
-      <Grid size={12}>
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: isMobile ? "flex-start" : "center",
-                gap: 2,
-                flexDirection: isMobile ? "column" : "row",
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 56,
-                  height: 56,
-                  bgcolor: "primary.main",
-                }}
-              >
-                {getInitials()}
-              </Avatar>
-              <Box sx={{ flex: 1, width: "100%" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                  {getFullName()}
-                </Typography>
-                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                  <Chip icon={<CalendarIcon />} label={calculateAge()} size="small" />
-                  {child?.cid && (
-                    <Chip label={`CID: ${child.cid}`} size="small" variant="outlined" />
-                  )}
-                  {child?.archivedAt && (
-                    <Chip
-                      label={
-                        t("Archived") +
-                        (child.archivedAt ? `: ${dayjs(child.archivedAt).format("LL")}` : "")
-                      }
-                      color="warning"
-                      size="small"
-                      variant="filled"
-                      sx={{ fontWeight: 600 }}
-                    />
-                  )}
-                </Stack>
-              </Box>
-              {/* Archive Button - Responsive Placement */}
-              {isMobile ? null : (
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={async () => {
-                    try {
-                      await archiveChildAsync({ id: childId });
-                      enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
-                      void queryClient.invalidateQueries({
-                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
-                      });
-                    } catch {
-                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
-                    }
-                  }}
-                  sx={{ ml: 2 }}
-                  disabled={isArchiving ?? !!child?.archivedAt}
-                >
-                  {t("Archive Child")}
-                </Button>
-              )}
-            </Box>
-            {/* Archive Button for Mobile - below header */}
-            {isMobile && (
-              <Box
-                sx={{
-                  width: "100%",
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={async () => {
-                    try {
-                      await archiveChildAsync({ id: childId });
-                      enqueueSnackbar(t("Child archived"), { variant: "success" });
-                      void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
-                      void queryClient.invalidateQueries({
-                        queryKey: getGetChildByIdQueryOptions(childId).queryKey,
-                      });
-                    } catch {
-                      enqueueSnackbar(t("Failed to archive child"), { variant: "error" });
-                    }
-                  }}
-                  disabled={isArchiving ?? !!child?.archivedAt}
-                >
-                  {t("Archive Child")}
-                </Button>
-              </Box>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
+      <ChildHeader
+          firstName={child.givenName}
+          lastName={child.familyName}
+          dateOfBirth={child.dateOfBirth}
+          cid={child.cid || undefined}
+          onArchive={archive}
+          loading={isArchiving}
+        />
 
+          <Grid container spacing={3}>
       {/* Personal Information Section */}
       <Grid size={{ xs: 12, xl: 6 }}>
         <Card>
@@ -344,7 +243,8 @@ const UpdateChildPage = () => {
           </CardContent>
         </Card>
       </Grid>
-    </Grid>
+      </Grid>
+    </>
   );
 };
 

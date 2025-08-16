@@ -65,7 +65,7 @@ const router = (t: TFunction<"translation">) =>
                 },
                 {
                   path: ":childId",
-                  lazy: () => import("@pages/children/UpdateChildPage"),
+                  lazy: () => import("@pages/children/UpdateChildPageModernTabs"),
                   loader: withAuth(updateChildPageLoader(queryClient)),
                   handle: {
                     crumb: (
@@ -94,6 +94,48 @@ const router = (t: TFunction<"translation">) =>
                 {
                   path: "new",
                   lazy: () => import("@pages/children/NewChildPage"),
+                },
+              ],
+            },
+            {
+              path: "guardians",
+              loader: requireAuth,
+              handle: {
+                crumb: () => {
+                  return t("Guardians");
+                },
+              },
+              children: [
+                {
+                  index: true,
+                  lazy: () => import("@pages/guardians/GuardiansPage"),
+                },
+                {
+                  path: "new",
+                  lazy: () => import("@pages/guardians/NewGuardianPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("New Guardian");
+                    },
+                  },
+                },
+                {
+                  path: ":guardianId",
+                  lazy: () => import("@pages/guardians/GuardianDetailPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("Guardian Details");
+                    },
+                  },
+                },
+                {
+                  path: ":guardianId/edit",
+                  lazy: () => import("@pages/guardians/EditGuardianPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("Edit Guardian");
+                    },
+                  },
                 },
               ],
             },

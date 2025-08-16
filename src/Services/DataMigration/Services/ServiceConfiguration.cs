@@ -28,6 +28,7 @@ public static class ServiceConfiguration
 
         // Add migrators
         services.AddScoped<ChildrenDataMigrator>();
+        services.AddScoped<GuardiansDataMigrator>();
         services.AddScoped<SchedulingDataMigrator>();
     }
 }

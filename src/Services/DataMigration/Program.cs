@@ -20,20 +20,6 @@ public class Program
             return;
         }
 
-        // Check if we should run only children migration
-        if (args.Length > 0 && args[0] == "--children-only")
-        {
-            await RunChildrenOnlyMigration();
-            return;
-        }
-
-        // Check if we should run only scheduling migration
-        if (args.Length > 0 && args[0] == "--scheduling-only")
-        {
-            await RunSchedulingOnlyMigration();
-            return;
-        }
-
         // Default: run both migrations
         await RunFullMigration();
     }
@@ -52,6 +38,10 @@ public class Program
             // First migrate children and get the mapping
             var childrenMigrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
             var childIdMapping = await childrenMigrator.MigrateAsync();
+
+            // Then migrate guardians using the child mapping
+            var guardiansMigrator = scope.ServiceProvider.GetRequiredService<GuardiansDataMigrator>();
+            await guardiansMigrator.MigrateAsync(childIdMapping);
 
             // Then migrate scheduling using the child mapping
             var schedulingMigrator = scope.ServiceProvider.GetRequiredService<SchedulingDataMigrator>();
@@ -84,34 +74,6 @@ public class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Children migration failed: {ex.Message}");
-            Console.WriteLine(ex.StackTrace);
-        }
-    }
-
-    private static async Task RunSchedulingOnlyMigration()
-    {
-        Console.WriteLine("Running scheduling-only migration...");
-        Console.WriteLine("Note: This requires existing children data to map external child IDs.");
-
-        var configuration = BuildConfiguration();
-        var serviceProvider = BuildServiceProvider(configuration);
-
-        try
-        {
-            using var scope = serviceProvider.CreateScope();
-
-            // For scheduling-only migration, we need to rebuild the child mapping from existing data
-            var childrenMigrator = scope.ServiceProvider.GetRequiredService<ChildrenDataMigrator>();
-            var childIdMapping = await childrenMigrator.BuildChildIdMappingFromExistingData();
-
-            var schedulingMigrator = scope.ServiceProvider.GetRequiredService<SchedulingDataMigrator>();
-            await schedulingMigrator.MigrateAsync(childIdMapping);
-
-            Console.WriteLine("Scheduling migration completed successfully!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Scheduling migration failed: {ex.Message}");
             Console.WriteLine(ex.StackTrace);
         }
     }

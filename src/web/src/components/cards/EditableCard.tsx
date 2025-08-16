@@ -17,7 +17,7 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 
-interface EditableCardProps {
+type EditableCardProps = {
   title: string;
   icon?: React.ReactNode;
   children: React.ReactNode;
@@ -31,7 +31,7 @@ interface EditableCardProps {
   actions?: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
-}
+};
 
 export const EditableCard: React.FC<EditableCardProps> = ({
   title,
@@ -110,7 +110,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {actions}
-          
+
           {/* Edit Controls */}
           {isEditing ? (
             <Stack direction="row" spacing={1}>

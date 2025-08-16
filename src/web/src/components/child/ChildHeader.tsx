@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Typography,
@@ -17,7 +18,7 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 
-interface ChildHeaderProps {
+type ChildHeaderProps = {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
@@ -30,14 +31,13 @@ interface ChildHeaderProps {
   onDelete?: () => void;
   loading?: boolean;
   editMode?: boolean;
-}
+};
 
 export const ChildHeader: React.FC<ChildHeaderProps> = ({
   firstName,
   lastName,
   dateOfBirth,
   group,
-  cid,
   isArchived,
   archivedAt,
   onEdit,
@@ -48,12 +48,13 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { t } = useTranslation();
 
   const getFullName = () => {
     if (firstName && lastName) {
       return `${firstName} ${lastName}`.trim();
     }
-    return "Unknown Child";
+    return t("Unknown Child");
   };
 
   const getInitials = () => {
@@ -64,16 +65,16 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
   };
 
   const calculateAge = () => {
-    if (!dateOfBirth) return "N/A";
+    if (!dateOfBirth) return t("N/A");
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
     const age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      return `${age - 1} years`;
+      return t("{{count}} years", { count: age - 1 });
     }
-    return `${age} years`;
+    return t("{{count}} years", { count: age });
   };
 
   return (
@@ -122,7 +123,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
             >
               {loading ? <PersonIcon /> : getInitials()}
             </Avatar>
-            
+
             <Box sx={{ flex: 1 }}>
               <Typography
                 variant="h4"
@@ -135,7 +136,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
               >
                 {getFullName()}
               </Typography>
-              
+
               <Typography
                 variant="subtitle1"
                 sx={{
@@ -144,7 +145,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                   mb: 1,
                 }}
               >
-                Child Record {group && `• Group: ${group}`}
+                {t("Child Record")} {group && `• ${t("Group")}: ${group}`}
               </Typography>
 
               <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -159,7 +160,13 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                 />
                 {isArchived && (
                   <Chip
-                    label={`Archived${archivedAt ? ` on ${new Date(archivedAt).toLocaleDateString()}` : ""}`}
+                    label={
+                      archivedAt
+                        ? t("Archived on {{date}}", {
+                            date: new Date(archivedAt).toLocaleDateString(),
+                          })
+                        : t("Archived")
+                    }
                     size="small"
                     sx={{
                       backgroundColor: theme.palette.warning.main,
@@ -174,11 +181,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
 
           {/* Actions */}
           {!editMode && (
-            <Stack
-              direction={isMobile ? "row" : "row"}
-              spacing={1}
-              sx={{ mt: isMobile ? 2 : 0 }}
-            >
+            <Stack direction={isMobile ? "row" : "row"} spacing={1} sx={{ mt: isMobile ? 2 : 0 }}>
               {onEdit && (
                 <Button
                   variant="outlined"
@@ -194,10 +197,10 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     },
                   }}
                 >
-                  Edit
+                  {t("Edit")}
                 </Button>
               )}
-              
+
               {onArchive && !isArchived && (
                 <Button
                   variant="outlined"
@@ -213,10 +216,10 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     },
                   }}
                 >
-                  Archive
+                  {t("Archive")}
                 </Button>
               )}
-              
+
               {onDelete && (
                 <Button
                   variant="outlined"
@@ -232,7 +235,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     },
                   }}
                 >
-                  Delete
+                  {t("Delete")}
                 </Button>
               )}
             </Stack>

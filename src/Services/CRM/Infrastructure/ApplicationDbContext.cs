@@ -16,13 +16,36 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Child> Children { get; set; }
-    public DbSet<Person> People { get; set; }
+    public DbSet<Guardian> Guardians { get; set; }
+    public DbSet<ChildGuardian> ChildGuardians { get; set; }
+    // PhoneNumbers owned by Guardian; no separate DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
-        modelBuilder.Entity<Person>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current.TenantId);
+        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<Guardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<ChildGuardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        // PhoneNumbers owned; query filter handled via Guardian
+
+        modelBuilder.Entity<ChildGuardian>()
+            .HasOne<Child>()
+            .WithMany()
+            .HasForeignKey(cg => cg.ChildId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ChildGuardian>()
+            .HasOne<Guardian>()
+            .WithMany()
+            .HasForeignKey(cg => cg.GuardianId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Ensure unique child-guardian relationships
+        modelBuilder.Entity<ChildGuardian>()
+            .HasIndex(cg => new { cg.ChildId, cg.GuardianId })
+            .IsUnique();
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -33,7 +56,7 @@ public class ApplicationDbContext : DbContext
             {
                 case EntityState.Added:
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _tenancyContextAccessor.Current.TenantId;
+                    entry.Entity.TenantId = _tenancyContextAccessor.Current!.TenantId;
                     break;
             }
         }

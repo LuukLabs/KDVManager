@@ -79,7 +79,7 @@ static_resources:
                 auth0_provider:
                   issuer: https://kdvmanager.eu.auth0.com/
                   audiences:
-                  - https://api.kdvmanager.com
+                  - https://api.kdvmanager.nl
                   - https://kdvmanager.eu.auth0.com/userinfo
                   remote_jwks:
                     http_uri:

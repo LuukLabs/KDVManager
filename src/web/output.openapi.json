@@ -16,6 +16,9 @@
   "tags": [
     {
       "name": "children"
+    },
+    {
+      "name": "guardians"
     }
   ],
   "paths": {
@@ -214,6 +217,294 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/crm/v1/guardians": {
+      "get": {
+        "tags": ["guardians"],
+        "operationId": "ListGuardians",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuardianListVM"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["guardians"],
+        "operationId": "AddGuardian",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGuardianCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crm/v1/guardians/{id}": {
+      "get": {
+        "tags": ["guardians"],
+        "operationId": "GetGuardianById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuardianDetailVM"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["guardians"],
+        "operationId": "UpdateGuardian",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGuardianCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["guardians"],
+        "operationId": "DeleteGuardian",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/crm/v1/guardians/{guardianId}/children": {
+      "get": {
+        "tags": ["guardians"],
+        "operationId": "GetGuardianChildren",
+        "parameters": [
+          {
+            "name": "guardianId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuardianChildVM"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crm/v1/children/{childId}/guardians": {
+      "get": {
+        "tags": ["guardians"],
+        "operationId": "GetChildGuardians",
+        "parameters": [
+          {
+            "name": "childId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChildGuardianVM"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crm/v1/children/{childId}/guardians/{guardianId}": {
+      "post": {
+        "tags": ["guardians"],
+        "operationId": "LinkGuardianToChild",
+        "parameters": [
+          {
+            "name": "childId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "guardianId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkGuardianToChildRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["guardians"],
+        "operationId": "UnlinkGuardianFromChild",
+        "parameters": [
+          {
+            "name": "childId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "guardianId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1067,6 +1358,41 @@
           }
         }
       },
+      "AddGuardianCommand": {
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddPhoneNumberDto"
+            }
+          }
+        }
+      },
+      "AddPhoneNumberDto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PhoneNumberType"
+          }
+        }
+      },
       "ChildDetailVM": {
         "required": ["givenName", "familyName"],
         "type": "object",
@@ -1096,6 +1422,36 @@
           }
         }
       },
+      "ChildGuardianVM": {
+        "required": ["fullName"],
+        "type": "object",
+        "properties": {
+          "guardianId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "relationshipType": {
+            "$ref": "#/components/schemas/GuardianRelationshipType"
+          },
+          "isPrimaryContact": {
+            "type": "boolean"
+          },
+          "isEmergencyContact": {
+            "type": "boolean"
+          }
+        }
+      },
       "ChildListVM": {
         "required": ["id", "fullName", "dateOfBirth"],
         "type": "object",
@@ -1115,6 +1471,170 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "ChildRelationshipVM": {
+        "required": ["childName"],
+        "type": "object",
+        "properties": {
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "childName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "relationshipType": {
+            "$ref": "#/components/schemas/GuardianRelationshipType"
+          },
+          "isPrimaryContact": {
+            "type": "boolean"
+          },
+          "isEmergencyContact": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GuardianChildVM": {
+        "required": ["fullName"],
+        "type": "object",
+        "properties": {
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relationshipType": {
+            "$ref": "#/components/schemas/GuardianRelationshipType"
+          },
+          "isPrimaryContact": {
+            "type": "boolean"
+          },
+          "isEmergencyContact": {
+            "type": "boolean"
+          },
+          "isArchived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GuardianDetailVM": {
+        "required": ["givenName", "familyName"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneNumberVM"
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChildRelationshipVM"
+            }
+          }
+        }
+      },
+      "GuardianListVM": {
+        "required": ["id", "fullName", "email", "primaryPhoneNumber"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumberCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "childrenCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GuardianRelationshipType": {
+        "enum": ["Parent", "Guardian", "Grandparent", "Other"]
+      },
+      "LinkGuardianToChildRequest": {
+        "type": "object",
+        "properties": {
+          "relationshipType": {
+            "$ref": "#/components/schemas/GuardianRelationshipType"
+          },
+          "isPrimaryContact": {
+            "type": "boolean"
+          },
+          "isEmergencyContact": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PhoneNumberType": {
+        "enum": ["Mobile", "Home", "Work", "Other"]
+      },
+      "PhoneNumberVM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PhoneNumberType"
           }
         }
       },
@@ -1158,6 +1678,51 @@
           "cid": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "UpdateGuardianCommand": {
+        "required": ["id", "givenName", "familyName", "dateOfBirth", "email"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdatePhoneNumberDto"
+            }
+          }
+        }
+      },
+      "UpdatePhoneNumberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PhoneNumberType"
           }
         }
       },

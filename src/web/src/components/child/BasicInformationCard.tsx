@@ -1,136 +1,86 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import { Person as PersonIcon } from "@mui/icons-material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { EditableCard } from "../cards/EditableCard";
 import { FieldDisplay } from "../forms/FieldDisplay";
-import { UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 
-interface BasicInformationCardProps {
+type BasicInformationCardProps = {
   // View props
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
   cid?: string;
   loading?: boolean;
-  
+
   // Edit props
   isEditing?: boolean;
   formContext?: UseFormReturn<any>;
   onSave?: () => void;
   onCancel?: () => void;
   onEditToggle?: (editing: boolean) => void;
-}
+};
 
 export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
   firstName,
   lastName,
   dateOfBirth,
   cid,
-  loading = false,
-  isEditing = false,
+  loading,
+  isEditing,
   formContext,
   onSave,
   onCancel,
   onEditToggle,
 }) => {
+  const { t } = useTranslation();
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return undefined;
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
+  // View mode content
   const viewContent = (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay
-          label="First Name"
-          value={firstName}
-          loading={loading}
-          placeholder="Not specified"
-        />
+        <FieldDisplay label={t("First Name")} value={firstName} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay
-          label="Last Name"
-          value={lastName}
-          loading={loading}
-          placeholder="Not specified"
-        />
+        <FieldDisplay label={t("Last Name")} value={lastName} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay
-          label="Date of Birth"
-          value={formatDate(dateOfBirth)}
-          loading={loading}
-          placeholder="Not specified"
-        />
+        <FieldDisplay label={t("Date of Birth")} value={dateOfBirth} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay
-          label="CID"
-          value={cid}
-          loading={loading}
-          placeholder="Not specified"
-        />
+        <FieldDisplay label={t("CID")} value={cid} />
       </Grid>
     </Grid>
   );
 
+  // Edit mode content
   const editContent = formContext ? (
     <FormContainer formContext={formContext}>
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement
-            name="givenName"
-            label="First Name"
-            required
-            fullWidth
-            size="small"
-          />
+          <TextFieldElement name="firstName" label={t("First Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement
-            name="familyName"
-            label="Last Name"
-            required
-            fullWidth
-            size="small"
-          />
+          <TextFieldElement name="lastName" label={t("Last Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
           <DatePickerElement
-            label="Date of Birth"
             name="dateOfBirth"
-            transform={{
-              output: (value) => {
-                return value ? value.format("YYYY-MM-DD") : null;
-              },
-            }}
-            slotProps={{
-              textField: {
-                size: "small",
-                fullWidth: true,
-              },
-            }}
+            label={t("Date of Birth")}
+            inputProps={{ fullWidth: true }}
+            required
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextFieldElement
             name="cid"
-            label="CID"
+            label={t("CID")}
             fullWidth
             size="small"
-            helperText="Child identification number"
+            helperText={t("Child identification number")}
           />
         </Grid>
       </Grid>
@@ -139,7 +89,7 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
 
   return (
     <EditableCard
-      title="Basic Information"
+      title={t("Basic Information")}
       icon={<PersonIcon color="primary" />}
       isEditing={isEditing}
       onSave={onSave}

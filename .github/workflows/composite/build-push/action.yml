@@ -22,7 +22,6 @@ inputs:
     required: true
   nuget_github_token:
     description: "GitHub NuGet token for private packages"
-    required: false
   
 runs:
   using: "composite"

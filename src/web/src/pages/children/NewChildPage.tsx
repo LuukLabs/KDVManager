@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
-import { UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 
 const NewChildPage = () => {
   const { t } = useTranslation();

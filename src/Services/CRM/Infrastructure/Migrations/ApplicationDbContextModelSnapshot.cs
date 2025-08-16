@@ -53,21 +53,50 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.ToTable("Children");
                 });
 
-            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Person", b =>
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.ChildGuardian", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("BSN")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("ChildId")
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<Guid>("GuardianId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsEmergencyContact")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPrimaryContact")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("RelationshipType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuardianId");
+
+                    b.HasIndex("ChildId", "GuardianId")
+                        .IsUnique();
+
+                    b.ToTable("ChildGuardians");
+                });
+
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Guardian", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FamilyName")
@@ -78,16 +107,58 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.ToTable("Guardians");
+                });
+
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.ChildGuardian", b =>
+                {
+                    b.HasOne("KDVManager.Services.CRM.Domain.Entities.Child", null)
+                        .WithMany()
+                        .HasForeignKey("ChildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KDVManager.Services.CRM.Domain.Entities.Guardian", null)
+                        .WithMany()
+                        .HasForeignKey("GuardianId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Guardian", b =>
+                {
+                    b.OwnsMany("KDVManager.Services.CRM.Domain.Entities.PhoneNumber", "PhoneNumbers", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("GuardianId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)");
+
+                            b1.Property<int>("Type")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("GuardianId", "Type");
+
+                            b1.ToTable("GuardianPhoneNumbers", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("GuardianId");
+                        });
+
+                    b.Navigation("PhoneNumbers");
                 });
 #pragma warning restore 612, 618
         }

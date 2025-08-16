@@ -102,7 +102,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   const rulesByDay = scheduleRules.reduce(
     (acc, rule) => {
       const day = (rule.day ?? DayOfWeek.Sunday) as DayOfWeek;
-      if (!acc[day]) acc[day] = [];
+      acc[day] ??= [];
       acc[day].push(rule);
       return acc;
     },

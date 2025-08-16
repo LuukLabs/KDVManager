@@ -5,31 +5,28 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 
-import { 
-  useUpdateChild, 
+import {
+  useUpdateChild,
   getListChildrenQueryKey,
-  getGetChildByIdQueryOptions 
+  getGetChildByIdQueryOptions,
 } from "@api/endpoints/children/children";
 import { type UpdateChildCommand } from "@api/models/updateChildCommand";
 import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
 import { type ChildDetailVM } from "@api/models/childDetailVM";
 
-import {
-  BasicInformationCard,
-  MedicalInformationCard,
-  ContactInformationCard,
-} from "../../../components/child";
+import { ChildGuardiansCard } from "../../../features/guardians/ChildGuardiansCard";
+import { BasicInformationCard } from "@components/child/BasicInformationCard";
 
-interface GeneralInformationTabProps {
+type GeneralInformationTabProps = {
   child: ChildDetailVM;
-}
+};
 
 export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ child }) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const { mutateAsync: updateChild } = useUpdateChild();
-  
+
   const [editingSections, setEditingSections] = useState<Record<string, boolean>>({
     basic: false,
     medical: false,
@@ -42,10 +39,10 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
   const basicFormContext = useForm<UpdateChildCommand>({
     defaultValues: {
       id: child.id,
-      givenName: child.givenName || "",
-      familyName: child.familyName || "",
-      dateOfBirth: child.dateOfBirth || "",
-      cid: child.cid || "",
+      givenName: child.givenName ?? "",
+      familyName: child.familyName ?? "",
+      dateOfBirth: child.dateOfBirth ?? "",
+      cid: child.cid ?? "",
     },
   });
 
@@ -63,23 +60,10 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
     },
   });
 
-  const contactFormContext = useForm({
-    defaultValues: {
-      address: "",
-      city: "",
-      postalCode: "",
-      phoneNumber: "",
-      emailAddress: "",
-      parentName: "",
-      parentPhone: "",
-      parentEmail: "",
-    },
-  });
-
   const handleSectionEdit = (section: string, isEditing: boolean) => {
-    setEditingSections(prev => ({
+    setEditingSections((prev) => ({
       ...prev,
-      [section]: isEditing
+      [section]: isEditing,
     }));
     setSubmitError(null);
   };
@@ -88,11 +72,11 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
     try {
       setSubmitError(null);
       const data = basicFormContext.getValues();
-      
+
       if (!child.id) {
         throw new Error("Child ID is required");
       }
-      
+
       await updateChild({
         id: child.id,
         data: {
@@ -101,20 +85,19 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           familyName: data.familyName,
           dateOfBirth: data.dateOfBirth,
           cid: data.cid,
-        }
+        },
       });
 
       // Update cache and show success
       await queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
-      await queryClient.invalidateQueries({ 
-        queryKey: getGetChildByIdQueryOptions(child.id).queryKey 
+      await queryClient.invalidateQueries({
+        queryKey: getGetChildByIdQueryOptions(child.id).queryKey,
       });
-      
+
       enqueueSnackbar(t("Basic information updated successfully"), { variant: "success" });
       handleSectionEdit("basic", false);
-      
     } catch (error) {
-      if (error && typeof error === 'object' && 'errors' in error) {
+      if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
         validationError.errors.forEach((propertyError) => {
           basicFormContext.setError(propertyError.property as any, {
@@ -128,25 +111,11 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
     }
   };
 
-  const handleMedicalSave = async () => {
-    // Placeholder - would integrate with API when medical fields are added
-    enqueueSnackbar(t("Medical information updated successfully"), { variant: "success" });
-    handleSectionEdit("medical", false);
-  };
-
-  const handleContactSave = async () => {
-    // Placeholder - would integrate with API when contact fields are added
-    enqueueSnackbar(t("Contact information updated successfully"), { variant: "success" });
-    handleSectionEdit("contact", false);
-  };
-
   const handleCancel = (section: string) => {
     if (section === "basic") {
       basicFormContext.reset();
     } else if (section === "medical") {
       medicalFormContext.reset();
-    } else if (section === "contact") {
-      contactFormContext.reset();
     }
     handleSectionEdit(section, false);
     setSubmitError(null);
@@ -169,7 +138,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
             firstName={child.givenName}
             lastName={child.familyName}
             dateOfBirth={child.dateOfBirth}
-            cid={child.cid || undefined}
+            cid={child.cid ?? undefined}
             isEditing={editingSections.basic}
             formContext={basicFormContext}
             onSave={handleBasicSave}
@@ -178,45 +147,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           />
         </Grid>
 
-        {/* Medical Information */}
-        <Grid size={{ xs: 12, lg: 6 }}>
-          <MedicalInformationCard
-            // Placeholder data - would come from API
-            allergies=""
-            medication=""
-            medicalNotes=""
-            dietaryRequirements=""
-            emergencyContact=""
-            emergencyPhone=""
-            doctorName=""
-            doctorPhone=""
-            isEditing={editingSections.medical}
-            formContext={medicalFormContext}
-            onSave={handleMedicalSave}
-            onCancel={() => handleCancel("medical")}
-            onEditToggle={(editing) => handleSectionEdit("medical", editing)}
-          />
-        </Grid>
-
-        {/* Contact Information */}
-        <Grid size={{ xs: 12 }}>
-          <ContactInformationCard
-            // Placeholder data - would come from API
-            address=""
-            city=""
-            postalCode=""
-            phoneNumber=""
-            emailAddress=""
-            parentName=""
-            parentPhone=""
-            parentEmail=""
-            isEditing={editingSections.contact}
-            formContext={contactFormContext}
-            onSave={handleContactSave}
-            onCancel={() => handleCancel("contact")}
-            onEditToggle={(editing) => handleSectionEdit("contact", editing)}
-          />
-        </Grid>
+        {/* Guardians Information */}
+        <Grid size={{ xs: 12 }}>{child.id && <ChildGuardiansCard childId={child.id} />}</Grid>
       </Grid>
     </>
   );

@@ -96,12 +96,13 @@ public class ChildrenDataMigrator
 
                 var childId = Guid.NewGuid();
                 var isOlderThanSix = dateOfBirth.AddYears(6) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
-                var isOlderThanFive = dateOfBirth.AddYears(5) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
+                // Check if child is older than 4.5 years (5 years and 6 months)
+                var isOlderThanFourAndHalf = dateOfBirth.AddYears(4).AddMonths(6) < DateOnly.FromDateTime(DateTime.UtcNow);
 
                 // Skip if children older than 6 years
-                if (isOlderThanSix)
+                if (isOlderThanFourAndHalf)
                 {
-                    Console.WriteLine($"Skipping child {firstName} {familyName} (older than 5 years)");
+                    Console.WriteLine($"Skipping child {firstName} {familyName} (older than 4.5 years)");
                     skippedCount++;
                     continue;
                 }
@@ -155,50 +156,6 @@ public class ChildrenDataMigrator
         Console.WriteLine($"Children migration completed: {migratedCount} children migrated, {skippedCount} skipped");
         Console.WriteLine($"Child ID mapping created with {childIdMapping.Count} entries");
 
-        return childIdMapping;
-    }
-
-    public async Task<Dictionary<int, Guid>> BuildChildIdMappingFromExistingData()
-    {
-        Console.WriteLine("Building child ID mapping from existing children data...");
-
-        var childIdMapping = new Dictionary<int, Guid>();
-        var mssqlConnectionString = _configuration.GetConnectionString("MSSQLSourceConnectionString");
-
-        if (string.IsNullOrEmpty(mssqlConnectionString))
-        {
-            throw new InvalidOperationException("MSSQLSourceConnectionString not found in configuration");
-        }
-
-        // Get all children from CRM database ordered by creation time or ID
-        var existingChildren = await _context.Children
-            .OrderBy(c => c.Id)
-            .ToListAsync();
-
-        // Get external children from MSSQL in the same order as they were migrated
-        var query = @"
-            SELECT [dbo].[Child].id as external_child_id
-            FROM [dbo].[Child]
-            LEFT JOIN [dbo].[Person] ON ([dbo].[Person].id = [dbo].[Child].id)
-            ORDER BY [dbo].[Child].id";
-
-        using var connection = new SqlConnection(mssqlConnectionString);
-        await connection.OpenAsync();
-
-        using var command = new SqlCommand(query, connection);
-        using var reader = await command.ExecuteReaderAsync();
-
-        var index = 0;
-        while (await reader.ReadAsync() && index < existingChildren.Count)
-        {
-            var externalChildId = reader.GetInt32("external_child_id");
-            var internalChild = existingChildren[index];
-
-            childIdMapping[externalChildId] = internalChild.Id;
-            index++;
-        }
-
-        Console.WriteLine($"Built child ID mapping with {childIdMapping.Count} entries");
         return childIdMapping;
     }
 }

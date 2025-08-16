@@ -34,6 +34,7 @@ const config: ReturnType<typeof defineConfig> = {
           ListChildren: queryPaginated,
           ListGroups: queryPaginated,
           ListTimeSlots: queryPaginated,
+          ListGuardians: queryPaginated,
           GetAllPeople: queryPaginated,
         },
       },

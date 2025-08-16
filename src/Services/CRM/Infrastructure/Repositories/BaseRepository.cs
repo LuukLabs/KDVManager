@@ -31,7 +31,9 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
 
     public async Task<T> GetByIdAsync(Guid id)
     {
-        return await _dbContext.Set<T>().FindAsync(id);
+        // Interface expects non-null; callers should verify existence via ExistsAsync when needed.
+        // Suppress possible null warning with null-forgiving operator.
+        return (await _dbContext.Set<T>().FindAsync(id))!;
     }
 
     public async Task<IReadOnlyList<T>> ListAllAsync()
@@ -41,7 +43,17 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
 
     public async Task UpdateAsync(T entity)
     {
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        // If the entity is being tracked already (typical for update flows where we queried first),
+        // we don't need to force the state to Modified. Forcing Modified on an already tracked graph
+        // can result in EF issuing updates for unchanged entities and increases the chance of
+        // concurrency issues when dependents were concurrently deleted.
+        var entry = _dbContext.Entry(entity);
+        if (entry.State == EntityState.Detached)
+        {
+            _dbContext.Set<T>().Attach(entity);
+            entry.State = EntityState.Modified;
+        }
+
         await _dbContext.SaveChangesAsync();
     }
 

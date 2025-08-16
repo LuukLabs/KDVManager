@@ -17,7 +17,8 @@ public static class ConfigureServices
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
 
         services.AddScoped<IChildRepository, ChildRepository>();
-        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IGuardianRepository, GuardianRepository>();
+        services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
 
         services.AddTenancy();
 

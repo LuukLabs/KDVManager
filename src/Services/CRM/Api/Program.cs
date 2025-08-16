@@ -1,4 +1,5 @@
-﻿using KDVManager.Services.CRM.Api.Middleware;
+﻿using KDVManager.Services.CRM.Api.Endpoints;
+using KDVManager.Services.CRM.Api.Middleware;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using OpenTelemetry.Logs;
 
@@ -49,6 +50,7 @@ app.MapHealthChecks("/healthz");
 
 // Map minimal API endpoints
 app.MapChildrenEndpoints();
+app.MapGuardiansEndpoints();
 // app.MapPeopleEndpoints();
 
 app.Run();

@@ -6,15 +6,13 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import NiceModal from "@ebay/nice-modal-react";
-
 import { ChildScheduleView } from "../../../features/schedules/ChildScheduleView";
 import { AbsenceList } from "../../../features/absence/AbsenceList";
 import { AddAbsenceDialog } from "../../../features/absence/AddAbsenceDialog";
-import { ScheduleInformationCard } from "../../../components/child/ScheduleInformationCard";
 
-interface PlanningTabProps {
+type PlanningTabProps = {
   childId: string;
-}
+};
 
 export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
   const { t } = useTranslation();
@@ -25,31 +23,15 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
   return (
     <>
       <Grid container spacing={4}>
-        {/* Schedule Information Card */}
-        <Grid size={{ xs: 12, xl: 6 }}>
-          <ScheduleInformationCard
-            // Placeholder data - would come from API
-            startDate=""
-            endDate=""
-            daysPerWeek={3}
-            preferredDays={[]}
-            startTime="08:00"
-            endTime="16:00"
-            notes=""
-            isEditing={false}
-            onEditToggle={() => {}}
-          />
-        </Grid>
-
         {/* Current Schedule Management */}
         <Grid size={{ xs: 12, xl: 6 }}>
-          <Paper 
-            variant="outlined" 
-            sx={{ 
-              p: 3, 
-              height: '100%',
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              height: "100%",
               borderRadius: 2,
-              backgroundColor: 'background.paper'
+              backgroundColor: "background.paper",
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
@@ -69,21 +51,23 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
 
       {/* Absence Management Section */}
       <Box>
-        <Box sx={{ 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "space-between",
-          mb: 3,
-          flexWrap: "wrap",
-          gap: 2
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 3,
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <CalendarIcon color="primary" />
             <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
               {t("Absence Management")}
             </Typography>
           </Box>
-          
+
           <Button
             variant="contained"
             onClick={onAddAbsenceClickHandler}
@@ -95,12 +79,12 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
           </Button>
         </Box>
 
-        <Paper 
-          variant="outlined" 
-          sx={{ 
+        <Paper
+          variant="outlined"
+          sx={{
             p: 3,
             borderRadius: 2,
-            backgroundColor: 'background.paper'
+            backgroundColor: "background.paper",
           }}
         >
           <AbsenceList childId={childId} />

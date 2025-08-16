@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, Typography, Skeleton } from "@mui/material";
 
-interface FieldDisplayProps {
+type FieldDisplayProps = {
   label: string;
   value?: string | null;
   loading?: boolean;
   placeholder?: string;
-}
+};
 
 export const FieldDisplay: React.FC<FieldDisplayProps> = ({
   label,
@@ -57,7 +57,7 @@ export const FieldDisplay: React.FC<FieldDisplayProps> = ({
           fontStyle: value ? "normal" : "italic",
         }}
       >
-        {value || placeholder}
+        {value ?? placeholder}
       </Typography>
     </Box>
   );

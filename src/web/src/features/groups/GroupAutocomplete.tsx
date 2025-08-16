@@ -22,7 +22,7 @@ const GroupAutocomplete: React.FC<GroupAutocompleteProps> = (props) => {
       {...props}
       options={data?.value ?? []}
       loading={isLoading || isFetching}
-      getOptionLabel={(option) => option.name!}
+      getOptionLabel={(option) => option.name ?? ""}
       renderInput={(params) => (
         <TextField
           {...params}

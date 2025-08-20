@@ -79,20 +79,26 @@ export const GuardianDetailView = ({
                 <Typography variant="body2" color="text.secondary">
                   Given Name
                 </Typography>
-                <Typography variant="body1" fontWeight={500}>{guardian.givenName}</Typography>
+                <Typography variant="body1" fontWeight={500}>
+                  {guardian.givenName}
+                </Typography>
               </Grid>
               <Grid size={{ xs: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Family Name
                 </Typography>
-                <Typography variant="body1" fontWeight={500}>{guardian.familyName}</Typography>
+                <Typography variant="body1" fontWeight={500}>
+                  {guardian.familyName}
+                </Typography>
               </Grid>
               {guardian.dateOfBirth && (
                 <Grid size={{ xs: 6 }}>
                   <Typography variant="body2" color="text.secondary">
                     Date of Birth
                   </Typography>
-                  <Typography variant="body1" fontWeight={500}>{formatDate(guardian.dateOfBirth)}</Typography>
+                  <Typography variant="body1" fontWeight={500}>
+                    {formatDate(guardian.dateOfBirth)}
+                  </Typography>
                 </Grid>
               )}
             </Grid>
@@ -107,13 +113,17 @@ export const GuardianDetailView = ({
             <Stack spacing={1}>
               <Box display="flex" alignItems="center" gap={1}>
                 <Email fontSize="small" color="action" />
-                <Typography variant="body1" fontWeight={500}>{guardian.email}</Typography>
+                <Typography variant="body1" fontWeight={500}>
+                  {guardian.email}
+                </Typography>
               </Box>
               {guardian.phoneNumbers && guardian.phoneNumbers.length > 0 ? (
                 guardian.phoneNumbers.map((p) => (
                   <Box key={p.id} display="flex" alignItems="center" gap={1}>
                     <Phone fontSize="small" color="action" />
-                    <Typography variant="body1" fontWeight={500}>{p.number}</Typography>
+                    <Typography variant="body1" fontWeight={500}>
+                      {p.number}
+                    </Typography>
                     <Chip label={p.type} size="small" variant="outlined" />
                   </Box>
                 ))
@@ -129,7 +139,9 @@ export const GuardianDetailView = ({
         <Grid size={{ xs: 12 }}>
           <AccentSection borderColor="secondary.main" variant="outlined" padding="normal">
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-              <Typography variant="h6" fontWeight={600}>Children</Typography>
+              <Typography variant="h6" fontWeight={600}>
+                Children
+              </Typography>
               <Button variant="outlined" startIcon={<Add />} onClick={onLinkChild} size="small">
                 Link Child
               </Button>
@@ -140,18 +152,28 @@ export const GuardianDetailView = ({
               </Box>
             ) : (
               <LinkedEntityList
-        items={children.map((c) => ({
+                items={children.map((c) => ({
                   id: c.childId ?? c.fullName,
                   primaryText: c.fullName,
                   chips: [
-          { label: getRelationshipLabel(c.relationshipType), variant: 'outlined' as const, color: getRelationshipColor(c.relationshipType) as any },
-          ...(c.isPrimaryContact ? [{ label: 'Primary', color: 'primary', variant: 'filled' as const }] : []),
-          ...(c.isEmergencyContact ? [{ label: 'Emergency', color: 'error', variant: 'filled' as const }] : []),
-          ...(c.isArchived ? [{ label: 'Archived', color: 'warning', variant: 'filled' as const }] : []),
+                    {
+                      label: getRelationshipLabel(c.relationshipType),
+                      variant: "outlined" as const,
+                      color: getRelationshipColor(c.relationshipType) as any,
+                    },
+                    ...(c.isPrimaryContact
+                      ? [{ label: "Primary", color: "primary", variant: "filled" as const }]
+                      : []),
+                    ...(c.isEmergencyContact
+                      ? [{ label: "Emergency", color: "error", variant: "filled" as const }]
+                      : []),
+                    ...(c.isArchived
+                      ? [{ label: "Archived", color: "warning", variant: "filled" as const }]
+                      : []),
                   ],
                   secondaryLines: [
-                    `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ''}`,
-                    c.cid ? `CID: ${c.cid}` : ''
+                    `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ""}`,
+                    c.cid ? `CID: ${c.cid}` : "",
                   ].filter(Boolean),
                   navigateTo: c.childId ? `/children/${c.childId}` : undefined,
                   unlinkDisabled: unlinkingChild === c.childId,

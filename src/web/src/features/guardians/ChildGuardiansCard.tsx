@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ChildGuardianVM } from "../../api/models/childGuardianVM";
-import { Typography, Box, Button, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  Alert,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { LinkExistingGuardianDialog } from "./LinkExistingGuardianDialog";
@@ -85,16 +97,21 @@ export const ChildGuardiansCard = ({
     <>
       <AccentSection variant="outlined" borderColor="primary.main" padding="normal">
         <Box>
-          <Box 
-            display="flex" 
-            justifyContent="space-between" 
-            alignItems={{ xs: "flex-start", md: "center" }} 
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", md: "center" }}
             mb={2}
             flexDirection={{ xs: "column", sm: "row" }}
             gap={{ xs: 2, sm: 1 }}
           >
             <Typography variant="h6">{t("Guardians")}</Typography>
-            <Box display="flex" gap={1} flexDirection={{ xs: "column", sm: "row" }} width={{ xs: "100%", sm: "auto" }}>
+            <Box
+              display="flex"
+              gap={1}
+              flexDirection={{ xs: "column", sm: "row" }}
+              width={{ xs: "100%", sm: "auto" }}
+            >
               <Button
                 variant="outlined"
                 startIcon={<Add />}
@@ -130,25 +147,35 @@ export const ChildGuardiansCard = ({
                 primaryText: g.fullName,
                 avatarText: getInitials(g.fullName),
                 chips: [
-                  { label: t(getRelationshipLabel(g.relationshipType)), variant: 'outlined' as const, color: getRelationshipColor(g.relationshipType) as any },
-                  ...(g.isPrimaryContact ? [{ label: t('Primary'), color: 'primary', variant: 'filled' as const }] : []),
-                  ...(g.isEmergencyContact ? [{ label: t('Emergency'), color: 'error', variant: 'filled' as const }] : []),
+                  {
+                    label: t(getRelationshipLabel(g.relationshipType)),
+                    variant: "outlined" as const,
+                    color: getRelationshipColor(g.relationshipType) as any,
+                  },
+                  ...(g.isPrimaryContact
+                    ? [{ label: t("Primary"), color: "primary", variant: "filled" as const }]
+                    : []),
+                  ...(g.isEmergencyContact
+                    ? [{ label: t("Emergency"), color: "error", variant: "filled" as const }]
+                    : []),
                 ],
-                secondaryLines: [
-                  [g.phoneNumber, g.email].filter(Boolean).join(' • '),
-                ].filter(Boolean),
+                secondaryLines: [[g.phoneNumber, g.email].filter(Boolean).join(" • ")].filter(
+                  Boolean,
+                ),
                 navigateTo: g.guardianId ? `/guardians/${g.guardianId}` : undefined,
                 unlinkDisabled: unlinkMutation.isPending,
               }))}
               onNavigate={(path) => {
-                const idPart = path.split('/').pop();
-                handleNavigateGuardian(idPart ?? '');
+                const idPart = path.split("/").pop();
+                handleNavigateGuardian(idPart ?? "");
               }}
               onUnlink={(id) => {
                 const match = guardians.find((g) => g.guardianId === id);
                 if (match) handleUnlinkClick(match);
               }}
-              unlinkLoadingId={unlinkMutation.isPending ? (selectedGuardian?.guardianId ?? null) : null}
+              unlinkLoadingId={
+                unlinkMutation.isPending ? (selectedGuardian?.guardianId ?? null) : null
+              }
               emptyContent={null}
             />
           )}
@@ -175,23 +202,23 @@ export const ChildGuardiansCard = ({
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: { xs: 2, md: 1.5 }, gap: { xs: 1, md: 0.5 } }}>
-          <Button 
+          <Button
             onClick={() => setUnlinkDialogOpen(false)}
             size={isMobile ? "large" : "medium"}
-            sx={{ 
+            sx={{
               minHeight: { xs: 44, md: "auto" },
               px: { xs: 3, md: 2 },
             }}
           >
             {t("Cancel")}
           </Button>
-          <Button 
-            onClick={handleUnlinkConfirm} 
-            color="error" 
+          <Button
+            onClick={handleUnlinkConfirm}
+            color="error"
             disabled={unlinkMutation.isPending}
             size={isMobile ? "large" : "medium"}
             variant={isMobile ? "contained" : "text"}
-            sx={{ 
+            sx={{
               minHeight: { xs: 44, md: "auto" },
               px: { xs: 3, md: 2 },
               fontWeight: 600,

@@ -77,7 +77,10 @@ export const AccentSection: React.FC<AccentSectionProps> = ({
     : {};
 
   return (
-    <Paper elevation={variant === "elevated" ? 1 : 0} sx={{ ...baseStyles, ...variantStyles, ...accentStyles }}>
+    <Paper
+      elevation={variant === "elevated" ? 1 : 0}
+      sx={{ ...baseStyles, ...variantStyles, ...accentStyles }}
+    >
       <Box>{children}</Box>
     </Paper>
   );

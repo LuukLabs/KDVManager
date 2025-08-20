@@ -7,6 +7,7 @@ using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.Add
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
 using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
+using KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -19,6 +20,7 @@ public class SchedulesController : ControllerBase
     private readonly GetGroupSummaryQueryHandler _getGroupSummaryQueryHandler;
     private readonly AddScheduleCommandHandler _addScheduleCommandHandler;
     private readonly DeleteScheduleCommandHandler _deleteScheduleCommandHandler;
+    private readonly GetPrintSchedulesQueryHandler _getPrintSchedulesQueryHandler;
     private readonly ILogger<SchedulesController> _logger;
 
     public SchedulesController(
@@ -26,7 +28,8 @@ public class SchedulesController : ControllerBase
         GetSchedulesByDateQueryHandler getSchedulesByDateQueryHandler,
         GetGroupSummaryQueryHandler getGroupSummaryQueryHandler,
         AddScheduleCommandHandler addScheduleCommandHandler,
-        DeleteScheduleCommandHandler deleteScheduleCommandHandler,
+    DeleteScheduleCommandHandler deleteScheduleCommandHandler,
+    GetPrintSchedulesQueryHandler getPrintSchedulesQueryHandler,
         ILogger<SchedulesController> logger)
     {
         _getChildSchedulesQueryHandler = getChildSchedulesQueryHandler;
@@ -34,6 +37,7 @@ public class SchedulesController : ControllerBase
         _getGroupSummaryQueryHandler = getGroupSummaryQueryHandler;
         _addScheduleCommandHandler = addScheduleCommandHandler;
         _deleteScheduleCommandHandler = deleteScheduleCommandHandler;
+        _getPrintSchedulesQueryHandler = getPrintSchedulesQueryHandler;
         _logger = logger;
     }
 
@@ -58,6 +62,14 @@ public class SchedulesController : ControllerBase
     {
         var summary = await _getGroupSummaryQueryHandler.Handle(getGroupSummaryQuery);
         return Ok(summary);
+    }
+
+    [HttpGet("print", Name = "GetPrintSchedules")]
+    [ProducesResponseType(typeof(PrintSchedulesVM), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PrintSchedulesVM>> GetPrintSchedules([FromQuery] GetPrintSchedulesQuery query)
+    {
+        var vm = await _getPrintSchedulesQueryHandler.Handle(query);
+        return Ok(vm);
     }
 
     [HttpPost(Name = "AddSchedule")]

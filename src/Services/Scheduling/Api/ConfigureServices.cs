@@ -20,6 +20,8 @@ public static class ConfigureServices
         services.AddHealthChecks();
 
         services.AddControllers();
+        // Query handlers (could consider MediatR later)
+        services.AddScoped<KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules.GetPrintSchedulesQueryHandler>();
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo

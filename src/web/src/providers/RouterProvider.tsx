@@ -50,6 +50,22 @@ const router = (t: TFunction<"translation">) =>
               },
             },
             {
+              path: "print-schedules",
+              loader: requireAuth,
+              lazy: () => import("@pages/print/PrintSchedulesPage"),
+              handle: {
+                crumb: () => t("Print Schedules"),
+              },
+            },
+            {
+              path: "print-schedules",
+              loader: requireAuth,
+              lazy: () => import("@pages/print/PrintSchedulesPage"),
+              handle: {
+                crumb: () => t("Print Schedules"),
+              },
+            },
+            {
               path: "children",
               loader: requireAuth,
               handle: {

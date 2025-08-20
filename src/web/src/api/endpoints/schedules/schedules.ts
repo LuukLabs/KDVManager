@@ -28,9 +28,13 @@ import type { GetChildSchedulesParams } from "../../models/getChildSchedulesPara
 
 import type { GetGroupSummaryParams } from "../../models/getGroupSummaryParams";
 
+import type { GetPrintSchedulesParams } from "../../models/getPrintSchedulesParams";
+
 import type { GetSchedulesByDateParams } from "../../models/getSchedulesByDateParams";
 
 import type { GroupSummaryVM } from "../../models/groupSummaryVM";
+
+import type { PrintSchedulesVM } from "../../models/printSchedulesVM";
 
 import type { ProblemDetails } from "../../models/problemDetails";
 
@@ -426,6 +430,115 @@ export function useGetGroupSummary<
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetGroupSummaryQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getPrintSchedules = (params?: GetPrintSchedulesParams, signal?: AbortSignal) => {
+  return executeFetch<PrintSchedulesVM>({
+    url: `/scheduling/v1/schedules/print`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getGetPrintSchedulesQueryKey = (params?: GetPrintSchedulesParams) => {
+  return [`/scheduling/v1/schedules/print`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetPrintSchedulesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPrintSchedules>>,
+  TError = unknown,
+>(
+  params?: GetPrintSchedulesParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPrintSchedules>>, TError, TData>>;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPrintSchedulesQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPrintSchedules>>> = ({ signal }) =>
+    getPrintSchedules(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPrintSchedules>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetPrintSchedulesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPrintSchedules>>
+>;
+export type GetPrintSchedulesQueryError = unknown;
+
+export function useGetPrintSchedules<
+  TData = Awaited<ReturnType<typeof getPrintSchedules>>,
+  TError = unknown,
+>(
+  params: undefined | GetPrintSchedulesParams,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPrintSchedules>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPrintSchedules>>,
+          TError,
+          Awaited<ReturnType<typeof getPrintSchedules>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPrintSchedules<
+  TData = Awaited<ReturnType<typeof getPrintSchedules>>,
+  TError = unknown,
+>(
+  params?: GetPrintSchedulesParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPrintSchedules>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPrintSchedules>>,
+          TError,
+          Awaited<ReturnType<typeof getPrintSchedules>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPrintSchedules<
+  TData = Awaited<ReturnType<typeof getPrintSchedules>>,
+  TError = unknown,
+>(
+  params?: GetPrintSchedulesParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPrintSchedules>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetPrintSchedules<
+  TData = Awaited<ReturnType<typeof getPrintSchedules>>,
+  TError = unknown,
+>(
+  params?: GetPrintSchedulesParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPrintSchedules>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetPrintSchedulesQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

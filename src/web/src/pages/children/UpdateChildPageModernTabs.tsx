@@ -116,11 +116,10 @@ const UpdateChildPageModernTabs = () => {
           zIndex: 100, // Higher z-index to ensure it stays above content
           backgroundColor: "background.default",
           backdropFilter: { xs: "blur(8px)", md: "none" }, // Subtle backdrop blur on mobile when sticky
-          borderRadius: { xs: 0, md: 8 }, // Sharp corners on mobile for better edge-to-edge feel
+          borderRadius: { xs: 0, md: 2 }, // Sharp corners on mobile for better edge-to-edge feel
           px: { xs: 0, md: 2 },
           mx: { xs: -2, md: 0 }, // Stretch edge-to-edge on mobile
           mb: { xs: 0, md: 2 },
-          border: { xs: 0, md: 1 },
           borderColor: "divider",
           borderBottom: { xs: 1, md: 0 }, // Bottom border on mobile for separation
           borderBottomColor: { xs: "divider", md: "transparent" },
@@ -128,9 +127,9 @@ const UpdateChildPageModernTabs = () => {
           alignItems: "center",
           overflow: "hidden",
           // Add shadow when sticky on mobile for better visual separation
-          boxShadow: { 
-            xs: "0 2px 8px rgba(0,0,0,0.1)", 
-            md: "none" 
+          boxShadow: {
+            xs: "0 2px 8px rgba(0,0,0,0.1)",
+            md: "none",
           },
         }}
       >
@@ -146,7 +145,7 @@ const UpdateChildPageModernTabs = () => {
               fontSize: { xs: "0.875rem", md: "0.95rem" },
               fontWeight: 600,
               textTransform: "none",
-              borderRadius: { xs: 0, md: 6 }, // No border radius on mobile
+              borderRadius: { xs: 0, md: 3 }, // No border radius on mobile
               mx: { xs: 0, md: 0.5 },
               py: { xs: 1.5, md: 1.25 }, // More vertical padding on mobile
               minWidth: { xs: "auto", md: 120 }, // Auto width on mobile, min width on desktop

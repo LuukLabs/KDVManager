@@ -41,10 +41,7 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
 
   // Calculate age if dateOfBirth is present
   const age = calculateAge(dateOfBirth ?? "");
-  const ageString =
-    age !== undefined && age !== null
-      ? ` (${age} ${t("years")})`
-      : "";
+  const ageString = age !== undefined && age !== null ? ` (${age} ${t("years")})` : "";
 
   // View mode content
   const viewContent = (
@@ -56,7 +53,10 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
         <FieldDisplay label={t("Last Name")} value={lastName} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay label={t("Date of Birth")} value={dateOfBirth ? `${dateOfBirth}${ageString}` : ""} />
+        <FieldDisplay
+          label={t("Date of Birth")}
+          value={dateOfBirth ? `${dateOfBirth}${ageString}` : ""}
+        />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("CID")} value={cid} />

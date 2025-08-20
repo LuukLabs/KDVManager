@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, Typography, Chip, IconButton, Avatar, Tooltip, Stack, alpha, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Chip,
+  IconButton,
+  Avatar,
+  Tooltip,
+  Stack,
+  alpha,
+  useTheme,
+} from "@mui/material";
 import { LinkOff } from "@mui/icons-material";
 
 export type LinkedEntity = {
@@ -7,7 +17,7 @@ export type LinkedEntity = {
   primaryText: string;
   secondaryLines?: string[];
   avatarText?: string;
-  chips?: { label: string; color?: any; variant?: 'filled' | 'outlined' }[];
+  chips?: { label: string; color?: any; variant?: "filled" | "outlined" }[];
   navigateTo?: string;
   unlinkDisabled?: boolean;
 };
@@ -42,30 +52,31 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
         return (
           <Box
             key={item.id ?? `item-${idx}`}
-            component={clickable ? 'button' : 'div'}
+            component={clickable ? "button" : "div"}
             onClick={() => clickable && onNavigate(item.navigateTo!)}
             sx={{
-              width: '100%',
-              textAlign: 'left',
+              width: "100%",
+              textAlign: "left",
               border: 1,
-              borderColor: 'divider',
+              borderColor: "divider",
               borderRadius: 2,
-              display: 'flex',
-              alignItems: 'stretch',
+              display: "flex",
+              alignItems: "stretch",
               gap: 1.5,
               padding: { xs: 1.25, sm: 1.5 },
-              position: 'relative',
-              cursor: clickable ? 'pointer' : 'default',
-              backgroundColor: 'background.paper',
-              transition: 'border-color .25s ease, background-color .25s ease, box-shadow .25s ease',
-              '&:hover': clickable
+              position: "relative",
+              cursor: clickable ? "pointer" : "default",
+              backgroundColor: "background.paper",
+              transition:
+                "border-color .25s ease, background-color .25s ease, box-shadow .25s ease",
+              "&:hover": clickable
                 ? {
-                    borderColor: 'primary.main',
+                    borderColor: "primary.main",
                     backgroundColor: alpha(theme.palette.primary.main, 0.035),
                     boxShadow: theme.shadows[1],
                   }
                 : undefined,
-              '&:focus-visible': clickable
+              "&:focus-visible": clickable
                 ? {
                     outline: `2px solid ${theme.palette.primary.main}`,
                     outlineOffset: 2,
@@ -78,10 +89,10 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                 sx={{
                   width: 44,
                   height: 44,
-                  fontSize: '.95rem',
+                  fontSize: ".95rem",
                   fontWeight: 600,
                   bgcolor: alpha(theme.palette.primary.main, 0.15),
-                  color: 'primary.main',
+                  color: "primary.main",
                   flexShrink: 0,
                 }}
               >
@@ -89,8 +100,18 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
               </Avatar>
             )}
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Box display="flex" alignItems="center" gap={1} flexWrap="wrap" mb={item.secondaryLines?.length ? 0.5 : 0}>
-                <Typography variant="body1" fontWeight={600} sx={{ fontSize: { xs: '.95rem', sm: '1rem' } }}>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                flexWrap="wrap"
+                mb={item.secondaryLines?.length ? 0.5 : 0}
+              >
+                <Typography
+                  variant="body1"
+                  fontWeight={600}
+                  sx={{ fontSize: { xs: ".95rem", sm: "1rem" } }}
+                >
                   {item.primaryText}
                 </Typography>
                 {item.chips?.map((c, i) => (
@@ -99,10 +120,10 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                     size="small"
                     label={c.label}
                     color={c.color}
-                    variant={c.variant ?? 'outlined'}
+                    variant={c.variant ?? "outlined"}
                     sx={{
                       fontWeight: 500,
-                      '& .MuiChip-label': { px: 1 },
+                      "& .MuiChip-label": { px: 1 },
                     }}
                   />
                 ))}
@@ -114,7 +135,7 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                       key={i}
                       variant="body2"
                       color="text.secondary"
-                      sx={{ fontSize: { xs: '.7rem', sm: '.75rem' } }}
+                      sx={{ fontSize: { xs: ".7rem", sm: ".75rem" } }}
                     >
                       {line}
                     </Typography>
@@ -122,8 +143,8 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                 </Stack>
               )}
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', pl: 0.5 }}>
-              <Tooltip title={t('common.unlink')}>
+            <Box sx={{ display: "flex", alignItems: "center", pl: 0.5 }}>
+              <Tooltip title={t("common.unlink")}>
                 <span>
                   <IconButton
                     size="small"
@@ -133,7 +154,7 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                       onUnlink(item.id);
                     }}
                     disabled={(item.unlinkDisabled ?? false) || unlinkLoadingId === item.id}
-                    aria-label={t('common.unlink')}
+                    aria-label={t("common.unlink")}
                   >
                     <LinkOff fontSize="small" />
                   </IconButton>

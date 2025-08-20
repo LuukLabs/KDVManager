@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, Typography, Avatar, Stack, Button, useTheme, useMediaQuery, alpha } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  Stack,
+  Button,
+  useTheme,
+  useMediaQuery,
+  alpha,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Person as PersonIcon, Edit, Delete, Link as LinkIcon } from "@mui/icons-material";
 
@@ -29,7 +38,8 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const initials = (givenName?.[0] ?? "?") + (familyName?.[0] ?? "");
-  const fullName = [givenName ?? '', familyName ?? ''].filter(Boolean).join(" ") || t("Unknown Guardian");
+  const fullName =
+    [givenName ?? "", familyName ?? ""].filter(Boolean).join(" ") || t("Unknown Guardian");
 
   return (
     <Box
@@ -68,7 +78,7 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
                 color: "secondary.main",
                 fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
-                border: '2px solid rgba(255,255,255,0.3)'
+                border: "2px solid rgba(255,255,255,0.3)",
               }}
             >
               {loading ? <PersonIcon /> : initials.toUpperCase()}
@@ -111,7 +121,7 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
                 sx={{
                   borderColor: alpha("#fff", 0.5),
                   color: "white",
-                  '&:hover': { borderColor: 'white', backgroundColor: alpha("#fff",0.1) },
+                  "&:hover": { borderColor: "white", backgroundColor: alpha("#fff", 0.1) },
                 }}
               >
                 {t("Link Child")}
@@ -126,7 +136,7 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
                 sx={{
                   borderColor: alpha("#fff", 0.5),
                   color: "white",
-                  '&:hover': { borderColor: 'white', backgroundColor: alpha("#fff",0.1) },
+                  "&:hover": { borderColor: "white", backgroundColor: alpha("#fff", 0.1) },
                 }}
               >
                 {t("Edit")}
@@ -142,7 +152,10 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
                 sx={{
                   borderColor: alpha(theme.palette.error.main, 0.7),
                   color: theme.palette.error.main,
-                  '&:hover': { borderColor: theme.palette.error.main, backgroundColor: alpha(theme.palette.error.main,0.1) },
+                  "&:hover": {
+                    borderColor: theme.palette.error.main,
+                    backgroundColor: alpha(theme.palette.error.main, 0.1),
+                  },
                 }}
               >
                 {t("Delete")}

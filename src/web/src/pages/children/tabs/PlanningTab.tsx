@@ -1,4 +1,13 @@
-import { Box, Grid, Typography, Button, Divider, Paper, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  Divider,
+  Paper,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import {
   Schedule as ScheduleIcon,
   CalendarMonth as CalendarIcon,
@@ -76,7 +85,7 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
             startIcon={<AddIcon />}
             size={isMobile ? "large" : "medium"}
             fullWidth={isMobile}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               minHeight: { xs: 48, md: "auto" }, // Larger touch target on mobile
               fontSize: { xs: "1rem", md: "0.875rem" }, // Larger text on mobile

@@ -27,6 +27,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
     { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
     { key: "children", label: t("Children"), path: "/children" },
     { key: "guardians", label: t("Guardians"), path: "/guardians" },
+  { key: "print", label: t("Print Schedules"), path: "/print-schedules" },
   ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

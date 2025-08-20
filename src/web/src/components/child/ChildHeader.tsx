@@ -120,7 +120,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                 color: "primary.main",
                 fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
-                border: '2px solid rgba(255,255,255,0.3)'
+                border: "2px solid rgba(255,255,255,0.3)",
               }}
             >
               {loading ? <PersonIcon /> : getInitials()}

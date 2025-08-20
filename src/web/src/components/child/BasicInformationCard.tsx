@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
+import { calculateAge } from "../../utils/calculateAge";
 import { Person as PersonIcon } from "@mui/icons-material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
@@ -38,6 +39,13 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Calculate age if dateOfBirth is present
+  const age = calculateAge(dateOfBirth ?? "");
+  const ageString =
+    age !== undefined && age !== null
+      ? ` (${age} ${t("years")})`
+      : "";
+
   // View mode content
   const viewContent = (
     <Grid container spacing={2}>
@@ -48,7 +56,7 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
         <FieldDisplay label={t("Last Name")} value={lastName} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay label={t("Date of Birth")} value={dateOfBirth} />
+        <FieldDisplay label={t("Date of Birth")} value={dateOfBirth ? `${dateOfBirth}${ageString}` : ""} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("CID")} value={cid} />
@@ -56,15 +64,15 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
     </Grid>
   );
 
-  // Edit mode content
+  // Edit mode content (use correct field names for form)
   const editContent = formContext ? (
     <FormContainer formContext={formContext}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement name="firstName" label={t("First Name")} fullWidth required />
+          <TextFieldElement name="givenName" label={t("First Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement name="lastName" label={t("Last Name")} fullWidth required />
+          <TextFieldElement name="familyName" label={t("Last Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
           <DatePickerElement

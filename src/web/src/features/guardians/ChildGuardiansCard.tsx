@@ -110,20 +110,6 @@ export const ChildGuardiansCard = ({
               >
                 {t("Link Guardian")}
               </Button>
-              <Button
-                variant="contained"
-                startIcon={<Add />}
-                onClick={() => navigate("/guardians/new")}
-                size={isMobile ? "large" : "small"}
-                fullWidth={isMobile}
-                sx={{
-                  minHeight: { xs: 48, md: "auto" },
-                  fontSize: { xs: "1rem", md: "0.875rem" },
-                  fontWeight: 600,
-                }}
-              >
-                {t("New Guardian")}
-              </Button>
             </Box>
           </Box>
 

@@ -34,8 +34,18 @@ public class GetPrintSchedulesQueryHandler
     {
         var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Month);
 
-        var groups = request.GroupId.HasValue
-            ? (await _groupRepository.GetGroupsByIdsAsync(new List<Guid> { request.GroupId.Value })).ToList()
+        List<Guid>? filterIds = null;
+        if (request.GroupIds != null && request.GroupIds.Any())
+        {
+            filterIds = request.GroupIds;
+        }
+        else if (request.GroupId.HasValue)
+        {
+            filterIds = new List<Guid> { request.GroupId.Value };
+        }
+
+        var groups = filterIds != null
+            ? (await _groupRepository.GetGroupsByIdsAsync(filterIds)).ToList()
             : (await _groupRepository.ListAllAsync()).ToList();
 
         var closurePeriods = await _closurePeriodRepository.ListByYearAsync(request.Year);
@@ -90,8 +100,9 @@ public class GetPrintSchedulesQueryHandler
                             childVm = new PrintChildVM
                             {
                                 Id = child.Id,
-                                // Child entity does not contain name fields in Scheduling service; use placeholder
-                                Name = $"Child {child.Id.ToString().Substring(0, 8)}"
+                                GivenName = child.GivenName,
+                                FamilyName = child.FamilyName,
+                                DateOfBirth = child.DateOfBirth
                             };
                             childEntries[child.Id] = childVm;
                         }

@@ -30,7 +30,9 @@ public class ChildAddedEventConsumer : IConsumer<ChildAddedEvent>
         var command = new AddChildCommand
         {
             Id = childEvent.ChildId,
-            DateOfBirth = childEvent.DateOfBirth
+            DateOfBirth = childEvent.DateOfBirth,
+            GivenName = childEvent.GivenName,
+            FamilyName = childEvent.FamilyName
         };
 
         await _addChildCommandHandler.Handle(command);

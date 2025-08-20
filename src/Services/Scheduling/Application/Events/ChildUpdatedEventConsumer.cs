@@ -27,7 +27,9 @@ public class ChildUpdatedEventConsumer : IConsumer<ChildUpdatedEvent>
         var command = new UpdateChildCommand
         {
             Id = childEvent.ChildId,
-            DateOfBirth = childEvent.DateOfBirth
+            DateOfBirth = childEvent.DateOfBirth,
+            GivenName = childEvent.GivenName,
+            FamilyName = childEvent.FamilyName
         };
 
         await _updateChildCommandHandler.Handle(command);

@@ -1,15 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Container,
-  Box,
-  Tabs,
-  Tab,
-  useTheme,
-  useMediaQuery,
-  Fade,
-  Card,
-  CardContent,
-} from "@mui/material";
+import { Box, Tabs, Tab, useTheme, useMediaQuery, Fade, Divider, Paper } from "@mui/material";
 import { Person as PersonIcon, Schedule as ScheduleIcon } from "@mui/icons-material";
 import { useParams, useLoaderData, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -99,15 +89,14 @@ const UpdateChildPageModernTabs = () => {
   }
 
   return (
-    <Container
-      maxWidth={false}
+    <Box
       sx={{
-        py: { xs: 2, md: 3 },
-        px: { xs: 2, md: 4 },
+        pb: 6, // space for potential bottom elements future
       }}
     >
       {/* Header */}
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 2, mx: { xs: -2, md: 0 } }}>
+        {/* Stretch header edge-to-edge on mobile by negative margin compensating for Container padding in layout */}
         <ChildHeader
           firstName={child.givenName}
           lastName={child.familyName}
@@ -118,82 +107,83 @@ const UpdateChildPageModernTabs = () => {
         />
       </Box>
 
-      {/* Main Card with Integrated Tabs */}
-      <Card
+      {/* Sticky Tabs (segmented) */}
+      <Paper
+        elevation={0}
         sx={{
-          borderRadius: { xs: 2, md: 3 },
-          boxShadow: (theme) => theme.shadows[2],
+          position: { xs: "sticky", md: "static" },
+            top: { xs: 64 + 40, md: 0 }, // app bar approx + breadcrumbs row height
+          zIndex: 5,
+          backgroundColor: "background.default",
+          borderRadius: 8,
+          px: { xs: 1, md: 2 },
+          mb: 2,
+          border: 1,
+          borderColor: "divider",
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
         }}
       >
-        {/* Tabs Header */}
-        <Box
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          variant={isMobile ? "fullWidth" : "standard"}
           sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-            backgroundColor: "background.paper",
+            minHeight: 48,
+            flex: 1,
+            "& .MuiTab-root": {
+              minHeight: 48,
+              fontSize: { xs: "0.8rem", md: "0.95rem" },
+              fontWeight: 600,
+              textTransform: "none",
+              borderRadius: 6,
+              mx: { xs: 0.25, md: 0.5 },
+              py: { xs: 1, md: 1.25 },
+              "&.Mui-selected": {
+                color: "primary.contrastText",
+                backgroundColor: "primary.main",
+              },
+            },
+            "& .MuiTabs-flexContainer": {
+              gap: { xs: 0.5, md: 1 },
+            },
+            "& .MuiTabs-indicator": {
+              display: "none",
+            },
           }}
         >
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            variant={isMobile ? "fullWidth" : "standard"}
-            sx={{
-              px: { xs: 2, md: 3 },
-              "& .MuiTab-root": {
-                minHeight: { xs: 48, md: 64 },
-                fontSize: { xs: "0.875rem", md: "1rem" },
-                fontWeight: 600,
-                textTransform: "none",
-                transition: "all 0.2s ease-in-out",
-                "&:hover": {
-                  backgroundColor: "action.hover",
-                },
-                "&.Mui-selected": {
-                  color: "primary.main",
-                },
-              },
-              "& .MuiTabs-indicator": {
-                height: 3,
-                borderRadius: "3px 3px 0 0",
-              },
-            }}
-          >
-            <Tab
-              icon={<PersonIcon />}
-              iconPosition={isMobile ? "top" : "start"}
-              label={t("General Information")}
-              {...a11yProps(0)}
-            />
-            <Tab
-              icon={<ScheduleIcon />}
-              iconPosition={isMobile ? "top" : "start"}
-              label={t("Planning & Schedule")}
-              {...a11yProps(1)}
-            />
-          </Tabs>
-        </Box>
+          <Tab
+            icon={<PersonIcon fontSize="small" />}
+            iconPosition={isMobile ? "start" : "start"}
+            label={t("General")}
+            {...a11yProps(0)}
+          />
+          <Tab
+            icon={<ScheduleIcon fontSize="small" />}
+            iconPosition={isMobile ? "start" : "start"}
+            label={t("Planning")}
+            {...a11yProps(1)}
+          />
+        </Tabs>
+      </Paper>
 
-        {/* Tab Content */}
-        <CardContent
-          sx={{
-            p: 0,
-            "&:last-child": { pb: 0 },
-          }}
-        >
-          <CustomTabPanel value={activeTab} index={0}>
-            <Box sx={{ p: { xs: 2, md: 3 } }}>
-              <GeneralInformationTab child={child} />
-            </Box>
-          </CustomTabPanel>
+      <Divider sx={{ mb: 2, display: { xs: "none", md: "block" } }} />
 
-          <CustomTabPanel value={activeTab} index={1}>
-            <Box sx={{ p: { xs: 2, md: 3 } }}>
-              <PlanningTab childId={childId} />
-            </Box>
-          </CustomTabPanel>
-        </CardContent>
-      </Card>
-    </Container>
+      {/* Content Panels */}
+      <Box sx={{ px: { xs: 0, md: 0 } }}>
+        <CustomTabPanel value={activeTab} index={0}>
+          <Box sx={{ p: { xs: 0.5, sm: 1.5, md: 0 } }}>
+            <GeneralInformationTab child={child} />
+          </Box>
+        </CustomTabPanel>
+        <CustomTabPanel value={activeTab} index={1}>
+          <Box sx={{ p: { xs: 0.5, sm: 1.5, md: 0 } }}>
+            <PlanningTab childId={childId} />
+          </Box>
+        </CustomTabPanel>
+      </Box>
+    </Box>
   );
 };
 

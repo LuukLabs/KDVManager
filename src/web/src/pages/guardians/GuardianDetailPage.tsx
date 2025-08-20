@@ -1,4 +1,4 @@
-import { Container, Alert, CircularProgress, Box } from "@mui/material";
+import { Alert, CircularProgress, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -21,29 +21,19 @@ const GuardianDetailPage = () => {
   const linkToChild = useLinkGuardianToChild();
 
   if (!guardianId) {
-    return (
-      <Container maxWidth="lg">
-        <Alert severity="error">{t("Guardian ID is required")}</Alert>
-      </Container>
-    );
+    return <Alert severity="error">{t("Guardian ID is required")}</Alert>;
   }
 
   if (isLoading) {
     return (
-      <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" py={4}>
-          <CircularProgress />
-        </Box>
-      </Container>
+      <Box display="flex" justifyContent="center" py={4}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (error || !guardian) {
-    return (
-      <Container maxWidth="lg">
-        <Alert severity="error">{t("Guardian not found")}</Alert>
-      </Container>
-    );
+    return <Alert severity="error">{t("Guardian not found")}</Alert>;
   }
 
   const handleEdit = () => {
@@ -74,8 +64,8 @@ const GuardianDetailPage = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box py={3}>
+    <Box sx={{ pb: 4 }}>
+      <Box sx={{ mx: { xs: -2, md: 0 } }}>
         <GuardianDetailView
           guardian={guardian}
           isLoading={deleteGuardian.isPending}
@@ -83,19 +73,18 @@ const GuardianDetailPage = () => {
           onDelete={handleDelete}
           onLinkChild={handleLinkChild}
         />
-
-        <LinkGuardianToChildDialog
-          open={linkDialogOpen}
-          onClose={() => setLinkDialogOpen(false)}
-          onSubmit={handleLinkSubmit}
-          mode="linkToGuardian"
-          preselectedGuardianId={guardianId}
-          children={[]}
-          guardians={[]}
-          isLoading={linkToChild.isPending}
-        />
       </Box>
-    </Container>
+      <LinkGuardianToChildDialog
+        open={linkDialogOpen}
+        onClose={() => setLinkDialogOpen(false)}
+        onSubmit={handleLinkSubmit}
+        mode="linkToGuardian"
+        preselectedGuardianId={guardianId}
+        children={[]}
+        guardians={[]}
+        isLoading={linkToChild.isPending}
+      />
+    </Box>
   );
 };
 

@@ -100,8 +100,18 @@ export const ChildGuardiansCard = ({
 
   return (
     <>
-      <Card>
-        <CardContent>
+      <Card
+        elevation={0}
+        sx={{
+          border: 1,
+          borderColor: 'divider',
+          borderLeftWidth: { xs: 4, md: 6 },
+          borderLeftColor: 'primary.main',
+          borderRadius: 3,
+          background: (theme) => `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
+        }}
+      >
+        <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 } }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6">{t("Guardians")}</Typography>
             <Box display="flex" gap={1}>

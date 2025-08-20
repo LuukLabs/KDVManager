@@ -82,9 +82,9 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
       sx={{
         background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
         color: "white",
-        p: 3,
-        borderRadius: 3,
-        mb: 3,
+        p: { xs: 2, sm: 2.5, md: 3 },
+        borderRadius: { xs: 0, md: 3 },
+        mb: { xs: 2, md: 3 },
         position: "relative",
         overflow: "hidden",
         "&::before": {
@@ -94,10 +94,11 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          background: `radial-gradient(circle at 20% 80%, ${alpha("#fff", 0.1)} 0%, transparent 50%), 
-                       radial-gradient(circle at 80% 20%, ${alpha("#fff", 0.05)} 0%, transparent 50%)`,
+          background: `radial-gradient(circle at 20% 80%, ${alpha("#fff", 0.12)} 0%, transparent 55%), 
+                       radial-gradient(circle at 80% 20%, ${alpha("#fff", 0.07)} 0%, transparent 55%)`,
           pointerEvents: "none",
         },
+        boxShadow: { xs: "none", md: theme.shadows[2] },
       }}
     >
       <Box sx={{ position: "relative", zIndex: 1 }}>
@@ -113,12 +114,13 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
             <Avatar
               sx={{
-                width: 64,
-                height: 64,
-                bgcolor: alpha("#fff", 0.2),
+                width: { xs: 56, md: 64 },
+                height: { xs: 56, md: 64 },
+                bgcolor: alpha("#fff", 0.22),
                 color: "primary.main",
-                fontSize: "1.5rem",
+                fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
+                border: '2px solid rgba(255,255,255,0.3)'
               }}
             >
               {loading ? <PersonIcon /> : getInitials()}
@@ -131,7 +133,8 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                 sx={{
                   fontWeight: 700,
                   mb: 0.5,
-                  fontSize: isMobile ? "1.75rem" : "2rem",
+                  lineHeight: 1.15,
+                  fontSize: isMobile ? "1.55rem" : "2rem",
                 }}
               >
                 {getFullName()}
@@ -141,8 +144,10 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                 variant="subtitle1"
                 sx={{
                   opacity: 0.9,
-                  fontSize: "1rem",
+                  fontSize: { xs: ".85rem", sm: ".9rem", md: "1rem" },
                   mb: 1,
+                  fontWeight: 500,
+                  letterSpacing: 0.3,
                 }}
               >
                 {t("Child Record")} {group && `• ${t("Group")}: ${group}`}

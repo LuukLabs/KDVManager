@@ -91,7 +91,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
       {/* Card Header */}
       <Box
         sx={{
-          p: 2.5,
+          p: { xs: 1.75, sm: 2, md: 2.5 },
           borderBottom: "1px solid",
           borderBottomColor: "divider",
           display: "flex",
@@ -183,7 +183,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
 
       {/* Card Content */}
       <Collapse in={expanded} timeout={300}>
-        <CardContent sx={{ p: 2.5 }}>
+  <CardContent sx={{ p: { xs: 2, sm: 2.25, md: 2.5 } }}>
           {isEditing && editChildren ? editChildren : children}
         </CardContent>
       </Collapse>

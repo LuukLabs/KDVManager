@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ChildGuardianVM } from "../../api/models/childGuardianVM";
-import { Typography, Box, Button, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Typography, Box, Button, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, useMediaQuery } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { LinkExistingGuardianDialog } from "./LinkExistingGuardianDialog";
@@ -31,6 +31,8 @@ export const ChildGuardiansCard = ({
 }: ChildGuardiansCardProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [unlinkDialogOpen, setUnlinkDialogOpen] = useState(false);
   const [selectedGuardian, setSelectedGuardian] = useState<ChildGuardianVM | null>(null);
@@ -83,15 +85,28 @@ export const ChildGuardiansCard = ({
     <>
       <AccentSection variant="outlined" borderColor="primary.main" padding="normal">
         <Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box 
+            display="flex" 
+            justifyContent="space-between" 
+            alignItems={{ xs: "flex-start", md: "center" }} 
+            mb={2}
+            flexDirection={{ xs: "column", sm: "row" }}
+            gap={{ xs: 2, sm: 1 }}
+          >
             <Typography variant="h6">{t("Guardians")}</Typography>
-            <Box display="flex" gap={1}>
+            <Box display="flex" gap={1} flexDirection={{ xs: "column", sm: "row" }} width={{ xs: "100%", sm: "auto" }}>
               <Button
                 variant="outlined"
                 startIcon={<Add />}
                 onClick={() => setLinkDialogOpen(true)}
-                size="small"
+                size={isMobile ? "large" : "small"}
+                fullWidth={isMobile}
                 disabled={loading}
+                sx={{
+                  minHeight: { xs: 48, md: "auto" },
+                  fontSize: { xs: "1rem", md: "0.875rem" },
+                  fontWeight: 600,
+                }}
               >
                 {t("Link Guardian")}
               </Button>
@@ -99,7 +114,13 @@ export const ChildGuardiansCard = ({
                 variant="contained"
                 startIcon={<Add />}
                 onClick={() => navigate("/guardians/new")}
-                size="small"
+                size={isMobile ? "large" : "small"}
+                fullWidth={isMobile}
+                sx={{
+                  minHeight: { xs: 48, md: "auto" },
+                  fontSize: { xs: "1rem", md: "0.875rem" },
+                  fontWeight: 600,
+                }}
               >
                 {t("New Guardian")}
               </Button>
@@ -167,9 +188,29 @@ export const ChildGuardiansCard = ({
             )}
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setUnlinkDialogOpen(false)}>{t("Cancel")}</Button>
-          <Button onClick={handleUnlinkConfirm} color="error" disabled={unlinkMutation.isPending}>
+        <DialogActions sx={{ p: { xs: 2, md: 1.5 }, gap: { xs: 1, md: 0.5 } }}>
+          <Button 
+            onClick={() => setUnlinkDialogOpen(false)}
+            size={isMobile ? "large" : "medium"}
+            sx={{ 
+              minHeight: { xs: 44, md: "auto" },
+              px: { xs: 3, md: 2 },
+            }}
+          >
+            {t("Cancel")}
+          </Button>
+          <Button 
+            onClick={handleUnlinkConfirm} 
+            color="error" 
+            disabled={unlinkMutation.isPending}
+            size={isMobile ? "large" : "medium"}
+            variant={isMobile ? "contained" : "text"}
+            sx={{ 
+              minHeight: { xs: 44, md: "auto" },
+              px: { xs: 3, md: 2 },
+              fontWeight: 600,
+            }}
+          >
             {unlinkMutation.isPending ? t("Unlinking...") : t("Unlink")}
           </Button>
         </DialogActions>

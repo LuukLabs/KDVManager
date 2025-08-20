@@ -9,6 +9,7 @@ import {
   alpha,
   useTheme,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Edit as EditIcon,
@@ -49,6 +50,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
   disabled = false,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   const handleEditToggle = () => {
@@ -121,14 +123,17 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                 }}
                 color="primary"
                 disabled={loading}
+                size={isMobile ? "medium" : "small"}
                 sx={{
                   backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                  minHeight: { xs: 44, md: "auto" },
                   "&:hover": {
                     backgroundColor: alpha(theme.palette.primary.main, 0.2),
                   },
                 }}
               >
-                <SaveIcon fontSize="small" />
+                <SaveIcon fontSize={isMobile ? "medium" : "small"} />
               </IconButton>
               <IconButton
                 onClick={(e) => {
@@ -137,14 +142,17 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                 }}
                 color="error"
                 disabled={loading}
+                size={isMobile ? "medium" : "small"}
                 sx={{
                   backgroundColor: alpha(theme.palette.error.main, 0.1),
+                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                  minHeight: { xs: 44, md: "auto" },
                   "&:hover": {
                     backgroundColor: alpha(theme.palette.error.main, 0.2),
                   },
                 }}
               >
-                <CancelIcon fontSize="small" />
+                <CancelIcon fontSize={isMobile ? "medium" : "small"} />
               </IconButton>
             </Stack>
           ) : (
@@ -155,14 +163,17 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                   handleEditToggle();
                 }}
                 disabled={disabled || loading}
+                size={isMobile ? "medium" : "small"}
                 sx={{
                   backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                  minHeight: { xs: 44, md: "auto" },
                   "&:hover": {
                     backgroundColor: alpha(theme.palette.primary.main, 0.2),
                   },
                 }}
               >
-                <EditIcon fontSize="small" />
+                <EditIcon fontSize={isMobile ? "medium" : "small"} />
               </IconButton>
             )
           )}

@@ -91,11 +91,11 @@ const UpdateChildPageModernTabs = () => {
   return (
     <Box
       sx={{
-        pb: 6, // space for potential bottom elements future
+        pb: { xs: 8, md: 6 }, // More bottom padding on mobile for better scrolling
       }}
     >
       {/* Header */}
-      <Box sx={{ mb: 2, mx: { xs: -2, md: 0 } }}>
+      <Box sx={{ mb: { xs: 1, md: 2 }, mx: { xs: -2, md: 0 } }}>
         {/* Stretch header edge-to-edge on mobile by negative margin compensating for Container padding in layout */}
         <ChildHeader
           firstName={child.givenName}
@@ -109,20 +109,29 @@ const UpdateChildPageModernTabs = () => {
 
       {/* Sticky Tabs (segmented) */}
       <Paper
-        elevation={0}
+        elevation={isMobile ? 2 : 0}
         sx={{
           position: { xs: "sticky", md: "static" },
-            top: { xs: 64 + 40, md: 0 }, // app bar approx + breadcrumbs row height
-          zIndex: 5,
+          top: { xs: 0, md: 0 }, // Simple 0 for mobile to stick to top
+          zIndex: 100, // Higher z-index to ensure it stays above content
           backgroundColor: "background.default",
-          borderRadius: 8,
-          px: { xs: 1, md: 2 },
-          mb: 2,
-          border: 1,
+          backdropFilter: { xs: "blur(8px)", md: "none" }, // Subtle backdrop blur on mobile when sticky
+          borderRadius: { xs: 0, md: 8 }, // Sharp corners on mobile for better edge-to-edge feel
+          px: { xs: 0, md: 2 },
+          mx: { xs: -2, md: 0 }, // Stretch edge-to-edge on mobile
+          mb: { xs: 0, md: 2 },
+          border: { xs: 0, md: 1 },
           borderColor: "divider",
+          borderBottom: { xs: 1, md: 0 }, // Bottom border on mobile for separation
+          borderBottomColor: { xs: "divider", md: "transparent" },
           display: "flex",
           alignItems: "center",
           overflow: "hidden",
+          // Add shadow when sticky on mobile for better visual separation
+          boxShadow: { 
+            xs: "0 2px 8px rgba(0,0,0,0.1)", 
+            md: "none" 
+          },
         }}
       >
         <Tabs
@@ -130,23 +139,30 @@ const UpdateChildPageModernTabs = () => {
           onChange={handleTabChange}
           variant={isMobile ? "fullWidth" : "standard"}
           sx={{
-            minHeight: 48,
+            minHeight: { xs: 56, md: 48 }, // Larger touch target on mobile
             flex: 1,
             "& .MuiTab-root": {
-              minHeight: 48,
-              fontSize: { xs: "0.8rem", md: "0.95rem" },
+              minHeight: { xs: 56, md: 48 }, // 56px minimum touch target for mobile
+              fontSize: { xs: "0.875rem", md: "0.95rem" },
               fontWeight: 600,
               textTransform: "none",
-              borderRadius: 6,
-              mx: { xs: 0.25, md: 0.5 },
-              py: { xs: 1, md: 1.25 },
+              borderRadius: { xs: 0, md: 6 }, // No border radius on mobile
+              mx: { xs: 0, md: 0.5 },
+              py: { xs: 1.5, md: 1.25 }, // More vertical padding on mobile
+              minWidth: { xs: "auto", md: 120 }, // Auto width on mobile, min width on desktop
               "&.Mui-selected": {
                 color: "primary.contrastText",
                 backgroundColor: "primary.main",
+                fontWeight: 700, // Bolder text for selected state
+              },
+              "&:not(.Mui-selected)": {
+                "&:hover": {
+                  backgroundColor: { xs: "transparent", md: "action.hover" }, // No hover on mobile
+                },
               },
             },
             "& .MuiTabs-flexContainer": {
-              gap: { xs: 0.5, md: 1 },
+              gap: { xs: 0, md: 1 }, // No gap on mobile for full-width effect
             },
             "& .MuiTabs-indicator": {
               display: "none",
@@ -155,30 +171,30 @@ const UpdateChildPageModernTabs = () => {
         >
           <Tab
             icon={<PersonIcon fontSize="small" />}
-            iconPosition={isMobile ? "start" : "start"}
+            iconPosition="start"
             label={t("General")}
             {...a11yProps(0)}
           />
           <Tab
             icon={<ScheduleIcon fontSize="small" />}
-            iconPosition={isMobile ? "start" : "start"}
+            iconPosition="start"
             label={t("Planning")}
             {...a11yProps(1)}
           />
         </Tabs>
       </Paper>
 
-      <Divider sx={{ mb: 2, display: { xs: "none", md: "block" } }} />
+      <Divider sx={{ mb: 2, mt: { xs: 2, md: 0 }, display: { xs: "none", md: "block" } }} />
 
       {/* Content Panels */}
-      <Box sx={{ px: { xs: 0, md: 0 } }}>
+      <Box sx={{ px: { xs: 0, md: 0 }, mt: { xs: 2, md: 0 } }}>
         <CustomTabPanel value={activeTab} index={0}>
-          <Box sx={{ p: { xs: 0.5, sm: 1.5, md: 0 } }}>
+          <Box sx={{ p: { xs: 1, sm: 1.5, md: 0 } }}>
             <GeneralInformationTab child={child} />
           </Box>
         </CustomTabPanel>
         <CustomTabPanel value={activeTab} index={1}>
-          <Box sx={{ p: { xs: 0.5, sm: 1.5, md: 0 } }}>
+          <Box sx={{ p: { xs: 1, sm: 1.5, md: 0 } }}>
             <PlanningTab childId={childId} />
           </Box>
         </CustomTabPanel>

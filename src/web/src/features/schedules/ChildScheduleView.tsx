@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useTheme, useMediaQuery } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
@@ -12,6 +12,8 @@ type ChildScheduleViewProps = {
 
 export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialogV2, { childId: childId });
@@ -33,7 +35,15 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
           variant="contained"
           onClick={onAddChildScheduleClickHandler}
           startIcon={<AddIcon />}
-          size="medium"
+          size={isMobile ? "large" : "medium"}
+          fullWidth={isMobile}
+          sx={{
+            minHeight: { xs: 48, md: "auto" }, // Larger touch target on mobile
+            fontSize: { xs: "1rem", md: "0.875rem" }, // Larger text on mobile
+            fontWeight: 600,
+            px: { xs: 3, md: 2 },
+            borderRadius: 2,
+          }}
         >
           {t("Add Schedule")}
         </Button>

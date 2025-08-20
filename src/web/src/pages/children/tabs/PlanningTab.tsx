@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button, Divider, Paper } from "@mui/material";
+import { Box, Grid, Typography, Button, Divider, Paper, useTheme, useMediaQuery } from "@mui/material";
 import {
   Schedule as ScheduleIcon,
   CalendarMonth as CalendarIcon,
@@ -16,25 +16,27 @@ type PlanningTabProps = {
 
 export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const onAddAbsenceClickHandler = () =>
     void NiceModal.show(AddAbsenceDialog, { childId: childId });
 
   return (
     <>
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 2, md: 4 }}>
         {/* Current Schedule Management */}
         <Grid size={{ xs: 12, xl: 6 }}>
           <Paper
             variant="outlined"
             sx={{
-              p: 3,
+              p: { xs: 2, md: 3 },
               height: "100%",
               borderRadius: 2,
               backgroundColor: "background.paper",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: { xs: 2, md: 3 } }}>
               <ScheduleIcon color="primary" />
               <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
                 {t("Current Schedule")}
@@ -47,18 +49,18 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
       </Grid>
 
       {/* Divider between sections */}
-      <Divider sx={{ my: 4 }} />
+      <Divider sx={{ my: { xs: 3, md: 4 } }} />
 
       {/* Absence Management Section */}
       <Box>
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", md: "center" },
             justifyContent: "space-between",
-            mb: 3,
-            flexWrap: "wrap",
-            gap: 2,
+            mb: { xs: 2, md: 3 },
+            flexDirection: { xs: "column", sm: "row" },
+            gap: { xs: 2, sm: 2, md: 2 },
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -72,8 +74,15 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
             variant="contained"
             onClick={onAddAbsenceClickHandler}
             startIcon={<AddIcon />}
-            size="medium"
-            sx={{ borderRadius: 2 }}
+            size={isMobile ? "large" : "medium"}
+            fullWidth={isMobile}
+            sx={{ 
+              borderRadius: 2,
+              minHeight: { xs: 48, md: "auto" }, // Larger touch target on mobile
+              fontSize: { xs: "1rem", md: "0.875rem" }, // Larger text on mobile
+              fontWeight: 600,
+              px: { xs: 3, md: 2 },
+            }}
           >
             {t("Add Absence")}
           </Button>
@@ -82,7 +91,7 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
         <Paper
           variant="outlined"
           sx={{
-            p: 3,
+            p: { xs: 2, md: 3 },
             borderRadius: 2,
             backgroundColor: "background.paper",
           }}

@@ -1,0 +1,115 @@
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Box, Button, CircularProgress, Alert } from "@mui/material";
+import { Add as AddIcon, People as PeopleIcon } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import {
+  useGetGuardianChildren,
+  useUnlinkGuardianFromChild,
+} from "@api/endpoints/guardians/guardians";
+import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
+import { EditableCard } from "../cards/EditableCard";
+import { LinkedEntityList } from "../linked/LinkedEntityList";
+
+type GuardianChildrenCardProps = {
+  guardianId: string;
+  onLinkChild?: () => void;
+};
+
+export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({
+  guardianId,
+  onLinkChild,
+}) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
+
+  const {
+    data: children = [],
+    isLoading: childrenLoading,
+    refetch: refetchChildren,
+  } = useGetGuardianChildren(guardianId);
+  const unlinkMutation = useUnlinkGuardianFromChild();
+
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("nl-NL");
+  };
+
+  const handleUnlinkChild = async (childId: string) => {
+    setUnlinkingChild(childId);
+    try {
+      await unlinkMutation.mutateAsync({ childId, guardianId });
+      await refetchChildren();
+    } catch {
+      // Intentionally swallow error (could surface toast notification later)
+    } finally {
+      setUnlinkingChild(null);
+    }
+  };
+
+  const cardActions = (
+    <Button
+      variant="outlined"
+      startIcon={<AddIcon />}
+      onClick={onLinkChild}
+      size="small"
+      sx={{ minWidth: { xs: "auto", md: "auto" } }}
+    >
+      {t("Link Child")}
+    </Button>
+  );
+
+  const content = childrenLoading ? (
+    <Box display="flex" justifyContent="center" p={2}>
+      <CircularProgress size={28} />
+    </Box>
+  ) : (
+    <LinkedEntityList
+      items={children.map((c) => ({
+        id: c.childId ?? c.fullName,
+        primaryText: c.fullName,
+        chips: [
+          {
+            label: getRelationshipLabel(c.relationshipType),
+            variant: "outlined" as const,
+            color: getRelationshipColor(c.relationshipType) as any,
+          },
+          ...(c.isPrimaryContact
+            ? [{ label: "Primary", color: "primary", variant: "filled" as const }]
+            : []),
+          ...(c.isEmergencyContact
+            ? [{ label: "Emergency", color: "error", variant: "filled" as const }]
+            : []),
+          ...(c.isArchived
+            ? [{ label: "Archived", color: "warning", variant: "filled" as const }]
+            : []),
+        ],
+        secondaryLines: [
+          `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ""}`,
+          c.cid ? `CID: ${c.cid}` : "",
+        ].filter(Boolean),
+        navigateTo: c.childId ? `/children/${c.childId}` : undefined,
+        unlinkDisabled: unlinkingChild === c.childId,
+      }))}
+      onNavigate={(path) => navigate(path)}
+      onUnlink={(id) => {
+        const match = children.find((c) => c.childId === id);
+        if (match?.childId) handleUnlinkChild(match.childId);
+      }}
+      unlinkLoadingId={unlinkingChild}
+      emptyContent={<Alert severity="info">{t("No children linked to this guardian")}</Alert>}
+    />
+  );
+
+  return (
+    <EditableCard
+      title={t("Children")}
+      icon={<PeopleIcon color="primary" />}
+      actions={cardActions}
+      collapsible={false}
+    >
+      {content}
+    </EditableCard>
+  );
+};

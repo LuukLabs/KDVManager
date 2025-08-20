@@ -28,8 +28,8 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const initials = (givenName?.[0] || "?") + (familyName?.[0] || "");
-  const fullName = [givenName, familyName].filter(Boolean).join(" ") || t("Unknown Guardian");
+  const initials = (givenName?.[0] ?? "?") + (familyName?.[0] ?? "");
+  const fullName = [givenName ?? '', familyName ?? ''].filter(Boolean).join(" ") || t("Unknown Guardian");
 
   return (
     <Box

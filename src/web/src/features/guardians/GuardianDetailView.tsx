@@ -1,6 +1,6 @@
 /* eslint-disable i18next/no-literal-string */
-import { Box, Typography, Grid, Chip, Button, IconButton, List, ListItem, ListItemText, Alert, CircularProgress, Tooltip, Stack } from "@mui/material";
-import { Add, Phone, Email, LinkOff } from "@mui/icons-material";
+import { Box, Typography, Grid, Chip, Button, Alert, CircularProgress, Stack } from "@mui/material";
+import { Add, Phone, Email } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { type GuardianDetailVM } from "@api/models/guardianDetailVM";
@@ -11,6 +11,7 @@ import {
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
 import { GuardianHeader } from "../../components/guardian/GuardianHeader";
 import { AccentSection } from "../../components/layout/AccentSection";
+import { LinkedEntityList } from "../../components/linked/LinkedEntityList";
 
 type GuardianDetailViewProps = {
   guardian: GuardianDetailVM;
@@ -69,7 +70,7 @@ export const GuardianDetailView = ({
       <Grid container spacing={3}>
         {/* Personal Information */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <AccentSection borderColor="secondary.main">
+          <AccentSection borderColor="secondary.main" variant="subtle" padding="normal">
             <Typography variant="h6" gutterBottom fontWeight={600}>
               Personal Information
             </Typography>
@@ -99,7 +100,7 @@ export const GuardianDetailView = ({
         </Grid>
         {/* Contact */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <AccentSection borderColor="secondary.main">
+          <AccentSection borderColor="secondary.main" variant="subtle" padding="normal">
             <Typography variant="h6" gutterBottom fontWeight={600}>
               Contact
             </Typography>
@@ -126,7 +127,7 @@ export const GuardianDetailView = ({
         </Grid>
         {/* Children */}
         <Grid size={{ xs: 12 }}>
-          <AccentSection borderColor="secondary.main">
+          <AccentSection borderColor="secondary.main" variant="outlined" padding="normal">
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
               <Typography variant="h6" fontWeight={600}>Children</Typography>
               <Button variant="outlined" startIcon={<Add />} onClick={onLinkChild} size="small">
@@ -137,86 +138,32 @@ export const GuardianDetailView = ({
               <Box display="flex" justifyContent="center" p={2}>
                 <CircularProgress size={28} />
               </Box>
-            ) : children.length === 0 ? (
-              <Alert severity="info">No children linked to this guardian</Alert>
             ) : (
-              <List disablePadding>
-                {children.map((child) => (
-                  <ListItem
-                    key={child.childId}
-                    divider
-                    component={child.childId ? "button" : "div"}
-                    onClick={() => child.childId && navigate(`/children/${child.childId}`)}
-                    sx={{
-                      cursor: child.childId ? "pointer" : "default",
-                      border: "none",
-                      background: "none",
-                      width: "100%",
-                      textAlign: "left",
-                      px: 0,
-                      py: 1,
-                    }}
-                    disableGutters
-                    secondaryAction={
-                      <Tooltip title="Unlink child">
-                        <span>
-                          <IconButton
-                            edge="end"
-                            color="warning"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (child.childId) {
-                                handleUnlinkChild(child.childId);
-                              }
-                            }}
-                            disabled={unlinkingChild === child.childId || !child.childId}
-                            size="small"
-                            aria-label="Unlink child"
-                          >
-                            <LinkOff fontSize="small" />
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                    }
-                    {...(child.childId ? { type: "button", tabIndex: 0 } : {})}
-                  >
-                    <ListItemText
-                      primary={
-                        <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" fontWeight={500}>{child.fullName}</Typography>
-                          <Chip
-                            label={getRelationshipLabel(child.relationshipType)}
-                            size="small"
-                            color={getRelationshipColor(child.relationshipType) as any}
-                            variant="outlined"
-                          />
-                          {child.isPrimaryContact && (
-                            <Chip label="Primary" size="small" color="primary" />
-                          )}
-                          {child.isEmergencyContact && (
-                            <Chip label="Emergency" size="small" color="error" />
-                          )}
-                          {child.isArchived && (
-                            <Chip label="Archived" size="small" color="warning" />
-                          )}
-                        </Box>
-                      }
-                      secondary={
-                        <Box>
-                          <Typography variant="body2" color="text.secondary">
-                            Born: {formatDate(child.dateOfBirth)} {child.age && `(${child.age} years old)`}
-                          </Typography>
-                          {child.cid && (
-                            <Typography variant="body2" color="text.secondary">
-                              CID: {child.cid}
-                            </Typography>
-                          )}
-                        </Box>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
+              <LinkedEntityList
+        items={children.map((c) => ({
+                  id: c.childId ?? c.fullName,
+                  primaryText: c.fullName,
+                  chips: [
+          { label: getRelationshipLabel(c.relationshipType), variant: 'outlined' as const, color: getRelationshipColor(c.relationshipType) as any },
+          ...(c.isPrimaryContact ? [{ label: 'Primary', color: 'primary', variant: 'filled' as const }] : []),
+          ...(c.isEmergencyContact ? [{ label: 'Emergency', color: 'error', variant: 'filled' as const }] : []),
+          ...(c.isArchived ? [{ label: 'Archived', color: 'warning', variant: 'filled' as const }] : []),
+                  ],
+                  secondaryLines: [
+                    `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ''}`,
+                    c.cid ? `CID: ${c.cid}` : ''
+                  ].filter(Boolean),
+                  navigateTo: c.childId ? `/children/${c.childId}` : undefined,
+                  unlinkDisabled: unlinkingChild === c.childId,
+                }))}
+                onNavigate={(path) => navigate(path)}
+                onUnlink={(id) => {
+                  const match = children.find((c) => c.childId === id);
+                  if (match?.childId) handleUnlinkChild(match.childId);
+                }}
+                unlinkLoadingId={unlinkingChild}
+                emptyContent={<Alert severity="info">No children linked to this guardian</Alert>}
+              />
             )}
           </AccentSection>
         </Grid>

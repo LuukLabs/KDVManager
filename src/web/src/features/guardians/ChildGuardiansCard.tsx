@@ -1,32 +1,17 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ChildGuardianVM } from "../../api/models/childGuardianVM";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Button,
-  List,
-  ListItem,
-  IconButton,
-  Chip,
-  Alert,
-  CircularProgress,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
-import { Add, Delete, Phone, Email, Edit, Visibility } from "@mui/icons-material";
+import { Typography, Box, Button, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { LinkExistingGuardianDialog } from "./LinkExistingGuardianDialog";
+import { AccentSection } from "../../components/layout/AccentSection";
 import {
   useGetChildGuardians,
   useUnlinkGuardianFromChild,
 } from "@api/endpoints/guardians/guardians";
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
+import { LinkedEntityList } from "../../components/linked/LinkedEntityList";
 
 // Type definitions (to be replaced with generated API types)
 // Using generated ChildGuardianVM type from API client
@@ -62,12 +47,8 @@ export const ChildGuardiansCard = ({
       .slice(0, 2);
   };
 
-  const handleViewGuardian = (guardianId: string) => {
+  const handleNavigateGuardian = (guardianId: string) => {
     navigate(`/guardians/${guardianId}`);
-  };
-
-  const handleEditGuardian = (guardianId: string) => {
-    navigate(`/guardians/${guardianId}/edit`);
   };
 
   const handleUnlinkClick = (guardian: ChildGuardianVM) => {
@@ -100,18 +81,8 @@ export const ChildGuardiansCard = ({
 
   return (
     <>
-      <Card
-        elevation={0}
-        sx={{
-          border: 1,
-          borderColor: 'divider',
-          borderLeftWidth: { xs: 4, md: 6 },
-          borderLeftColor: 'primary.main',
-          borderRadius: 3,
-          background: (theme) => `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
-        }}
-      >
-        <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 } }}>
+      <AccentSection variant="outlined" borderColor="primary.main" padding="normal">
+        <Box>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6">{t("Guardians")}</Typography>
             <Box display="flex" gap={1}>
@@ -146,114 +117,36 @@ export const ChildGuardiansCard = ({
               )}
             </Alert>
           ) : (
-            <List disablePadding>
-              {guardians.map((guardian, index) => (
-                <ListItem
-                  key={guardian.guardianId}
-                  divider={index < guardians.length - 1}
-                  sx={{ px: 0 }}
-                >
-                  <Box display="flex" alignItems="center" width="100%">
-                    {/* Avatar */}
-                    <Avatar
-                      sx={{
-                        bgcolor: "primary.main",
-                        mr: 2,
-                        width: 48,
-                        height: 48,
-                      }}
-                    >
-                      {getInitials(guardian.fullName)}
-                    </Avatar>
-
-                    {/* Main Content */}
-                    <Box flex={1}>
-                      <Box display="flex" alignItems="center" gap={1} mb={1}>
-                        <Typography variant="subtitle1" fontWeight="medium">
-                          {guardian.fullName}
-                        </Typography>
-                        <Chip
-                          label={getRelationshipLabel(guardian.relationshipType)}
-                          size="small"
-                          color={getRelationshipColor(guardian.relationshipType) as any}
-                          variant="outlined"
-                        />
-                        {guardian.isPrimaryContact && (
-                          <Chip
-                            label={t("Primary")}
-                            size="small"
-                            color="primary"
-                            variant="filled"
-                          />
-                        )}
-                        {guardian.isEmergencyContact && (
-                          <Chip
-                            label={t("Emergency")}
-                            size="small"
-                            color="error"
-                            variant="filled"
-                          />
-                        )}
-                      </Box>
-
-                      {/* Contact Info */}
-                      <Box display="flex" flexWrap="wrap" gap={2} mb={1}>
-                        <Box display="flex" alignItems="center" gap={0.5}>
-                          <Phone fontSize="small" color="action" />
-                          <Typography variant="body2" color="text.secondary">
-                            {guardian.phoneNumber}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" gap={0.5}>
-                          <Email fontSize="small" color="action" />
-                          <Typography variant="body2" color="text.secondary">
-                            {guardian.email}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    {/* Actions */}
-                    <Box display="flex" flexDirection="column" gap={0.5} ml={2}>
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() =>
-                          guardian.guardianId && handleViewGuardian(guardian.guardianId)
-                        }
-                        title={t("View Details")}
-                        disabled={!guardian.guardianId}
-                      >
-                        <Visibility fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() =>
-                          guardian.guardianId && handleEditGuardian(guardian.guardianId)
-                        }
-                        title={t("Edit Guardian")}
-                        disabled={!guardian.guardianId}
-                      >
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => guardian.guardianId && handleUnlinkClick(guardian)}
-                        title={t("Unlink Guardian")}
-                        disabled={unlinkMutation.isPending || !guardian.guardianId}
-                      >
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
+            <LinkedEntityList
+              items={guardians.map((g) => ({
+                id: g.guardianId ?? g.fullName,
+                primaryText: g.fullName,
+                avatarText: getInitials(g.fullName),
+                chips: [
+                  { label: t(getRelationshipLabel(g.relationshipType)), variant: 'outlined' as const, color: getRelationshipColor(g.relationshipType) as any },
+                  ...(g.isPrimaryContact ? [{ label: t('Primary'), color: 'primary', variant: 'filled' as const }] : []),
+                  ...(g.isEmergencyContact ? [{ label: t('Emergency'), color: 'error', variant: 'filled' as const }] : []),
+                ],
+                secondaryLines: [
+                  [g.phoneNumber, g.email].filter(Boolean).join(' • '),
+                ].filter(Boolean),
+                navigateTo: g.guardianId ? `/guardians/${g.guardianId}` : undefined,
+                unlinkDisabled: unlinkMutation.isPending,
+              }))}
+              onNavigate={(path) => {
+                const idPart = path.split('/').pop();
+                handleNavigateGuardian(idPart ?? '');
+              }}
+              onUnlink={(id) => {
+                const match = guardians.find((g) => g.guardianId === id);
+                if (match) handleUnlinkClick(match);
+              }}
+              unlinkLoadingId={unlinkMutation.isPending ? (selectedGuardian?.guardianId ?? null) : null}
+              emptyContent={null}
+            />
           )}
-        </CardContent>
-      </Card>
+        </Box>
+      </AccentSection>
 
       {/* Link Existing Guardian Dialog */}
       <LinkExistingGuardianDialog

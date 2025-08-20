@@ -23,6 +23,8 @@ public class UpdateChildCommandHandler
         }
 
         child.DateOfBirth = command.DateOfBirth;
+        child.GivenName = command.GivenName;
+        child.FamilyName = command.FamilyName;
 
         await _childRepository.UpdateAsync(child);
     }

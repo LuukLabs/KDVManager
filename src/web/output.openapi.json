@@ -2113,7 +2113,11 @@
             "type": "string",
             "format": "uuid"
           },
-          "name": {
+          "givenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "familyName": {
             "type": "string",
             "nullable": true
           },
@@ -2123,6 +2127,11 @@
               "$ref": "#/components/schemas/PrintCellVM"
             },
             "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false

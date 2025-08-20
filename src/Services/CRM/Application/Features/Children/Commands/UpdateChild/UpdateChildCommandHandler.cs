@@ -47,6 +47,8 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             {
                 ChildId = child.Id,
                 DateOfBirth = child.DateOfBirth,
+                GivenName = child.GivenName,
+                FamilyName = child.FamilyName
             });
 
         }

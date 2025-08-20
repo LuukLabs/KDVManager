@@ -27,7 +27,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
     { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
     { key: "children", label: t("Children"), path: "/children" },
     { key: "guardians", label: t("Guardians"), path: "/guardians" },
-  { key: "print", label: t("Print Schedules"), path: "/print-schedules" },
+    { key: "print", label: t("Print Schedules"), path: "/print-schedules" },
   ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -45,7 +45,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" className="app-navbar">
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box
@@ -158,7 +158,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
         </Container>
       </AppBar>
       <Container maxWidth={false}>
-        <Box display="flex" alignItems="center" marginY={1}>
+        <Box display="flex" alignItems="center" marginY={1} className="app-breadcrumbs">
           <RouterBreadcrumbs />
         </Box>
         {children}

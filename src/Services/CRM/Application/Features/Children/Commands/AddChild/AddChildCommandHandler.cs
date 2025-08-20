@@ -42,7 +42,9 @@ public class AddChildCommandHandler
         await _publishEndpoint.Publish(new ChildAddedEvent
         {
             ChildId = child.Id,
-            DateOfBirth = child.DateOfBirth
+            DateOfBirth = child.DateOfBirth,
+            GivenName = child.GivenName,
+            FamilyName = child.FamilyName
         });
 
         return child.Id;

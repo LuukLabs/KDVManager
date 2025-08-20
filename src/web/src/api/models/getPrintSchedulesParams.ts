@@ -9,4 +9,6 @@ export type GetPrintSchedulesParams = {
   month?: number;
   year?: number;
   groupId?: string;
+  /** Optional list of group ids (new backend support). */
+  groupIds?: string[];
 };

@@ -283,6 +283,9 @@ public class SchedulingDataMigrator
         var currentScheduleId = Guid.Empty;
         var scheduleMapping = new Dictionary<int, Guid>(); // Maps external scheduling ID to internal schedule ID
 
+        // Build a lookup for child names from CRM context
+        var crmChildNames = _crmContext.Children.ToDictionary(c => c.Id, c => new { c.GivenName, c.FamilyName });
+
         Console.WriteLine("Reading scheduling data with rules from MSSQL...");
 
         while (await reader.ReadAsync())
@@ -307,11 +310,22 @@ public class SchedulingDataMigrator
                     continue;
                 }
 
+                var childId = childIdMapping[externalChildId];
+
+                // Ensure child in Scheduling DB has correct names (if not already set)
+                var schedChild = await _context.Children.FirstOrDefaultAsync(c => c.Id == childId);
+                if (schedChild != null && crmChildNames.TryGetValue(childId, out var crmNames))
+                {
+                    if (string.IsNullOrWhiteSpace(schedChild.GivenName) && !string.IsNullOrWhiteSpace(crmNames.GivenName))
+                        schedChild.GivenName = crmNames.GivenName;
+                    if (string.IsNullOrWhiteSpace(schedChild.FamilyName) && !string.IsNullOrWhiteSpace(crmNames.FamilyName))
+                        schedChild.FamilyName = crmNames.FamilyName;
+                }
+
                 // Check if we need to create a new schedule or if we're adding rules to an existing one
                 if (!scheduleMapping.ContainsKey(externalSchedulingId))
                 {
                     // Create new schedule
-                    var childId = childIdMapping[externalChildId];
                     var scheduleId = Guid.NewGuid();
 
                     var schedule = new Schedule

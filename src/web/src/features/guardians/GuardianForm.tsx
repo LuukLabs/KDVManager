@@ -14,6 +14,9 @@ import {
   Select,
   MenuItem,
   IconButton,
+  Stack,
+  Divider,
+  Paper,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
@@ -166,18 +169,9 @@ export const GuardianForm = ({
       {/* Contact Information */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h6">{t("Contact Information")}</Typography>
-            <Button
-              startIcon={<Add />}
-              size="small"
-              variant="outlined"
-              onClick={addPhone}
-              disabled={phoneFields.length >= 10}
-            >
-              {t("Add Phone")}
-            </Button>
-          </Box>
+          <Typography variant="h6" gutterBottom>
+            {t("Contact Information")}
+          </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
               <Controller
@@ -200,65 +194,102 @@ export const GuardianForm = ({
                 )}
               />
             </Grid>
-            {phoneFields.length === 0 && (
-              <Grid size={{ xs: 12 }}>
-                <Alert severity="info">{t("No phone numbers added")}</Alert>
-              </Grid>
-            )}
-            {phoneFields.map((field, index) => (
-              <Grid size={{ xs: 12 }} key={field.id}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid size={{ xs: 12, sm: 4 }}>
-                    <Controller
-                      name={`phoneNumbers.${index}.type`}
-                      control={control}
-                      render={({ field }) => (
-                        <FormControl fullWidth>
-                          <InputLabel>{t("Type")}</InputLabel>
-                          <Select {...field} label={t("Type")}>
-                            <MenuItem value="Mobile">{t("Mobile")}</MenuItem>
-                            <MenuItem value="Home">{t("Home")}</MenuItem>
-                            <MenuItem value="Work">{t("Work")}</MenuItem>
-                            <MenuItem value="Other">{t("Other")}</MenuItem>
-                          </Select>
-                        </FormControl>
-                      )}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, sm: 7 }}>
-                    <Controller
-                      name={`phoneNumbers.${index}.number`}
-                      control={control}
-                      rules={{
-                        validate: (val) =>
-                          !val ||
-                          /^\+?[1-9]\d{7,18}$/.test(val) ||
-                          t("Must be E.164 format (e.g. +31612345678)"),
-                      }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label={t("Phone Number")}
-                          error={!!errors.phoneNumbers?.[index]?.number}
-                          placeholder={t("+31612345678")}
+            <Grid size={{ xs: 12 }}>
+              <Divider sx={{ my: 1 }} />
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Stack spacing={2}>
+                {phoneFields.length === 0 && (
+                  <Paper variant="outlined" sx={{ p: 2, textAlign: "center" }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      {t("No phone numbers added")}
+                    </Typography>
+                    <Button
+                      startIcon={<Add />}
+                      size="small"
+                      onClick={addPhone}
+                      disabled={phoneFields.length >= 10}
+                    >
+                      {t("Add Phone")}
+                    </Button>
+                  </Paper>
+                )}
+                {phoneFields.map((field, index) => (
+                  <Paper
+                    key={field.id}
+                    variant="outlined"
+                    sx={{ p: 2, position: "relative", borderRadius: 2 }}
+                  >
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 4 }}>
+                        <Controller
+                          name={`phoneNumbers.${index}.type`}
+                          control={control}
+                          render={({ field }) => (
+                            <FormControl fullWidth size="small">
+                              <InputLabel>{t("Type")}</InputLabel>
+                              <Select {...field} label={t("Type")}>
+                                <MenuItem value="Mobile">{t("Mobile")}</MenuItem>
+                                <MenuItem value="Home">{t("Home")}</MenuItem>
+                                <MenuItem value="Work">{t("Work")}</MenuItem>
+                                <MenuItem value="Other">{t("Other")}</MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, sm: 1 }}>
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 8 }}>
+                        <Controller
+                          name={`phoneNumbers.${index}.number`}
+                          control={control}
+                          rules={{
+                            validate: (val) =>
+                              !val ||
+                              /^\+?[1-9]\d{7,18}$/.test(val) ||
+                              t("Must be E.164 format (e.g. +31612345678)"),
+                          }}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              fullWidth
+                              label={t("Phone Number")}
+                              error={!!errors.phoneNumbers?.[index]?.number}
+                              placeholder={t("+31612345678")}
+                              size="small"
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </Grid>
                     <IconButton
                       color="error"
                       onClick={() => removePhoneNumber(index)}
                       size="small"
                       aria-label={t("Remove phone number")}
+                      sx={{ position: "absolute", top: 4, right: 4 }}
                     >
-                      <Remove />
+                      <Remove fontSize="small" />
                     </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-            ))}
+                  </Paper>
+                ))}
+                {phoneFields.length > 0 && phoneFields.length < 10 && (
+                  <Button
+                    startIcon={<Add />}
+                    variant="outlined"
+                    size="small"
+                    onClick={addPhone}
+                    sx={{ alignSelf: "flex-start" }}
+                  >
+                    {t("Add Phone")}
+                  </Button>
+                )}
+                {phoneFields.length >= 10 && (
+                  <Typography variant="caption" color="text.secondary">
+                    {t("Maximum phone numbers reached")}
+                  </Typography>
+                )}
+              </Stack>
+            </Grid>
           </Grid>
         </CardContent>
       </Card>

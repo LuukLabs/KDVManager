@@ -50,8 +50,10 @@ export const PrintSchedulesPage = () => {
 
   const queryParams = useMemo(() => {
     if (!filters.submitted) return undefined;
+    // Defensive: ensure month is always between 1 and 12
+    const safeMonth = Math.max(1, Math.min(12, Number(filters.month) || 1));
     return {
-      month: filters.month,
+      month: safeMonth,
       year: filters.year,
       // new multi-select support (backend will also accept single groupId for backward compatibility)
       groupIds: filters.groupIds.length ? filters.groupIds : undefined,
@@ -155,15 +157,17 @@ export const PrintSchedulesPage = () => {
 
       <Box className="print-container" sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {(data?.groups ?? []).map((group: any) =>
-          (group.pages ?? []).map((page: PrintGroupWeekdayPageVM) => (
-            <PrintPage
-              key={group.id + page.weekday}
-              groupName={group.name}
-              month={data.month}
-              year={data.year}
-              page={page}
-            />
-          )),
+          (group.pages ?? []).map((page: PrintGroupWeekdayPageVM) =>
+            data && typeof data.month === "string" && typeof data.year === "number" ? (
+              <PrintPage
+                key={group.id + page.weekday}
+                groupName={group.name}
+                month={data.month}
+                year={data.year}
+                page={page}
+              />
+            ) : null,
+          ),
         )}
       </Box>
     </Box>
@@ -222,14 +226,16 @@ const PrintPage = ({
   const dates: string[] = page.dates ?? [];
   const children = page.children ?? [];
   // Convert weekday (number or string) to localized day name
-  let weekdayLabel = page.weekday;
-  if (typeof weekdayLabel === "number") {
-    // DayOfWeek: 0=Sunday, 1=Monday, ...
+  let weekdayLabel = "";
+  if (typeof page.weekday === "number") {
     weekdayLabel = dayjs().day(page.weekday).format("dddd");
-  } else if (typeof weekdayLabel === "string" && !isNaN(Number(weekdayLabel))) {
+  } else if (typeof page.weekday === "string" && !isNaN(Number(page.weekday))) {
     weekdayLabel = dayjs().day(Number(page.weekday)).format("dddd");
+  } else if (typeof page.weekday === "string") {
+    weekdayLabel = page.weekday;
   }
-  weekdayLabel = t(weekdayLabel);
+  // Ensure weekdayLabel is a string for translation
+  weekdayLabel = t(weekdayLabel || "");
 
   return (
     <Paper className="print-page" sx={{ p: 1.5, mb: 3, breakAfter: "page" }}>

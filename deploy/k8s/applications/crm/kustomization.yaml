@@ -2,17 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - deployment.yml
-  - service.yml
+- deployment.yml
+- service.yml
 
 labels:
-  - pairs:
-      app: crm-api
-      component: api
-      service: crm
+- pairs:
+    app: crm-api
+    component: api
+    service: crm
 
 images:
-  - name: ghcr.io/luuklabs/kdvmanager/crm.api
-    newTag: linux-main
-  - name: ghcr.io/luuklabs/kdvmanager/crm.migrator
-    newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/crm.api
+  newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/crm.migrator
+  newTag: linux-main-8a070aa

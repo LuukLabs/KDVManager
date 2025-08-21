@@ -50,21 +50,19 @@ export const PrintSchedulesPage = () => {
 
   const queryParams = useMemo(() => {
     if (!filters.submitted) return undefined;
-    // Defensive: ensure month is always between 1 and 12
     const safeMonth = Math.max(1, Math.min(12, Number(filters.month) || 1));
-    return {
-      month: safeMonth,
-      year: filters.year,
-      // new multi-select support (backend will also accept single groupId for backward compatibility)
-      groupIds: filters.groupIds.length ? filters.groupIds : undefined,
-    } as any; // cast until regenerated typings
+    const base: any = { month: safeMonth, year: filters.year };
+    if (filters.groupIds.length) base.groupIds = filters.groupIds; // only set when non-empty
+    return base;
   }, [filters]);
 
   const { data, isFetching } = useGetPrintSchedules(queryParams, {
-    query: { staleTime: 5 * 60 * 1000 },
+    query: { staleTime: 5 * 60 * 1000, enabled: !!queryParams },
   });
 
-  const handleGenerate = () => setFilters((f) => ({ ...f, submitted: true }));
+  const handleGenerate = () => {
+    setFilters((f) => ({ ...f, submitted: true }));
+  };
 
   return (
     <Box sx={{ p: 2 }}>
@@ -155,20 +153,34 @@ export const PrintSchedulesPage = () => {
         </Box>
       )}
 
-      <Box className="print-container" sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        {(data?.groups ?? []).map((group: any) =>
-          (group.pages ?? []).map((page: PrintGroupWeekdayPageVM) =>
-            data && typeof data.month === "string" && typeof data.year === "number" ? (
-              <PrintPage
-                key={group.id + page.weekday}
-                groupName={group.name}
-                month={data.month}
-                year={data.year}
-                page={page}
-              />
-            ) : null,
-          ),
-        )}
+      <Box
+        className="print-pages"
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <Box
+          className="print-container"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          {(data?.groups ?? []).flatMap((group: any) =>
+            (group.pages ?? []).map((page: PrintGroupWeekdayPageVM) =>
+              data && typeof data.month === "string" && typeof data.year === "number" ? (
+                <PrintPage
+                  key={group.id + page.weekday}
+                  groupName={group.name}
+                  month={data.month}
+                  year={data.year}
+                  page={page}
+                />
+              ) : null,
+            ),
+          )}
+        </Box>
       </Box>
     </Box>
   );
@@ -225,38 +237,55 @@ const PrintPage = ({
   const { t } = useTranslation();
   const dates: string[] = page.dates ?? [];
   const children = page.children ?? [];
-  // Convert weekday (number or string) to localized day name
+
+  // Localized weekday label
   let weekdayLabel = "";
   if (typeof page.weekday === "number") {
     weekdayLabel = dayjs().day(page.weekday).format("dddd");
-  } else if (typeof page.weekday === "string" && !isNaN(Number(page.weekday))) {
-    weekdayLabel = dayjs().day(Number(page.weekday)).format("dddd");
-  } else if (typeof page.weekday === "string") {
-    weekdayLabel = page.weekday;
   }
-  // Ensure weekdayLabel is a string for translation
-  weekdayLabel = t(weekdayLabel || "");
 
   return (
-    <Paper className="print-page" sx={{ p: 1.5, mb: 3, breakAfter: "page" }}>
-      <Typography variant="h6" gutterBottom>
-        {t("{{groupName}}, {{weekday}}, {{month}} {{year}}", {
-          groupName,
-          weekday: weekdayLabel,
-          month,
-          year,
-        })}
-      </Typography>
+  <Paper className="print-page" sx={{ p: 2, mb: 3 }}>
+      {/* HEADER */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            {groupName}
+          </Typography>
+          <Typography sx={{ fontSize: 12 }}>
+            {t("Leiding")} {t("Ochtend")}: ________ &nbsp;&nbsp; {t("Middag")}: ________
+          </Typography>
+        </Box>
+        <Box sx={{ textAlign: "right", fontSize: 12 }}>
+          <div>
+            {t("Dag")}: <strong>{weekdayLabel}</strong>
+          </div>
+          <div>
+            {t("Maand")}: <strong>{month}</strong>
+          </div>
+          <div>
+            {t("Jaar")}: <strong>{year}</strong>
+          </div>
+        </Box>
+      </Box>
+
+      {/* TABLE (schedule with colored cells) */}
       <Box
         component="table"
-        sx={{ borderCollapse: "collapse", width: "100%", tableLayout: "fixed" }}
+        sx={{
+          borderCollapse: "collapse",
+          width: "100%",
+          fontSize: 11,
+          tableLayout: "fixed",
+        }}
       >
         <thead>
           <tr>
-            <th style={{ ...headerCellStyle, width: 160 }}>{t("Child")}</th>
+            <th style={{ ...headerCellStyle, width: 'auto' }}>{t("Naam")}</th>
+            <th style={{ ...headerCellStyle, width: 90 }}>{t("Geb. datum")}</th>
             {dates.map((d: string) => (
-              <th key={d} style={headerCellStyle}>
-                {d}
+              <th key={d} style={{ ...headerCellStyle, width: 60 }} className="day-col">
+                {dayjs(d).format("DD-MM")}
               </th>
             ))}
           </tr>
@@ -271,19 +300,17 @@ const PrintPage = ({
                       ? `${ch.givenName ?? ""} ${ch.familyName ?? ""}`.trim()
                       : (ch.name ?? t("Child") + ` ${ch.id?.substring(0, 8)}`)}
                   </span>
-                  {ch.dateOfBirth && (
-                    <span style={{ fontSize: 9, opacity: 0.75 }}>
-                      {dayjs(ch.dateOfBirth).format("DD-MM-YYYY")}
-                    </span>
-                  )}
                 </div>
+              </td>
+              <td style={{ ...headerCellStyle, background: "#fff", fontWeight: 400, width: 90 }}>
+                {ch.dateOfBirth ? dayjs(ch.dateOfBirth).format("DD-MM-YYYY") : ""}
               </td>
               {dates.map((d: string) => {
                 const key = d.split("T")[0];
                 const cell = ch.schedule ? ch.schedule[key] : undefined;
                 const showTime = cell?.startTime && cell.endTime;
                 return (
-                  <td key={d} style={cellStyles(cell)}>
+                  <td key={d} style={{ ...cellStyles(cell), width: 60 }} className="day-col">
                     {showTime ? `${cell!.startTime}-${cell!.endTime}` : ""}
                   </td>
                 );
@@ -302,7 +329,9 @@ const headerCellStyle: React.CSSProperties = {
   padding: 3,
   fontSize: 10,
   background: "#f5f5f5",
+  textAlign: "center",
 };
+
 const nameCellStyle: React.CSSProperties = {
   border: "1px solid #000",
   padding: "2px 3px",
@@ -342,14 +371,33 @@ const LegendItem = ({ label, boxStyle }: { label: string; boxStyle: React.CSSPro
 
 export const Component = PrintSchedulesPage;
 
-// Print media styles
-const style = document.createElement("style");
-style.innerHTML = `@media print { 
+// Print + screen styles (inject once)
+(() => {
+  if (typeof document === "undefined") return; // safety for SSR (if any)
+  const existing = document.getElementById("print-schedules-styles");
+  if (existing) return;
+  const style = document.createElement("style");
+  style.id = "print-schedules-styles";
+  style.innerHTML = `
+@media screen {
+  body { background: #f0f0f0; }
+  .print-pages { width: 100%; padding: 8px 0 32px; }
+  .print-page { width: 210mm; min-height: 297mm; background:#fff; margin: 12px auto; box-shadow:0 2px 6px rgba(0,0,0,0.25); position:relative; overflow:hidden; }
+  .print-page table { width:100%; }
+  .print-page table th, .print-page table td { font-family: Arial, sans-serif; }
+  .print-page table { table-layout: fixed; }
+  .print-page table th.day-col, .print-page table td.day-col { width:60px; }
+}
+@media print { 
   body { -webkit-print-color-adjust: exact; background:#fff; }
   .app-header, header, nav, .MuiAppBar-root, .app-navbar, .app-breadcrumbs, .print-controls { display: none !important; }
   .print-page { page-break-after: always; box-shadow:none !important; }
+  .print-page:last-of-type { page-break-after: auto; }
   .print-page { padding:4mm !important; }
   .print-page table th, .print-page table td { line-height:1.05; }
+  .print-page table { table-layout: fixed; }
+  .print-page table th.day-col, .print-page table td.day-col { width:60px; }
   @page { size: A4 portrait; margin: 6mm 8mm; }
 }`;
-document.head.appendChild(style);
+  document.head.appendChild(style);
+})();

@@ -1,0 +1,180 @@
+name: Update Deployment Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      application:
+        description: "Application folder under deploy/k8s/applications (e.g. web, crm, scheduling, data-migration)"
+        required: true
+        type: string
+      image:
+        description: "Full image repo (e.g. ghcr.io/luuklabs/kdvmanager/web)"
+        required: true
+        type: string
+      tag:
+        description: "New image tag (e.g. linux-main-abc123)"
+        required: true
+        type: string
+      commitMessageSuffix:
+        description: "Optional commit message suffix (e.g. from build SHA)"
+        required: false
+        type: string
+  workflow_run:
+    workflows:
+      - web
+      - crm-api
+      - crm-migrator
+      - scheduling-api
+      - scheduling-migrator
+      - data-migration
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  BASE_DIR: deploy/k8s/applications
+
+concurrency:
+  group: update-deployment-image
+  cancel-in-progress: false
+
+jobs:
+  manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install kustomize
+        run: |
+          curl -sSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.1/kustomize_v5.4.1_linux_amd64.tar.gz \
+            | tar -xz -C /usr/local/bin kustomize
+
+      - name: Update image via kustomize
+        id: update
+        run: |
+          set -euo pipefail
+          APP_DIR="$BASE_DIR/${{ inputs.application }}"
+          if [ ! -d "$APP_DIR" ]; then
+            echo "::error::Application directory '$APP_DIR' not found"; exit 1; fi
+          pushd "$APP_DIR" >/dev/null
+          IMAGE_REF="${{ inputs.image }}:${{ inputs.tag }}"
+          # Use kustomize edit set image (updates or appends)
+          kustomize edit set image "$IMAGE_REF"
+          popd >/dev/null
+          if git diff --quiet -- "$APP_DIR/kustomization.yaml"; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore(deploy): update ${{ inputs.application }} image to ${{ inputs.image }}:${{ inputs.tag }}${{ inputs.commitMessageSuffix && format(' - {0}', inputs.commitMessageSuffix) || '' }}
+          title: "chore(deploy): update ${ { inputs.application } } image to ${ { inputs.tag } }"
+          branch: auto/update-image/${{ inputs.application }}-${{ inputs.tag }}
+          base: main
+          body: |
+            Automated image update.
+            Application: `${{ inputs.application }}`
+            Image: `${{ inputs.image }}:${{ inputs.tag }}`
+            Trigger: manual dispatch.
+          add-paths: |
+            ${{ env.BASE_DIR }}/${{ inputs.application }}/kustomization.yaml
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.update.outputs.changed }}" = "true" ]; then
+            echo "Image updated and committed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No update necessary; manifest already had desired image tag." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  auto:
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine target (mapping build workflow -> app & image repo)
+        id: map
+        run: |
+          set -euo pipefail
+          WF_NAME='${{ github.event.workflow_run.name }}'
+          REGISTRY_BASE='ghcr.io/luuklabs/kdvmanager'
+          case "$WF_NAME" in
+            web) APP=web; IMAGE="$REGISTRY_BASE/web" ;;
+            crm-api) APP=crm; IMAGE="$REGISTRY_BASE/crm.api" ;;
+            crm-migrator) APP=crm; IMAGE="$REGISTRY_BASE/crm.migrator" ;;
+            scheduling-api) APP=scheduling; IMAGE="$REGISTRY_BASE/scheduling.api" ;;
+            scheduling-migrator) APP=scheduling; IMAGE="$REGISTRY_BASE/scheduling.migrator" ;;
+            data-migration) APP=data-migration; IMAGE="$REGISTRY_BASE/data.migration" ;;
+            *) echo "::notice::No mapping for workflow '$WF_NAME'"; echo "skip=true" >> $GITHUB_OUTPUT; exit 0 ;;
+          esac
+          echo "app=$APP" >> $GITHUB_OUTPUT
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+      - name: Checkout repo
+        if: steps.map.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install kustomize
+        if: steps.map.outputs.skip != 'true'
+        run: |
+          curl -sSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.1/kustomize_v5.4.1_linux_amd64.tar.gz \
+            | tar -xz -C /usr/local/bin kustomize
+      - name: Update image tag
+        if: steps.map.outputs.skip != 'true'
+        id: update
+        run: |
+          set -euo pipefail
+          APP_DIR="$BASE_DIR/${{ steps.map.outputs.app }}"
+          HEAD_SHA='${{ github.event.workflow_run.head_sha }}'
+          BRANCH='${{ github.event.workflow_run.head_branch }}'
+            
+          SHORT_SHA=${HEAD_SHA::7}
+          # New tag pattern: linux-<branch>-<shortsha>
+          NEW_TAG="linux-${BRANCH}-${SHORT_SHA}"
+          IMAGE="${{ steps.map.outputs.image }}"
+          echo "Determined tag: $NEW_TAG for image $IMAGE"
+          pushd "$APP_DIR" >/dev/null
+          kustomize edit set image "$IMAGE:$NEW_TAG"
+          popd >/dev/null
+          if git diff --quiet -- "$APP_DIR/kustomization.yaml"; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+          fi
+      - name: Create Pull Request
+        if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore(deploy): update ${{ steps.map.outputs.app }} image ${{ steps.map.outputs.image }}:${{ steps.update.outputs.new_tag }}
+          title: "chore(deploy): update ${ { steps.map.outputs.app } } image to ${ { steps.update.outputs.new_tag } }"
+          branch: auto/update-image/${{ steps.map.outputs.app }}-${{ steps.update.outputs.new_tag }}
+          base: main
+          body: |
+            Automated image update triggered by workflow `${{ github.event.workflow_run.name }}`.
+            Application: `${{ steps.map.outputs.app }}`
+            Image: `${{ steps.map.outputs.image }}:${{ steps.update.outputs.new_tag }}`
+            Source commit: `${{ github.event.workflow_run.head_sha }}`
+          add-paths: |
+            ${{ env.BASE_DIR }}/${{ steps.map.outputs.app }}/kustomization.yaml
+      - name: Summary
+        if: steps.map.outputs.skip != 'true'
+        run: |
+          if [ "${{ steps.update.outputs.changed }}" = "true" ]; then
+            echo "Updated ${{ steps.map.outputs.app }} to tag ${{ steps.update.outputs.new_tag }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No change for ${{ steps.map.outputs.app }} (tag already current)." >> $GITHUB_STEP_SUMMARY
+          fi

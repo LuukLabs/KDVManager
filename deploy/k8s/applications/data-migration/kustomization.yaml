@@ -2,14 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - cronjob.yml
+- cronjob.yml
 
 labels:
-  - pairs:
-      app: data-migration
-      component: cronjob
-      service: data-migration
+- pairs:
+    app: data-migration
+    component: cronjob
+    service: data-migration
 
 images:
-  - name: ghcr.io/luuklabs/kdvmanager/data.migration
-    newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/data.migration
+  newTag: linux-main-8a070aa

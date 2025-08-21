@@ -34,7 +34,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }}
       useRefreshTokens={true}
       onRedirectCallback={onRedirectCallback}
-      cacheLocation="localstorage"
+      cacheLocation="memory"
     >
       <AuthSetup />
       {children}

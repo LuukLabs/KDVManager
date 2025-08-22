@@ -8,6 +8,7 @@ using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetS
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
 using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
 using KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules;
+using KDVManager.Services.Scheduling.Application.Features.LongTermPlanning.Queries.GetLongTermPlanning;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;
 
@@ -22,6 +23,7 @@ public class SchedulesController : ControllerBase
     private readonly DeleteScheduleCommandHandler _deleteScheduleCommandHandler;
     private readonly GetPrintSchedulesQueryHandler _getPrintSchedulesQueryHandler;
     private readonly ILogger<SchedulesController> _logger;
+    private readonly GetLongTermPlanningQueryHandler _getLongTermPlanningQueryHandler;
 
     public SchedulesController(
         GetChildSchedulesQueryHandler getChildSchedulesQueryHandler,
@@ -30,6 +32,7 @@ public class SchedulesController : ControllerBase
         AddScheduleCommandHandler addScheduleCommandHandler,
     DeleteScheduleCommandHandler deleteScheduleCommandHandler,
     GetPrintSchedulesQueryHandler getPrintSchedulesQueryHandler,
+    GetLongTermPlanningQueryHandler getLongTermPlanningQueryHandler,
         ILogger<SchedulesController> logger)
     {
         _getChildSchedulesQueryHandler = getChildSchedulesQueryHandler;
@@ -38,6 +41,7 @@ public class SchedulesController : ControllerBase
         _addScheduleCommandHandler = addScheduleCommandHandler;
         _deleteScheduleCommandHandler = deleteScheduleCommandHandler;
         _getPrintSchedulesQueryHandler = getPrintSchedulesQueryHandler;
+        _getLongTermPlanningQueryHandler = getLongTermPlanningQueryHandler;
         _logger = logger;
     }
 
@@ -69,6 +73,14 @@ public class SchedulesController : ControllerBase
     public async Task<ActionResult<PrintSchedulesVM>> GetPrintSchedules([FromQuery] GetPrintSchedulesQuery query)
     {
         var vm = await _getPrintSchedulesQueryHandler.Handle(query);
+        return Ok(vm);
+    }
+
+    [HttpGet("long-term-planning", Name = "GetLongTermPlanning")]
+    [ProducesResponseType(typeof(LongTermPlanningVM), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<LongTermPlanningVM>> GetLongTermPlanning([FromQuery] GetLongTermPlanningQuery query)
+    {
+        var vm = await _getLongTermPlanningQueryHandler.Handle(query);
         return Ok(vm);
     }
 

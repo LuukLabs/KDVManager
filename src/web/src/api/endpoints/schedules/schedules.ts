@@ -28,11 +28,15 @@ import type { GetChildSchedulesParams } from "../../models/getChildSchedulesPara
 
 import type { GetGroupSummaryParams } from "../../models/getGroupSummaryParams";
 
+import type { GetLongTermPlanningParams } from "../../models/getLongTermPlanningParams";
+
 import type { GetPrintSchedulesParams } from "../../models/getPrintSchedulesParams";
 
 import type { GetSchedulesByDateParams } from "../../models/getSchedulesByDateParams";
 
 import type { GroupSummaryVM } from "../../models/groupSummaryVM";
+
+import type { LongTermPlanningVM } from "../../models/longTermPlanningVM";
 
 import type { PrintSchedulesVM } from "../../models/printSchedulesVM";
 
@@ -539,6 +543,125 @@ export function useGetPrintSchedules<
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetPrintSchedulesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getLongTermPlanning = (params?: GetLongTermPlanningParams, signal?: AbortSignal) => {
+  return executeFetch<LongTermPlanningVM>({
+    url: `/scheduling/v1/schedules/long-term-planning`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getGetLongTermPlanningQueryKey = (params?: GetLongTermPlanningParams) => {
+  return [`/scheduling/v1/schedules/long-term-planning`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetLongTermPlanningQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLongTermPlanning>>,
+  TError = unknown,
+>(
+  params?: GetLongTermPlanningParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getLongTermPlanning>>, TError, TData>
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLongTermPlanningQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLongTermPlanning>>> = ({ signal }) =>
+    getLongTermPlanning(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLongTermPlanning>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetLongTermPlanningQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLongTermPlanning>>
+>;
+export type GetLongTermPlanningQueryError = unknown;
+
+export function useGetLongTermPlanning<
+  TData = Awaited<ReturnType<typeof getLongTermPlanning>>,
+  TError = unknown,
+>(
+  params: undefined | GetLongTermPlanningParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getLongTermPlanning>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLongTermPlanning>>,
+          TError,
+          Awaited<ReturnType<typeof getLongTermPlanning>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetLongTermPlanning<
+  TData = Awaited<ReturnType<typeof getLongTermPlanning>>,
+  TError = unknown,
+>(
+  params?: GetLongTermPlanningParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getLongTermPlanning>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLongTermPlanning>>,
+          TError,
+          Awaited<ReturnType<typeof getLongTermPlanning>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetLongTermPlanning<
+  TData = Awaited<ReturnType<typeof getLongTermPlanning>>,
+  TError = unknown,
+>(
+  params?: GetLongTermPlanningParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getLongTermPlanning>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetLongTermPlanning<
+  TData = Awaited<ReturnType<typeof getLongTermPlanning>>,
+  TError = unknown,
+>(
+  params?: GetLongTermPlanningParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getLongTermPlanning>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetLongTermPlanningQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

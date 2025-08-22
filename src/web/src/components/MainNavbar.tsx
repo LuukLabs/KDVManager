@@ -28,6 +28,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
     { key: "children", label: t("Children"), path: "/children" },
     { key: "guardians", label: t("Guardians"), path: "/guardians" },
     { key: "print", label: t("Print Schedules"), path: "/print-schedules" },
+    { key: "long-term-planning", label: t("Long Term Planning"), path: "/planning/long-term" },
   ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

@@ -1205,6 +1205,17 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "groupIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
           }
         ],
         "responses": {
@@ -1224,6 +1235,60 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PrintSchedulesVM"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduling/v1/schedules/long-term-planning": {
+      "get": {
+        "tags": ["Schedules"],
+        "operationId": "GetLongTermPlanning",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongTermPlanningVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongTermPlanningVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongTermPlanningVM"
                 }
               }
             }
@@ -1929,6 +1994,30 @@
         },
         "additionalProperties": false
       },
+      "AgeAddOptionVM": {
+        "type": "object",
+        "properties": {
+          "ageRange": {
+            "type": "string",
+            "nullable": true
+          },
+          "canAddWithCurrentStaff": {
+            "type": "boolean"
+          },
+          "canAddWithOneExtraStaff": {
+            "type": "boolean"
+          },
+          "additionalProfessionalsNeeded": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resultingProfessionals": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "AgeGroupSummary": {
         "type": "object",
         "properties": {
@@ -2084,6 +2173,114 @@
         },
         "additionalProperties": false
       },
+      "LongTermPlanningVM": {
+        "required": ["days", "daysData", "startDate"],
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "daysData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanningDayVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlanningDayVM": {
+        "required": ["date", "timeBlocks"],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "timeBlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanningTimeBlockVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlanningTimeBlockVM": {
+        "required": [
+          "endTime",
+          "requiredProfessionals",
+          "startTime",
+          "timeSlotName",
+          "totalChildren"
+        ],
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "timeSlotName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalChildren": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredProfessionals": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capacityCurrent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capacityWithExtraSupervisor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spotsCurrent": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "spotsWithExtraSupervisor": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "originalHasSolution": {
+            "type": "boolean"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgeGroupSummary"
+            },
+            "nullable": true
+          },
+          "ageAddOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgeAddOptionVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PrintCellVM": {
         "type": "object",
         "properties": {
@@ -2119,6 +2316,11 @@
           },
           "familyName": {
             "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
             "nullable": true
           },
           "schedule": {

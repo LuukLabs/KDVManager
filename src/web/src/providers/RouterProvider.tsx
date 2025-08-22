@@ -58,6 +58,14 @@ const router = (t: TFunction<"translation">) =>
               },
             },
             {
+              path: "planning/long-term",
+              loader: requireAuth,
+              lazy: () => import("@pages/LongTermPlanningPage"),
+              handle: {
+                crumb: () => t("Long Term Planning"),
+              },
+            },
+            {
               path: "print-schedules",
               loader: requireAuth,
               lazy: () => import("@pages/print/PrintSchedulesPage"),

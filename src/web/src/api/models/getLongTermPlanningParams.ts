@@ -5,9 +5,8 @@
  * OpenAPI spec version: v1
  */
 
-export type GetPrintSchedulesParams = {
-  month?: number;
-  year?: number;
+export type GetLongTermPlanningParams = {
   groupId?: string;
-  groupIds?: string[];
+  startDate?: string;
+  days?: number;
 };

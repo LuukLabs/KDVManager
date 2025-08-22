@@ -5,9 +5,9 @@
  * OpenAPI spec version: v1
  */
 
-export type GetPrintSchedulesParams = {
-  month?: number;
-  year?: number;
-  groupId?: string;
-  groupIds?: string[];
+export type AddEndMarkCommand = {
+  childId?: string;
+  endDate?: string;
+  /** @nullable */
+  reason?: string | null;
 };

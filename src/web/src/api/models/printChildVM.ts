@@ -12,7 +12,7 @@ export type PrintChildVM = {
   givenName?: string | null;
   /** @nullable */
   familyName?: string | null;
-  /** @format date */
+  /** @nullable */
   dateOfBirth?: string | null;
   /** @nullable */
   schedule?: PrintChildVMSchedule;

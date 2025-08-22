@@ -5,9 +5,6 @@
  * OpenAPI spec version: v1
  */
 
-export type GetPrintSchedulesParams = {
-  month?: number;
-  year?: number;
-  groupId?: string;
-  groupIds?: string[];
+export type ListEndMarksParams = {
+  childId?: string;
 };

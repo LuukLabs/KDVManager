@@ -245,7 +245,7 @@ const PrintPage = ({
   }
 
   return (
-  <Paper className="print-page" sx={{ p: 2, mb: 3 }}>
+    <Paper className="print-page" sx={{ p: 2, mb: 3 }}>
       {/* HEADER */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Box>
@@ -253,7 +253,19 @@ const PrintPage = ({
             {groupName}
           </Typography>
           <Typography sx={{ fontSize: 12 }}>
-            {t("Leiding")} {t("Ochtend")}: ________ &nbsp;&nbsp; {t("Middag")}: ________
+            <Box component="span" sx={{ display: "inline-flex", gap: 1, alignItems: "center" }}>
+              <Box component="span">{t("Leiding")}</Box>
+              <Box component="span">{t("Ochtend")}</Box>
+              <Box
+                component="span"
+                sx={{ display: "inline-block", width: 80, borderBottom: "1px solid #000", ml: 1 }}
+              />
+              <Box component="span">{t("Middag")}</Box>
+              <Box
+                component="span"
+                sx={{ display: "inline-block", width: 80, borderBottom: "1px solid #000", ml: 1 }}
+              />
+            </Box>
           </Typography>
         </Box>
         <Box sx={{ textAlign: "right", fontSize: 12 }}>
@@ -281,7 +293,7 @@ const PrintPage = ({
       >
         <thead>
           <tr>
-            <th style={{ ...headerCellStyle, width: 'auto' }}>{t("Naam")}</th>
+            <th style={{ ...headerCellStyle, width: "auto" }}>{t("Naam")}</th>
             <th style={{ ...headerCellStyle, width: 90 }}>{t("Geb. datum")}</th>
             {dates.map((d: string) => (
               <th key={d} style={{ ...headerCellStyle, width: 60 }} className="day-col">

@@ -30,11 +30,6 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
 
-  const handleEditSchedule = (scheduleId: string) => {
-    // TODO: Implement edit functionality
-    console.log("Edit schedule:", scheduleId);
-  };
-
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
@@ -70,7 +65,6 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
                 endDate: schedule.endDate ?? "",
                 scheduleRules: schedule.scheduleRules ?? [],
               }}
-              onEdit={handleEditSchedule}
             />
           ))}
         </Box>

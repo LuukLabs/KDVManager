@@ -6,5 +6,26 @@
   },
   "loading": {
     "page": "Loading page..."
-  }
+  },
+  "Add Schedule": "Add Schedule",
+  "Schedule Period": "Schedule Period",
+  "Weekly Schedule": "Weekly Schedule",
+  "Schedule Summary": "Schedule Summary",
+  "time slots": "time slots",
+  "days": "days",
+  "groups": "groups",
+  "No schedule rules defined": "No schedule rules defined",
+  "Active": "Active",
+  "Upcoming": "Upcoming",
+  "Expired": "Expired",
+  "No schedules found": "No schedules found",
+  "Create your first schedule to get started": "Create your first schedule to get started",
+  "End Marks": "End Marks",
+  "Add End Mark": "Add End Mark",
+  "End Date": "End Date",
+  "Reason": "Reason",
+  "No end marks defined": "No end marks defined",
+  "End Mark": "End Mark",
+  "Delete": "Delete",
+  "Unknown date": "Unknown date"
 }

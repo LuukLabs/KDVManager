@@ -5,12 +5,10 @@ import {
   CardContent,
   Typography,
   Chip,
-  IconButton,
   Stack,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
@@ -21,23 +19,27 @@ type ScheduleCardProps = {
   schedule: {
     id: string;
     startDate: string;
-    endDate: string;
+    endDate: string | null;
     scheduleRules: ChildScheduleListVMScheduleRule[];
   };
-  onEdit?: (scheduleId: string) => void;
 };
 
-export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) => {
+export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const now = dayjs();
   const startDate = dayjs(schedule.startDate);
-  const endDate = dayjs(schedule.endDate);
+  const endDate = schedule.endDate ? dayjs(schedule.endDate) : null;
 
-  const isActive = now.isAfter(startDate) && now.isBefore(endDate.add(1, "day"));
+  // If endDate is null the schedule is open-ended (ongoing after startDate)
   const isUpcoming = now.isBefore(startDate);
-  const isExpired = now.isAfter(endDate);
+  // Include start date as active (isSame or after start)
+  const isActive = endDate
+    ? (now.isAfter(startDate) || now.isSame(startDate, "day")) &&
+      (now.isBefore(endDate.add(1, "day")) || now.isSame(endDate, "day"))
+    : now.isAfter(startDate) || now.isSame(startDate, "day");
+  const isExpired = endDate ? now.isAfter(endDate) && !now.isSame(endDate, "day") : false;
 
   const getStatusChip = () => {
     if (isActive) {
@@ -51,16 +53,22 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
   };
 
   const getDateRangeDisplay = () => {
-    const startDate = dayjs(schedule.startDate);
-    const endDate = dayjs(schedule.endDate);
+    const start = dayjs(schedule.startDate);
+    const end = schedule.endDate ? dayjs(schedule.endDate) : null;
 
-    if (startDate.isSame(endDate, "year")) {
-      if (startDate.isSame(endDate, "month")) {
-        return `${startDate.format("MMM D")} - ${endDate.format("D, YYYY")}`;
-      }
-      return `${startDate.format("MMM D")} - ${endDate.format("MMM D, YYYY")}`;
+    console.warn("end", end);
+
+    if (!end) {
+      return `${start.format("MMM D, YYYY")} • ${t("No end date")}`;
     }
-    return `${startDate.format("MMM D, YYYY")} - ${endDate.format("MMM D, YYYY")}`;
+
+    if (start.isSame(end, "year")) {
+      if (start.isSame(end, "month")) {
+        return `${start.format("MMM D")} - ${end.format("D, YYYY")}`;
+      }
+      return `${start.format("MMM D")} - ${end.format("MMM D, YYYY")}`;
+    }
+    return `${start.format("MMM D, YYYY")} - ${end.format("MMM D, YYYY")}`;
   };
 
   return (
@@ -101,11 +109,6 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
           >
             {getStatusChip()}
             <Box>
-              {onEdit && (
-                <IconButton size="small" onClick={() => onEdit(schedule.id)}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              )}
               <DeleteScheduleButton id={schedule.id} />
             </Box>
           </Box>

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
 using KDVManager.Shared.Infrastructure.Tenancy;
+using KDVManager.Services.Scheduling.Infrastructure.Services;
+using KDVManager.Services.Scheduling.Application.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +24,8 @@ public static class ConfigureServices
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
         services.AddScoped<IAbsenceRepository, AbsenceRepository>();
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
+        services.AddScoped<IEndMarkRepository, EndMarkRepository>();
+        services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
 
         services.AddTenancy();
 

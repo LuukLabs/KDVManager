@@ -759,26 +759,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     output: (value) => (value ? value.format("YYYY-MM-DD") : null),
                   }}
                 />
-                <DatePickerElement
-                  label={t("End date")}
-                  name="endDate"
-                  slotProps={{
-                    textField: {
-                      size: "medium",
-                      fullWidth: true,
-                      variant: "outlined",
-                      sx: {
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: 2,
-                          "&:hover": { boxShadow: 1 },
-                        },
-                      },
-                    },
-                  }}
-                  transform={{
-                    output: (value) => (value ? value.format("YYYY-MM-DD") : null),
-                  }}
-                />
               </Stack>
             </Box>
 

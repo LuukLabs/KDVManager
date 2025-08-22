@@ -19,6 +19,10 @@ using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Command
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.DeleteClosurePeriod;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriods;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriodYears;
+using KDVManager.Services.Scheduling.Application.Features.EndMarks.Commands.AddEndMark;
+using KDVManager.Services.Scheduling.Application.Features.EndMarks.Commands.DeleteEndMark;
+using KDVManager.Services.Scheduling.Application.Features.EndMarks.Queries.GetEndMarks;
+using KDVManager.Services.Scheduling.Application.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -47,6 +51,9 @@ public static class ConfigureServices
         services.AddScoped<DeleteClosurePeriodCommandHandler>();
         services.AddScoped<ListClosurePeriodsQueryHandler>();
         services.AddScoped<ListClosurePeriodYearsQueryHandler>();
+        services.AddScoped<AddEndMarkCommandHandler>();
+        services.AddScoped<DeleteEndMarkCommandHandler>();
+        services.AddScoped<GetEndMarksQueryHandler>();
 
         return services;
     }

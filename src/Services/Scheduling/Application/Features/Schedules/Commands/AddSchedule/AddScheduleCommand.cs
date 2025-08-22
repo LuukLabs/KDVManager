@@ -8,8 +8,6 @@ public class AddScheduleCommand
 
     public DateOnly StartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
-
     // Collection of nested schedules
     public ICollection<AddScheduleCommandScheduleRule> ScheduleRules { get; set; } = new List<AddScheduleCommandScheduleRule>();
 

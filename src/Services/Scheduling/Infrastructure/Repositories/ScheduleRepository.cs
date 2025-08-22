@@ -62,4 +62,9 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public async Task<bool> ExistsWithStartDateAsync(Guid childId, DateOnly startDate)
+    {
+        return await _dbContext.Schedules.AnyAsync(s => s.ChildId == childId && s.StartDate == startDate);
+    }
 }

@@ -6,5 +6,26 @@
   },
   "loading": {
     "page": "Pagina wordt geladen..."
-  }
+  },
+  "Add Schedule": "Planning toevoegen",
+  "Schedule Period": "Planning periode",
+  "Weekly Schedule": "Weekplanning",
+  "Schedule Summary": "Planning samenvatting",
+  "time slots": "tijdsblokken",
+  "days": "dagen",
+  "groups": "groepen",
+  "No schedule rules defined": "Geen planning regels gedefinieerd",
+  "Active": "Actief",
+  "Upcoming": "Komend",
+  "Expired": "Verlopen",
+  "No schedules found": "Geen planningen gevonden",
+  "Create your first schedule to get started": "Maak je eerste planning om te beginnen",
+  "End Marks": "Eindmarkeringen",
+  "Add End Mark": "Eindmarkering toevoegen",
+  "End Date": "Einddatum",
+  "Reason": "Reden",
+  "No end marks defined": "Geen eindmarkeringen gedefinieerd",
+  "End Mark": "Eindmarkering",
+  "Delete": "Verwijderen",
+  "Unknown date": "Onbekende datum"
 }

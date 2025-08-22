@@ -44,3 +44,21 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Web Frontend
+
+## End Marks Management
+
+The child planning page now includes an "End Marks" section:
+
+- List existing end marks (chronological) with reason.
+- Add a new end mark (date + optional reason) which triggers backend recalculation of schedule end dates.
+- Delete an end mark to revert schedule chaining beyond that point.
+
+API endpoints used (prefixed with /scheduling):
+
+- GET v1/endmarks?childId= GUID
+- POST v1/endmarks
+- DELETE v1/endmarks/{id}
+
+Translations added under `public/locales/{lang}/translation.json`.

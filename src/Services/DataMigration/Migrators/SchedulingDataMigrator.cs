@@ -12,6 +12,7 @@ using TimeSlot = KDVManager.Services.Scheduling.Domain.Entities.TimeSlot;
 using Group = KDVManager.Services.Scheduling.Domain.Entities.Group;
 using CRMContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using KDVManager.Shared.Contracts.Tenancy;
+using KDVManager.Services.Scheduling.Domain.Entities;
 
 namespace KDVManager.Services.DataMigration.Migrators;
 
@@ -46,6 +47,10 @@ public class SchedulingDataMigrator
 
         // Finally, migrate Schedules and ScheduleRules together
         await MigrateSchedulesAsync(childIdMapping, timeSlotMapping, groupMapping);
+        // Create automatic EndMarks (child turns 4 minus 1 day)
+        await CreateEndMarksForChildrenAsync();
+        // Recalculate schedule end dates now that EndMarks exist
+        await RecalculateScheduleEndDatesAsync();
 
         // Create closure dates
         await CreateClosureDatesAsync();
@@ -61,6 +66,7 @@ public class SchedulingDataMigrator
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"TimeSlots\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"Children\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
         await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"ClosurePeriods\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"EndMarks\" WHERE \"TenantId\" = {0};", _tenancyContextAccessor.Current.TenantId);
 
         Console.WriteLine("All data for the tenant has been cleared.");
     }
@@ -333,7 +339,7 @@ public class SchedulingDataMigrator
                         Id = scheduleId,
                         ChildId = childId,
                         StartDate = DateOnly.FromDateTime(startDate),
-                        EndDate = endDate.HasValue ? DateOnly.FromDateTime(endDate.Value) : null,
+                        // EndDate is calculated later via timeline logic; do not set here
                         TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
                     };
 
@@ -587,5 +593,45 @@ public class SchedulingDataMigrator
 
         await _context.SaveChangesAsync();
         Console.WriteLine("Closure dates created successfully.");
+    }
+
+    private async Task CreateEndMarksForChildrenAsync()
+    {
+        Console.WriteLine("Creating automatic EndMarks (day before 4th birthday)...");
+
+        var children = await _context.Children.AsNoTracking().Select(c => new { c.Id, c.DateOfBirth }).ToListAsync();
+        int created = 0;
+        foreach (var child in children)
+        {
+            var fourYearsDate = child.DateOfBirth.AddYears(4);
+            var endMarkDate = fourYearsDate;
+            // Skip if already exists (by ChildId + EndDate)
+            bool exists = await _context.EndMarks.AnyAsync(em => em.ChildId == child.Id && em.EndDate == endMarkDate);
+            if (exists) continue;
+            var mark = new EndMark(child.Id, endMarkDate, "Automatisch einde: kind wordt 4");
+            mark.TenantId = _tenancyContextAccessor.Current.TenantId;
+            _context.EndMarks.Add(mark);
+            created++;
+        }
+        if (created > 0)
+        {
+            await _context.SaveChangesAsync();
+        }
+        Console.WriteLine($"EndMarks creation completed: {created} created.");
+    }
+
+    private async Task RecalculateScheduleEndDatesAsync()
+    {
+        Console.WriteLine("Recalculating schedule EndDates based on EndMarks and sequence...");
+        // Group schedules by child to minimize memory
+        var childIds = await _context.Schedules.Select(s => s.ChildId).Distinct().ToListAsync();
+        foreach (var childId in childIds)
+        {
+            var schedules = await _context.Schedules.Where(s => s.ChildId == childId).OrderBy(s => s.StartDate).ToListAsync();
+            var marks = await _context.EndMarks.Where(e => e.ChildId == childId).ToListAsync();
+            KDVManager.Services.Scheduling.Domain.Services.ScheduleEndDateCalculator.Recalculate(schedules, marks);
+        }
+        await _context.SaveChangesAsync();
+        Console.WriteLine("Schedule EndDates recalculation complete.");
     }
 }

@@ -42,7 +42,7 @@ services:
 
   crm-migrator:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
     depends_on:
       - postgres
@@ -63,7 +63,7 @@ services:
 
   scheduling-migrator:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
     depends_on:
       - postgres
@@ -80,6 +80,12 @@ services:
     volumes:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+
+  data-migration:
+     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy
+      - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy
 
 volumes:
   kdvmanager-data: null

@@ -10,7 +10,5 @@ export type AddScheduleCommand = {
   childId?: string;
   startDate?: string;
   /** @nullable */
-  endDate?: string | null;
-  /** @nullable */
   scheduleRules?: AddScheduleCommandScheduleRule[] | null;
 };

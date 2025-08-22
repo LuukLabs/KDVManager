@@ -9,22 +9,23 @@ namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Commands
 public class AddScheduleCommandValidator : AbstractValidator<AddScheduleCommand>
 {
     private readonly ITimeSlotRepository _timeSlotRepository;
+    private readonly IScheduleRepository _scheduleRepository;
 
-    public AddScheduleCommandValidator(ITimeSlotRepository timeSlotRepository)
+    public AddScheduleCommandValidator(ITimeSlotRepository timeSlotRepository, IScheduleRepository scheduleRepository)
     {
         _timeSlotRepository = timeSlotRepository;
+        _scheduleRepository = scheduleRepository;
 
         RuleFor(AddScheduleCommand => AddScheduleCommand.ChildId)
             .NotEmpty()
             .NotNull();
 
-        RuleFor(AddScheduleCommand => AddScheduleCommand.StartDate)
-                .NotEmpty()
-                .NotNull();
+        RuleFor(c => c.StartDate)
+            .NotEmpty()
+            .NotNull()
+            .MustAsync(BeUniqueStartDate)
+            .WithMessage("A schedule with the same start date already exists for this child.");
 
-        RuleFor(AddScheduleCommand => AddScheduleCommand.EndDate)
-                .GreaterThan(AddScheduleCommand => AddScheduleCommand.StartDate)
-                .When(AddScheduleCommand => AddScheduleCommand.EndDate.HasValue);
 
         RuleFor(AddScheduleCommand => AddScheduleCommand.ScheduleRules)
             .NotEmpty()
@@ -51,5 +52,10 @@ public class AddScheduleCommandValidator : AbstractValidator<AddScheduleCommand>
     private async Task<bool> TimeSlotExists(Guid timeSlotId, CancellationToken cancellationToken)
     {
         return await _timeSlotRepository.ExistsAsync(timeSlotId);
+    }
+
+    private async Task<bool> BeUniqueStartDate(AddScheduleCommand command, DateOnly startDate, CancellationToken ct)
+    {
+        return !await _scheduleRepository.ExistsWithStartDateAsync(command.ChildId, startDate);
     }
 }

@@ -188,12 +188,12 @@ const UpdateChildPageModernTabs = () => {
       {/* Content Panels */}
       <Box sx={{ px: { xs: 0, md: 0 }, mt: { xs: 2, md: 0 } }}>
         <CustomTabPanel value={activeTab} index={0}>
-          <Box sx={{ p: { xs: 1, sm: 1.5, md: 0 } }}>
+          <Box sx={{ p: { sm: 1.5, md: 0 } }}>
             <GeneralInformationTab child={child} />
           </Box>
         </CustomTabPanel>
         <CustomTabPanel value={activeTab} index={1}>
-          <Box sx={{ p: { xs: 1, sm: 1.5, md: 0 } }}>
+          <Box sx={{ p: { sm: 1.5, md: 0 } }}>
             <PlanningTab childId={childId} />
           </Box>
         </CustomTabPanel>

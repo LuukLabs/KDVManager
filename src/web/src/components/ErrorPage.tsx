@@ -80,11 +80,7 @@ export default function ErrorPage() {
         >
           {t("Retry")}
         </Button>
-        <Button
-          variant="contained"
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-        >
+        <Button variant="contained" startIcon={<HomeIcon />} onClick={() => navigate("/")}>
           {t("Go to Home")}
         </Button>
       </Stack>

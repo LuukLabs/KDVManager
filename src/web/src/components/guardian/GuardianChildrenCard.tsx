@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Button, CircularProgress, Alert } from "@mui/material";
-import { Add as AddIcon, People as PeopleIcon } from "@mui/icons-material";
+import { Box, CircularProgress, Alert } from "@mui/material";
+import { People as PeopleIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
   useGetGuardianChildren,
@@ -13,13 +13,9 @@ import { LinkedEntityList } from "../linked/LinkedEntityList";
 
 type GuardianChildrenCardProps = {
   guardianId: string;
-  onLinkChild?: () => void;
 };
 
-export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({
-  guardianId,
-  onLinkChild,
-}) => {
+export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guardianId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
@@ -48,17 +44,8 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({
     }
   };
 
-  const cardActions = (
-    <Button
-      variant="outlined"
-      startIcon={<AddIcon />}
-      onClick={onLinkChild}
-      size="small"
-      sx={{ minWidth: { xs: "auto", md: "auto" } }}
-    >
-      {t("Link Child")}
-    </Button>
-  );
+  // Linking children has been removed; no actions displayed.
+  const cardActions = undefined;
 
   const content = childrenLoading ? (
     <Box display="flex" justifyContent="center" p={2}>
@@ -80,9 +67,6 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({
             : []),
           ...(c.isEmergencyContact
             ? [{ label: "Emergency", color: "error", variant: "filled" as const }]
-            : []),
-          ...(c.isArchived
-            ? [{ label: "Archived", color: "warning", variant: "filled" as const }]
             : []),
         ],
         secondaryLines: [

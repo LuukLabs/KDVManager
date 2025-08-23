@@ -71,8 +71,7 @@ export const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
             {open ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
           </IconButton>
         </Tooltip>
-        <Tooltip title={t("devError.copyJson", "Copy details as JSON")}
-        >
+        <Tooltip title={t("devError.copyJson", "Copy details as JSON")}>
           <IconButton
             size="small"
             onClick={handleCopy}

@@ -10,7 +10,7 @@ import {
   alpha,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { Person as PersonIcon, Edit, Delete, Link as LinkIcon } from "@mui/icons-material";
+import { Person as PersonIcon, Edit, Delete } from "@mui/icons-material";
 
 export type GuardianHeaderProps = {
   givenName?: string;
@@ -19,7 +19,6 @@ export type GuardianHeaderProps = {
   phone?: string;
   onEdit?: () => void;
   onDelete?: () => void;
-  onLinkChild?: () => void;
   loading?: boolean;
 };
 
@@ -30,7 +29,6 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
   phone,
   onEdit,
   onDelete,
-  onLinkChild,
   loading = false,
 }) => {
   const { t } = useTranslation();
@@ -112,21 +110,6 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
           </Box>
 
           <Stack direction="row" spacing={1} sx={{ mt: isMobile ? 1 : 0 }}>
-            {onLinkChild && (
-              <Button
-                variant="outlined"
-                startIcon={<LinkIcon />}
-                onClick={onLinkChild}
-                disabled={loading}
-                sx={{
-                  borderColor: alpha("#fff", 0.5),
-                  color: "white",
-                  "&:hover": { borderColor: "white", backgroundColor: alpha("#fff", 0.1) },
-                }}
-              >
-                {t("Link Child")}
-              </Button>
-            )}
             {onEdit && (
               <Button
                 variant="outlined"

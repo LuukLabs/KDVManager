@@ -13,7 +13,5 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
 
         [property: Required]
         public required DateOnly DateOfBirth { get; set; }
-
-        public DateTime? ArchivedAt { get; set; }
     }
 }

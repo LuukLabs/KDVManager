@@ -28,8 +28,7 @@ public class GetChildDetailQueryHandler
             GivenName = child.GivenName,
             FamilyName = child.FamilyName,
             DateOfBirth = child.DateOfBirth,
-            CID = child.CID,
-            ArchivedAt = child.ArchivedAt
+            CID = child.CID
         };
     }
 }

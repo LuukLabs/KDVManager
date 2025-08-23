@@ -3,7 +3,6 @@ using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
-using KDVManager.Services.CRM.Application.Features.Children.Commands.ArchiveChild;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
 
@@ -48,12 +47,5 @@ public static class ChildrenEndpoints
             await handler.Handle(command);
             return Results.NoContent();
         }).WithName("DeleteChild").WithTags("children").Produces(StatusCodes.Status204NoContent);
-
-        endpoints.MapPost("/v1/children/{id:guid}/archive", async ([FromRoute] Guid id, [FromServices] ArchiveChildCommandHandler handler) =>
-        {
-            var command = new ArchiveChildCommand { Id = id };
-            await handler.Handle(command);
-            return Results.NoContent();
-        }).WithName("ArchiveChild").WithTags("children").Produces(StatusCodes.Status204NoContent);
     }
 }

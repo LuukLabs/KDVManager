@@ -39,14 +39,12 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
                     RelationshipType = cg.RelationshipType,
                     IsPrimaryContact = cg.IsPrimaryContact,
                     IsEmergencyContact = cg.IsEmergencyContact,
-                    IsArchived = child.ArchivedAt.HasValue
                 };
                 result.Add(vm);
             }
 
             return result
-                .OrderBy(c => c.IsArchived ? 1 : 0) // Active children first
-                .ThenBy(c => c.FullName)
+                .OrderBy(c => c.FullName)
                 .ToList();
         }
 

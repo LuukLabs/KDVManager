@@ -32,7 +32,7 @@ export const buildApiError = (params: {
   const { status, body, rawBody, cause } = params;
 
   const messageFromBody = body
-    ? body.message ?? body.title ?? body.error ?? body.detail
+    ? (body.message ?? body.title ?? body.error ?? body.detail)
     : undefined;
   const message =
     messageFromBody ??
@@ -58,6 +58,9 @@ export const buildApiError = (params: {
     details,
     rawBody,
     cause,
-    type: cause instanceof DOMException && cause.name === "AbortError" ? "aborted" : classifyStatus(status),
+    type:
+      cause instanceof DOMException && cause.name === "AbortError"
+        ? "aborted"
+        : classifyStatus(status),
   });
 };

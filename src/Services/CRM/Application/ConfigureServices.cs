@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using KDVManager.Services.CRM.Application.Features.Children.Commands.ArchiveChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
@@ -23,7 +22,6 @@ public static class ConfigureServices
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         // Register handlers
-        services.AddScoped<ArchiveChildCommandHandler>();
         services.AddScoped<AddChildCommandHandler>();
         services.AddScoped<UpdateChildCommandHandler>();
         services.AddScoped<DeleteChildCommandHandler>();

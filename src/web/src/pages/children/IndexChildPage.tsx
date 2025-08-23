@@ -18,28 +18,16 @@ const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
 
 const IndexChildPage = () => {
   const { t } = useTranslation();
-  const [showArchived, setShowArchived] = useState(false);
 
   return (
     <Paper>
       <StyledToolbar>
         <Box display="flex" flexGrow={1} />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showArchived}
-              onChange={(_, checked) => setShowArchived(checked)}
-              color="primary"
-            />
-          }
-          label={t("Show archived")}
-          sx={{ mr: 2 }}
-        />
         <Button variant="contained" component={Link} to="new" startIcon={<AddIcon />}>
           {t("Child")}
         </Button>
       </StyledToolbar>
-      <ChildrenTable showArchived={showArchived} />
+      <ChildrenTable />
     </Paper>
   );
 };

@@ -35,14 +35,6 @@
             }
           },
           {
-            "name": "archived",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
             "name": "pageNumber",
             "in": "query",
             "required": true,
@@ -192,28 +184,6 @@
       "delete": {
         "tags": ["children"],
         "operationId": "DeleteChild",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/crm/v1/children/{id}/archive": {
-      "post": {
-        "tags": ["children"],
-        "operationId": "ArchiveChild",
         "parameters": [
           {
             "name": "id",
@@ -1576,11 +1546,6 @@
           "cid": {
             "type": "string",
             "nullable": true
-          },
-          "archivedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
           }
         }
       },
@@ -1628,11 +1593,6 @@
           "dateOfBirth": {
             "type": "string",
             "format": "date"
-          },
-          "archivedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
           }
         }
       },
@@ -1692,9 +1652,6 @@
             "type": "boolean"
           },
           "isEmergencyContact": {
-            "type": "boolean"
-          },
-          "isArchived": {
             "type": "boolean"
           }
         }

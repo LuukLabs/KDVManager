@@ -1,6 +1,6 @@
 /* eslint-disable i18next/no-literal-string */
-import { Box, Typography, Grid, Chip, Button, Alert, CircularProgress, Stack } from "@mui/material";
-import { Add, Phone, Email } from "@mui/icons-material";
+import { Box, Typography, Grid, Chip, Alert, CircularProgress, Stack } from "@mui/material";
+import { Phone, Email } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { type GuardianDetailVM } from "@api/models/guardianDetailVM";
@@ -18,7 +18,6 @@ type GuardianDetailViewProps = {
   isLoading?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
-  onLinkChild?: () => void;
 };
 
 export const GuardianDetailView = ({
@@ -26,7 +25,6 @@ export const GuardianDetailView = ({
   isLoading = false,
   onEdit,
   onDelete,
-  onLinkChild,
 }: GuardianDetailViewProps) => {
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
@@ -64,7 +62,6 @@ export const GuardianDetailView = ({
         phone={guardian.phoneNumbers?.[0]?.number}
         onEdit={onEdit ?? (() => navigate(`/guardians/${guardian.id}/edit`))}
         onDelete={onDelete}
-        onLinkChild={onLinkChild}
         loading={isLoading}
       />
       <Grid container spacing={3}>
@@ -142,9 +139,7 @@ export const GuardianDetailView = ({
               <Typography variant="h6" fontWeight={600}>
                 Children
               </Typography>
-              <Button variant="outlined" startIcon={<Add />} onClick={onLinkChild} size="small">
-                Link Child
-              </Button>
+              {/* Link Child action removed */}
             </Box>
             {childrenLoading ? (
               <Box display="flex" justifyContent="center" p={2}>
@@ -166,9 +161,6 @@ export const GuardianDetailView = ({
                       : []),
                     ...(c.isEmergencyContact
                       ? [{ label: "Emergency", color: "error", variant: "filled" as const }]
-                      : []),
-                    ...(c.isArchived
-                      ? [{ label: "Archived", color: "warning", variant: "filled" as const }]
                       : []),
                   ],
                   secondaryLines: [

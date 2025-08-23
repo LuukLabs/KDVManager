@@ -7,7 +7,6 @@
 
 export type ListChildrenParams = {
   search?: string;
-  archived?: boolean;
   /**
    * @minimum 1
    * @maximum 2147483647

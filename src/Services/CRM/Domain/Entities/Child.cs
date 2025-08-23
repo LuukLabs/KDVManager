@@ -16,16 +16,5 @@ namespace KDVManager.Services.CRM.Domain.Entities
         public string? CID { get; set; }
 
         public DateOnly DateOfBirth { get; set; }
-
-        public DateTime? ArchivedAt { get; private set; }
-
-        public bool Archive()
-        {
-            if (ArchivedAt.HasValue)
-                return false;
-
-            ArchivedAt = DateTime.UtcNow;
-            return true;
-        }
     }
 }

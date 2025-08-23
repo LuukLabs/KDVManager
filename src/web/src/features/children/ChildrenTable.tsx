@@ -4,15 +4,16 @@ import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useListChildren } from "@api/endpoints/children/children";
-import { usePagination } from "@hooks/usePagination";
+import { useChildrenListState } from "@hooks/useChildrenListState";
+import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
 
 export const ChildrenTable = () => {
-  const { apiPagination, muiPagination } = usePagination();
+  const { apiParams, muiPagination } = useChildrenListState();
   const { data, isLoading, isFetching } = useListChildren(
-    { ...apiPagination },
+    { ...apiParams },
     {
       query: { placeholderData: keepPreviousData },
     },
@@ -55,15 +56,17 @@ export const ChildrenTable = () => {
   );
 
   return (
-    <DataGrid<ChildListVM>
-      autoHeight
-      pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total ?? 0}
-      loading={isLoading ?? isFetching}
-      columns={columns}
-      rows={data?.value ?? []}
-      disableRowSelectionOnClick
-      {...muiPagination}
-    />
+    <Stack spacing={1} sx={{ width: "100%" }}>
+      <DataGrid<ChildListVM>
+        autoHeight
+        pageSizeOptions={[5, 10, 20]}
+        rowCount={data?.meta.total ?? 0}
+        loading={isLoading ?? isFetching}
+        columns={columns}
+        rows={data?.value ?? []}
+        disableRowSelectionOnClick
+        {...muiPagination}
+      />
+    </Stack>
   );
 };

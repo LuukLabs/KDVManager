@@ -19,7 +19,11 @@ type GuardianDetailViewProps = {
   onDelete?: () => void;
 };
 
-export const GuardianDetailView = ({ guardian, isLoading = false, onDelete }: GuardianDetailViewProps) => {
+export const GuardianDetailView = ({
+  guardian,
+  isLoading = false,
+  onDelete,
+}: GuardianDetailViewProps) => {
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
 

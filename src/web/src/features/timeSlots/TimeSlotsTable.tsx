@@ -53,7 +53,9 @@ const TimeSlotsTable = () => {
       disableColumnMenu: true,
       disableReorder: true,
       width: 90,
-      renderCell: (params) => <DeleteTimeSlotButton id={(params.row as any).id} displayName={(params.row as any).name} />,
+      renderCell: (params) => (
+        <DeleteTimeSlotButton id={(params.row as any).id} displayName={(params.row as any).name} />
+      ),
     },
   ];
 
@@ -63,7 +65,7 @@ const TimeSlotsTable = () => {
       pageSizeOptions={[5, 10, 20]}
       rowCount={data?.meta.total ?? 0}
       loading={isLoading ?? isFetching}
-  columns={columns}
+      columns={columns}
       rows={data?.value ?? []}
       disableRowSelectionOnClick
       {...muiPagination}

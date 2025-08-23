@@ -1,6 +1,6 @@
 import { Alert, CircularProgress, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLoaderData } from "react-router-dom";
 import { GuardianHeader } from "../../components/guardian/GuardianHeader";
 import { GuardianDetailTab } from "../../features/guardians/GuardianDetailTab";
 import { useGetGuardianById, useDeleteGuardian } from "@api/endpoints/guardians/guardians";
@@ -10,7 +10,10 @@ const GuardianDetailPage = () => {
   const { guardianId } = useParams<{ guardianId: string }>();
   const navigate = useNavigate();
 
-  const { data: guardian, isLoading, error } = useGetGuardianById(guardianId!);
+  const loaderData = useLoaderData() as any;
+  const { data: guardian, isLoading, error } = useGetGuardianById(guardianId!, {
+    query: { initialData: loaderData },
+  });
   const deleteGuardian = useDeleteGuardian();
 
   if (!guardianId) {
@@ -28,10 +31,6 @@ const GuardianDetailPage = () => {
   if (error || !guardian) {
     return <Alert severity="error">{t("Guardian not found")}</Alert>;
   }
-
-  const handleEdit = () => {
-    navigate(`/guardians/${guardianId}/edit`);
-  };
 
   const handleDelete = async () => {
     try {
@@ -58,7 +57,6 @@ const GuardianDetailPage = () => {
           familyName={guardian.familyName}
           email={guardian.email ?? undefined}
           phone={guardian.phoneNumbers?.[0]?.number}
-          onEdit={handleEdit}
           onDelete={handleDelete}
           loading={deleteGuardian.isPending}
         />

@@ -5,11 +5,11 @@ import { type DataGridProps, type GridPaginationModel } from "@mui/x-data-grid";
 // Key for localStorage persistence
 const STORAGE_KEY = "childrenListState";
 
-export interface ChildrenListState {
+export type ChildrenListState = {
   pageNumber: number; // 1-based
   pageSize: number;
   search: string;
-}
+};
 
 const parsePositiveInt = (value: string | null, fallback: number) => {
   const n = Number(value);

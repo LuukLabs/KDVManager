@@ -21,9 +21,15 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
 
         IQueryable<Child> children = _dbContext.Set<Child>().AsQueryable();
 
-        if (!String.IsNullOrEmpty(search))
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            children = children.Where(child => (child.GivenName + child.FamilyName).Contains(search, StringComparison.OrdinalIgnoreCase));
+            var pattern = $"%{search.Trim()}%".ToLower();
+            // Avoid string concatenation translation issues; match either given name, family name, or both with space in between.
+            children = children.Where(child =>
+                EF.Functions.Like((child.GivenName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like((child.FamilyName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like(((child.GivenName ?? "") + " " + (child.FamilyName ?? "")).ToLower(), pattern)
+            );
         }
 
         children = children.OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName);
@@ -32,9 +38,18 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
         return await children.ToListAsync();
     }
 
-    public async Task<int> CountAsync()
+    public async Task<int> CountAsync(string? search = null)
     {
         IQueryable<Child> children = _dbContext.Set<Child>().AsQueryable();
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var pattern = $"%{search.Trim()}%".ToLower();
+            children = children.Where(child =>
+                EF.Functions.Like((child.GivenName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like((child.FamilyName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like(((child.GivenName ?? "") + " " + (child.FamilyName ?? "")).ToLower(), pattern)
+            );
+        }
         return await children.CountAsync();
     }
 }

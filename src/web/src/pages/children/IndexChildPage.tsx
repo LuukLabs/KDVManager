@@ -7,9 +7,6 @@ import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import { useState } from "react";
 
 const StyledToolbar = styled(Toolbar)<ToolbarProps>(() => ({
   marginLeft: "auto",

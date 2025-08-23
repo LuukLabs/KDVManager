@@ -16,16 +16,10 @@ import { LinkedEntityList } from "../../components/linked/LinkedEntityList";
 type GuardianDetailViewProps = {
   guardian: GuardianDetailVM;
   isLoading?: boolean;
-  onEdit?: () => void;
   onDelete?: () => void;
 };
 
-export const GuardianDetailView = ({
-  guardian,
-  isLoading = false,
-  onEdit,
-  onDelete,
-}: GuardianDetailViewProps) => {
+export const GuardianDetailView = ({ guardian, isLoading = false, onDelete }: GuardianDetailViewProps) => {
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
 
@@ -60,7 +54,6 @@ export const GuardianDetailView = ({
         familyName={guardian.familyName}
         email={guardian.email ?? undefined}
         phone={guardian.phoneNumbers?.[0]?.number}
-        onEdit={onEdit ?? (() => navigate(`/guardians/${guardian.id}/edit`))}
         onDelete={onDelete}
         loading={isLoading}
       />

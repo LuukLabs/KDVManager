@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
@@ -33,5 +34,12 @@ public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
     {
         var matches = _dbContext.TimeSlots.Any(e => e.Name.Equals(name));
         return await Task.FromResult(matches);
+    }
+
+    public async Task<bool> IsInUseAsync(Guid id)
+    {
+        // A TimeSlot is in use if any ScheduleRule references it.
+        var inUse = await _dbContext.ScheduleRules.AnyAsync(r => r.TimeSlotId == id);
+        return inUse;
     }
 }

@@ -24,6 +24,8 @@ import type { AddTimeSlotCommand } from "../../models/addTimeSlotCommand";
 
 import type { ListTimeSlotsParams } from "../../models/listTimeSlotsParams";
 
+import type { ProblemDetails } from "../../models/problemDetails";
+
 import type { TimeSlotListVM } from "../../models/timeSlotListVM";
 
 import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
@@ -204,6 +206,68 @@ export const useAddTimeSlot = <TError = UnprocessableEntityResponse1, TContext =
   TContext
 > => {
   const mutationOptions = getAddTimeSlotMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+export const deleteTimeSlot = (id: string) => {
+  return executeFetch<void>({ url: `/scheduling/v1/timeslots/${id}`, method: "DELETE" });
+};
+
+export const getDeleteTimeSlotMutationOptions = <
+  TError = ProblemDetails,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteTimeSlot>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteTimeSlot>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deleteTimeSlot"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTimeSlot>>, { id: string }> = (
+    props,
+  ) => {
+    const { id } = props ?? {};
+
+    return deleteTimeSlot(id);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteTimeSlotMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTimeSlot>>>;
+
+export type DeleteTimeSlotMutationError = ProblemDetails;
+
+export const useDeleteTimeSlot = <TError = ProblemDetails, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteTimeSlot>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteTimeSlot>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteTimeSlotMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

@@ -11,7 +11,11 @@ const GuardianDetailPage = () => {
   const navigate = useNavigate();
 
   const loaderData = useLoaderData() as any;
-  const { data: guardian, isLoading, error } = useGetGuardianById(guardianId!, {
+  const {
+    data: guardian,
+    isLoading,
+    error,
+  } = useGetGuardianById(guardianId!, {
     query: { initialData: loaderData },
   });
   const deleteGuardian = useDeleteGuardian();

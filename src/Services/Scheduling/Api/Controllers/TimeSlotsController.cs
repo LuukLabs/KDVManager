@@ -1,4 +1,5 @@
 ﻿using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.AddTimeSlot;
+using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.DeleteTimeSlot;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
@@ -13,14 +14,17 @@ public class TimeSlotsController : ControllerBase
     private readonly ListTimeSlotsQueryHandler _listTimeSlotsQueryHandler;
     private readonly AddTimeSlotCommandHandler _addTimeSlotCommandHandler;
     private readonly ILogger<TimeSlotsController> _logger;
+    private readonly DeleteTimeSlotCommandHandler _deleteTimeSlotCommandHandler;
 
     public TimeSlotsController(
         ListTimeSlotsQueryHandler listTimeSlotsQueryHandler,
         AddTimeSlotCommandHandler addTimeSlotCommandHandler,
+        DeleteTimeSlotCommandHandler deleteTimeSlotCommandHandler,
         ILogger<TimeSlotsController> logger)
     {
         _listTimeSlotsQueryHandler = listTimeSlotsQueryHandler;
         _addTimeSlotCommandHandler = addTimeSlotCommandHandler;
+        _deleteTimeSlotCommandHandler = deleteTimeSlotCommandHandler;
         _logger = logger;
     }
 
@@ -39,5 +43,15 @@ public class TimeSlotsController : ControllerBase
     {
         var id = await _addTimeSlotCommandHandler.Handle(addTimeSlotCommand);
         return Ok(id);
+    }
+
+    [HttpDelete("{id}", Name = "DeleteTimeSlot")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
+    public async Task<ActionResult> DeleteTimeSlot(Guid id)
+    {
+        await _deleteTimeSlotCommandHandler.Handle(new DeleteTimeSlotCommand { Id = id });
+        return NoContent();
     }
 }

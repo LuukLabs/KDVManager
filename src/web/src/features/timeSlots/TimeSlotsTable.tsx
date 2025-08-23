@@ -5,8 +5,9 @@ import { usePagination } from "@hooks/usePagination";
 import { type GroupListVM } from "@api/models/groupListVM";
 import { useListTimeSlots } from "@api/endpoints/time-slots/time-slots";
 import dayjs from "dayjs";
+import DeleteTimeSlotButton from "./DeleteTimeSlotButton";
 
-const columns: GridColDef[] = [
+const baseColumns: GridColDef[] = [
   {
     field: "name",
     headerName: "Name",
@@ -42,13 +43,27 @@ const TimeSlotsTable = () => {
     query: { placeholderData: keepPreviousData },
   });
 
+  const columns: GridColDef[] = [
+    ...baseColumns,
+    {
+      field: "actions",
+      headerName: "Actions",
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      disableReorder: true,
+      width: 90,
+      renderCell: (params) => <DeleteTimeSlotButton id={(params.row as any).id} displayName={(params.row as any).name} />,
+    },
+  ];
+
   return (
     <DataGrid<GroupListVM>
       autoHeight
       pageSizeOptions={[5, 10, 20]}
       rowCount={data?.meta.total ?? 0}
       loading={isLoading ?? isFetching}
-      columns={columns}
+  columns={columns}
       rows={data?.value ?? []}
       disableRowSelectionOnClick
       {...muiPagination}

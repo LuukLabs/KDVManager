@@ -12,5 +12,10 @@ public interface ITimeSlotRepository : IAsyncRepository<TimeSlot>
     Task<int> CountAsync();
 
     Task<bool> IsTimeSlotNameUnique(string name);
+
+    /// <summary>
+    /// Returns true if the time slot is referenced by any schedule rule (in use and cannot be deleted).
+    /// </summary>
+    Task<bool> IsInUseAsync(Guid id);
 }
 

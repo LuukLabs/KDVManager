@@ -51,7 +51,7 @@ const RouterBreadcrumbs: React.FC = () => {
           sx={{ display: "inline-flex", alignItems: "center" }}
         >
           <Tooltip title={t("Schedule Overview") || ""} disableInteractive>
-            <IconButton size="small" sx={{ p: 0.5 }} aria-label={t("Home") || "Home"}>
+            <IconButton size="small" sx={{ p: 0.5 }} aria-label={t("Home")}>
               <HomeRoundedIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
@@ -61,22 +61,22 @@ const RouterBreadcrumbs: React.FC = () => {
         )}
         {displayCrumbs.map((c, idx) => {
           const isLast = idx === displayCrumbs.length - 1;
-            return isLast ? (
-              <Typography key={c.pathname} color="text.primary" sx={{ fontWeight: 500 }}>
-                {c.element}
-              </Typography>
-            ) : (
-              <Link
-                key={c.pathname}
-                component={RouterLink}
-                to={c.pathname}
-                underline="hover"
-                color="inherit"
-                sx={{ display: "inline-flex", alignItems: "center" }}
-              >
-                {c.element}
-              </Link>
-            );
+          return isLast ? (
+            <Typography key={c.pathname} color="text.primary" sx={{ fontWeight: 500 }}>
+              {c.element}
+            </Typography>
+          ) : (
+            <Link
+              key={c.pathname}
+              component={RouterLink}
+              to={c.pathname}
+              underline="hover"
+              color="inherit"
+              sx={{ display: "inline-flex", alignItems: "center" }}
+            >
+              {c.element}
+            </Link>
+          );
         })}
       </Breadcrumbs>
     </Box>

@@ -1,32 +1,37 @@
 import { type DeleteTexts } from "../types/delete.types";
-
-type ApiError = {
-  readonly status?: number;
-  readonly response?: {
-    readonly status?: number;
-  };
-};
+import { ApiError } from "@api/errors/types";
+import { classifyStatus } from "@api/errors/classify";
 
 export const getErrorStatus = (error: unknown): number | undefined => {
-  if (!error || typeof error !== "object") return undefined;
-  const apiError = error as ApiError;
-  return apiError.status ?? apiError.response?.status;
+  if (!error) return undefined;
+  if (error instanceof ApiError) return error.status;
+  if (typeof error === "object" && "status" in (error as any)) return (error as any).status;
+  return undefined;
 };
 
-export const createErrorHandler =
-  (
-    texts: DeleteTexts,
-    enqueueSnackbar: (message: string, options: { variant: "error" | "warning" }) => void,
-  ) =>
+export const createErrorHandler = (
+  texts: DeleteTexts,
+  enqueueSnackbar: (message: string, options: { variant: "error" | "warning" }) => void,
+) =>
   (error: unknown): void => {
-    const status = getErrorStatus(error);
-    const { errors } = texts;
-
-    if (status === 409) {
-      enqueueSnackbar(errors.conflict, { variant: "warning" });
-    } else if (status === 404) {
-      enqueueSnackbar(errors.notFound, { variant: "error" });
+    let apiError: ApiError;
+    if (error instanceof ApiError) {
+      apiError = error;
     } else {
-      enqueueSnackbar(errors.unknown, { variant: "error" });
+      const status = getErrorStatus(error);
+      apiError = new ApiError({ message: "Unexpected error", status, type: classifyStatus(status) });
+    }
+
+    const { errors } = texts;
+    switch (apiError.type) {
+      case "conflict":
+        enqueueSnackbar(errors.conflict, { variant: "warning" });
+        break;
+      case "not-found":
+        enqueueSnackbar(errors.notFound, { variant: "error" });
+        break;
+      default:
+        enqueueSnackbar(errors.unknown, { variant: "error" });
+        break;
     }
   };

@@ -1,13 +1,42 @@
 import { useTranslation } from "react-i18next";
 import { useRouteError } from "react-router-dom";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { ApiError } from "@api/errors/types";
+import DevErrorPanel from "./DevErrorPanel";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import HomeIcon from "@mui/icons-material/Home";
 
 export default function ErrorPage() {
   const { t } = useTranslation();
   const error = useRouteError();
   const navigate = useNavigate();
   console.error(error);
+
+  let status: number | undefined;
+  let messageKey = "error.unexpected";
+  if (error instanceof ApiError) {
+    status = error.status;
+    switch (error.type) {
+      case "unauthorized":
+        messageKey = "error.unauthorized";
+        break;
+      case "forbidden":
+        messageKey = "error.forbidden";
+        break;
+      case "not-found":
+        messageKey = "error.notFound";
+        break;
+      case "server":
+        messageKey = "error.server";
+        break;
+      case "network":
+        messageKey = "error.network";
+        break;
+      default:
+        messageKey = "error.unexpected";
+    }
+  }
 
   return (
     <Box
@@ -34,18 +63,31 @@ export default function ErrorPage() {
       />
       <Box>
         <Typography variant="h3" component="h1" gutterBottom>
-          {t("error.oops")}
+          {status ? `${status} – ${t("error.oops")}` : t("error.oops")}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          {t("error.unexpected")}
+          {t(messageKey)}
         </Typography>
-        <Typography variant="body2" color="text.secondary" fontStyle="italic">
-          {t("error.notFound")}
-        </Typography>
+        {process.env.NODE_ENV === "development" && error instanceof Error && (
+          <DevErrorPanel error={error} />
+        )}
       </Box>
-      <Button variant="contained" onClick={() => navigate("/")} sx={{ mt: 2 }}>
-        {t("Go to Home")}
-      </Button>
+      <Stack direction="row" spacing={2}>
+        <Button
+          variant="outlined"
+          startIcon={<RefreshIcon />}
+          onClick={() => window.location.reload()}
+        >
+          {t("Retry")}
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+        >
+          {t("Go to Home")}
+        </Button>
+      </Stack>
     </Box>
   );
 }

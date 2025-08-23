@@ -1,6 +1,7 @@
 import { type RequestConfig } from "./requestConfig";
 import { determineUrl } from "./determineUrl";
 import { getAuthToken } from "@lib/auth/auth";
+import { buildApiError } from "../errors/classify";
 
 export type ListRecord<RecordType> = {
   value: RecordType;
@@ -24,21 +25,41 @@ export const executeFetchPaginated = async <T>(
 
   const fetchUrl = determineUrl(url, params);
 
-  const response = await fetch(fetchUrl, {
-    headers: fetchHeaders,
-    signal,
-    method,
-    ...(data ? { body: JSON.stringify(data) } : {}),
-  });
+  let response: Response;
+  try {
+    response = await fetch(fetchUrl, {
+      headers: fetchHeaders,
+      signal,
+      method,
+      ...(data ? { body: JSON.stringify(data) } : {}),
+    });
+  } catch (networkError) {
+    throw buildApiError({ cause: networkError });
+  }
 
-  const json = (await response.json()) as T;
+  const contentType = response.headers.get("content-type") ?? "";
+  let parsed: any = undefined;
+  let rawBody: string | undefined;
+  if (contentType.includes("application/json")) {
+    try {
+      parsed = await response.json();
+    } catch (parseError) {
+      throw buildApiError({ status: response.status, rawBody, cause: parseError });
+    }
+  } else {
+    try {
+      rawBody = await response.text();
+    } catch {
+      /* ignore */
+    }
+  }
 
   if (!response.ok) {
-    return Promise.reject(json);
+    throw buildApiError({ status: response.status, body: parsed, rawBody });
   }
 
   return {
-    value: json,
+    value: parsed as T,
     meta: {
       total: Number(response.headers.get("X-Total")),
     },

@@ -11,7 +11,8 @@ resources:
   # - jaeger-deployment.yaml
   # - jaeger-service.yaml
   # - jaeger-ingress.yaml
-  # - signoz-application.yaml
+  - signoz-application.yaml
+  - signoz-ingress.yaml
   # - prometheus-config.yaml
   # - prometheus-deployment.yaml
   # - prometheus-service.yaml

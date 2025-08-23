@@ -62,41 +62,6 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
 
       {/* Absence Management Section */}
       <Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: { xs: "flex-start", md: "center" },
-            justifyContent: "space-between",
-            mb: { xs: 2, md: 3 },
-            flexDirection: { xs: "column", sm: "row" },
-            gap: { xs: 2, sm: 2, md: 2 },
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <CalendarIcon color="primary" />
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
-              {t("Absence Management")}
-            </Typography>
-          </Box>
-
-          <Button
-            variant="contained"
-            onClick={onAddAbsenceClickHandler}
-            startIcon={<AddIcon />}
-            size={isMobile ? "large" : "medium"}
-            fullWidth={isMobile}
-            sx={{
-              borderRadius: 2,
-              minHeight: { xs: 48, md: "auto" }, // Larger touch target on mobile
-              fontSize: { xs: "1rem", md: "0.875rem" }, // Larger text on mobile
-              fontWeight: 600,
-              px: { xs: 3, md: 2 },
-            }}
-          >
-            {t("Add Absence")}
-          </Button>
-        </Box>
-
         <Paper
           variant="outlined"
           sx={{
@@ -105,6 +70,40 @@ export const PlanningTab: React.FC<PlanningTabProps> = ({ childId }) => {
             backgroundColor: "background.paper",
           }}
         >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: { xs: "flex-start", md: "center" },
+              justifyContent: "space-between",
+              mb: { xs: 2, md: 3 },
+              flexDirection: { xs: "column", sm: "row" },
+              gap: { xs: 2, sm: 2, md: 2 },
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <CalendarIcon color="primary" />
+              <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
+                {t("Absence Management")}
+              </Typography>
+            </Box>
+
+            <Button
+              variant="contained"
+              onClick={onAddAbsenceClickHandler}
+              startIcon={<AddIcon />}
+              size={isMobile ? "large" : "medium"}
+              fullWidth={isMobile}
+              sx={{
+                borderRadius: 2,
+                minHeight: { xs: 48, md: "auto" },
+                fontSize: { xs: "1rem", md: "0.875rem" },
+                fontWeight: 600,
+                px: { xs: 3, md: 2 },
+              }}
+            >
+              {t("Add Absence")}
+            </Button>
+          </Box>
           <AbsenceList childId={childId} />
         </Paper>
       </Box>

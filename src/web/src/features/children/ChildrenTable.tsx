@@ -9,10 +9,10 @@ import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
 
-export const ChildrenTable = ({ showArchived = false }: { showArchived?: boolean }) => {
+export const ChildrenTable = () => {
   const { apiPagination, muiPagination } = usePagination();
   const { data, isLoading, isFetching } = useListChildren(
-    { ...apiPagination, archived: showArchived },
+    { ...apiPagination },
     {
       query: { placeholderData: keepPreviousData },
     },

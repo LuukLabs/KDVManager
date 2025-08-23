@@ -95,7 +95,6 @@ public class ChildrenDataMigrator
                 Console.WriteLine($"FamilyName: {familyName}");
 
                 var childId = Guid.NewGuid();
-                var isOlderThanSix = dateOfBirth.AddYears(6) < DateOnly.FromDateTime(DateTime.UtcNow); // Adjusted for DateOnly
                 // Check if child is older than 4.5 years (5 years and 6 months)
                 var isOlderThanFourAndHalf = dateOfBirth.AddYears(4).AddMonths(6) < DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -115,10 +114,6 @@ public class ChildrenDataMigrator
                     DateOfBirth = dateOfBirth,
                     TenantId = tenantId
                 };
-
-                // Archive if older than 6 years
-                if (isOlderThanSix)
-                    child.Archive();
 
                 _context.Children.Add(child);
 

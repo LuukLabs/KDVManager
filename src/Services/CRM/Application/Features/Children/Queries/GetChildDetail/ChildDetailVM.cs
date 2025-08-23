@@ -11,6 +11,5 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
         public DateOnly DateOfBirth { get; set; }
 
         public string? CID { get; set; }
-        public DateTime? ArchivedAt { get; set; }
     }
 }

@@ -9,6 +9,4 @@ export type ChildListVM = {
   id: string;
   fullName: string;
   dateOfBirth: string;
-  /** @nullable */
-  archivedAt?: string | null;
 };

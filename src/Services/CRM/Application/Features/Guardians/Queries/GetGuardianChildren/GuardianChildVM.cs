@@ -13,6 +13,5 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
         public GuardianRelationshipType RelationshipType { get; set; }
         public bool IsPrimaryContact { get; set; }
         public bool IsEmergencyContact { get; set; }
-        public bool IsArchived { get; set; }
     }
 }

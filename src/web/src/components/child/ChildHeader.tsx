@@ -11,12 +11,7 @@ import {
   useMediaQuery,
   alpha,
 } from "@mui/material";
-import {
-  Person as PersonIcon,
-  Edit as EditIcon,
-  Archive as ArchiveIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
+import { Person as PersonIcon, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 type ChildHeaderProps = {
   firstName?: string;
@@ -24,10 +19,7 @@ type ChildHeaderProps = {
   dateOfBirth?: string;
   group?: string;
   cid?: string;
-  isArchived?: boolean;
-  archivedAt?: string;
   onEdit?: () => void;
-  onArchive?: () => void;
   onDelete?: () => void;
   loading?: boolean;
   editMode?: boolean;
@@ -38,10 +30,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
   lastName,
   dateOfBirth,
   group,
-  isArchived,
-  archivedAt,
   onEdit,
-  onArchive,
   onDelete,
   loading = false,
   editMode = false,
@@ -163,23 +152,6 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     "& .MuiChip-label": { fontWeight: 600 },
                   }}
                 />
-                {isArchived && (
-                  <Chip
-                    label={
-                      archivedAt
-                        ? t("Archived on {{date}}", {
-                            date: new Date(archivedAt).toLocaleDateString(),
-                          })
-                        : t("Archived")
-                    }
-                    size="small"
-                    sx={{
-                      backgroundColor: theme.palette.warning.main,
-                      color: "white",
-                      "& .MuiChip-label": { fontWeight: 600 },
-                    }}
-                  />
-                )}
               </Stack>
             </Box>
           </Box>
@@ -205,26 +177,6 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                   {t("Edit")}
                 </Button>
               )}
-
-              {onArchive && !isArchived && (
-                <Button
-                  variant="outlined"
-                  startIcon={<ArchiveIcon />}
-                  onClick={onArchive}
-                  disabled={loading}
-                  sx={{
-                    borderColor: alpha(theme.palette.warning.main, 0.7),
-                    color: theme.palette.warning.main,
-                    "&:hover": {
-                      borderColor: theme.palette.warning.main,
-                      backgroundColor: alpha(theme.palette.warning.main, 0.1),
-                    },
-                  }}
-                >
-                  {t("Archive")}
-                </Button>
-              )}
-
               {onDelete && (
                 <Button
                   variant="outlined"

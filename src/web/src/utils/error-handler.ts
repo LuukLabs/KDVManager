@@ -9,17 +9,22 @@ export const getErrorStatus = (error: unknown): number | undefined => {
   return undefined;
 };
 
-export const createErrorHandler = (
-  texts: DeleteTexts,
-  enqueueSnackbar: (message: string, options: { variant: "error" | "warning" }) => void,
-) =>
+export const createErrorHandler =
+  (
+    texts: DeleteTexts,
+    enqueueSnackbar: (message: string, options: { variant: "error" | "warning" }) => void,
+  ) =>
   (error: unknown): void => {
     let apiError: ApiError;
     if (error instanceof ApiError) {
       apiError = error;
     } else {
       const status = getErrorStatus(error);
-      apiError = new ApiError({ message: "Unexpected error", status, type: classifyStatus(status) });
+      apiError = new ApiError({
+        message: "Unexpected error",
+        status,
+        type: classifyStatus(status),
+      });
     }
 
     const { errors } = texts;

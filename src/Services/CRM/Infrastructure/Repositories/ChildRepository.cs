@@ -15,7 +15,7 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
     {
     }
 
-    public async Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter, string? search, bool? archived = false)
+    public async Task<IReadOnlyList<Child>> PagedAsync(IPaginationFilter paginationFilter, string? search)
     {
         int skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
@@ -26,27 +26,15 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
             children = children.Where(child => (child.GivenName + child.FamilyName).Contains(search, StringComparison.OrdinalIgnoreCase));
         }
 
-        // Filter by archived status
-        if (!(archived ?? true))
-        {
-            children = children.Where(child => child.ArchivedAt == null);
-        }
-        // If archived == true, include all (archived and non-archived)
-
         children = children.OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName);
         children = children.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
 
         return await children.ToListAsync();
     }
 
-    public async Task<int> CountAsync(bool? archived)
+    public async Task<int> CountAsync()
     {
         IQueryable<Child> children = _dbContext.Set<Child>().AsQueryable();
-        if (!(archived ?? true))
-        {
-            children = children.Where(child => child.ArchivedAt == null);
-        }
-        // If archived == true, include all
         return await children.CountAsync();
     }
 }

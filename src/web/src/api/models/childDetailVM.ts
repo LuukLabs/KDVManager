@@ -12,6 +12,4 @@ export type ChildDetailVM = {
   dateOfBirth?: string;
   /** @nullable */
   cid?: string | null;
-  /** @nullable */
-  archivedAt?: string | null;
 };

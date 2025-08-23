@@ -19,7 +19,6 @@ import { GuardianChildrenCard } from "../../components/guardian/GuardianChildren
 
 type GuardianDetailTabProps = {
   guardian: GuardianDetailVM;
-  onLinkChild?: () => void;
 };
 
 type UpdateGuardianFormData = {
@@ -34,7 +33,7 @@ type UpdateGuardianFormData = {
   }[];
 };
 
-export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian, onLinkChild }) => {
+export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian }) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -242,9 +241,7 @@ export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian, 
 
         {/* Children Information */}
         <Grid size={{ xs: 12 }}>
-          {guardian.id && (
-            <GuardianChildrenCard guardianId={guardian.id} onLinkChild={onLinkChild} />
-          )}
+          {guardian.id && <GuardianChildrenCard guardianId={guardian.id} />}
         </Grid>
       </Grid>
     </>

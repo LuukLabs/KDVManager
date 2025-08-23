@@ -16,5 +16,4 @@ export type GuardianChildVM = {
   relationshipType?: GuardianRelationshipType;
   isPrimaryContact?: boolean;
   isEmergencyContact?: boolean;
-  isArchived?: boolean;
 };

@@ -4,7 +4,6 @@ import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
 import { usePagination } from "@hooks/usePagination";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
-import { EditGuardianButton } from "./EditGuardianButton";
 import { ViewGuardianButton } from "./ViewGuardianButton";
 import { useListGuardians } from "@api/endpoints/guardians/guardians";
 import { type GuardianListVM } from "@api/models/guardianListVM";
@@ -63,7 +62,6 @@ export const GuardiansTable = ({ searchTerm = "" }: { searchTerm?: string }) => 
         renderCell: (params: GridRenderCellParams<any, string>) => (
           <div style={{ display: "flex", gap: "8px" }}>
             <ViewGuardianButton id={params.value!} />
-            <EditGuardianButton id={params.value!} />
             <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
           </div>
         ),

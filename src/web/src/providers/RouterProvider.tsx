@@ -6,6 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { type TFunction } from "i18next";
 import { updateChildPageLoader } from "@pages/children/updateChildPage.loader";
+import { guardianDetailPageLoader } from "@pages/guardians/guardianDetailPage.loader";
 import ErrorPage from "@components/ErrorPage";
 import { queryClient } from "@lib/query-client/queryClient";
 import MainLayout from "@components/MainLayout";
@@ -47,14 +48,6 @@ const router = (t: TFunction<"translation">) =>
                 crumb: () => {
                   return t("Schedule Overview");
                 },
-              },
-            },
-            {
-              path: "print-schedules",
-              loader: requireAuth,
-              lazy: () => import("@pages/print/PrintSchedulesPage"),
-              handle: {
-                crumb: () => t("Print Schedules"),
               },
             },
             {
@@ -110,6 +103,9 @@ const router = (t: TFunction<"translation">) =>
                 {
                   path: "new",
                   lazy: () => import("@pages/children/NewChildPage"),
+                  handle: {
+                    crumb: () => t("New Child"),
+                  },
                 },
               ],
             },
@@ -138,19 +134,12 @@ const router = (t: TFunction<"translation">) =>
                 {
                   path: ":guardianId",
                   lazy: () => import("@pages/guardians/GuardianDetailPage"),
+                  loader: withAuth(guardianDetailPageLoader(queryClient)),
                   handle: {
-                    crumb: () => {
-                      return t("Guardian Details");
-                    },
-                  },
-                },
-                {
-                  path: ":guardianId/edit",
-                  lazy: () => import("@pages/guardians/EditGuardianPage"),
-                  handle: {
-                    crumb: () => {
-                      return t("Edit Guardian");
-                    },
+                    crumb: (data: any) =>
+                      data?.givenName && data?.familyName
+                        ? `${data.givenName} ${data.familyName}`
+                        : t("Guardian"),
                   },
                 },
               ],

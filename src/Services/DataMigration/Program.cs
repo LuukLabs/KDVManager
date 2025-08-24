@@ -1,3 +1,5 @@
+// Nullable reference types enabled for correct annotation handling
+#nullable enable
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,23 +15,40 @@ public class Program
     {
         Console.WriteLine("Starting Data Migration from MSSQL to KDVManager...");
 
-        // Check if we should run connection test
-        if (args.Length > 0 && args[0] == "--test-connections")
+        // Basic CLI parsing (very small scale, no external deps)
+        bool testConnections = args.Contains("--test-connections", StringComparer.OrdinalIgnoreCase);
+        bool anonymize = args.Contains("--anonymize", StringComparer.OrdinalIgnoreCase);
+        string? tenantIdArg = null;
+
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i].Equals("--tenant", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                tenantIdArg = args[i + 1];
+            }
+        }
+
+        if (testConnections)
         {
             await DatabaseConnectionTest.TestConnections();
             return;
         }
 
-        // Default: run both migrations
-        await RunFullMigration();
+        if (!Guid.TryParse(tenantIdArg, out _))
+        {
+            Console.WriteLine("ERROR: --tenant <GUID> is required. Aborting.");
+            return;
+        }
+
+        await RunFullMigration(tenantIdArg, anonymize);
     }
 
-    private static async Task RunFullMigration()
+    private static async Task RunFullMigration(string? tenantIdArg, bool anonymize)
     {
         Console.WriteLine("Running full migration (Children + Scheduling)...");
 
-        var configuration = BuildConfiguration();
-        var serviceProvider = BuildServiceProvider(configuration);
+        var configuration = BuildConfiguration(tenantIdArg, anonymize);
+        var serviceProvider = BuildServiceProvider(configuration, tenantIdArg);
 
         try
         {
@@ -56,12 +75,12 @@ public class Program
         }
     }
 
-    private static async Task RunChildrenOnlyMigration()
+    private static async Task RunChildrenOnlyMigration(string? tenantIdArg, bool anonymize)
     {
         Console.WriteLine("Running children-only migration...");
 
-        var configuration = BuildConfiguration();
-        var serviceProvider = BuildServiceProvider(configuration);
+        var configuration = BuildConfiguration(tenantIdArg, anonymize);
+        var serviceProvider = BuildServiceProvider(configuration, tenantIdArg);
 
         try
         {
@@ -78,19 +97,26 @@ public class Program
         }
     }
 
-    private static IConfiguration BuildConfiguration()
+    private static IConfiguration BuildConfiguration(string? tenantIdArg, bool anonymize)
     {
-        return new ConfigurationBuilder()
+        var builder = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
+            .AddEnvironmentVariables();
+
+        var dict = new Dictionary<string, string?>
+        {
+            ["DataMigration:Anonymize"] = anonymize.ToString(),
+            ["DataMigration:TenantIdOverride"] = tenantIdArg
+        };
+        builder.AddInMemoryCollection(dict!);
+        return builder.Build();
     }
 
-    private static ServiceProvider BuildServiceProvider(IConfiguration configuration)
+    private static ServiceProvider BuildServiceProvider(IConfiguration configuration, string? tenantIdArg)
     {
         var services = new ServiceCollection();
-        ServiceConfiguration.ConfigureServices(services, configuration);
+        ServiceConfiguration.ConfigureServices(services, configuration, tenantIdArg);
         return services.BuildServiceProvider();
     }
 }

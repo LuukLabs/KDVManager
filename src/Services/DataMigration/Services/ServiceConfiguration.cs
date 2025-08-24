@@ -1,3 +1,5 @@
+// Nullable reference types enabled for correct annotation handling
+#nullable enable
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +12,7 @@ namespace KDVManager.Services.DataMigration.Services;
 
 public static class ServiceConfiguration
 {
-    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration, string? tenantIdOverride = null)
     {
         // Register configuration as a service
         services.AddSingleton<IConfiguration>(configuration);
@@ -23,8 +25,14 @@ public static class ServiceConfiguration
         services.AddDbContext<SchedulingContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("KDVManagerSchedulingConnectionString")));
 
-        // Add tenant service with a default tenant for migration
-        services.AddScoped<ITenancyContextAccessor, MigrationTenancyContextAccessor>();
+        if (!Guid.TryParse(tenantIdOverride, out var tenantId))
+        {
+            throw new InvalidOperationException("A valid --tenant <GUID> must be supplied (no default tenant id).");
+        }
+        services.AddScoped<ITenancyContextAccessor>(_ => new MigrationTenancyContextAccessor(tenantId));
+
+        // Register anonymizer
+        services.AddSingleton<NameAnonymizer>();
 
         // Add migrators
         services.AddScoped<ChildrenDataMigrator>();

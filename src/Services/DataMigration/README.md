@@ -1,15 +1,16 @@
-# Children Data Migration Tool
+# Data Migration Tool
 
-This is a one-time migration tool that reads children data from an MSSQL database and imports it into the KDVManager CRM PostgreSQL database.
+Migrates legacy MSSQL data (Children, Guardians, Scheduling) into KDVManager PostgreSQL databases (CRM + Scheduling). A tenant id is REQUIRED (no default).
 
 ## What it does
 
-The migration script:
-1. Connects to your source MSSQL database
-2. Executes the query: `SELECT firstname, lastname, infixes, cid, dateofbirth, gender FROM [dbo].[Child] LEFT JOIN [dbo].[Person] ON ([dbo].[Person].id = [dbo].[Child].id)`
-3. Combines `infixes` and `lastname` into the `FamilyName` field
-4. Maps gender strings to the Gender enum (Male, Female, Other)
-5. Inserts the data into the CRM PostgreSQL database
+1. Connects to legacy MSSQL.
+2. Migrates Children (CRM) and mirrors them into Scheduling.
+3. Migrates Guardians (+ phone numbers) and guardian-child relationships.
+4. Migrates Scheduling (TimeSlots, Groups, Schedules, ScheduleRules) and recalculates schedule end dates.
+5. Generates EndMarks and ClosurePeriods.
+6. Optional anonymization: pseudonymizes given/family names, guardian emails (full), and masks last 3 digits of guardian phone numbers.
+7. Deterministic UUIDs: Children and Guardians receive stable UUIDv5-derived identifiers based on TenantId + legacy numeric ID, ensuring idempotent re-runs without breaking foreign keys.
 
 ## Setup Instructions
 
@@ -35,25 +36,38 @@ The migration script:
    dotnet build
    ```
 
-5. **Run the Migration** (from this directory):
+5. **Run the Migration** (from this directory) - tenant is mandatory:
    ```bash
-   dotnet run
+   # Full migration
+   dotnet run -- --tenant 11111111-2222-3333-4444-555555555555
+
+   # Full migration with anonymization
+   dotnet run -- --tenant 11111111-2222-3333-4444-555555555555 --anonymize
    ```
 
-## Data Mapping
+### CLI Options
 
-- `firstname` → `GivenName`
-- `lastname` + `infixes` → `FamilyName` (combined as "infixes lastname")
-- `cid` → `CID`
-- `dateofbirth` → `DateOfBirth`
-- `gender` → `Gender` (mapped to enum: m/male/man/boy → Male, f/female/woman/girl/v/vrouw → Female, others → Other)
+| Option | Required | Description |
+| ------ | -------- | ----------- |
+| `--tenant <GUID>` | Yes | Tenant id to attribute all migrated data to (no default) |
+| `--anonymize` | No | Pseudonymize names, guardian emails, mask phone digits |
+| `--test-connections` | No | Only test database connections and exit |
+
+## Data Mapping (selected)
+
+- Child: firstname → GivenName; infixes+lastname → FamilyName
+- Guardian: firstname/infixes/lastname merged similarly; phone numbers normalized; emails anonymized if flag
+- Scheduling: time slots & groups deduplicated; schedules & rules recreated with calculated end dates
 
 ## Notes
 
-- The migration uses a default tenant ID for all imported records
-- Records with missing first name AND last name are skipped
-- The migration processes records in batches of 100 for better performance
-- This is a one-time migration tool - run it only once per environment
+- Tenant id must be provided explicitly.
+- Records with missing first & last name are skipped.
+- Batches of 100 for performance.
+- Safe to re-run; existing tenant data in target tables is cleared before inserting (per migrator logic).
+- Deterministic IDs: When a legacy external ID is available, the tool derives a UUID using SHA1(namespace=TenantId, name="entityType:legacyId"). This guarantees identical GUIDs across runs for the same tenant + legacy ID pair while avoiding collisions between tenants.
+- Anonymization creates deterministic pseudonyms (stable across runs with same input).
+- Guardian emails become `u<token>@anon.<tld>`; last 3 digits of each guardian phone number set to 0 when anonymized.
 
 ## Error Handling
 

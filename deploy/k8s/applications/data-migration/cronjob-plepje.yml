@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: data-migration-cronjob
+  name: data-migration-cronjob-plepje
 spec:
   # Run every day at 2:00 AM UTC
   schedule: "0 2 * * *"
@@ -16,7 +16,7 @@ spec:
       template:
         metadata:
           labels:
-            app: data-migration
+            app: data-migration-plepje
             release: production
         spec:
           restartPolicy: Never
@@ -25,9 +25,7 @@ spec:
           - name: data-migration
             image: ghcr.io/luuklabs/kdvmanager/data.migration:linux-main
             imagePullPolicy: Always
-            # Run full migration by default, you can change this to specific migration types
-            # args: ["--children-only"]  # Uncomment for children-only migration
-            # args: ["--scheduling-only"]  # Uncomment for scheduling-only migration
+            args: ["--tenant", "7e520828-45e6-415f-b0ba-19d56a312f7f"]
             env:
             - name: POSTGRES_SERVER
               value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"

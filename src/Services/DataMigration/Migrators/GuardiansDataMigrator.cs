@@ -21,12 +21,16 @@ public class GuardiansDataMigrator
     private readonly CrmContext _context;
     private readonly IConfiguration _configuration;
     private readonly ITenancyContextAccessor _tenancyContextAccessor;
+    private readonly Services.NameAnonymizer _anonymizer;
+    private readonly bool _anonymize;
 
-    public GuardiansDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor)
+    public GuardiansDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor, Services.NameAnonymizer anonymizer)
     {
         _context = context;
         _configuration = configuration;
         _tenancyContextAccessor = tenancyContextAccessor;
+        _anonymizer = anonymizer;
+        _anonymize = bool.TryParse(configuration["DataMigration:Anonymize"], out var anon) && anon;
     }
 
     private async Task DeleteGuardiansForTenantAsync(Guid tenantId)
@@ -100,15 +104,33 @@ public class GuardiansDataMigrator
                 // Combine lastname and infixes for FamilyName
                 familyName = $"{(infixes ?? "").Trim()} {(lastName ?? "").Trim()}".Trim();
 
-                var guardianId = Guid.NewGuid();
+                // Use deterministic GUID if external ID available, else random
+                Guid guardianId;
+                if (externalGuardianId.HasValue)
+                {
+                    guardianId = DeterministicGuid.Create(tenantId, $"guardian:{externalGuardianId.Value}");
+                }
+                else
+                {
+                    guardianId = Guid.NewGuid();
+                }
+
+                string? given = firstName?.Trim();
+                string? family = familyName?.Trim();
+                string? emailOut = email?.Trim();
+                if (_anonymize)
+                {
+                    (given, family) = _anonymizer.Anonymize(given, family);
+                    emailOut = _anonymizer.AnonymizeEmail(emailOut);
+                }
 
                 var guardian = new Guardian
                 {
                     Id = guardianId,
-                    GivenName = firstName?.Trim(),
-                    FamilyName = familyName?.Trim(),
+                    GivenName = given,
+                    FamilyName = family,
                     DateOfBirth = dateOfBirth,
-                    Email = email?.Trim(),
+                    Email = emailOut,
                     TenantId = tenantId
                 };
 
@@ -123,7 +145,7 @@ public class GuardiansDataMigrator
                         if (added >= 10) break; // enforce limit
                         try
                         {
-                            guardian.AddPhoneNumber(phone.FormattedE123, phone.Type);
+                            guardian.AddPhoneNumber(phone.GetMaskedE123(_anonymize), phone.Type);
                             added++;
                         }
                         catch (Exception exPhone)
@@ -176,7 +198,24 @@ public class GuardiansDataMigrator
         return guardianIdMapping;
     }
 
-    private record RawPhone(string RawAreaCode, string RawNumber, string FormattedE123, PhoneNumberType Type);
+    private record RawPhone(string RawAreaCode, string RawNumber, string FormattedE123, PhoneNumberType Type)
+    {
+        public string GetMaskedE123(bool anonymize)
+        {
+            if (!anonymize) return FormattedE123;
+            var chars = FormattedE123.ToCharArray();
+            int replaced = 0;
+            for (int i = chars.Length - 1; i >= 0 && replaced < 3; i--)
+            {
+                if (char.IsDigit(chars[i]))
+                {
+                    chars[i] = '0';
+                    replaced++;
+                }
+            }
+            return new string(chars);
+        }
+    }
 
     /// <summary>
     /// Loads all phone numbers from the legacy MSSQL database and prepares them in E.123 format.

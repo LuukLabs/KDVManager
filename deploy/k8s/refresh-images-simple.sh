@@ -81,13 +81,21 @@ restart_service() {
             kubectl rollout status deployment/envoy -n "$NAMESPACE" --timeout=300s
             ;;
         data-migration)
-            log "Refreshing data-migration cronjob to force image pull..."
-            kubectl patch cronjob data-migration-cronjob \
+            log "Refreshing data-migration-plepje cronjob to force image pull..."
+            kubectl patch cronjob data-migration-cronjob-plepje \
               -n "$NAMESPACE" \
               -p "{\"spec\": {\"jobTemplate\": {\"metadata\": {\"annotations\": {\"kubectl.kubernetes.io/restartedAt\": \"$(date +%FT%T%z)\"}}}}}"
             
-            log "Running data-migration cronjob immediately..."
-            kubectl create job --from=cronjob/data-migration-cronjob data-migration-manual-$(date +%s) -n "$NAMESPACE"
+            log "Running data-migration-plepje cronjob immediately..."
+            kubectl create job --from=cronjob/data-migration-cronjob-plepje data-migration-plepje-manual-$(date +%s) -n "$NAMESPACE"
+
+            log "Refreshing data-migration-anonymize cronjob to force image pull..."
+            kubectl patch cronjob data-migration-cronjob-anonymize \
+              -n "$NAMESPACE" \
+              -p "{\"spec\": {\"jobTemplate\": {\"metadata\": {\"annotations\": {\"kubectl.kubernetes.io/restartedAt\": \"$(date +%FT%T%z)\"}}}}}"
+
+            log "Running data-migration-anonymize cronjob immediately..."
+            kubectl create job --from=cronjob/data-migration-cronjob-anonymize data-migration-anonymize-manual-$(date +%s) -n "$NAMESPACE"
             ;;
         *)
             echo "Error: Unknown service '$service'"

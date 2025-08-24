@@ -18,12 +18,16 @@ public class ChildrenDataMigrator
     private readonly CrmContext _context;
     private readonly IConfiguration _configuration;
     private readonly ITenancyContextAccessor _tenancyContextAccessor;
+    private readonly Services.NameAnonymizer _anonymizer;
+    private readonly bool _anonymize;
 
-    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor)
+    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor, Services.NameAnonymizer anonymizer)
     {
         _context = context;
         _configuration = configuration;
         _tenancyContextAccessor = tenancyContextAccessor;
+        _anonymizer = anonymizer;
+        _anonymize = bool.TryParse(configuration["DataMigration:Anonymize"], out var anon) && anon;
     }
 
     private async Task DeleteChildrenForTenantAsync(Guid tenantId)
@@ -94,7 +98,17 @@ public class ChildrenDataMigrator
 
                 Console.WriteLine($"FamilyName: {familyName}");
 
-                var childId = Guid.NewGuid();
+                // Use deterministic GUID if external ID available, else random
+                Guid childId;
+                if (externalChildId.HasValue)
+                {
+                    // Namespace: derive from tenant to avoid collisions across tenants
+                    childId = DeterministicGuid.Create(tenantId, $"child:{externalChildId.Value}");
+                }
+                else
+                {
+                    childId = Guid.NewGuid();
+                }
                 // Check if child is older than 4.5 years (5 years and 6 months)
                 var isOlderThanFourAndHalf = dateOfBirth.AddYears(4).AddMonths(6) < DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -106,11 +120,18 @@ public class ChildrenDataMigrator
                     continue;
                 }
 
+                string? given = firstName?.Trim();
+                string? family = familyName?.Trim();
+                if (_anonymize)
+                {
+                    (given, family) = _anonymizer.Anonymize(given, family);
+                }
+
                 var child = new Child
                 {
                     Id = childId,
-                    GivenName = firstName?.Trim(),
-                    FamilyName = familyName?.Trim(),
+                    GivenName = given,
+                    FamilyName = family,
                     DateOfBirth = dateOfBirth,
                     TenantId = tenantId
                 };

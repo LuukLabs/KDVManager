@@ -22,13 +22,17 @@ public class SchedulingDataMigrator
     private readonly CRMContext _crmContext; // Add CRM context
     private readonly IConfiguration _configuration;
     private readonly ITenancyContextAccessor _tenancyContextAccessor; // Add tenancy context
+    private readonly Services.NameAnonymizer _anonymizer;
+    private readonly bool _anonymize;
 
-    public SchedulingDataMigrator(SchedulingContext context, CRMContext crmContext, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor)
+    public SchedulingDataMigrator(SchedulingContext context, CRMContext crmContext, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor, Services.NameAnonymizer anonymizer)
     {
         _context = context;
         _crmContext = crmContext; // Initialize CRM context
         _configuration = configuration;
         _tenancyContextAccessor = tenancyContextAccessor; // Initialize tenancy context
+        _anonymizer = anonymizer;
+        _anonymize = bool.TryParse(configuration["DataMigration:Anonymize"], out var anon) && anon;
     }
 
     public async Task MigrateAsync(Dictionary<int, Guid> childIdMapping)
@@ -322,10 +326,16 @@ public class SchedulingDataMigrator
                 var schedChild = await _context.Children.FirstOrDefaultAsync(c => c.Id == childId);
                 if (schedChild != null && crmChildNames.TryGetValue(childId, out var crmNames))
                 {
-                    if (string.IsNullOrWhiteSpace(schedChild.GivenName) && !string.IsNullOrWhiteSpace(crmNames.GivenName))
-                        schedChild.GivenName = crmNames.GivenName;
-                    if (string.IsNullOrWhiteSpace(schedChild.FamilyName) && !string.IsNullOrWhiteSpace(crmNames.FamilyName))
-                        schedChild.FamilyName = crmNames.FamilyName;
+                    string? given = crmNames.GivenName;
+                    string? family = crmNames.FamilyName;
+                    if (_anonymize)
+                    {
+                        (given, family) = _anonymizer.Anonymize(given, family);
+                    }
+                    if (string.IsNullOrWhiteSpace(schedChild.GivenName) && !string.IsNullOrWhiteSpace(given))
+                        schedChild.GivenName = given;
+                    if (string.IsNullOrWhiteSpace(schedChild.FamilyName) && !string.IsNullOrWhiteSpace(family))
+                        schedChild.FamilyName = family;
                 }
 
                 // Check if we need to create a new schedule or if we're adding rules to an existing one
@@ -340,7 +350,7 @@ public class SchedulingDataMigrator
                         ChildId = childId,
                         StartDate = DateOnly.FromDateTime(startDate),
                         // EndDate is calculated later via timeline logic; do not set here
-                        TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                        TenantId = _tenancyContextAccessor.Current.TenantId
                     };
 
                     _context.Schedules.Add(schedule);
@@ -396,7 +406,7 @@ public class SchedulingDataMigrator
                     GroupId = groupId,
                     TimeSlotId = timeSlotId,
                     Day = dayOfWeek,
-                    TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f")
+                    TenantId = _tenancyContextAccessor.Current.TenantId
                 };
 
                 _context.ScheduleRules.Add(scheduleRule);

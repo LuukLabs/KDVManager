@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Paper,
@@ -14,6 +14,9 @@ import {
   Button,
   Stack,
   Chip,
+  Popper,
+  ClickAwayListener,
+  Paper as MuiPaper,
 } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import {
@@ -100,6 +103,21 @@ const ScheduleOverviewPage = () => {
 
   const handleCloseCalendar = () => {
     setIsCalendarOpen(false);
+  };
+
+  // Desktop popper state for hover/click calendar
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const isPopperOpen = Boolean(anchorEl);
+
+  // use a stable ref to the FAB so clicks are not treated as click-away
+  const fabRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleOpenPopper = () => {
+    setAnchorEl(fabRef.current);
+  };
+
+  const handleClosePopper = () => {
+    setAnchorEl(null);
   };
 
   const handleCalendarDateChange = (newDate: dayjs.Dayjs | null) => {
@@ -219,8 +237,8 @@ const ScheduleOverviewPage = () => {
           </Grid>
         )}
 
-        {/* Groups Section */}
-        <Grid size={{ xs: 12, lg: 9 }}>
+  {/* Groups Section */}
+  <Grid size={{ xs: 12, lg: 12 }}>
           {!groups || groups.length === 0 ? (
             <Paper sx={{ p: 4, textAlign: "center" }}>
               <GroupsIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
@@ -283,21 +301,7 @@ const ScheduleOverviewPage = () => {
           )}
         </Grid>
 
-        {/* Desktop Calendar */}
-        {!isMobile && (
-          <Grid size={{ xs: 12, lg: 3 }}>
-            <Paper sx={{ p: 2, position: "sticky", top: 20 }}>
-              <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
-                {t("Calendar")}
-              </Typography>
-              <DateCalendar
-                value={selectedDate}
-                onChange={handleDateChange}
-                sx={{ width: "100%", maxWidth: 320 }}
-              />
-            </Paper>
-          </Grid>
-        )}
+  {/* Desktop calendar removed to allow columns to occupy full width */}
       </Grid>
 
       {/* Mobile Calendar Drawer */}
@@ -332,22 +336,45 @@ const ScheduleOverviewPage = () => {
       </Drawer>
 
       {/* Mobile Floating Action Button (alternative) */}
-      {isMobile && (
-        <Fab
-          color="primary"
-          aria-label={t("open calendar")}
-          onClick={handleOpenCalendar}
-          sx={{
-            position: "fixed",
-            bottom: 24,
-            right: 24,
-            display: { xs: "flex", md: "none" },
-            zIndex: 1000,
-          }}
-        >
-          <CalendarIcon />
-        </Fab>
-      )}
+      {/* Floating Action Button for mobile and desktop (desktop opens popper) */}
+      <ClickAwayListener onClickAway={handleClosePopper}>
+        <Box>
+          <Fab
+            ref={fabRef as any}
+            color="primary"
+            aria-label={t("open calendar")}
+            onClick={() => {
+              if (isMobile) handleOpenCalendar();
+              else handleOpenPopper();
+            }}
+            sx={{
+              position: "fixed",
+              bottom: 24,
+              right: 24,
+              display: "flex",
+              zIndex: 1000,
+            }}
+          >
+            <CalendarIcon />
+          </Fab>
+
+          {/* Desktop Popper anchored to FAB */}
+          {!isMobile && (
+            <Popper open={isPopperOpen} anchorEl={anchorEl} placement="top-end" disablePortal>
+              <MuiPaper elevation={4} sx={{ mt: 1, p: 1 }}>
+                <DateCalendar
+                  value={selectedDate}
+                  onChange={(d) => {
+                    handleDateChange(d);
+                    handleClosePopper();
+                  }}
+                  sx={{ width: 320, maxWidth: "100%" }}
+                />
+              </MuiPaper>
+            </Popper>
+          )}
+        </Box>
+      </ClickAwayListener>
     </Box>
   );
 };

@@ -62,3 +62,20 @@ API endpoints used (prefixed with /scheduling):
 - DELETE v1/endmarks/{id}
 
 Translations added under `public/locales/{lang}/translation.json`.
+
+## Observability / Tracing
+
+OpenTelemetry is initialized in `src/otel.ts` and imported at the top of `src/index.tsx`.
+
+Environment variables (see `.env.example`):
+
+- `VITE_OTEL_EXPORTER_URL` Base URL to an OTLP/HTTP collector endpoint (the code appends `/v1/traces`). Leave empty to disable exporting.
+- `VITE_DEPLOY_ENV` Deployment environment tag (e.g., development, staging, production).
+
+### Error Pages & Trace IDs
+
+`ErrorPage` now shows the active trace ID (if available) so that users can supply it when reporting issues. The trace ID is also accessible via `window.getCurrentTraceId()`.
+
+### Adding More Instrumentations
+
+Add additional instrumentation packages and register them inside `otel.ts`. For backend correlation be sure your API propagates B3 headers (`X-B3-TraceId`, etc.).

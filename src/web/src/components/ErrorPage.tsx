@@ -6,12 +6,25 @@ import { ApiError } from "@api/errors/types";
 import DevErrorPanel from "./DevErrorPanel";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import HomeIcon from "@mui/icons-material/Home";
+import { useEffect, useState } from "react";
 
-export default function ErrorPage() {
+type ErrorPageProps = {
+  errorOverride?: unknown;
+};
+export default function ErrorPage({ errorOverride }: ErrorPageProps) {
   const { t } = useTranslation();
-  const error = useRouteError();
+  const routeError = useRouteError();
+  const error = errorOverride ?? routeError;
   const navigate = useNavigate();
   console.error(error);
+
+  const [traceId, setTraceId] = useState<string | undefined>();
+  useEffect(() => {
+    const getter = (window as any).getCurrentTraceId;
+    if (typeof getter === "function") {
+      setTraceId(getter());
+    }
+  }, []);
 
   let status: number | undefined;
   let messageKey = "error.unexpected";
@@ -68,6 +81,11 @@ export default function ErrorPage() {
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
           {t(messageKey)}
         </Typography>
+        {traceId && (
+          <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+            {t("error.traceId", "Trace ID")}: <code>{traceId}</code>
+          </Typography>
+        )}
         {process.env.NODE_ENV === "development" && error instanceof Error && (
           <DevErrorPanel error={error} />
         )}

@@ -20,6 +20,21 @@ spec:
           storageClass: do-block-storage
         
         signoz:
+          ingress:
+            enabled: true
+            className: nginx
+            hosts:
+              - host: signoz.kdvmanager.nl
+                paths:
+                  - path: /
+                    pathType: ImplementationSpecific
+                    port: 8080
+            tls:
+              - secretName: signoz-tls-cert
+                hosts:
+                  - signoz.kdvmanager.nl
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production
           env:
             storage: clickhouse
   destination:

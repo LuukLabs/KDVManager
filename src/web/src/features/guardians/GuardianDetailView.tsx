@@ -1,5 +1,5 @@
-/* eslint-disable i18next/no-literal-string */
 import { Box, Typography, Grid, Chip, Alert, CircularProgress, Stack } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { Phone, Email } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -24,6 +24,7 @@ export const GuardianDetailView = ({
   isLoading = false,
   onDelete,
 }: GuardianDetailViewProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
 
@@ -66,12 +67,12 @@ export const GuardianDetailView = ({
         <Grid size={{ xs: 12, md: 6 }}>
           <AccentSection borderColor="secondary.main" variant="subtle" padding="normal">
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              Personal Information
+              {t("Personal Information")}
             </Typography>
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Given Name
+                  {t("Given Name")}
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
                   {guardian.givenName}
@@ -79,7 +80,7 @@ export const GuardianDetailView = ({
               </Grid>
               <Grid size={{ xs: 6 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Family Name
+                  {t("Family Name")}
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
                   {guardian.familyName}
@@ -88,7 +89,7 @@ export const GuardianDetailView = ({
               {guardian.dateOfBirth && (
                 <Grid size={{ xs: 6 }}>
                   <Typography variant="body2" color="text.secondary">
-                    Date of Birth
+                    {t("Date of Birth")}
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
                     {formatDate(guardian.dateOfBirth)}
@@ -102,7 +103,7 @@ export const GuardianDetailView = ({
         <Grid size={{ xs: 12, md: 6 }}>
           <AccentSection borderColor="secondary.main" variant="subtle" padding="normal">
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              Contact
+              {t("Contact")}
             </Typography>
             <Stack spacing={1}>
               <Box display="flex" alignItems="center" gap={1}>
@@ -123,7 +124,7 @@ export const GuardianDetailView = ({
                 ))
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  No phone numbers
+                  {t("No phone numbers")}
                 </Typography>
               )}
             </Stack>
@@ -134,7 +135,7 @@ export const GuardianDetailView = ({
           <AccentSection borderColor="secondary.main" variant="outlined" padding="normal">
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
               <Typography variant="h6" fontWeight={600}>
-                Children
+                {t("Children")}
               </Typography>
               {/* Link Child action removed */}
             </Box>

@@ -13,6 +13,7 @@ using Guardian = KDVManager.Services.CRM.Domain.Entities.Guardian;
 using ChildGuardian = KDVManager.Services.CRM.Domain.Entities.ChildGuardian;
 using GuardianRelationshipType = KDVManager.Services.CRM.Domain.Entities.GuardianRelationshipType;
 using PhoneNumberType = KDVManager.Services.CRM.Domain.Entities.PhoneNumberType;
+using KDVManager.Services.CRM.Domain.Entities; // For PhoneNumber
 
 namespace KDVManager.Services.DataMigration.Migrators;
 
@@ -245,37 +246,74 @@ public class GuardiansDataMigrator
             try
             {
                 var personId = DatabaseHelper.GetSafeInt(reader, "PersonId");
-                var areaCode = DatabaseHelper.GetSafeString(reader, "AreaCode");
-                var number = DatabaseHelper.GetSafeString(reader, "Number");
+                var areaCodeRaw = DatabaseHelper.GetSafeString(reader, "AreaCode") ?? string.Empty;
+                var numberRaw = DatabaseHelper.GetSafeString(reader, "Number") ?? string.Empty;
                 var typeId = DatabaseHelper.GetSafeInt(reader, "TypeId");
 
-                if (!personId.HasValue || string.IsNullOrWhiteSpace(areaCode) || string.IsNullOrWhiteSpace(number))
+                if (!personId.HasValue || (string.IsNullOrWhiteSpace(areaCodeRaw) && string.IsNullOrWhiteSpace(numberRaw)))
                 {
-                    continue; // insufficient data
-                }
-
-                var phoneType = MapPhoneType(typeId);
-
-                // Build E.123 formatted number.
-                // Area codes appear as 0416 or 06; remove leading 0 for international format
-                var areaNoZero = areaCode.Trim();
-                areaNoZero = areaNoZero.StartsWith("0") ? areaNoZero[1..] : areaNoZero;
-                var nationalSubscriber = new string(number.Where(char.IsDigit).ToArray());
-                var areaDigits = new string(areaNoZero.Where(char.IsDigit).ToArray());
-                if (string.IsNullOrEmpty(areaDigits) || string.IsNullOrEmpty(nationalSubscriber))
-                {
+                    Console.WriteLine($"--- PHONE (skipped: no digits) AreaCode='{areaCodeRaw}' Number='{numberRaw}' PersonId='{personId}'");
                     continue;
                 }
 
-                // Basic grouping: don't attempt complex spacing; keep area code separate
-                var formatted = $"{defaultCountryCode} {areaDigits} {nationalSubscriber}";
+                // Concatenate: some legacy rows have full number in area code or number; merge then split heuristically.
+                var allDigits = new string((areaCodeRaw + numberRaw).Where(char.IsDigit).ToArray());
+                if (string.IsNullOrEmpty(allDigits))
+                {
+                    Console.WriteLine($"--- PHONE (skipped: no digit chars) AreaCode='{areaCodeRaw}' Number='{numberRaw}' PersonId='{personId}'");
+                    continue;
+                }
+
+                // Trim leading + or zeros (keep one possible trunk 0 for mobile heuristic) then process.
+                // We'll store a simple E.123: +31 <area?> <subscriber>
+                // Heuristic: NL mobile starts with '6' after trunk '0', geographic area codes vary (2-4 digits).
+                // We'll attempt: if after removing country assumptions we have length >=9.
+                var digits = allDigits.TrimStart('0'); // drop initial trunk zeros
+                if (digits.Length < 6)
+                {
+                    Console.WriteLine($"--- PHONE (skipped: too short) Combined='{allDigits}' PersonId='{personId}'");
+                    continue;
+                }
+
+                string areaDigits = string.Empty;
+                string subscriberDigits = digits;
+
+                // Basic split heuristic: try mobile pattern first (starts with 6 and length 8 or 9 subscriber)
+                if (digits.StartsWith("6") && digits.Length >= 8 && digits.Length <= 9)
+                {
+                    areaDigits = "6";
+                    subscriberDigits = digits[1..];
+                }
+                else
+                {
+                    // Try common geographic area code lengths (2 to 4). We'll pick the shortest that leaves a subscriber >=5.
+                    for (int len = 2; len <= 4; len++)
+                    {
+                        if (digits.Length - len >= 5)
+                        {
+                            areaDigits = digits[..len];
+                            subscriberDigits = digits[len..];
+                            break;
+                        }
+                    }
+                    if (string.IsNullOrEmpty(areaDigits))
+                    {
+                        // Fallback: no split
+                        subscriberDigits = digits;
+                    }
+                }
+
+                var phoneType = MapPhoneType(typeId);
+                var formatted = string.IsNullOrEmpty(areaDigits)
+                    ? $"{defaultCountryCode} {subscriberDigits}"
+                    : $"{defaultCountryCode} {areaDigits} {subscriberDigits}";
 
                 if (!result.TryGetValue(personId.Value, out var list))
                 {
                     list = new List<RawPhone>();
                     result[personId.Value] = list;
                 }
-                list.Add(new RawPhone(areaCode, number, formatted, phoneType));
+                list.Add(new RawPhone(areaCodeRaw, numberRaw, formatted, phoneType));
             }
             catch (Exception ex)
             {

@@ -36,7 +36,6 @@ app.UseRouting();
 
 app.UseCustomExceptionHandler();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<TenancyMiddleware>();

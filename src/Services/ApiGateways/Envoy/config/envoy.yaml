@@ -79,8 +79,12 @@ static_resources:
                   from_headers:
                   - name: Authorization
                     value_prefix: "Bearer "
-                  forward: true
-                  payload_in_metadata: jwt_payload
+                  forward: false  # Don't forward JWT token to backend
+                  claim_to_headers:
+                  - header_name: x-jwt-tenant
+                    claim_name: '"https://kdvmanager.nl/tenant"'
+                  - header_name: x-jwt-sub
+                    claim_name: "sub"
               rules:
               - match:
                   prefix: /crm/openapi/

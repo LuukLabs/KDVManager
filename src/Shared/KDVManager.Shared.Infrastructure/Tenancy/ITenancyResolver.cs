@@ -4,5 +4,5 @@ namespace KDVManager.Shared.Infrastructure.Tenancy;
 
 public interface ITenancyResolver
 {
-    ITenancyContext Resolve();
+    ITenancyContext? Resolve();
 }

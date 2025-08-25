@@ -41,7 +41,6 @@ app.UseRouting();
 
 app.UseCustomExceptionHandler();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<TenancyMiddleware>();
@@ -51,6 +50,5 @@ app.MapHealthChecks("/healthz");
 // Map minimal API endpoints
 app.MapChildrenEndpoints();
 app.MapGuardiansEndpoints();
-// app.MapPeopleEndpoints();
 
 app.Run();

@@ -1,5 +1,4 @@
 using MassTransit.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -60,14 +59,6 @@ public static class ConfigureServices
             });
         });
 
-        string domain = $"https://{configuration["Auth0:Domain"]}/";
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.Authority = domain;
-                        options.Audience = configuration["Auth0:Audience"];
-                    });
         services.AddAuthorization();
 
         var otel = services.AddOpenTelemetry();

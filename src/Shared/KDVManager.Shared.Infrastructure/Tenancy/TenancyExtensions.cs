@@ -9,7 +9,7 @@ namespace KDVManager.Shared.Infrastructure.Tenancy
         public static IServiceCollection AddTenancy(this IServiceCollection services)
         {
             services.AddScoped<ITenancyContextAccessor, TenancyContextAccessor>();
-            services.AddScoped<ITenancyResolver, JwtTenancyResolver>();
+            services.AddScoped<ITenancyResolver, HeaderTenancyResolver>();
             return services;
         }
 

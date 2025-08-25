@@ -6,6 +6,8 @@ import { ScheduleCard } from "../../components/ScheduleCard";
 import { EndMarkCard } from "../endmarks/EndMarkCard";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import NiceModal from "@ebay/nice-modal-react";
+import { EditChildScheduleDialog } from "./EditChildScheduleDialog";
 
 type ChildScheduleTimelineProps = {
   childId: string;
@@ -35,6 +37,18 @@ export const ChildScheduleTimeline: React.FC<ChildScheduleTimelineProps> = ({ ch
   const { t } = useTranslation();
   const { data: schedules } = useGetChildSchedules({ childId });
   const { data: endMarks } = useListEndMarks({ childId }, {});
+
+  const handleEditSchedule = (schedule: any) => {
+    void NiceModal.show(EditChildScheduleDialog, { 
+      childId, 
+      schedule: {
+        id: schedule.id,
+        startDate: schedule.startDate,
+        endDate: schedule.endDate,
+        scheduleRules: schedule.scheduleRules ?? []
+      }
+    });
+  };
 
   const items: TimelineItem[] = [];
   schedules?.forEach((s) => {
@@ -93,7 +107,7 @@ export const ChildScheduleTimeline: React.FC<ChildScheduleTimelineProps> = ({ ch
       {items.map((item) => (
         <Box key={(item.type === "schedule" ? item.schedule.id : item.mark.id) + item.type}>
           {item.type === "schedule" ? (
-            <ScheduleCard schedule={item.schedule} />
+            <ScheduleCard schedule={item.schedule} onEdit={handleEditSchedule} />
           ) : (
             <EndMarkCard mark={item.mark} childId={childId} />
           )}

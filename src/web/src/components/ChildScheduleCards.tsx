@@ -11,6 +11,7 @@ import {
 import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddChildScheduleDialog } from "../features/schedules/AddChildScheduleDialog";
+import { EditChildScheduleDialog } from "../features/schedules/EditChildScheduleDialog";
 import { useTranslation } from "react-i18next";
 import { useGetChildSchedules } from "@api/endpoints/schedules/schedules";
 import { ScheduleCard } from "./ScheduleCard";
@@ -29,6 +30,18 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
 
   const onAddChildScheduleClickHandler = () =>
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
+
+  const handleEditSchedule = (schedule: any) => {
+    void NiceModal.show(EditChildScheduleDialog, { 
+      childId, 
+      schedule: {
+        id: schedule.id,
+        startDate: schedule.startDate,
+        endDate: schedule.endDate,
+        scheduleRules: schedule.scheduleRules ?? []
+      }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -65,6 +78,7 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
                 endDate: schedule.endDate ?? "",
                 scheduleRules: schedule.scheduleRules ?? [],
               }}
+              onEdit={handleEditSchedule}
             />
           ))}
         </Box>

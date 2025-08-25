@@ -8,7 +8,10 @@ import {
   Stack,
   useTheme,
   useMediaQuery,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
@@ -22,9 +25,10 @@ type ScheduleCardProps = {
     endDate: string | null;
     scheduleRules: ChildScheduleListVMScheduleRule[];
   };
+  onEdit?: (schedule: ScheduleCardProps['schedule']) => void;
 };
 
-export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule }) => {
+export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -108,7 +112,25 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule }) => {
             }}
           >
             {getStatusChip()}
-            <Box>
+            <Box sx={{ display: "flex", gap: 0.5 }}>
+              {onEdit && (
+                <Tooltip title={t("Edit Schedule") as string} arrow>
+                  <IconButton
+                    size="small"
+                    onClick={() => onEdit(schedule)}
+                    sx={{
+                      color: "primary.main",
+                      "&:hover": {
+                        backgroundColor: "primary.50",
+                        transform: "scale(1.1)",
+                      },
+                      transition: "all 0.2s ease-in-out",
+                    }}
+                  >
+                    <EditIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                </Tooltip>
+              )}
               <DeleteScheduleButton id={schedule.id} />
             </Box>
           </Box>

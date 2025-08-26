@@ -37,7 +37,7 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     SELECT 
                         ""Id"",
                         ""TenantId"",
-                        ROW_NUMBER() OVER (PARTITION BY ""TenantId"" ORDER BY ""Id"") as child_number
+                        ROW_NUMBER() OVER (PARTITION BY ""TenantId"" ORDER BY ""Id"") + 19999 as child_number
                     FROM ""Children""
                 )
                 UPDATE ""Children""
@@ -52,7 +52,7 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                 SELECT 
                     gen_random_uuid(),
                     ""TenantId"",
-                    COALESCE(MAX(""ChildNumber""), 0) + 1
+                    MAX(""ChildNumber"") + 1
                 FROM ""Children""
                 GROUP BY ""TenantId"";
             ");

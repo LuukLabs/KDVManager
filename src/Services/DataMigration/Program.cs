@@ -15,9 +15,17 @@ public class Program
     {
         Console.WriteLine("Starting Data Migration from MSSQL to KDVManager...");
 
+        // Check for help
+        if (args.Contains("--help", StringComparer.OrdinalIgnoreCase) || args.Contains("-h", StringComparer.OrdinalIgnoreCase))
+        {
+            ShowHelp();
+            return;
+        }
+
         // Basic CLI parsing (very small scale, no external deps)
         bool testConnections = args.Contains("--test-connections", StringComparer.OrdinalIgnoreCase);
         bool anonymize = args.Contains("--anonymize", StringComparer.OrdinalIgnoreCase);
+        bool migrateChildNumbers = args.Contains("--migrate-child-numbers", StringComparer.OrdinalIgnoreCase);
         string? tenantIdArg = null;
 
         for (int i = 0; i < args.Length; i++)
@@ -40,7 +48,35 @@ public class Program
             return;
         }
 
+        if (migrateChildNumbers)
+        {
+            await RunChildNumberMigration(tenantIdArg);
+            return;
+        }
+
         await RunFullMigration(tenantIdArg, anonymize);
+    }
+
+    private static async Task RunChildNumberMigration(string? tenantIdArg)
+    {
+        Console.WriteLine("Running child number migration...");
+
+        var configuration = BuildConfiguration(tenantIdArg, false);
+        var serviceProvider = BuildServiceProvider(configuration, tenantIdArg);
+
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            var childNumberMigrator = scope.ServiceProvider.GetRequiredService<ChildNumberMigrator>();
+            await childNumberMigrator.MigrateChildNumbersAsync();
+
+            Console.WriteLine("Child number migration completed successfully!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Child number migration failed: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
     }
 
     private static async Task RunFullMigration(string? tenantIdArg, bool anonymize)
@@ -118,6 +154,26 @@ public class Program
         var services = new ServiceCollection();
         ServiceConfiguration.ConfigureServices(services, configuration, tenantIdArg);
         return services.BuildServiceProvider();
+    }
+
+    private static void ShowHelp()
+    {
+        Console.WriteLine("KDVManager Data Migration Tool");
+        Console.WriteLine();
+        Console.WriteLine("Usage:");
+        Console.WriteLine("  dotnet run [options]");
+        Console.WriteLine();
+        Console.WriteLine("Options:");
+        Console.WriteLine("  --tenant <GUID>              Tenant ID to migrate data for (required)");
+        Console.WriteLine("  --anonymize                  Anonymize personal data during migration");
+        Console.WriteLine("  --test-connections           Test database connections and exit");
+        Console.WriteLine("  --migrate-child-numbers      Migrate external IDs to ChildNumber field and update sequence");
+        Console.WriteLine("  --help, -h                   Show this help message");
+        Console.WriteLine();
+        Console.WriteLine("Examples:");
+        Console.WriteLine("  dotnet run --tenant 7e520828-45e6-415f-b0ba-19d56a312f7f --anonymize");
+        Console.WriteLine("  dotnet run --tenant 7e520828-45e6-415f-b0ba-19d56a312f7f --migrate-child-numbers");
+        Console.WriteLine("  dotnet run --test-connections");
     }
 }
 

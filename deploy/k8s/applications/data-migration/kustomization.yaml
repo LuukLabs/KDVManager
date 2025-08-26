@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - cronjob-anonymize.yml
+  - cronjob-plepje.yml
 
 labels:
   - pairs:

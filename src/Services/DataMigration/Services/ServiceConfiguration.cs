@@ -40,6 +40,7 @@ public static class ServiceConfiguration
         services.AddSingleton<NameAnonymizer>();
 
         // Add migrators
+        services.AddScoped<ChildNumberMigrator>();
         services.AddScoped<ChildrenDataMigrator>();
         services.AddScoped<GuardiansDataMigrator>();
         services.AddScoped<SchedulingDataMigrator>();

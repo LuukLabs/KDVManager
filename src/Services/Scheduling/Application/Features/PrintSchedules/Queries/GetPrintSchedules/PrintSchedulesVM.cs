@@ -31,6 +31,8 @@ public class PrintChildVM
     public string FamilyName { get; set; } = string.Empty;
     public DateOnly? DateOfBirth { get; set; }
     public Dictionary<string, PrintCellVM> Schedule { get; set; } = new();
+    public int Index { get; set; }
+    public string AgeDisplay { get; set; } = string.Empty;
 
     public string Name => $"{GivenName} {FamilyName}".Trim();
 }

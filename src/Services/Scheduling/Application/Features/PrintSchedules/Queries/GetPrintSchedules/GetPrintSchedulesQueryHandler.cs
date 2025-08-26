@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
+using KDVManager.Shared.Domain.Utilities;
 
 namespace KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules;
 
@@ -149,13 +150,30 @@ public class GetPrintSchedulesQueryHandler
 
                 if (childEntries.Any())
                 {
+                    var orderedChildren = childEntries.Values
+                        .OrderBy(c => c.Name)
+                        .ToList();
+
+                    // Calculate age range for each child and assign index
+                    var firstDayOfMonth = new DateOnly(request.Year, request.Month, 1);
+                    var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
+                    for (int i = 0; i < orderedChildren.Count; i++)
+                    {
+                        var child = orderedChildren[i];
+                        child.Index = i + 1;
+
+                        if (child.DateOfBirth.HasValue)
+                        {
+                            child.AgeDisplay = CalculateAgeRange(child.DateOfBirth.Value, firstDayOfMonth, lastDayOfMonth);
+                        }
+                    }
+
                     var page = new PrintGroupWeekdayPageVM
                     {
                         Weekday = dow,
                         Dates = datesForWeekday,
-                        Children = childEntries.Values
-                            .OrderBy(c => c.Name)
-                            .ToList()
+                        Children = orderedChildren
                     };
                     groupVm.Pages.Add(page);
                 }
@@ -181,5 +199,20 @@ public class GetPrintSchedulesQueryHandler
                 dates.Add(date);
         }
         return dates;
+    }
+
+    private static string CalculateAgeRange(DateOnly dateOfBirth, DateOnly firstDayOfMonth, DateOnly lastDayOfMonth)
+    {
+        var startAge = DateTimeUtilities.CalculateAge(dateOfBirth, firstDayOfMonth);
+        var endAge = DateTimeUtilities.CalculateAge(dateOfBirth, lastDayOfMonth);
+
+        if (startAge == endAge)
+        {
+            return startAge.ToString();
+        }
+        else
+        {
+            return $"{startAge}/{endAge}";
+        }
     }
 }

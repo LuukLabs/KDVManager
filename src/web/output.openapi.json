@@ -2376,6 +2376,14 @@
             },
             "nullable": true
           },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ageDisplay": {
+            "type": "string",
+            "nullable": true
+          },
           "name": {
             "type": "string",
             "nullable": true,

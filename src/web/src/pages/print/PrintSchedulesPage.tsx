@@ -302,7 +302,9 @@ const PrintPage = ({
       >
         <thead>
           <tr>
+            <th style={{ ...headerCellStyle, width: 30 }}>#</th>
             <th style={{ ...headerCellStyle, width: "auto" }}>{t("Naam")}</th>
+            <th style={{ ...headerCellStyle, width: 50 }}>{t("Age")}</th>
             <th style={{ ...headerCellStyle, width: 90 }}>{t("Geb. datum")}</th>
             {dates.map((d: string) => (
               <th key={d} style={{ ...headerCellStyle, width: 60 }} className="day-col">
@@ -314,6 +316,9 @@ const PrintPage = ({
         <tbody>
           {children.map((ch: any) => (
             <tr key={ch.id}>
+              <td style={{ ...headerCellStyle, background: "#fff", fontWeight: 600, width: 30 }}>
+                {ch.index ?? ""}
+              </td>
               <td style={{ ...nameCellStyle }}>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                   <span>
@@ -322,6 +327,9 @@ const PrintPage = ({
                       : (ch.name ?? t("Child") + ` ${ch.id?.substring(0, 8)}`)}
                   </span>
                 </div>
+              </td>
+              <td style={{ ...headerCellStyle, background: "#fff", fontWeight: 400, width: 50 }}>
+                {ch.ageDisplay ?? ""}
               </td>
               <td style={{ ...headerCellStyle, background: "#fff", fontWeight: 400, width: 90 }}>
                 {ch.dateOfBirth ? dayjs(ch.dateOfBirth).format("DD-MM-YYYY") : ""}

@@ -16,6 +16,9 @@ export type PrintChildVM = {
   dateOfBirth?: string | null;
   /** @nullable */
   schedule?: PrintChildVMSchedule;
+  index?: number;
+  /** @nullable */
+  ageDisplay?: string | null;
   /** @nullable */
   readonly name?: string | null;
 };

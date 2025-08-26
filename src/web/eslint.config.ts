@@ -101,6 +101,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
             exclude: [
               "\\.\\.\\.",
               "•",
+              "#",
               ":",
               " • ",
               " : ",

@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import { calculateAge } from "../../utils/calculateAge";
+import { formatDate } from "../../utils/formatDate";
 import { Person as PersonIcon } from "@mui/icons-material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
@@ -53,7 +54,7 @@ export const GuardianBasicInformationCard: React.FC<GuardianBasicInformationCard
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay
           label={t("Date of Birth")}
-          value={dateOfBirth ? `${dateOfBirth}${ageString}` : ""}
+          value={dateOfBirth ? `${formatDate(dateOfBirth)}${ageString}` : ""}
         />
       </Grid>
     </Grid>

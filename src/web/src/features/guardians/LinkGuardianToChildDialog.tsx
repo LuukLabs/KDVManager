@@ -21,6 +21,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useListChildren } from "@api/endpoints/children/children";
 import { relationshipTypeOptions } from "@utils/guardianRelationshipTypes";
+import { formatDate } from "@utils/formatDate";
 
 // Type definitions (to be replaced with generated API types)
 type Child = {
@@ -165,7 +166,7 @@ export const LinkGuardianToChildDialog = ({
                           <Typography variant="body1">{option.fullName}</Typography>
                           <Typography variant="caption" color="text.secondary">
                             {t("guardians:linkGuardianToChildDialog.bornLabel", "Born:")}{" "}
-                            {new Date(option.dateOfBirth).toLocaleDateString("nl-NL")}
+                            {formatDate(option.dateOfBirth)}
                           </Typography>
                         </div>
                       </li>

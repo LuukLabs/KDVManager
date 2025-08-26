@@ -58,13 +58,13 @@ const TimeSlotsTable = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <Box 
-          sx={{ 
-            display: "flex", 
-            gap: 0.5, 
-            alignItems: "center", 
+        <Box
+          sx={{
+            display: "flex",
+            gap: 0.5,
+            alignItems: "center",
             justifyContent: "center",
-            height: "100%"
+            height: "100%",
           }}
         >
           <EditTimeSlotButton timeSlot={params.row as any} />

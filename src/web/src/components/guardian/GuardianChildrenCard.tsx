@@ -8,6 +8,7 @@ import {
   useUnlinkGuardianFromChild,
 } from "@api/endpoints/guardians/guardians";
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
+import { formatDate } from "../../utils/formatDate";
 import { EditableCard } from "../cards/EditableCard";
 import { LinkedEntityList } from "../linked/LinkedEntityList";
 
@@ -26,11 +27,6 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
     refetch: refetchChildren,
   } = useGetGuardianChildren(guardianId);
   const unlinkMutation = useUnlinkGuardianFromChild();
-
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString("nl-NL");
-  };
 
   const handleUnlinkChild = async (childId: string) => {
     setUnlinkingChild(childId);

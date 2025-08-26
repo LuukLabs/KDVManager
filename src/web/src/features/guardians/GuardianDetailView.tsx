@@ -9,6 +9,7 @@ import {
   useUnlinkGuardianFromChild,
 } from "@api/endpoints/guardians/guardians";
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
+import { formatDate } from "../../utils/formatDate";
 import { GuardianHeader } from "../../components/guardian/GuardianHeader";
 import { AccentSection } from "../../components/layout/AccentSection";
 import { LinkedEntityList } from "../../components/linked/LinkedEntityList";
@@ -34,11 +35,6 @@ export const GuardianDetailView = ({
     refetch: refetchChildren,
   } = useGetGuardianChildren(guardian.id ?? "");
   const unlinkMutation = useUnlinkGuardianFromChild();
-
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString("nl-NL");
-  };
 
   const handleUnlinkChild = async (childId: string) => {
     setUnlinkingChild(childId);

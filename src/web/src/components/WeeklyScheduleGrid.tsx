@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Chip, Typography, Paper } from "@mui/material";
 import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 type WeeklyScheduleGridProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
@@ -168,7 +169,9 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                         variant="body2"
                         sx={{ fontWeight: "medium", minWidth: "fit-content" }}
                       >
-                        {rule.startTime?.slice(0, 5)} - {rule.endTime?.slice(0, 5)}
+                        {rule.startTime && rule.endTime
+                          ? `${dayjs(rule.startTime, "HH:mm:ss").format("HH:mm")} - ${dayjs(rule.endTime, "HH:mm:ss").format("HH:mm")}`
+                          : ""}
                       </Typography>
                       {rule.groupName && (
                         <Typography

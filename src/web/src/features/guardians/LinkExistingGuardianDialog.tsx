@@ -115,7 +115,7 @@ export const LinkExistingGuardianDialog = ({
       onSuccess();
       handleClose();
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : "Failed to link guardian to child");
+      setSubmitError(error instanceof Error ? error.message : t("Failed to link guardian to child"));
     }
   };
 
@@ -288,11 +288,11 @@ export const LinkExistingGuardianDialog = ({
                   <Controller
                     name="relationshipType"
                     control={control}
-                    rules={{ required: "Please select a relationship type" }}
+                    rules={{ required: t("Please select a relationship type") }}
                     render={({ field }) => (
                       <FormControl fullWidth error={!!errors.relationshipType}>
-                        <InputLabel>Relationship Type</InputLabel>
-                        <Select {...field} label="Relationship Type">
+                        <InputLabel>{t("Relationship Type")}</InputLabel>
+                        <Select {...field} label={t("Relationship Type")}>
                           {Object.entries(GuardianRelationshipType).map(([key, value]) => (
                             <MenuItem key={key} value={value}>
                               {key}
@@ -315,7 +315,7 @@ export const LinkExistingGuardianDialog = ({
                     render={({ field }) => (
                       <FormControlLabel
                         control={<Checkbox {...field} checked={field.value} />}
-                        label="Primary Contact"
+                        label={t("Primary Contact")}
                       />
                     )}
                   />
@@ -325,7 +325,7 @@ export const LinkExistingGuardianDialog = ({
                     render={({ field }) => (
                       <FormControlLabel
                         control={<Checkbox {...field} checked={field.value} />}
-                        label="Emergency Contact"
+                        label={t("Emergency Contact")}
                       />
                     )}
                   />

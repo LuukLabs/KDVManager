@@ -111,7 +111,7 @@ const GuardiansPage = () => {
             size="small"
             fullWidth
             aria-label={t("Search guardians")}
-            placeholder={t("Search guardians") + "…"}
+            placeholder={t("Search guardians…")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             InputProps={{

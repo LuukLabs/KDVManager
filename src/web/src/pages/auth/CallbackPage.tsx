@@ -3,10 +3,12 @@ import { useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, CircularProgress, Container } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const CallbackPage = () => {
   const { isLoading, error, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
+  const t = useTranslation();
 
   // Retrieve appState from localStorage (set by AuthProviderWithNavigate)
   const getAppState = () => {
@@ -62,7 +64,7 @@ const CallbackPage = () => {
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom>
-            Completing authentication...
+           {t('Completing authentication...')}
           </Typography>
           <CircularProgress size={40} sx={{ mt: 2 }} />
         </Box>

@@ -111,7 +111,7 @@ const IndexChildPage = () => {
             size="small"
             fullWidth
             aria-label={t("Search children")}
-            placeholder={t("Search children") + "…"}
+            placeholder={t("Search children…")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             InputProps={{

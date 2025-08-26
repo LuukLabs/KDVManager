@@ -17,38 +17,23 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
 
         public async Task<PagedList<GuardianListVM>> Handle(GetGuardianListQuery request)
         {
-            var allGuardians = await _guardianRepository.GetAllWithRelationshipsAsync();
+            var guardianResults = await _guardianRepository.PagedWithChildrenCountAsync(request, request.Search);
+            var totalCount = await _guardianRepository.CountAsync(request.Search);
 
-            var query = allGuardians.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(request.Search))
+            var guardianVMs = guardianResults.Select(result => new GuardianListVM
             {
-                query = query.Where(p =>
-                    (p.GivenName != null && p.GivenName.Contains(request.Search)) ||
-                    (p.FamilyName != null && p.FamilyName.Contains(request.Search)) ||
-                    (p.Email != null && p.Email.Contains(request.Search)) ||
-                    p.PhoneNumbers.Any(n => n.Number.Contains(request.Search)));
-            }
+                Id = result.Guardian.Id,
+                FullName = $"{result.Guardian.GivenName} {result.Guardian.FamilyName}",
+                Email = result.Guardian.Email,
+                PrimaryPhoneNumber = result.Guardian.PhoneNumbers?
+                    .OrderBy(n => n.Type) // deterministic
+                    .Select(n => n.Number)
+                    .FirstOrDefault(),
+                PhoneNumberCount = result.Guardian.PhoneNumbers?.Count ?? 0,
+                ChildrenCount = result.ChildrenCount
+            }).ToList();
 
-            var totalCount = query.Count();
-
-            var guardians = query
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(p => new GuardianListVM
-                {
-                    Id = p.Id,
-                    FullName = $"{p.GivenName} {p.FamilyName}",
-                    Email = p.Email,
-                    PrimaryPhoneNumber = p.PhoneNumbers
-                        .OrderBy(n => n.Type) // deterministic
-                        .Select(n => n.Number)
-                        .FirstOrDefault(),
-                    PhoneNumberCount = p.PhoneNumbers.Count,
-                })
-                .ToList();
-
-            return new PagedList<GuardianListVM>(guardians, totalCount);
+            return new PagedList<GuardianListVM>(guardianVMs, totalCount);
         }
     }
 }

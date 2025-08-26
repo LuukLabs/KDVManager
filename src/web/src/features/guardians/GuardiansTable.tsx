@@ -2,16 +2,17 @@ import { useMemo } from "react";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
-import { usePagination } from "@hooks/usePagination";
+import { useGuardiansListState } from "@hooks/useGuardiansListState";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
 import { ViewGuardianButton } from "./ViewGuardianButton";
 import { useListGuardians } from "@api/endpoints/guardians/guardians";
 import { type GuardianListVM } from "@api/models/guardianListVM";
+import Stack from "@mui/material/Stack";
 
-export const GuardiansTable = ({ searchTerm = "" }: { searchTerm?: string }) => {
-  const { apiPagination, muiPagination } = usePagination();
+export const GuardiansTable = () => {
+  const { apiParams, muiPagination } = useGuardiansListState();
   const { data, isLoading, isFetching } = useListGuardians(
-    { ...apiPagination, search: searchTerm },
+    apiParams,
     {
       query: { placeholderData: keepPreviousData },
     },
@@ -21,7 +22,7 @@ export const GuardiansTable = ({ searchTerm = "" }: { searchTerm?: string }) => 
     () => [
       {
         field: "fullName",
-        headerName: "Full Name",
+        headerName: "Fullname",
         flex: 2,
         sortable: false,
         disableColumnMenu: true,
@@ -55,15 +56,14 @@ export const GuardiansTable = ({ searchTerm = "" }: { searchTerm?: string }) => 
       {
         field: "id",
         headerName: "Actions",
-        width: 150,
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
         renderCell: (params: GridRenderCellParams<any, string>) => (
-          <div style={{ display: "flex", gap: "8px" }}>
-            <ViewGuardianButton id={params.value!} />
+          <>
             <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
-          </div>
+            <ViewGuardianButton id={params.value!} />
+          </>
         ),
       },
     ],
@@ -71,15 +71,17 @@ export const GuardiansTable = ({ searchTerm = "" }: { searchTerm?: string }) => 
   );
 
   return (
-    <DataGrid<GuardianListVM>
-      autoHeight
-      pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total ?? 0}
-      loading={isLoading ?? isFetching}
-      columns={columns}
-      rows={data?.value ?? []}
-      disableRowSelectionOnClick
-      {...muiPagination}
-    />
+    <Stack spacing={1} sx={{ width: "100%" }}>
+      <DataGrid<GuardianListVM>
+        autoHeight
+        pageSizeOptions={[5, 10, 20]}
+        rowCount={data?.meta.total ?? 0}
+        loading={isLoading ?? isFetching}
+        columns={columns}
+        rows={data?.value ?? []}
+        disableRowSelectionOnClick
+        {...muiPagination}
+      />
+    </Stack>
   );
 };

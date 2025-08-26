@@ -10,8 +10,8 @@ const SettingsPage = () => {
 
   const settings = [
     {
-      title: t("Scheduling"),
-      description: t("Manage groups and timeslots."),
+      title: t("Time Slots"),
+      description: t("Manage time slots for scheduling."),
       navigateTo: "/settings/scheduling",
       icon: <CalendarMonth fontSize="large" />,
     },

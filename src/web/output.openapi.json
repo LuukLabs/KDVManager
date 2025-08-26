@@ -1731,7 +1731,7 @@
         }
       },
       "ChildListVM": {
-        "required": ["id", "fullName", "dateOfBirth"],
+        "required": ["id", "fullName", "dateOfBirth", "childNumber"],
         "type": "object",
         "properties": {
           "id": {
@@ -1744,6 +1744,10 @@
           "dateOfBirth": {
             "type": "string",
             "format": "date"
+          },
+          "childNumber": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

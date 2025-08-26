@@ -22,6 +22,14 @@ export const ChildrenTable = () => {
   const columns: GridColDef[] = useMemo(
     () => [
       {
+        field: "childNumber",
+        headerName: "Child #",
+        width: 100,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+      },
+      {
         field: "fullName",
         headerName: "Fullname",
         flex: 1,

@@ -9,4 +9,5 @@ export type ChildListVM = {
   id: string;
   fullName: string;
   dateOfBirth: string;
+  childNumber: number;
 };

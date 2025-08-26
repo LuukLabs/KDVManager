@@ -5,6 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using KDVManager.Services.CRM.Api.Telemetry;
+using KDVManager.Shared.Infrastructure.Telemetry;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -70,6 +71,9 @@ public static class ConfigureServices
                     });
         services.AddAuthorization();
 
+        // Register TenantEnrichmentProcessor
+        services.AddSingleton<TenantEnrichmentProcessor>();
+
         var otel = services.AddOpenTelemetry();
         var otelEndpoint = configuration["Otel:Endpoint"];
         otel.ConfigureResource(resource => resource.AddService(serviceName: "crm-api"));
@@ -77,6 +81,7 @@ public static class ConfigureServices
         otel.WithTracing(tracing =>
             {
                 tracing
+                    .AddProcessor(serviceProvider => serviceProvider.GetRequiredService<TenantEnrichmentProcessor>())
                     .AddAspNetCoreInstrumentation(options =>
                     {
                         // Configure ASP.NET Core instrumentation for better error tracking

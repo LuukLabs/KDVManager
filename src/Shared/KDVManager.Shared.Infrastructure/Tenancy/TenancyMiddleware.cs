@@ -1,4 +1,5 @@
 // File: KDVManager.Shared.Infrastructure/Tenancy/TenancyMiddleware.cs
+using System.Diagnostics;
 using KDVManager.Shared.Contracts.Tenancy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,13 @@ public class TenancyMiddleware
         if (tenantContext != null)
         {
             accessor.Current = tenantContext;
+
+            // Also set tenant information on the current Activity/span for immediate propagation
+            var currentActivity = Activity.Current;
+            if (currentActivity != null)
+            {
+                currentActivity.SetTag("tenant.id", tenantContext.TenantId.ToString());
+            }
         }
 
         await _next(context);

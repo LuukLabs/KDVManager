@@ -4,8 +4,10 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { usePagination } from "@hooks/usePagination";
 import { type GroupListVM } from "@api/models/groupListVM";
 import { useListTimeSlots } from "@api/endpoints/time-slots/time-slots";
+import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import DeleteTimeSlotButton from "./DeleteTimeSlotButton";
+import EditTimeSlotButton from "./EditTimeSlotButton";
 
 const baseColumns: GridColDef[] = [
   {
@@ -52,9 +54,25 @@ const TimeSlotsTable = () => {
       filterable: false,
       disableColumnMenu: true,
       disableReorder: true,
-      width: 90,
+      width: 120,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
-        <DeleteTimeSlotButton id={(params.row as any).id} displayName={(params.row as any).name} />
+        <Box 
+          sx={{ 
+            display: "flex", 
+            gap: 0.5, 
+            alignItems: "center", 
+            justifyContent: "center",
+            height: "100%"
+          }}
+        >
+          <EditTimeSlotButton timeSlot={params.row as any} />
+          <DeleteTimeSlotButton
+            id={(params.row as any).id}
+            displayName={(params.row as any).name}
+          />
+        </Box>
       ),
     },
   ];

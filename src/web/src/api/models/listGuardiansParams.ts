@@ -7,6 +7,14 @@
 
 export type ListGuardiansParams = {
   search?: string;
-  pageNumber: number;
-  pageSize: number;
+  /**
+   * @minimum 1
+   * @maximum 2147483647
+   */
+  pageNumber?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  pageSize?: number;
 };

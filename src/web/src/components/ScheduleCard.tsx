@@ -25,7 +25,7 @@ type ScheduleCardProps = {
     endDate: string | null;
     scheduleRules: ChildScheduleListVMScheduleRule[];
   };
-  onEdit?: (schedule: ScheduleCardProps['schedule']) => void;
+  onEdit?: (schedule: ScheduleCardProps["schedule"]) => void;
 };
 
 export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) => {

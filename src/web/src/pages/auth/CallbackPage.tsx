@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 const CallbackPage = () => {
   const { isLoading, error, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   // Retrieve appState from localStorage (set by AuthProviderWithNavigate)
   const getAppState = () => {
@@ -64,7 +64,7 @@ const CallbackPage = () => {
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom>
-           {t('Completing authentication...')}
+            {t("Completing authentication...")}
           </Typography>
           <CircularProgress size={40} sx={{ mt: 2 }} />
         </Box>

@@ -32,14 +32,14 @@ export const ChildScheduleCards: React.FC<ChildScheduleCardsProps> = ({ childId 
     void NiceModal.show(AddChildScheduleDialog, { childId: childId });
 
   const handleEditSchedule = (schedule: any) => {
-    void NiceModal.show(EditChildScheduleDialog, { 
-      childId, 
+    void NiceModal.show(EditChildScheduleDialog, {
+      childId,
       schedule: {
         id: schedule.id,
         startDate: schedule.startDate,
         endDate: schedule.endDate,
-        scheduleRules: schedule.scheduleRules ?? []
-      }
+        scheduleRules: schedule.scheduleRules ?? [],
+      },
     });
   };
 

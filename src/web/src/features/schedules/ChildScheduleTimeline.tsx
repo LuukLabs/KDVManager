@@ -39,14 +39,14 @@ export const ChildScheduleTimeline: React.FC<ChildScheduleTimelineProps> = ({ ch
   const { data: endMarks } = useListEndMarks({ childId }, {});
 
   const handleEditSchedule = (schedule: any) => {
-    void NiceModal.show(EditChildScheduleDialog, { 
-      childId, 
+    void NiceModal.show(EditChildScheduleDialog, {
+      childId,
       schedule: {
         id: schedule.id,
         startDate: schedule.startDate,
         endDate: schedule.endDate,
-        scheduleRules: schedule.scheduleRules ?? []
-      }
+        scheduleRules: schedule.scheduleRules ?? [],
+      },
     });
   };
 

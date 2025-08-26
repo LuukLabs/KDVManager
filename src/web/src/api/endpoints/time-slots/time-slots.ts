@@ -30,6 +30,8 @@ import type { TimeSlotListVM } from "../../models/timeSlotListVM";
 
 import type { UnprocessableEntityResponse1 } from "../../models/unprocessableEntityResponse1";
 
+import type { UpdateTimeSlotCommand } from "../../models/updateTimeSlotCommand";
+
 import { executeFetchPaginated } from "../../mutator/executeFetchPaginated";
 import { executeFetch } from "../../mutator/executeFetch";
 
@@ -206,6 +208,77 @@ export const useAddTimeSlot = <TError = UnprocessableEntityResponse1, TContext =
   TContext
 > => {
   const mutationOptions = getAddTimeSlotMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+export const updateTimeSlot = (id: string, updateTimeSlotCommand: UpdateTimeSlotCommand) => {
+  return executeFetch<void>({
+    url: `/scheduling/v1/timeslots/${id}`,
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    data: updateTimeSlotCommand,
+  });
+};
+
+export const getUpdateTimeSlotMutationOptions = <
+  TError = ProblemDetails | UnprocessableEntityResponse1,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateTimeSlot>>,
+    TError,
+    { id: string; data: UpdateTimeSlotCommand },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateTimeSlot>>,
+  TError,
+  { id: string; data: UpdateTimeSlotCommand },
+  TContext
+> => {
+  const mutationKey = ["updateTimeSlot"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateTimeSlot>>,
+    { id: string; data: UpdateTimeSlotCommand }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateTimeSlot(id, data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateTimeSlotMutationResult = NonNullable<Awaited<ReturnType<typeof updateTimeSlot>>>;
+export type UpdateTimeSlotMutationBody = UpdateTimeSlotCommand;
+export type UpdateTimeSlotMutationError = ProblemDetails | UnprocessableEntityResponse1;
+
+export const useUpdateTimeSlot = <
+  TError = ProblemDetails | UnprocessableEntityResponse1,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof updateTimeSlot>>,
+      TError,
+      { id: string; data: UpdateTimeSlotCommand },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof updateTimeSlot>>,
+  TError,
+  { id: string; data: UpdateTimeSlotCommand },
+  TContext
+> => {
+  const mutationOptions = getUpdateTimeSlotMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };

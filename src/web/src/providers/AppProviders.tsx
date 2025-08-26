@@ -16,7 +16,7 @@ import i18n from "@lib/i18n/i18n";
 import { SnackbarProvider } from "notistack";
 
 // Set global dayjs locale to match i18n default
-dayjs.locale('nl');
+dayjs.locale("nl");
 
 type AppProvidersProps = PropsWithChildren & {
   enableRouter?: boolean;

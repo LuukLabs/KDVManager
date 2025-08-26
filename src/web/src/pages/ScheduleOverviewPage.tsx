@@ -237,8 +237,8 @@ const ScheduleOverviewPage = () => {
           </Grid>
         )}
 
-  {/* Groups Section */}
-  <Grid size={{ xs: 12, lg: 12 }}>
+        {/* Groups Section */}
+        <Grid size={{ xs: 12, lg: 12 }}>
           {!groups || groups.length === 0 ? (
             <Paper sx={{ p: 4, textAlign: "center" }}>
               <GroupsIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
@@ -301,7 +301,7 @@ const ScheduleOverviewPage = () => {
           )}
         </Grid>
 
-  {/* Desktop calendar removed to allow columns to occupy full width */}
+        {/* Desktop calendar removed to allow columns to occupy full width */}
       </Grid>
 
       {/* Mobile Calendar Drawer */}

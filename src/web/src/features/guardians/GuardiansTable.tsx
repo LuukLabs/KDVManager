@@ -11,12 +11,9 @@ import Stack from "@mui/material/Stack";
 
 export const GuardiansTable = () => {
   const { apiParams, muiPagination } = useGuardiansListState();
-  const { data, isLoading, isFetching } = useListGuardians(
-    apiParams,
-    {
-      query: { placeholderData: keepPreviousData },
-    },
-  );
+  const { data, isLoading, isFetching } = useListGuardians(apiParams, {
+    query: { placeholderData: keepPreviousData },
+  });
 
   const columns: GridColDef<GuardianListVM>[] = useMemo(
     () => [

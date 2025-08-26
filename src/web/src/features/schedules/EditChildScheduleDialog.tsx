@@ -37,7 +37,11 @@ import {
   RadioButtonUnchecked as UncheckedIcon,
   AccessTime as TimeIcon,
 } from "@mui/icons-material";
-import { getGetChildSchedulesQueryKey, useAddSchedule, useDeleteSchedule } from "@api/endpoints/schedules/schedules";
+import {
+  getGetChildSchedulesQueryKey,
+  useAddSchedule,
+  useDeleteSchedule,
+} from "@api/endpoints/schedules/schedules";
 import { useState, useCallback } from "react";
 import dayjs from "dayjs";
 
@@ -569,22 +573,22 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
         .sort((a, b) => {
           const ruleA = watchedRules?.[a.index];
           const ruleB = watchedRules?.[b.index];
-          
+
           // Sort by day first, then by completion status
           if (ruleA?.day !== undefined && ruleB?.day !== undefined) {
             if (ruleA.day !== ruleB.day) {
               return ruleA.day - ruleB.day;
             }
           }
-          
+
           // If days are same or undefined, sort by completion
           const completeA = isRuleComplete(a.index);
           const completeB = isRuleComplete(b.index);
-          
+
           if (completeA !== completeB) {
             return completeA ? -1 : 1; // Complete rules first
           }
-          
+
           return a.index - b.index; // Original order as tiebreaker
         });
     }, [fields, watchedRules, isRuleComplete]);

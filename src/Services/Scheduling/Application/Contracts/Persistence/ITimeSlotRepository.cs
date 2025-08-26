@@ -13,6 +13,8 @@ public interface ITimeSlotRepository : IAsyncRepository<TimeSlot>
 
     Task<bool> IsTimeSlotNameUnique(string name);
 
+    Task<bool> IsTimeSlotNameUniqueExcludingId(string name, Guid excludeId);
+
     /// <summary>
     /// Returns true if the time slot is referenced by any schedule rule (in use and cannot be deleted).
     /// </summary>

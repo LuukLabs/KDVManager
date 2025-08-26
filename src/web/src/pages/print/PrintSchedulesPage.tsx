@@ -246,7 +246,10 @@ const PrintPage = ({
   }
 
   // Localized month label using dayjs
-  const monthLabel = dayjs().month(month - 1).locale(i18n.language).format("MMMM");
+  const monthLabel = dayjs()
+    .month(month - 1)
+    .locale(i18n.language)
+    .format("MMMM");
 
   console.warn(month);
 

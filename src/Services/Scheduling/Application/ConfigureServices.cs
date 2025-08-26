@@ -3,6 +3,7 @@ using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGro
 using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.AddTimeSlot;
+using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.UpdateTimeSlot;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.DeleteTimeSlot;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
@@ -36,7 +37,8 @@ public static class ConfigureServices
         services.AddScoped<DeleteGroupCommandHandler>();
         services.AddScoped<ListGroupsQueryHandler>();
         services.AddScoped<AddTimeSlotCommandHandler>();
-    services.AddScoped<DeleteTimeSlotCommandHandler>();
+        services.AddScoped<UpdateTimeSlotCommandHandler>();
+        services.AddScoped<DeleteTimeSlotCommandHandler>();
         services.AddScoped<ListTimeSlotsQueryHandler>();
         services.AddScoped<AddScheduleCommandHandler>();
         services.AddScoped<DeleteScheduleCommandHandler>();

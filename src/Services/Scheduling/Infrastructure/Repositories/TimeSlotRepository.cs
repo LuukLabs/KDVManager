@@ -36,6 +36,12 @@ public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
         return await Task.FromResult(matches);
     }
 
+    public async Task<bool> IsTimeSlotNameUniqueExcludingId(string name, Guid excludeId)
+    {
+        var matches = await _dbContext.TimeSlots.AnyAsync(e => e.Name.Equals(name) && e.Id != excludeId);
+        return !matches;
+    }
+
     public async Task<bool> IsInUseAsync(Guid id)
     {
         // A TimeSlot is in use if any ScheduleRule references it.

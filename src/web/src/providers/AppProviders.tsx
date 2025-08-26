@@ -9,10 +9,14 @@ import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { theme } from "@lib/theme";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import "dayjs/locale/nl";
 import { I18nextProvider } from "react-i18next";
 import i18n from "@lib/i18n/i18n";
 import { SnackbarProvider } from "notistack";
+
+// Set global dayjs locale to match i18n default
+dayjs.locale('nl');
 
 type AppProvidersProps = PropsWithChildren & {
   enableRouter?: boolean;
@@ -22,7 +26,6 @@ export const AppProviders = ({ children, enableRouter = true }: AppProvidersProp
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
       <AuthProvider>
         <I18nextProvider i18n={i18n}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">

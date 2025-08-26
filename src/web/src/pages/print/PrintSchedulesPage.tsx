@@ -23,6 +23,7 @@ import { useListGroups } from "@api/endpoints/groups/groups";
 import { useGetPrintSchedules } from "@api/endpoints/schedules/schedules";
 import type { PrintGroupWeekdayPageVM } from "@api/models/printGroupWeekdayPageVM";
 import type { PrintCellVM } from "@api/models/printCellVM";
+import i18n from "@lib/i18n/i18n";
 
 type Filters = {
   month: number;
@@ -169,11 +170,11 @@ export const PrintSchedulesPage = () => {
         >
           {(data?.groups ?? []).flatMap((group: any) =>
             (group.pages ?? []).map((page: PrintGroupWeekdayPageVM) =>
-              data && typeof data.month === "string" && typeof data.year === "number" ? (
+              data && typeof data.year === "number" ? (
                 <PrintPage
                   key={group.id + page.weekday}
                   groupName={group.name}
-                  month={data.month}
+                  month={filters.month}
                   year={data.year}
                   page={page}
                 />
@@ -230,7 +231,7 @@ const PrintPage = ({
   page,
 }: {
   groupName: string;
-  month: string;
+  month: number;
   year: number;
   page: PrintGroupWeekdayPageVM;
 }) => {
@@ -241,8 +242,13 @@ const PrintPage = ({
   // Localized weekday label
   let weekdayLabel = "";
   if (typeof page.weekday === "number") {
-    weekdayLabel = dayjs().day(page.weekday).format("dddd");
+    weekdayLabel = dayjs().day(page.weekday).locale(i18n.language).format("dddd");
   }
+
+  // Localized month label using dayjs
+  const monthLabel = dayjs().month(month - 1).locale(i18n.language).format("MMMM");
+
+  console.warn(month);
 
   return (
     <Paper className="print-page" sx={{ p: 2, mb: 3 }}>
@@ -273,7 +279,7 @@ const PrintPage = ({
             {t("Dag")}: <strong>{weekdayLabel}</strong>
           </div>
           <div>
-            {t("Maand")}: <strong>{month}</strong>
+            {t("Maand")}: <strong>{monthLabel}</strong>
           </div>
           <div>
             {t("Jaar")}: <strong>{year}</strong>

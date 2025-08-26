@@ -18,6 +18,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Child> Children { get; set; }
     public DbSet<Guardian> Guardians { get; set; }
     public DbSet<ChildGuardian> ChildGuardians { get; set; }
+    public DbSet<ChildNumberSequence> ChildNumberSequences { get; set; }
     // PhoneNumbers owned by Guardian; no separate DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +27,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<Guardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ChildGuardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<ChildNumberSequence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         // PhoneNumbers owned; query filter handled via Guardian
 
         modelBuilder.Entity<ChildGuardian>()

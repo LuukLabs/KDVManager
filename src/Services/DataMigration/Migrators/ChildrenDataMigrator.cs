@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using KDVManager.Shared.Contracts.Tenancy;
 using KDVManager.Services.DataMigration.Utilities;
+using KDVManager.Services.CRM.Application.Contracts.Services;
 using CrmContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using Child = KDVManager.Services.CRM.Domain.Entities.Child;
 
@@ -18,14 +19,21 @@ public class ChildrenDataMigrator
     private readonly CrmContext _context;
     private readonly IConfiguration _configuration;
     private readonly ITenancyContextAccessor _tenancyContextAccessor;
+    private readonly IChildNumberSequenceService _childNumberSequenceService;
     private readonly Services.NameAnonymizer _anonymizer;
     private readonly bool _anonymize;
 
-    public ChildrenDataMigrator(CrmContext context, IConfiguration configuration, ITenancyContextAccessor tenancyContextAccessor, Services.NameAnonymizer anonymizer)
+    public ChildrenDataMigrator(
+        CrmContext context,
+        IConfiguration configuration,
+        ITenancyContextAccessor tenancyContextAccessor,
+        IChildNumberSequenceService childNumberSequenceService,
+        Services.NameAnonymizer anonymizer)
     {
         _context = context;
         _configuration = configuration;
         _tenancyContextAccessor = tenancyContextAccessor;
+        _childNumberSequenceService = childNumberSequenceService;
         _anonymizer = anonymizer;
         _anonymize = bool.TryParse(configuration["DataMigration:Anonymize"], out var anon) && anon;
     }
@@ -82,6 +90,7 @@ public class ChildrenDataMigrator
                 firstName = DatabaseHelper.GetSafeString(reader, "firstname");
                 lastName = DatabaseHelper.GetSafeString(reader, "lastname");
                 infixes = DatabaseHelper.GetSafeString(reader, "infixes");
+                cid = DatabaseHelper.GetSafeString(reader, "cid");
                 externalChildId = DatabaseHelper.GetSafeInt(reader, "external_child_id");
                 if (!reader.IsDBNull("dateofbirth"))
                 {
@@ -127,13 +136,18 @@ public class ChildrenDataMigrator
                     (given, family) = _anonymizer.Anonymize(given, family);
                 }
 
+                // Get the next child number for this tenant
+                var childNumber = await _childNumberSequenceService.GetNextChildNumberAsync();
+
                 var child = new Child
                 {
                     Id = childId,
                     GivenName = given,
                     FamilyName = family,
                     DateOfBirth = dateOfBirth,
-                    TenantId = tenantId
+                    TenantId = tenantId,
+                    ChildNumber = childNumber,
+                    CID = cid
                 };
 
                 _context.Children.Add(child);

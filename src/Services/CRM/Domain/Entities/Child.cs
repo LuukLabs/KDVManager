@@ -16,5 +16,12 @@ namespace KDVManager.Services.CRM.Domain.Entities
         public string? CID { get; set; }
 
         public DateOnly DateOfBirth { get; set; }
+
+        /// <summary>
+        /// Unique identification number for this child within the tenant.
+        /// This number is automatically assigned and cannot be changed manually.
+        /// Numbers are incremental starting from 1 per tenant.
+        /// </summary>
+        public int ChildNumber { get; set; }
     }
 }

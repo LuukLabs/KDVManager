@@ -16,6 +16,7 @@ type BasicInformationCardProps = {
   lastName?: string;
   dateOfBirth?: string;
   cid?: string;
+  childNumber?: number;
   loading?: boolean;
 
   // Edit props
@@ -31,6 +32,7 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
   lastName,
   dateOfBirth,
   cid,
+  childNumber,
   loading,
   isEditing,
   formContext,
@@ -48,19 +50,22 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
   const viewContent = (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 6 }}>
+        <FieldDisplay label={t("Child Number")} value={childNumber?.toString()} />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FieldDisplay label={t("CID")} value={cid} />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("First Name")} value={firstName} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("Last Name")} value={lastName} />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6 }}>
+      <Grid size={{ xs: 12 }}>
         <FieldDisplay
           label={t("Date of Birth")}
           value={dateOfBirth ? `${formatDate(dateOfBirth)}${ageString}` : ""}
         />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay label={t("CID")} value={cid} />
       </Grid>
     </Grid>
   );

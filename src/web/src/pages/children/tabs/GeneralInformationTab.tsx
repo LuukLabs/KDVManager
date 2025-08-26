@@ -139,6 +139,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
             lastName={child.familyName}
             dateOfBirth={child.dateOfBirth}
             cid={child.cid ?? undefined}
+            childNumber={child.childNumber}
             isEditing={editingSections.basic}
             formContext={basicFormContext}
             onSave={handleBasicSave}

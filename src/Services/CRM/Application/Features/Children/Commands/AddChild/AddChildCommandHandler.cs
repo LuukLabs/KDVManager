@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
+using KDVManager.Services.CRM.Application.Contracts.Services;
 using KDVManager.Services.CRM.Domain.Entities;
 using KDVManager.Shared.Contracts.Events;
 using MassTransit;
@@ -10,11 +11,16 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.AddChil
 public class AddChildCommandHandler
 {
     private readonly IChildRepository _childRepository;
+    private readonly IChildNumberSequenceService _childNumberSequenceService;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public AddChildCommandHandler(IChildRepository childRepository, IPublishEndpoint publishEndpoint)
+    public AddChildCommandHandler(
+        IChildRepository childRepository,
+        IChildNumberSequenceService childNumberSequenceService,
+        IPublishEndpoint publishEndpoint)
     {
         _childRepository = childRepository;
+        _childNumberSequenceService = childNumberSequenceService;
         _publishEndpoint = publishEndpoint;
     }
 
@@ -26,6 +32,9 @@ public class AddChildCommandHandler
         if (!validationResult.IsValid)
             throw new Exceptions.ValidationException(validationResult);
 
+        // Get the next child number for this tenant
+        var childNumber = await _childNumberSequenceService.GetNextChildNumberAsync();
+
         var child = new Child
         {
             Id = Guid.NewGuid(),
@@ -33,6 +42,7 @@ public class AddChildCommandHandler
             FamilyName = request.FamilyName!,
             DateOfBirth = (DateOnly)request.DateOfBirth!,
             CID = request.CID,
+            ChildNumber = childNumber,
             TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
         };
 

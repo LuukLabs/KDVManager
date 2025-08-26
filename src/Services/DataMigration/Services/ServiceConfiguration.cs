@@ -7,6 +7,8 @@ using KDVManager.Services.DataMigration.Migrators;
 using CrmContext = KDVManager.Services.CRM.Infrastructure.ApplicationDbContext;
 using SchedulingContext = KDVManager.Services.Scheduling.Infrastructure.ApplicationDbContext;
 using KDVManager.Shared.Contracts.Tenancy;
+using KDVManager.Services.CRM.Application.Contracts.Services;
+using KDVManager.Services.CRM.Infrastructure.Services;
 
 namespace KDVManager.Services.DataMigration.Services;
 
@@ -30,6 +32,9 @@ public static class ServiceConfiguration
             throw new InvalidOperationException("A valid --tenant <GUID> must be supplied (no default tenant id).");
         }
         services.AddScoped<ITenancyContextAccessor>(_ => new MigrationTenancyContextAccessor(tenantId));
+
+        // Register CRM services needed for migration
+        services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
 
         // Register anonymizer
         services.AddSingleton<NameAnonymizer>();

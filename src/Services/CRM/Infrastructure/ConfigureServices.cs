@@ -1,6 +1,8 @@
 ﻿using KDVManager.Services.CRM.Application.Contracts.Persistence;
+using KDVManager.Services.CRM.Application.Contracts.Services;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Services.CRM.Infrastructure.Repositories;
+using KDVManager.Services.CRM.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using KDVManager.Shared.Contracts.Tenancy;
@@ -19,6 +21,7 @@ public static class ConfigureServices
         services.AddScoped<IChildRepository, ChildRepository>();
         services.AddScoped<IGuardianRepository, GuardianRepository>();
         services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
+        services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
 
         services.AddTenancy();
 

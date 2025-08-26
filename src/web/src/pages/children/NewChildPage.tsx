@@ -4,6 +4,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { Alert } from "@mui/material";
 import { getListChildrenQueryKey, useAddChild } from "@api/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -46,6 +47,9 @@ const NewChildPage = () => {
     <>
       <div className="t1">{t("Single user Creation")}</div>
       <Paper style={{ padding: 16 }}>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {t("A unique child identification number will be automatically assigned when you save.")}
+        </Alert>
         <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
           <Grid container alignItems="flex-start" spacing={2}>
             <Grid size={12}>

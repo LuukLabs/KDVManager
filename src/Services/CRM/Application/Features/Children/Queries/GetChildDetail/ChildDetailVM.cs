@@ -11,5 +11,11 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
         public DateOnly DateOfBirth { get; set; }
 
         public string? CID { get; set; }
+
+        /// <summary>
+        /// Unique identification number for this child within the tenant.
+        /// This number is automatically assigned and incremental per tenant.
+        /// </summary>
+        public int ChildNumber { get; set; }
     }
 }

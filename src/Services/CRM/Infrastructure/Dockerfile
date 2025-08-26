@@ -25,7 +25,7 @@ WORKDIR "/src/Services/CRM"
 
 FROM build as build-migrator
 
-RUN dotnet tool install -g dotnet-ef --version 9.0.6
+RUN dotnet tool install -g dotnet-ef --version 9.0.7
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "./Api"
 

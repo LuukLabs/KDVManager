@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KDVManager.Services.CRM.Infrastructure.Configurations
 {
-    public class GroupConfiguration : IEntityTypeConfiguration<Child>
+    public class ChildConfiguration : IEntityTypeConfiguration<Child>
     {
-        public GroupConfiguration()
+        public ChildConfiguration()
         {
         }
 
@@ -17,6 +17,13 @@ namespace KDVManager.Services.CRM.Infrastructure.Configurations
 
             builder.Property(e => e.TenantId)
                 .IsRequired();
+
+            builder.Property(e => e.ChildNumber)
+                .IsRequired();
+
+            // Ensure unique child number per tenant
+            builder.HasIndex(e => new { e.TenantId, e.ChildNumber })
+                .IsUnique();
         }
     }
 }

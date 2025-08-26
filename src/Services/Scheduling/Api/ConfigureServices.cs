@@ -6,7 +6,6 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using MassTransit.Logging;
 using KDVManager.Services.Scheduling.Api.Telemetry;
-using KDVManager.Shared.Infrastructure.Telemetry;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -89,9 +88,6 @@ public static class ConfigureServices
             });
 
 
-        // Register TenantEnrichmentProcessor
-        services.AddSingleton<TenantEnrichmentProcessor>();
-
         var otel = services.AddOpenTelemetry();
         var otelEndpoint = configuration["Otel:Endpoint"];
         otel.ConfigureResource(resource => resource.AddService(serviceName: "scheduling-api"));
@@ -99,7 +95,6 @@ public static class ConfigureServices
         otel.WithTracing(tracing =>
             {
                 tracing
-                    .AddProcessor(serviceProvider => serviceProvider.GetRequiredService<TenantEnrichmentProcessor>())
                     .AddAspNetCoreInstrumentation(options =>
                     {
                         // Configure ASP.NET Core instrumentation for better error tracking

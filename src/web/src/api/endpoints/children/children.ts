@@ -411,3 +411,101 @@ export const useDeleteChild = <TError = unknown, TContext = unknown>(
 
   return useMutation(mutationOptions, queryClient);
 };
+export const getNextChildNumber = (signal?: AbortSignal) => {
+  return executeFetch<number>({ url: `/crm/v1/children/next-number`, method: "GET", signal });
+};
+
+export const getGetNextChildNumberQueryKey = () => {
+  return [`/crm/v1/children/next-number`] as const;
+};
+
+export const getGetNextChildNumberQueryOptions = <
+  TData = Awaited<ReturnType<typeof getNextChildNumber>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNextChildNumber>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNextChildNumberQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getNextChildNumber>>> = ({ signal }) =>
+    getNextChildNumber(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getNextChildNumber>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetNextChildNumberQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNextChildNumber>>
+>;
+export type GetNextChildNumberQueryError = unknown;
+
+export function useGetNextChildNumber<
+  TData = Awaited<ReturnType<typeof getNextChildNumber>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNextChildNumber>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNextChildNumber>>,
+          TError,
+          Awaited<ReturnType<typeof getNextChildNumber>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNextChildNumber<
+  TData = Awaited<ReturnType<typeof getNextChildNumber>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getNextChildNumber>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNextChildNumber>>,
+          TError,
+          Awaited<ReturnType<typeof getNextChildNumber>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetNextChildNumber<
+  TData = Awaited<ReturnType<typeof getNextChildNumber>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNextChildNumber>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetNextChildNumber<
+  TData = Awaited<ReturnType<typeof getNextChildNumber>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getNextChildNumber>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetNextChildNumberQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}

@@ -63,5 +63,25 @@ namespace KDVManager.Services.CRM.Infrastructure.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Peeks at the next child number that would be assigned without consuming it.
+        /// </summary>
+        /// <returns>The next child number that would be assigned</returns>
+        public async Task<int> PeekNextChildNumberAsync()
+        {
+            var tenantId = _tenancyContextAccessor.Current!.TenantId;
+
+            var sequence = await _context.ChildNumberSequences
+                .FirstOrDefaultAsync(s => s.TenantId == tenantId);
+
+            if (sequence == null)
+            {
+                // If no sequence exists, the next number would be 1
+                return 1;
+            }
+
+            return sequence.NextChildNumber;
+        }
     }
 }

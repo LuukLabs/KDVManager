@@ -2,6 +2,7 @@ using KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
+using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNextChildNumber;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
@@ -40,6 +41,13 @@ public static class ChildrenEndpoints
         }).WithName("UpdateChild").WithTags("children")
         .Produces(StatusCodes.Status204NoContent)
         .Produces<UnprocessableEntityResponse>(StatusCodes.Status422UnprocessableEntity);
+
+        endpoints.MapGet("/v1/children/next-number", async ([FromServices] GetNextChildNumberQueryHandler handler) =>
+        {
+            var query = new GetNextChildNumberQuery();
+            var nextNumber = await handler.Handle(query);
+            return Results.Ok(nextNumber);
+        }).WithName("GetNextChildNumber").WithTags("children").Produces<int>(StatusCodes.Status200OK);
 
         endpoints.MapDelete("/v1/children/{id:guid}", async ([FromRoute] Guid id, [FromServices] DeleteChildCommandHandler handler) =>
         {

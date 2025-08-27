@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { SettingsCard } from "../../features/settings/SettingsCard";
+import { NextChildNumberCard } from "../../features/settings/NextChildNumberCard";
 import Grid from "@mui/material/Grid";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -31,9 +32,17 @@ const SettingsPage = () => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        columns={{ xs: 1, sm: 2, md: 4 }}
+        sx={{ width: "100%", alignItems: "stretch" }}
+      >
+        <Grid size={1}>
+          <NextChildNumberCard />
+        </Grid>
         {settings.map((setting, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+          <Grid key={index} size={1}>
             <SettingsCard
               title={setting.title}
               description={setting.description}

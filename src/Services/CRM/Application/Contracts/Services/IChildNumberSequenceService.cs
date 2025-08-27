@@ -14,5 +14,11 @@ namespace KDVManager.Services.CRM.Application.Contracts.Services
         /// </summary>
         /// <returns>The next unique child number for the tenant</returns>
         Task<int> GetNextChildNumberAsync();
+
+        /// <summary>
+        /// Peeks at the next child number that would be assigned without consuming it.
+        /// </summary>
+        /// <returns>The next child number that would be assigned</returns>
+        Task<int> PeekNextChildNumberAsync();
     }
 }

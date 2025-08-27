@@ -26,9 +26,9 @@ export const SettingsCard: React.FC<SettingsCardProps> = ({
   };
 
   return (
-    <Card>
-      <CardActionArea onClick={handleClick}>
-        <CardContent>
+    <Card sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+      <CardActionArea onClick={handleClick} sx={{ flexGrow: 1, alignItems: "stretch" }}>
+        <CardContent sx={{ height: "100%" }}>
           <Box display="flex" alignItems="center">
             {icon}
             <Box ml={2}>

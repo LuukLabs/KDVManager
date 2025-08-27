@@ -202,6 +202,25 @@
         }
       }
     },
+    "/crm/v1/children/next-number": {
+      "get": {
+        "tags": ["children"],
+        "operationId": "GetNextChildNumber",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/crm/v1/guardians": {
       "get": {
         "tags": ["guardians"],

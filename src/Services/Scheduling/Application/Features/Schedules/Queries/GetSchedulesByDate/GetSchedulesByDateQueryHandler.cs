@@ -37,6 +37,7 @@ public class GetSchedulesByDateQueryHandler
             {
                 ScheduleId = rule.ScheduleId,
                 ChildId = rule.Schedule.ChildId,
+                ChildFullName = child != null ? $"{child.GivenName} {child.FamilyName}".Trim() : null,
                 TimeSlotName = rule.TimeSlot.Name,
                 StartTime = rule.TimeSlot.StartTime,
                 EndTime = rule.TimeSlot.EndTime,

@@ -14,17 +14,20 @@ public class GetGroupSummaryQueryHandler
     private readonly IChildRepository _childRepository;
     private readonly ITimeSlotRepository _timeSlotRepository;
     private readonly IGroupRepository _groupRepository;
+    private readonly IAbsenceRepository _absenceRepository;
 
     public GetGroupSummaryQueryHandler(
         IScheduleRepository scheduleRepository,
         IChildRepository childRepository,
         ITimeSlotRepository timeSlotRepository,
-        IGroupRepository groupRepository)
+        IGroupRepository groupRepository,
+        IAbsenceRepository absenceRepository)
     {
         _scheduleRepository = scheduleRepository;
         _childRepository = childRepository;
         _timeSlotRepository = timeSlotRepository;
         _groupRepository = groupRepository;
+        _absenceRepository = absenceRepository;
     }
 
     public async Task<GroupSummaryVM> Handle(GetGroupSummaryQuery request)
@@ -37,6 +40,15 @@ public class GetGroupSummaryQueryHandler
         var scheduleRules = ExtractScheduleRules(schedules, request);
         var children = await LoadChildrenAsync(schedules);
 
+        // Determine absent children for the requested date and exclude them from all calculations
+        var childIds = children.Select(c => c.Id).ToList();
+        var absences = await _absenceRepository.GetByChildIdsAsync(childIds);
+        var absentChildIds = absences
+            .Where(a => a.StartDate <= request.Date && a.EndDate >= request.Date)
+            .Select(a => a.ChildId)
+            .Distinct()
+            .ToHashSet();
+
         var timeBlocksIntervals = GetExactTimeBlocks(scheduleRules);
 
         // Haal ALLE TimeSlots één keer op, niet per interval
@@ -47,7 +59,7 @@ public class GetGroupSummaryQueryHandler
         foreach (var tb in timeBlocksIntervals)
         {
             var name = DetermineTimeBlockName(tb.Start, tb.End, allTimeSlots.ToList());
-            var summary = BuildTimeBlockSummary(tb.Start, tb.End, scheduleRules, children, request.Date, name);
+            var summary = BuildTimeBlockSummary(tb.Start, tb.End, scheduleRules, children, request.Date, name, absentChildIds);
             timeBlocks.Add(summary);
         }
 
@@ -62,7 +74,8 @@ public class GetGroupSummaryQueryHandler
             Date = request.Date,
             TimeBlocks = timeBlocks,
             RequiredProfessionals = maxProfessionals,
-            NumberOfChildren = children.Count()
+            // NumberOfChildren now represents present (non-absent) children for the date
+            NumberOfChildren = children.Count(c => !absentChildIds.Contains(c.Id))
         };
     }
 
@@ -110,7 +123,7 @@ public class GetGroupSummaryQueryHandler
         return exactMatch?.Name ?? "-";
     }
 
-    private TimeBlockSummary BuildTimeBlockSummary(TimeOnly start, TimeOnly end, List<ScheduleRule> scheduleRules, List<Child> children, DateOnly date, string timeSlotName)
+    private TimeBlockSummary BuildTimeBlockSummary(TimeOnly start, TimeOnly end, List<ScheduleRule> scheduleRules, List<Child> children, DateOnly date, string timeSlotName, HashSet<Guid> absentChildIds)
     {
         var overlappingRules = scheduleRules
             .Where(sr => sr.TimeSlot.StartTime <= start && sr.TimeSlot.EndTime >= end)
@@ -118,6 +131,7 @@ public class GetGroupSummaryQueryHandler
 
         var childrenInBlock = children
             .Where(c => overlappingRules.Any(r => r.Schedule.ChildId == c.Id))
+            .Where(c => !absentChildIds.Contains(c.Id))
             .ToList();
 
         var ageGroups = CalculateAgeGroups(childrenInBlock, date);

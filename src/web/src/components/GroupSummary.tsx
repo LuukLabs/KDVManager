@@ -27,6 +27,7 @@ import {
   VisibilityOutlined,
   Schedule,
   ChildCare,
+  PersonOff,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
@@ -37,9 +38,10 @@ import { type TimeBlockSummary } from "@api/models/timeBlockSummary";
 type GroupSummaryProps = {
   groupId: string;
   selectedDate: dayjs.Dayjs;
+  absentCount?: number;
 };
 
-const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
+const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryProps) => {
   const { t } = useTranslation();
   const [selectedTimeBlock, setSelectedTimeBlock] = useState<TimeBlockSummary | null>(null);
 
@@ -182,7 +184,7 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
           </Typography>
 
           {/* Summary Stats */}
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2, flexWrap: "wrap" }}>
             <Chip
               icon={<ChildCare />}
               label={`${summary.numberOfChildren} ${t("children")}`}
@@ -191,6 +193,16 @@ const GroupSummary = ({ groupId, selectedDate }: GroupSummaryProps) => {
               variant="outlined"
               sx={{ fontWeight: 600 }}
             />
+            {absentCount > 0 && (
+              <Chip
+                icon={<PersonOff />}
+                label={absentCount}
+                size="small"
+                variant="outlined"
+                color="warning"
+                sx={{ fontWeight: 600 }}
+              />
+            )}
             <Chip
               icon={<SupervisorAccount />}
               label={`${summary.requiredProfessionals} ${t("supervisors")}`}

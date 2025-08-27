@@ -8,4 +8,5 @@ namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 public interface IAbsenceRepository : IAsyncRepository<Absence>
 {
     Task<List<Absence>> GetByChildIdAsync(Guid childId);
+    Task<List<Absence>> GetByChildIdsAsync(IEnumerable<Guid> childIds);
 }

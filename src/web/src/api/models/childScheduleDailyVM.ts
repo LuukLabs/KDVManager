@@ -5,18 +5,18 @@
  * OpenAPI spec version: v1
  */
 
-export type ScheduleByDateVM = {
+export type ChildScheduleDailyVM = {
   scheduleId?: string;
   childId?: string;
-  /** @nullable */
-  childFullName?: string | null;
   /** @nullable */
   timeSlotName?: string | null;
   startTime?: string;
   endTime?: string;
-  groupId?: string;
   /** @nullable */
   dateOfBirth?: string | null;
   /** @nullable */
   age?: number | null;
+  isAbsent?: boolean;
+  /** @nullable */
+  absenceReason?: string | null;
 };

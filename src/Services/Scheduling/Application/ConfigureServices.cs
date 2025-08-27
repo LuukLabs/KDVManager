@@ -25,6 +25,7 @@ using KDVManager.Services.Scheduling.Application.Features.EndMarks.Commands.AddE
 using KDVManager.Services.Scheduling.Application.Features.EndMarks.Commands.DeleteEndMark;
 using KDVManager.Services.Scheduling.Application.Features.EndMarks.Queries.GetEndMarks;
 using KDVManager.Services.Scheduling.Application.Services;
+using KDVManager.Services.Scheduling.Application.Features.Overview.Queries.GetDailyOverview;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -58,6 +59,7 @@ public static class ConfigureServices
         services.AddScoped<AddEndMarkCommandHandler>();
         services.AddScoped<DeleteEndMarkCommandHandler>();
         services.AddScoped<GetEndMarksQueryHandler>();
+        services.AddScoped<GetDailyOverviewQueryHandler>();
 
         return services;
     }

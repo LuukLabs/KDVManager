@@ -31,6 +31,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useTranslation } from "react-i18next";
 import { useListGroups } from "@api/endpoints/groups/groups";
+import { useGetDailyOverview } from "@api/endpoints/overview/overview";
 import GroupColumn from "../components/GroupColumn";
 import { useSearchParams } from "react-router-dom";
 
@@ -82,6 +83,10 @@ const ScheduleOverviewPage = () => {
 
   const { data, isLoading: isLoadingGroups } = useListGroups();
   const groups = data?.value ?? [];
+
+  // Daily overview (closure + absences)
+  const overviewDate = selectedDate.format("YYYY-MM-DD");
+  const { data: dailyOverview } = useGetDailyOverview({ date: overviewDate });
 
   // Date navigation helpers
   const goToPreviousDay = () => {
@@ -156,6 +161,15 @@ const ScheduleOverviewPage = () => {
               <Typography variant="body2" color="text.secondary">
                 {selectedDate.locale(i18n.language).format("MMMM D, YYYY")}
               </Typography>
+              {dailyOverview?.isClosed && (
+                <Chip
+                  label={dailyOverview.closureReason ?? t("Closed")}
+                  size="small"
+                  color="warning"
+                  sx={{ mt: 0.5 }}
+                />
+              )}
+              {/* Removed aggregated absent chip from top header per request */}
               {todayIsSelected && (
                 <Chip label={t("Today")} size="small" color="primary" sx={{ mt: 0.5 }} />
               )}
@@ -224,6 +238,15 @@ const ScheduleOverviewPage = () => {
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     {selectedDate.locale(i18n.language).format("dddd, MMMM D, YYYY")}
                   </Typography>
+                  {dailyOverview?.isClosed && (
+                    <Chip
+                      label={dailyOverview.closureReason ?? t("Closed")}
+                      size="small"
+                      color="warning"
+                      sx={{ mt: 1 }}
+                    />
+                  )}
+                  {/* Removed aggregated absent chip from desktop header per request */}
                   {todayIsSelected && (
                     <Chip label={t("Today")} size="small" color="primary" sx={{ mt: 1 }} />
                   )}
@@ -282,21 +305,32 @@ const ScheduleOverviewPage = () => {
                   : undefined,
               }}
             >
-              {groups.map((group) => (
-                <Box
-                  key={group.id}
-                  sx={{
-                    minWidth: isMobile ? "100%" : 350,
-                    maxWidth: isMobile ? "100%" : 400,
-                    flexShrink: 0,
-                  }}
-                >
-                  <GroupColumn
-                    group={{ id: group.id ?? "", name: group.name ?? "" }}
-                    selectedDate={selectedDate}
-                  />
-                </Box>
-              ))}
+              {groups.map((group) => {
+                const groupOverview = dailyOverview?.groups?.find((g) => g.groupId === group.id);
+                const absentChildIds =
+                  groupOverview?.schedules
+                    ?.filter((s) => s.isAbsent)
+                    .map((s) => s.childId)
+                    ?.filter((id): id is string => !!id) ?? [];
+                return (
+                  <Box
+                    key={group.id}
+                    sx={{
+                      minWidth: isMobile ? "100%" : 350,
+                      maxWidth: isMobile ? "100%" : 400,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <GroupColumn
+                      group={{ id: group.id ?? "", name: group.name ?? "" }}
+                      selectedDate={selectedDate}
+                      absentChildIds={absentChildIds}
+                      isClosed={!!dailyOverview?.isClosed}
+                      closureReason={dailyOverview?.closureReason}
+                    />
+                  </Box>
+                );
+              })}
             </Box>
           )}
         </Grid>

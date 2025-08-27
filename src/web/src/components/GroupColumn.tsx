@@ -1,12 +1,4 @@
-import {
-  Box,
-  Paper,
-  Typography,
-  CircularProgress,
-  useTheme,
-  useMediaQuery,
-  Chip,
-} from "@mui/material";
+import { Box, Paper, Typography, CircularProgress, useTheme, useMediaQuery } from "@mui/material";
 import { type Dayjs } from "dayjs";
 import { useGetSchedulesByDate } from "@api/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
@@ -22,9 +14,18 @@ type Group = {
 type GroupColumnProps = {
   group: Group;
   selectedDate: Dayjs;
+  absentChildIds?: string[];
+  isClosed?: boolean;
+  closureReason?: string | null;
 };
 
-const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
+const GroupColumn = ({
+  group,
+  selectedDate,
+  absentChildIds = [],
+  isClosed = false,
+  closureReason,
+}: GroupColumnProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -33,7 +34,17 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
     groupId: group.id,
   });
 
-  const childrenCount = schedules?.length ?? 0;
+  const sortedSchedules = (schedules ?? []).sort((a, b) => {
+    const nameA = (a.childFullName ?? "").toLocaleLowerCase();
+    const nameB = (b.childFullName ?? "").toLocaleLowerCase();
+    if (nameA && nameB) return nameA.localeCompare(nameB);
+    if (nameA) return -1;
+    if (nameB) return 1;
+    return (a.childId ?? "").localeCompare(b.childId ?? "");
+  });
+
+  const present = sortedSchedules.filter((s) => !absentChildIds.includes(s.childId ?? ""));
+  const absent = sortedSchedules.filter((s) => absentChildIds.includes(s.childId ?? ""));
 
   return (
     <Paper
@@ -76,18 +87,6 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
             <GroupsIcon />
             {group.name}
           </Typography>
-          {!isLoading && (
-            <Chip
-              label={`${childrenCount} ${childrenCount === 1 ? t("child") : t("children")}`}
-              size="small"
-              color="primary"
-              variant="outlined"
-              sx={{
-                fontWeight: 600,
-                borderRadius: 2,
-              }}
-            />
-          )}
         </Box>
         <Typography
           variant="body2"
@@ -98,11 +97,35 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
         </Typography>
       </Box>
 
-      {/* Group Summary */}
-      <GroupSummary groupId={group.id} selectedDate={selectedDate} />
+      {/* Group Summary (hidden on closed days) */}
+      {!isClosed && (
+        <GroupSummary groupId={group.id} selectedDate={selectedDate} absentCount={absent.length} />
+      )}
 
-      {/* Content */}
-      {isLoading ? (
+      {isClosed && (
+        <Box
+          sx={{
+            mt: 1,
+            mb: 2,
+            p: 1,
+            border: "1px solid",
+            borderColor: "warning.light",
+            background: "linear-gradient(135deg, #fff3e0 0%, #fffaf2 100%)",
+            borderRadius: 1.5,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <EventBusyIcon sx={{ color: "warning.main" }} />
+          <Typography variant="caption" sx={{ fontWeight: 600, color: "warning.main" }}>
+            {closureReason ?? t("Closed")}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Content hidden entirely when closed */}
+      {isClosed ? null : isLoading ? (
         <Box
           sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 4, flex: 1 }}
         >
@@ -114,16 +137,28 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
           </Box>
         </Box>
       ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 1.5 }, flex: 1 }}>
-          {schedules && schedules.length > 0 ? (
-            schedules.map((schedule) => (
-              <ChildCard
-                key={schedule.scheduleId}
-                childId={schedule.childId ?? ""}
-                schedule={schedule}
-              />
-            ))
-          ) : (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+          {(present.length > 0 || absent.length > 0) && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 1.25 } }}>
+              {present.map((schedule) => (
+                <ChildCard
+                  key={schedule.scheduleId}
+                  childId={schedule.childId ?? ""}
+                  schedule={schedule}
+                />
+              ))}
+              {absent.length > 0 && present.length > 0 && (
+                <Box sx={{ borderTop: "1px dashed", borderColor: "divider", my: 0.5 }} />
+              )}
+              {absent.map((schedule) => (
+                <Box key={schedule.scheduleId} sx={{ opacity: 0.5 }}>
+                  <ChildCard childId={schedule.childId ?? ""} schedule={schedule} />
+                </Box>
+              ))}
+            </Box>
+          )}
+
+          {present.length === 0 && absent.length === 0 && (
             <Box
               sx={{
                 textAlign: "center",
@@ -137,11 +172,6 @@ const GroupColumn = ({ group, selectedDate }: GroupColumnProps) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "all 0.2s ease-in-out",
-                "&:hover": {
-                  backgroundColor: "grey.100",
-                  borderColor: "grey.400",
-                },
               }}
             >
               <Box>

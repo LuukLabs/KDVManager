@@ -1053,6 +1053,44 @@
         }
       }
     },
+    "/scheduling/v1/overview/daily": {
+      "get": {
+        "tags": ["Overview"],
+        "operationId": "GetDailyOverview",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyOverviewVM"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyOverviewVM"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyOverviewVM"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/scheduling/v1/schedules": {
       "get": {
         "tags": ["Schedules"],
@@ -2195,6 +2233,49 @@
         },
         "additionalProperties": false
       },
+      "ChildScheduleDailyVM": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "childId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timeSlotName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isAbsent": {
+            "type": "boolean"
+          },
+          "absenceReason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ChildScheduleListVM": {
         "type": "object",
         "properties": {
@@ -2284,6 +2365,30 @@
         },
         "additionalProperties": false
       },
+      "DailyOverviewVM": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "isClosed": {
+            "type": "boolean"
+          },
+          "closureReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupDailyOverviewVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DayOfWeek": {
         "enum": [0, 1, 2, 3, 4, 5, 6],
         "type": "integer",
@@ -2302,6 +2407,27 @@
           },
           "reason": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupDailyOverviewVM": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "schedules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChildScheduleDailyVM"
+            },
             "nullable": true
           }
         },
@@ -2522,6 +2648,10 @@
           "childId": {
             "type": "string",
             "format": "uuid"
+          },
+          "childFullName": {
+            "type": "string",
+            "nullable": true
           },
           "timeSlotName": {
             "type": "string",

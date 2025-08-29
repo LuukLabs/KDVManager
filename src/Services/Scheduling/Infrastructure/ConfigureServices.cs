@@ -26,6 +26,11 @@ public static class ConfigureServices
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
         services.AddScoped<IEndMarkRepository, EndMarkRepository>();
         services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
+        services.AddScoped<ICalendarRowCacheRepository, CalendarRowCacheRepository>();
+        services.AddScoped<ICalendarRowCalculator, CalendarRowCalculator>();
+        services.AddScoped<ICalendarRowQueryService, CalendarRowQueryService>();
+        services.AddScoped<ICalendarRowInvalidationService, CalendarRowInvalidationService>();
+        services.AddHostedService<CalendarRowCacheWarmingService>();
 
         services.AddTenancy();
 

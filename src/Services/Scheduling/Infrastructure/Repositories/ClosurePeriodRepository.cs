@@ -29,4 +29,12 @@ public class ClosurePeriodRepository : BaseRepository<ClosurePeriod>, IClosurePe
             .OrderBy(cd => cd.StartDate)
             .ToListAsync();
     }
+
+    public async Task<List<ClosurePeriod>> GetOverlappingRangeAsync(DateOnly startDate, DateOnly endDate)
+    {
+        return await _dbContext.ClosurePeriods
+            .Where(cp => cp.EndDate >= startDate && cp.StartDate <= endDate)
+            .OrderBy(cp => cp.StartDate)
+            .ToListAsync();
+    }
 }

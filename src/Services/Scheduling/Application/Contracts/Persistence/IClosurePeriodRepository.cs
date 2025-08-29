@@ -8,4 +8,5 @@ namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 public interface IClosurePeriodRepository : IAsyncRepository<ClosurePeriod>
 {
     Task<List<ClosurePeriod>> ListByYearAsync(int year);
+    Task<List<ClosurePeriod>> GetOverlappingRangeAsync(DateOnly startDate, DateOnly endDate);
 }

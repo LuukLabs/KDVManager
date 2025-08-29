@@ -25,6 +25,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Absence> Absences { get; set; }
     public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
     public DbSet<EndMark> EndMarks { get; set; }
+    public DbSet<CalendarRowCache> CalendarRowCaches { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +38,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Absence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ClosurePeriod>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMark>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<CalendarRowCache>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);
@@ -56,9 +58,16 @@ public class ApplicationDbContext : DbContext
             .HasOne<Child>()
             .WithMany()
             .HasForeignKey(a => a.ChildId);
+        modelBuilder.Entity<Absence>().HasIndex(a => new { a.ChildId, a.StartDate, a.EndDate });
 
         modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.StartDate);
         modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.EndDate);
+        modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => new { cd.StartDate, cd.EndDate });
+
+        modelBuilder.Entity<CalendarRowCache>().HasIndex(c => c.GroupId);
+        modelBuilder.Entity<CalendarRowCache>().HasIndex(c => c.Date);
+        modelBuilder.Entity<CalendarRowCache>().HasIndex(c => new { c.GroupId, c.Date });
+        modelBuilder.Entity<CalendarRowCache>().HasIndex(c => new { c.TenantId, c.GroupId, c.ChildId, c.Date, c.SlotId }).IsUnique();
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

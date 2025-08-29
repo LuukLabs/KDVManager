@@ -60,6 +60,8 @@ public static class ConfigureServices
         services.AddScoped<DeleteEndMarkCommandHandler>();
         services.AddScoped<GetEndMarksQueryHandler>();
         services.AddScoped<GetDailyOverviewQueryHandler>();
+        // ICalendarRowInvalidationService implementation registered in Infrastructure layer.
+        // Calendar rows already registered in Infrastructure via interfaces
 
         return services;
     }

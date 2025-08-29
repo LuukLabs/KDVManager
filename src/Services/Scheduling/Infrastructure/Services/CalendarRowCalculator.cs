@@ -14,17 +14,20 @@ public class CalendarRowCalculator : ICalendarRowCalculator
     private readonly IAbsenceRepository _absenceRepository;
     private readonly IClosurePeriodRepository _closurePeriodRepository;
     private readonly ICalendarRowCacheRepository _cacheRepository;
+    private readonly IChildRepository _childRepository;
 
     public CalendarRowCalculator(
         IScheduleRepository scheduleRepository,
         IAbsenceRepository absenceRepository,
         IClosurePeriodRepository closurePeriodRepository,
-        ICalendarRowCacheRepository cacheRepository)
+    ICalendarRowCacheRepository cacheRepository,
+    IChildRepository childRepository)
     {
         _scheduleRepository = scheduleRepository;
         _absenceRepository = absenceRepository;
         _closurePeriodRepository = closurePeriodRepository;
         _cacheRepository = cacheRepository;
+        _childRepository = childRepository;
     }
 
     public async Task<List<CalendarRowCache>> RecalculateAsync(Guid groupId, DateOnly startDate, DateOnly endDate)
@@ -33,6 +36,8 @@ public class CalendarRowCalculator : ICalendarRowCalculator
         var childIds = schedules.Select(s => s.ChildId).Distinct().ToList();
         var relevantAbsences = await _absenceRepository.GetByChildrenAndDateRangeAsync(childIds, startDate, endDate);
         var relevantClosures = await _closurePeriodRepository.GetOverlappingRangeAsync(startDate, endDate);
+        var children = await _childRepository.GetChildrenByIdsAsync(childIds);
+        var childLookup = children.ToDictionary(c => c.Id, c => c);
 
         var rows = new List<CalendarRowCache>();
         var dates = new List<DateOnly>();
@@ -70,6 +75,8 @@ public class CalendarRowCalculator : ICalendarRowCalculator
                         }
                     }
 
+                    var child = childLookup[schedule.ChildId];
+                    var age = child.Age(date);
                     rows.Add(new CalendarRowCache
                     {
                         Id = Guid.NewGuid(),
@@ -81,7 +88,9 @@ public class CalendarRowCalculator : ICalendarRowCalculator
                         StartTime = rule.TimeSlot.StartTime,
                         EndTime = rule.TimeSlot.EndTime,
                         Status = status,
-                        Reason = reason
+                        Reason = reason,
+                        Birthday = child.DateOfBirth,
+                        AgeYears = age
                     });
                 }
             }

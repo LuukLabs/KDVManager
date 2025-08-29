@@ -17,4 +17,6 @@ public class CalendarRowCache : IMustHaveTenant
     public string Status { get; set; } = string.Empty; // present | absent | closed
     public string? Reason { get; set; }
     public DateTime CachedAtUtc { get; set; } = DateTime.UtcNow; // for TTL logic if needed
+    public DateOnly Birthday { get; set; }
+    public int AgeYears { get; set; }
 }

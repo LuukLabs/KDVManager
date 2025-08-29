@@ -23,5 +23,13 @@ namespace KDVManager.Services.CRM.Domain.Entities
         /// Numbers are incremental starting from 1 per tenant.
         /// </summary>
         public int ChildNumber { get; set; }
+
+        public int Age(DateOnly? asOf = null)
+        {
+            var date = asOf ?? DateOnly.FromDateTime(DateTime.Today);
+            var age = date.Year - DateOfBirth.Year;
+            if (DateOfBirth > date.AddYears(-age)) age--;
+            return age < 0 ? 0 : age;
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
+using KDVManager.Shared.Domain.Extensions;
 
 namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren
 {

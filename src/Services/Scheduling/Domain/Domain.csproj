@@ -11,4 +11,8 @@
   <ItemGroup>
     <Folder Include="Entities\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj" />
+  </ItemGroup>
 </Project>

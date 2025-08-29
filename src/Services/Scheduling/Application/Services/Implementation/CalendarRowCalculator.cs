@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Services;
 using KDVManager.Services.Scheduling.Domain.Entities;
+using KDVManager.Shared.Domain.Extensions;
 
-namespace KDVManager.Services.Scheduling.Infrastructure.Services;
+namespace KDVManager.Services.Scheduling.Application.Services.Implementation;
 
 public class CalendarRowCalculator : ICalendarRowCalculator
 {
@@ -20,8 +21,8 @@ public class CalendarRowCalculator : ICalendarRowCalculator
         IScheduleRepository scheduleRepository,
         IAbsenceRepository absenceRepository,
         IClosurePeriodRepository closurePeriodRepository,
-    ICalendarRowCacheRepository cacheRepository,
-    IChildRepository childRepository)
+        ICalendarRowCacheRepository cacheRepository,
+        IChildRepository childRepository)
     {
         _scheduleRepository = scheduleRepository;
         _absenceRepository = absenceRepository;
@@ -40,20 +41,14 @@ public class CalendarRowCalculator : ICalendarRowCalculator
         var childLookup = children.ToDictionary(c => c.Id, c => c);
 
         var rows = new List<CalendarRowCache>();
-        var dates = new List<DateOnly>();
-        for (var d = startDate; d <= endDate; d = d.AddDays(1)) dates.Add(d);
-        var datesByDay = dates.GroupBy(d => d.DayOfWeek).ToDictionary(g => g.Key, g => g.ToList());
-
-        foreach (var schedule in schedules)
+        for (var d = startDate; d <= endDate; d = d.AddDays(1))
         {
-            foreach (var rule in schedule.ScheduleRules.Where(r => r.GroupId == groupId))
+            foreach (var schedule in schedules)
             {
-                if (!datesByDay.TryGetValue(rule.Day, out var ruleDates)) continue;
-                foreach (var date in ruleDates)
+                if (d < schedule.StartDate || (schedule.EndDate.HasValue && d > schedule.EndDate.Value)) continue;
+                foreach (var rule in schedule.ScheduleRules.Where(r => r.GroupId == groupId && r.Day == d.DayOfWeek))
                 {
-                    if (date < schedule.StartDate || (schedule.EndDate.HasValue && date > schedule.EndDate.Value)) continue;
-
-                    var closure = relevantClosures.FirstOrDefault(c => date >= c.StartDate && date <= c.EndDate);
+                    var closure = relevantClosures.FirstOrDefault(c => d >= c.StartDate && d <= c.EndDate);
                     string status;
                     string? reason = null;
                     if (closure != null)
@@ -63,7 +58,7 @@ public class CalendarRowCalculator : ICalendarRowCalculator
                     }
                     else
                     {
-                        var absence = relevantAbsences.FirstOrDefault(a => a.ChildId == schedule.ChildId && date >= a.StartDate && date <= a.EndDate);
+                        var absence = relevantAbsences.FirstOrDefault(a => a.ChildId == schedule.ChildId && d >= a.StartDate && d <= a.EndDate);
                         if (absence != null)
                         {
                             status = "absent";
@@ -76,13 +71,13 @@ public class CalendarRowCalculator : ICalendarRowCalculator
                     }
 
                     var child = childLookup[schedule.ChildId];
-                    var age = child.Age(date);
+                    var age = child.Age(d);
                     rows.Add(new CalendarRowCache
                     {
                         Id = Guid.NewGuid(),
                         GroupId = groupId,
                         ChildId = schedule.ChildId,
-                        Date = date,
+                        Date = d,
                         SlotId = rule.TimeSlotId,
                         SlotName = rule.TimeSlot.Name,
                         StartTime = rule.TimeSlot.StartTime,
@@ -96,7 +91,6 @@ public class CalendarRowCalculator : ICalendarRowCalculator
             }
         }
 
-        // Replace existing cache rows for that range
         await _cacheRepository.DeleteGroupRangeAsync(groupId, startDate, endDate);
         foreach (var chunk in rows.Chunk(200))
         {

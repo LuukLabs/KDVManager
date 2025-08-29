@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
 using KDVManager.Shared.Infrastructure.Tenancy;
-using KDVManager.Services.Scheduling.Infrastructure.Services;
+using KDVManager.Services.Scheduling.Application.Services.Implementation; // Calendar row services now live in Application
+using KDVManager.Services.Scheduling.Infrastructure.Services; // Cache warming service lives here
 using KDVManager.Services.Scheduling.Application.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;

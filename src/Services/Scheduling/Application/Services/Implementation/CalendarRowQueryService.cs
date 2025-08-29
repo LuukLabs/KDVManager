@@ -6,7 +6,7 @@ using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Services;
 using KDVManager.Services.Scheduling.Domain.Entities;
 
-namespace KDVManager.Services.Scheduling.Infrastructure.Services;
+namespace KDVManager.Services.Scheduling.Application.Services.Implementation;
 
 public class CalendarRowQueryService : ICalendarRowQueryService
 {
@@ -28,7 +28,6 @@ public class CalendarRowQueryService : ICalendarRowQueryService
 
         var rows = await _cacheRepository.GetGroupRangeAsync(groupId, startDate, endDate);
         bool needsRecalc = false;
-        // Quick completeness check: ensure each date has at least been processed if any schedules existed
         var dateSpan = Enumerable.Range(0, (endDate.DayNumber - startDate.DayNumber) + 1).Select(i => startDate.AddDays(i)).ToList();
         var missingDates = dateSpan.Except(rows.Select(r => r.Date).Distinct()).ToList();
         if (missingDates.Count > 0)
@@ -43,7 +42,6 @@ public class CalendarRowQueryService : ICalendarRowQueryService
 
     public async Task<List<CalendarRowAggregation>> GetAggregationsAsync(Guid groupId, DateOnly startDate, DateOnly endDate, bool forceRebuild = false)
     {
-        // Ensure rows present (may create fresh cache) but avoid duplication of grouping work if not forced
         var rows = await GetRowsAsync(groupId, startDate, endDate, forceRebuild);
         var grouped = await _cacheRepository.GetGroupedStatusCountsAsync(groupId, startDate, endDate);
         return grouped

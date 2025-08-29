@@ -1,9 +1,10 @@
 ﻿using System;
 using KDVManager.Services.CRM.Domain.Interfaces;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Domain.Entities
 {
-    public class Child : IMustHaveTenant
+    public class Child : IMustHaveTenant, IHasDateOfBirth
     {
         public Guid Id { get; set; }
 
@@ -24,12 +25,5 @@ namespace KDVManager.Services.CRM.Domain.Entities
         /// </summary>
         public int ChildNumber { get; set; }
 
-        public int Age(DateOnly? asOf = null)
-        {
-            var date = asOf ?? DateOnly.FromDateTime(DateTime.Today);
-            var age = date.Year - DateOfBirth.Year;
-            if (DateOfBirth > date.AddYears(-age)) age--;
-            return age < 0 ? 0 : age;
-        }
     }
 }

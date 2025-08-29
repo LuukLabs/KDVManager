@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Services;
 
-namespace KDVManager.Services.Scheduling.Infrastructure.Services;
+namespace KDVManager.Services.Scheduling.Application.Services.Implementation;
 
 public class CalendarRowInvalidationService : ICalendarRowInvalidationService
 {

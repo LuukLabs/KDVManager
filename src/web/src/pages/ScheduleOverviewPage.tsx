@@ -86,7 +86,7 @@ const ScheduleOverviewPage = () => {
 
   // Daily overview (closure + absences)
   const overviewDate = selectedDate.format("YYYY-MM-DD");
-  const { data: dailyOverview } = useGetDailyOverview({ date: overviewDate });
+  const { data: dailyOverview, isLoading: isLoadingOverview } = useGetDailyOverview({ date: overviewDate });
 
   // Date navigation helpers
   const goToPreviousDay = () => {
@@ -307,11 +307,17 @@ const ScheduleOverviewPage = () => {
             >
               {groups.map((group) => {
                 const groupOverview = dailyOverview?.groups?.find((g) => g.groupId === group.id);
-                const absentChildIds =
-                  groupOverview?.schedules
-                    ?.filter((s) => s.isAbsent)
-                    .map((s) => s.childId)
-                    ?.filter((id): id is string => !!id) ?? [];
+                const schedules = (groupOverview?.schedules ?? []).map((s) => ({
+                  // Adapt to ScheduleByDateVM shape expected by ChildCard while carrying isAbsent
+                  scheduleId: s.scheduleId ?? s.childId ?? "",
+                  childId: s.childId ?? "",
+                  timeSlotName: s.timeSlotName,
+                  startTime: s.startTime,
+                  endTime: s.endTime,
+                  age: s.age,
+                  dateOfBirth: s.dateOfBirth,
+                  isAbsent: s.isAbsent,
+                }));
                 return (
                   <Box
                     key={group.id}
@@ -324,9 +330,10 @@ const ScheduleOverviewPage = () => {
                     <GroupColumn
                       group={{ id: group.id ?? "", name: group.name ?? "" }}
                       selectedDate={selectedDate}
-                      absentChildIds={absentChildIds}
+                      schedules={schedules as any}
                       isClosed={!!dailyOverview?.isClosed}
                       closureReason={dailyOverview?.closureReason}
+                      isLoading={isLoadingOverview}
                     />
                   </Box>
                 );

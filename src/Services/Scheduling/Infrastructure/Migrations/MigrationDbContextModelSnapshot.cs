@@ -56,7 +56,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AgeYears")
+                    b.Property<int>("Age")
                         .HasColumnType("integer");
 
                     b.Property<DateOnly>("Birthday")

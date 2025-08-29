@@ -85,7 +85,7 @@ public class CalendarRowCalculator : ICalendarRowCalculator
                         Status = status,
                         Reason = reason,
                         Birthday = child.DateOfBirth,
-                        AgeYears = age
+                        Age = age
                     });
                 }
             }

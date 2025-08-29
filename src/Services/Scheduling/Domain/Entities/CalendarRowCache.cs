@@ -18,5 +18,5 @@ public class CalendarRowCache : IMustHaveTenant
     public string? Reason { get; set; }
     public DateTime CachedAtUtc { get; set; } = DateTime.UtcNow; // for TTL logic if needed
     public DateOnly Birthday { get; set; }
-    public int AgeYears { get; set; }
+    public int Age { get; set; }
 }

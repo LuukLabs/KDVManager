@@ -1,40 +1,50 @@
 import { Box, Paper, Typography, CircularProgress, useTheme, useMediaQuery } from "@mui/material";
 import { type Dayjs } from "dayjs";
-import { useGetSchedulesByDate } from "@api/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
 import GroupSummary from "./GroupSummary";
 import { useTranslation } from "react-i18next";
 import { Groups as GroupsIcon, EventBusy as EventBusyIcon } from "@mui/icons-material";
+import type { ScheduleByDateVM } from "@api/models/scheduleByDateVM"; // Reuse existing type for rendering
 
 type Group = {
   id: string;
   name: string;
 };
 
+/**
+ * GroupColumn (Presentational)
+ * ----------------------------------------------
+ * Refactored to follow the Backend-for-Frontend (BFF) principle.
+ * All data fetching and transformation (including absent/present classification)
+ * is performed by the parent (or upstream BFF endpoint: Daily Overview).
+ * This component now only receives:
+ *  - schedules: already shaped schedule objects (with isAbsent flags)
+ *  - group meta, closure info and date
+ * Any future enhancements (e.g. grouped rendering, sorting) should ideally be
+ * pushed back into the BFF layer so this component remains purely presentational.
+ */
 type GroupColumnProps = {
   group: Group;
   selectedDate: Dayjs;
-  absentChildIds?: string[];
+  schedules: (ScheduleByDateVM & { isAbsent?: boolean })[]; // isAbsent is supplied by DailyOverview
   isClosed?: boolean;
   closureReason?: string | null;
+  isLoading?: boolean; // loading state from parent daily overview fetch
 };
 
 const GroupColumn = ({
   group,
   selectedDate,
-  absentChildIds = [],
+  schedules,
   isClosed = false,
   closureReason,
+  isLoading = false,
 }: GroupColumnProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { data: schedules, isLoading } = useGetSchedulesByDate({
-    date: selectedDate.format("YYYY-MM-DD"),
-    groupId: group.id,
-  });
-
-  const sortedSchedules = (schedules ?? []).sort((a, b) => {
+  // Sorting kept local for UI presentation (could be moved to BFF if needed)
+  const sortedSchedules = (schedules ?? []).slice().sort((a, b) => {
     const nameA = (a.childFullName ?? "").toLocaleLowerCase();
     const nameB = (b.childFullName ?? "").toLocaleLowerCase();
     if (nameA && nameB) return nameA.localeCompare(nameB);
@@ -42,9 +52,8 @@ const GroupColumn = ({
     if (nameB) return 1;
     return (a.childId ?? "").localeCompare(b.childId ?? "");
   });
-
-  const present = sortedSchedules.filter((s) => !absentChildIds.includes(s.childId ?? ""));
-  const absent = sortedSchedules.filter((s) => absentChildIds.includes(s.childId ?? ""));
+  const present = sortedSchedules.filter((s) => !s.isAbsent);
+  const absent = sortedSchedules.filter((s) => s.isAbsent);
 
   return (
     <Paper
@@ -125,7 +134,7 @@ const GroupColumn = ({
       )}
 
       {/* Content hidden entirely when closed */}
-      {isClosed ? null : isLoading ? (
+  {isClosed ? null : isLoading ? (
         <Box
           sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 4, flex: 1 }}
         >

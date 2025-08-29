@@ -67,4 +67,19 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
     {
         return await _dbContext.Schedules.AnyAsync(s => s.ChildId == childId && s.StartDate == startDate);
     }
+
+    public async Task<IReadOnlyList<Schedule>> GetSchedulesForGroupInRangeAsync(Guid groupId, DateOnly startDate, DateOnly endDate)
+    {
+        var neededDays = new HashSet<DayOfWeek>();
+        for (var d = startDate; d <= endDate; d = d.AddDays(1)) neededDays.Add(d.DayOfWeek);
+
+        return await _dbContext.Schedules
+            .Where(s => s.StartDate <= endDate && (!s.EndDate.HasValue || s.EndDate >= startDate))
+            .Include(s => s.ScheduleRules.Where(sr => sr.GroupId == groupId && neededDays.Contains(sr.Day)))
+                .ThenInclude(sr => sr.TimeSlot)
+            .Include(s => s.ScheduleRules.Where(sr => sr.GroupId == groupId && neededDays.Contains(sr.Day)))
+                .ThenInclude(sr => sr.Group)
+            .Where(s => s.ScheduleRules.Any(sr => sr.GroupId == groupId && neededDays.Contains(sr.Day)))
+            .ToListAsync();
+    }
 }

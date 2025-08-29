@@ -9,4 +9,5 @@ public interface IAbsenceRepository : IAsyncRepository<Absence>
 {
     Task<List<Absence>> GetByChildIdAsync(Guid childId);
     Task<List<Absence>> GetByChildIdsAsync(IEnumerable<Guid> childIds);
+    Task<List<Absence>> GetByChildrenAndDateRangeAsync(IEnumerable<Guid> childIds, DateOnly startDate, DateOnly endDate);
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using KDVManager.Services.CRM.Domain.Interfaces;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Domain.Entities
 {
-    public class Child : IMustHaveTenant
+    public class Child : IMustHaveTenant, IHasDateOfBirth
     {
         public Guid Id { get; set; }
 
@@ -23,5 +24,6 @@ namespace KDVManager.Services.CRM.Domain.Entities
         /// Numbers are incremental starting from 1 per tenant.
         /// </summary>
         public int ChildNumber { get; set; }
+
     }
 }

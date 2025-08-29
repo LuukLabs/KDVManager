@@ -3,6 +3,7 @@ using System;
 using KDVManager.Services.Scheduling.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250829194935_AddCalendarRowCache")]
+    partial class AddCalendarRowCache
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChildId", "StartDate", "EndDate");
+                    b.HasIndex("ChildId");
 
                     b.ToTable("Absences");
                 });
@@ -55,12 +58,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly>("Birthday")
-                        .HasColumnType("date");
 
                     b.Property<DateTime>("CachedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -104,9 +101,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("GroupId", "Date");
-
-                    b.HasIndex("TenantId", "GroupId", "ChildId", "Date", "SlotId")
-                        .IsUnique();
 
                     b.ToTable("CalendarRowCaches");
                 });
@@ -160,8 +154,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("EndDate");
 
                     b.HasIndex("StartDate");
-
-                    b.HasIndex("StartDate", "EndDate");
 
                     b.ToTable("ClosurePeriods");
                 });

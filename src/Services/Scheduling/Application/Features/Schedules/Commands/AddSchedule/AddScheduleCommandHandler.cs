@@ -14,12 +14,14 @@ public class AddScheduleCommandHandler
     private readonly IScheduleRepository _scheduleRepository;
     private readonly ITimeSlotRepository _timeSlotRepository;
     private readonly IScheduleTimelineService _timelineService;
+    private readonly ICalendarRowInvalidationService _invalidationService;
 
-    public AddScheduleCommandHandler(IScheduleRepository scheduleRepository, ITimeSlotRepository timeSlotRepository, IScheduleTimelineService timelineService)
+    public AddScheduleCommandHandler(IScheduleRepository scheduleRepository, ITimeSlotRepository timeSlotRepository, IScheduleTimelineService timelineService, ICalendarRowInvalidationService invalidationService)
     {
         _scheduleRepository = scheduleRepository;
         _timeSlotRepository = timeSlotRepository;
         _timelineService = timelineService;
+        _invalidationService = invalidationService;
     }
 
     public async Task<Guid> Handle(AddScheduleCommand request)
@@ -56,6 +58,14 @@ public class AddScheduleCommandHandler
 
         // Recalculate timeline to set EndDates appropriately
         await _timelineService.RecalculateAsync(schedule.ChildId);
+
+        // Invalidate only affected date range for each involved group
+        var groupIds = schedule.ScheduleRules.Select(r => r.GroupId).Distinct();
+        var start = schedule.StartDate;
+        // New schedule has unknown end until timeline recalculation; assume 180-day planning horizon or timeline will extend later.
+        var end = schedule.ScheduleRules.Any() ? DateOnly.FromDateTime(DateTime.UtcNow.AddDays(180)) : start;
+        foreach (var gid in groupIds)
+            await _invalidationService.InvalidateGroupRangeAsync(gid, start, end);
 
         return schedule.Id;
     }

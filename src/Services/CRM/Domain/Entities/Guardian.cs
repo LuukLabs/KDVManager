@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using KDVManager.Services.CRM.Domain.Interfaces;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Domain.Entities
 {
-    public class Guardian : IMustHaveTenant
+    public class Guardian : IMustHaveTenant, IHasDateOfBirth
     {
         public Guid Id { get; set; }
 
@@ -56,5 +57,6 @@ namespace KDVManager.Services.CRM.Domain.Entities
             }
             throw new InvalidOperationException("Phone number not found");
         }
+
     }
 }

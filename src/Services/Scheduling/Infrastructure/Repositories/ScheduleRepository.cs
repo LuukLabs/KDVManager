@@ -67,4 +67,32 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
     {
         return await _dbContext.Schedules.AnyAsync(s => s.ChildId == childId && s.StartDate == startDate);
     }
+
+    public async Task<List<Schedule>> ListByGroupsAndDateRangeAsync(IEnumerable<Guid> groupIds, DateOnly from, DateOnly to)
+    {
+        var groupList = groupIds.Distinct().ToList();
+        if (!groupList.Any()) return new List<Schedule>();
+
+        // We include rules restricted to day range later when expanding; here we bring all potentially relevant
+        // rules for groups whose schedule intersects the date window to avoid N+1.
+        return await _dbContext.Schedules
+            .Where(s => s.StartDate <= to && (!s.EndDate.HasValue || s.EndDate >= from))
+            .Include(s => s.ScheduleRules.Where(sr => groupList.Contains(sr.GroupId)))
+                .ThenInclude(sr => sr.TimeSlot)
+            .Include(s => s.ScheduleRules.Where(sr => groupList.Contains(sr.GroupId)))
+                .ThenInclude(sr => sr.Group)
+            .Where(s => s.ScheduleRules.Any(sr => groupList.Contains(sr.GroupId)))
+            .ToListAsync();
+    }
+
+    public async Task<List<Schedule>> ListByChildAndDateRangeAsync(Guid childId, DateOnly from, DateOnly to)
+    {
+        return await _dbContext.Schedules
+            .Where(s => s.ChildId == childId && s.StartDate <= to && (!s.EndDate.HasValue || s.EndDate >= from))
+            .Include(s => s.ScheduleRules)
+                .ThenInclude(sr => sr.TimeSlot)
+            .Include(s => s.ScheduleRules)
+                .ThenInclude(sr => sr.Group)
+            .ToListAsync();
+    }
 }

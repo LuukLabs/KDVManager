@@ -29,4 +29,12 @@ public class ClosurePeriodRepository : BaseRepository<ClosurePeriod>, IClosurePe
             .OrderBy(cd => cd.StartDate)
             .ToListAsync();
     }
+
+    public async Task<List<ClosurePeriod>> ListByDateRangeAsync(DateOnly from, DateOnly to)
+    {
+        return await _dbContext.ClosurePeriods
+            .Where(cd => cd.StartDate <= to && cd.EndDate >= from)
+            .OrderBy(cd => cd.StartDate)
+            .ToListAsync();
+    }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
+using KDVManager.Shared.Domain.Extensions;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren
 {
@@ -27,7 +29,7 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
                 var child = await _childRepository.GetByIdAsync(cg.ChildId);
                 if (child == null) continue;
 
-                var age = CalculateAge(child.DateOfBirth);
+                var age = child.Age();
 
                 var vm = new GuardianChildVM
                 {
@@ -48,16 +50,5 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
                 .ToList();
         }
 
-        private static int CalculateAge(DateOnly birthDate)
-        {
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var age = today.Year - birthDate.Year;
-
-            // If birthday hasn't occurred this year yet, subtract one year
-            if (birthDate > today.AddYears(-age))
-                age--;
-
-            return Math.Max(0, age);
-        }
     }
 }

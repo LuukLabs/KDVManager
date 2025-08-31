@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using KDVManager.BKRCalculator;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
+using KDVManager.Shared.Domain.Extensions;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
 
@@ -151,7 +153,7 @@ public class GetGroupSummaryQueryHandler
 
     private static List<AgeGroupSummary> CalculateAgeGroups(List<Child> children, DateOnly date)
     {
-        var withAges = children.Select(c => new { c, Age = CalculateAge(c.DateOfBirth, date) }).ToList();
+        var withAges = children.Select(c => new { c, Age = c.Age(date) }).ToList();
 
         return new[]
         {
@@ -163,13 +165,7 @@ public class GetGroupSummaryQueryHandler
         }.Where(g => g.ChildCount > 0).ToList();
     }
 
-    private static int CalculateAge(DateOnly birthDate, DateOnly reference)
-    {
-        var age = reference.Year - birthDate.Year;
-        if (reference < birthDate.AddYears(age))
-            age--;
-        return age;
-    }
+    // Age calculation moved to shared extension method
 
     private static GroupAnalysisResult CalculateRequiredSupervisors(int totalChildren, List<AgeGroupSummary> groups)
     {

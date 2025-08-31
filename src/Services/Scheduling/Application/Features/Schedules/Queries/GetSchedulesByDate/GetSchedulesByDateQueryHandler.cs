@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
-using KDVManager.Shared.Domain.Utilities;
+using KDVManager.Shared.Domain.Extensions;
+using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 
@@ -43,7 +44,7 @@ public class GetSchedulesByDateQueryHandler
                 EndTime = rule.TimeSlot.EndTime,
                 GroupId = rule.GroupId,
                 DateOfBirth = child?.DateOfBirth,
-                Age = child != null ? DateTimeUtilities.CalculateAge(child.DateOfBirth, request.Date) : null
+                Age = child?.Age(request.Date)
             };
         }).ToList();
 

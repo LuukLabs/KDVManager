@@ -24,7 +24,7 @@ public class ExceptionHandlerMiddleware
         {
             await _next(context);
         }
-        catch (Exception exception)
+    catch (Exception exception)
         {
             // Increment error counter
             CrmApiMetrics.ErrorCounter.Add(1,
@@ -59,7 +59,7 @@ public class ExceptionHandlerMiddleware
             RemoteIp = context.Connection.RemoteIpAddress?.ToString()
         };
 
-        switch (exception)
+    switch (exception)
         {
             case ValidationException validationException:
                 httpStatusCode = HttpStatusCode.UnprocessableEntity;
@@ -82,6 +82,72 @@ public class ExceptionHandlerMiddleware
                     errorDetails.Service,
                     errorDetails.RequestPath,
                     errorDetails.TraceId);
+                break;
+
+            // Deserialize / model binding errors -> return 400 with helpful message
+            case System.Text.Json.JsonException jsonException:
+                httpStatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogWarning(jsonException,
+                    "JSON parse error in {Service} at {RequestPath}. TraceId: {TraceId}. Message: {Message}",
+                    errorDetails.Service,
+                    errorDetails.RequestPath,
+                    errorDetails.TraceId,
+                    jsonException.Message);
+
+                result = JsonSerializer.Serialize(new
+                {
+                    error = "Failed to read request body as JSON.",
+                    details = jsonException.Message,
+                    status = (int)httpStatusCode,
+                    traceId = traceId,
+                    timestamp = errorDetails.Timestamp,
+                    path = errorDetails.RequestPath
+                }, jsonSerializerOptions);
+                break;
+
+            // Bad HTTP request (e.g. large body, invalid headers)
+            case Microsoft.AspNetCore.Http.BadHttpRequestException badHttpRequestException:
+                httpStatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogWarning(badHttpRequestException,
+                    "Bad HTTP request in {Service} at {RequestPath}. TraceId: {TraceId}. Message: {Message}",
+                    errorDetails.Service,
+                    errorDetails.RequestPath,
+                    errorDetails.TraceId,
+                    badHttpRequestException.Message);
+
+                result = JsonSerializer.Serialize(new
+                {
+                    error = "Invalid HTTP request.",
+                    details = badHttpRequestException.Message,
+                    status = (int)httpStatusCode,
+                    traceId = traceId,
+                    timestamp = errorDetails.Timestamp,
+                    path = errorDetails.RequestPath
+                }, jsonSerializerOptions);
+                break;
+
+            // Some body readers may throw InvalidDataException when body is incorrect
+            case System.IO.InvalidDataException invalidDataException:
+                httpStatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogWarning(invalidDataException,
+                    "Invalid request body in {Service} at {RequestPath}. TraceId: {TraceId}. Message: {Message}",
+                    errorDetails.Service,
+                    errorDetails.RequestPath,
+                    errorDetails.TraceId,
+                    invalidDataException.Message);
+
+                result = JsonSerializer.Serialize(new
+                {
+                    error = "Invalid request body.",
+                    details = invalidDataException.Message,
+                    status = (int)httpStatusCode,
+                    traceId = traceId,
+                    timestamp = errorDetails.Timestamp,
+                    path = errorDetails.RequestPath
+                }, jsonSerializerOptions);
                 break;
 
             case NotFoundException notFoundException:
@@ -109,7 +175,7 @@ public class ExceptionHandlerMiddleware
                 break;
         }
 
-        // Add OpenTelemetry span tags for better error tracking
+        // Add OpenTelemetry span tags for better error tracking and record the exception
         if (Activity.Current != null)
         {
             Activity.Current.SetTag("error", "true");
@@ -117,6 +183,9 @@ public class ExceptionHandlerMiddleware
             Activity.Current.SetTag("error.message", exception.Message);
             Activity.Current.SetTag("http.status_code", ((int)httpStatusCode).ToString());
             Activity.Current.SetStatus(ActivityStatusCode.Error, exception.Message);
+            // Record exception on the current Activity so OTEL exporters (SigNoz) get full exception telemetry
+            // Use a safe wrapper that either calls Activity.RecordException or falls back to an Activity event
+            Activity.Current.RecordExceptionSafe(exception);
         }
 
         context.Response.StatusCode = (int)httpStatusCode;

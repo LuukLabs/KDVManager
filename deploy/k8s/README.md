@@ -23,7 +23,6 @@ k8s/
 │   ├── crm/                  # CRM service
 │   ├── scheduling/           # Scheduling service
 │   ├── web/                  # Web frontend
-│   ├── data-migration/       # Data migration jobs
 │   └── kustomization.yaml
 ├── observability/            # Observability stack
 │   ├── otel-collector-config.yaml

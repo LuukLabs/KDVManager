@@ -28,7 +28,6 @@
 │   │   │   ├── Domain/          # Domain entities and business logic
 │   │   │   └── Infrastructure/  # Data access, external services
 │   │   ├── Scheduling/          # Child scheduling API (same structure)
-│   │   ├── DataMigration/       # Data migration utilities
 │   │   └── ApiGateways/Envoy/   # API gateway configuration
 │   ├── Shared/                  # Shared libraries across services
 │   ├── web/                     # React frontend (Vite + TypeScript)
@@ -77,7 +76,7 @@
 - `docker compose up -d` - Start full local development stack
 - Set `NUGET_GITHUB_TOKEN` environment variable if building .NET services
 
-**Available services**: web, crm-api, crm-migrator, scheduling-api, scheduling-migrator, data-migration
+**Available services**: web, crm-api, crm-migrator, scheduling-api, scheduling-migrator
 
 ## CI/CD & Validation
 

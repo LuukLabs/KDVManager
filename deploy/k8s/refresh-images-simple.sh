@@ -15,7 +15,7 @@ print_help() {
     echo "  -h, --help        Show this help message and exit"
     echo "  --only SERVICE    Only refresh the specified service"
     echo ""
-    echo "Available services: web, crm-api, scheduling-api, envoy, data-migration"
+    echo "Available services: web, crm-api, scheduling-api, envoy"
     echo ""
     echo "Examples:"
     echo "  $0                    # Refresh all services"
@@ -80,26 +80,9 @@ restart_service() {
             kubectl rollout restart deployment/envoy -n "$NAMESPACE"
             kubectl rollout status deployment/envoy -n "$NAMESPACE" --timeout=300s
             ;;
-        data-migration)
-            log "Refreshing data-migration-plepje cronjob to force image pull..."
-            kubectl patch cronjob data-migration-cronjob-plepje \
-              -n "$NAMESPACE" \
-              -p "{\"spec\": {\"jobTemplate\": {\"metadata\": {\"annotations\": {\"kubectl.kubernetes.io/restartedAt\": \"$(date +%FT%T%z)\"}}}}}"
-            
-            log "Running data-migration-plepje cronjob immediately..."
-            kubectl create job --from=cronjob/data-migration-cronjob-plepje data-migration-plepje-manual-$(date +%s) -n "$NAMESPACE"
-
-            log "Refreshing data-migration-anonymize cronjob to force image pull..."
-            kubectl patch cronjob data-migration-cronjob-anonymize \
-              -n "$NAMESPACE" \
-              -p "{\"spec\": {\"jobTemplate\": {\"metadata\": {\"annotations\": {\"kubectl.kubernetes.io/restartedAt\": \"$(date +%FT%T%z)\"}}}}}"
-
-            log "Running data-migration-anonymize cronjob immediately..."
-            kubectl create job --from=cronjob/data-migration-cronjob-anonymize data-migration-anonymize-manual-$(date +%s) -n "$NAMESPACE"
-            ;;
         *)
             echo "Error: Unknown service '$service'"
-            echo "Available services: web, crm-api, scheduling-api, envoy, data-migration"
+            echo "Available services: web, crm-api, scheduling-api, envoy"
             exit 1
             ;;
     esac
@@ -117,15 +100,9 @@ else
     restart_service "scheduling-api"
     restart_service "web"
     restart_service "envoy"
-    restart_service "data-migration"
-    log_success "All deployments and the data-migration cronjob refreshed and triggered successfully!"
+    log_success "All deployments refreshed successfully!"
 fi
 
 # Show current pod and cronjob status
 log "Current pod status:"
 kubectl get pods -n "$NAMESPACE" -o wide
-
-if [ -z "$ONLY_SERVICE" ] || [ "$ONLY_SERVICE" = "data-migration" ]; then
-    log "Current cronjob status:"
-    kubectl get cronjobs -n "$NAMESPACE"
-fi

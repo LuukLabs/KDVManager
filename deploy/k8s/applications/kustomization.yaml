@@ -7,7 +7,6 @@ resources:
 - crm/
 - scheduling/
 - web/
-- data-migration/
 
 labels:
 - pairs:

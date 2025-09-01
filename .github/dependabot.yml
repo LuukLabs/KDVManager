@@ -34,7 +34,6 @@ updates:
       - "src/Services/CRM/Infrastructure"
       - "src/Services/Scheduling/Api"
       - "src/Services/Scheduling/Infrastructure"
-      - "src/Services/DataMigration"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3

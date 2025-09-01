@@ -81,17 +81,6 @@ services:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
 
-  data-migration:
-    # Override the default ENTRYPOINT arguments for the one-off migration run.
-    # Replace the GUID below with the tenant you wish to migrate. Add/remove --anonymize as needed.
-    command: ["--tenant","7e520828-45e6-415f-b0ba-19d56a312f7f","--anonymize"]
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      # Added password + pooling to match other services (was missing previously)
-      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
-      - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
-
-
 volumes:
   kdvmanager-data: null
   rabbitmq-data: null

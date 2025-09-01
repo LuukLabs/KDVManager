@@ -14,27 +14,28 @@ export default function ErrorPage() {
   console.error(error);
 
   let status: number | undefined;
-  let messageKey = "error.unexpected";
+  
+  let message = t("error.unexpected");
   if (error instanceof ApiError) {
     status = error.status;
     switch (error.type) {
       case "unauthorized":
-        messageKey = "error.unauthorized";
+        message = t("error.unauthorized");
         break;
       case "forbidden":
-        messageKey = "error.forbidden";
+        message = t("error.forbidden");
         break;
       case "not-found":
-        messageKey = "error.notFound";
+        message = t("error.notFound");
         break;
       case "server":
-        messageKey = "error.server";
+        message = t("error.server");
         break;
       case "network":
-        messageKey = "error.network";
+        message = t("error.network");
         break;
       default:
-        messageKey = "error.unexpected";
+        message = t("error.unexpected");
     }
   }
 
@@ -66,7 +67,7 @@ export default function ErrorPage() {
           {status ? `${status} – ${t("error.oops")}` : t("error.oops")}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          {t(messageKey)}
+          {message}
         </Typography>
         {process.env.NODE_ENV === "development" && error instanceof Error && (
           <DevErrorPanel error={error} />

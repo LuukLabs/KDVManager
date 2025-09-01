@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { type DeleteTexts } from "../types/delete.types";
 import { ApiError } from "@api/errors/types";
 import { classifyStatus } from "@api/errors/classify";
@@ -21,7 +22,7 @@ export const createErrorHandler =
     } else {
       const status = getErrorStatus(error);
       apiError = new ApiError({
-        message: "Unexpected error",
+        message: i18next.t("error.unexpected", "Unexpected error"),
         status,
         type: classifyStatus(status),
       });

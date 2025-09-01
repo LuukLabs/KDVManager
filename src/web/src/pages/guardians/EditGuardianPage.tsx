@@ -36,9 +36,12 @@ const EditGuardianPage = () => {
   const { data: guardian, isLoading, error } = useGetGuardianById(guardianId!);
   const updateGuardian = useUpdateGuardian();
 
+  const SECTION_BASIC = "basic";
+  const SECTION_CONTACT = "contact";
+
   const [editingSections, setEditingSections] = useState<Record<string, boolean>>({
-    basic: false,
-    contact: false,
+    [SECTION_BASIC]: false,
+    [SECTION_CONTACT]: false,
   });
 
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -106,7 +109,7 @@ const EditGuardianPage = () => {
       const data = basicFormContext.getValues();
 
       if (!guardianId) {
-        throw new Error("Guardian ID is required");
+        throw new Error(t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }));
       }
 
       await updateGuardian.mutateAsync({
@@ -133,8 +136,8 @@ const EditGuardianPage = () => {
         queryKey: getGetGuardianByIdQueryOptions(guardianId).queryKey,
       });
 
-      enqueueSnackbar(t("Basic information updated successfully"), { variant: "success" });
-      handleSectionEdit("basic", false);
+  enqueueSnackbar(t("guardian.success.basicUpdated", "Basic information updated successfully"), { variant: "success" });
+  handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -145,7 +148,7 @@ const EditGuardianPage = () => {
           });
         });
       } else {
-        setSubmitError("Failed to update basic information. Please try again.");
+  setSubmitError(t("guardian.errors.updateBasicFailed", { defaultValue: "Failed to update basic information. Please try again." }));
       }
     }
   };
@@ -156,7 +159,7 @@ const EditGuardianPage = () => {
       const data = contactFormContext.getValues();
 
       if (!guardianId) {
-        throw new Error("Guardian ID is required");
+        throw new Error(t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }));
       }
 
       await updateGuardian.mutateAsync({
@@ -183,8 +186,8 @@ const EditGuardianPage = () => {
         queryKey: getGetGuardianByIdQueryOptions(guardianId).queryKey,
       });
 
-      enqueueSnackbar(t("Contact information updated successfully"), { variant: "success" });
-      handleSectionEdit("contact", false);
+  enqueueSnackbar(t("guardian.success.contactUpdated", "Contact information updated successfully"), { variant: "success" });
+  handleSectionEdit(SECTION_CONTACT, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -195,15 +198,15 @@ const EditGuardianPage = () => {
           });
         });
       } else {
-        setSubmitError("Failed to update contact information. Please try again.");
+  setSubmitError(t("guardian.errors.updateContactFailed", { defaultValue: "Failed to update contact information. Please try again." }));
       }
     }
   };
 
   const handleCancel = (section: string) => {
-    if (section === "basic") {
+    if (section === SECTION_BASIC) {
       basicFormContext.reset();
-    } else if (section === "contact") {
+    } else if (section === SECTION_CONTACT) {
       contactFormContext.reset();
     }
     handleSectionEdit(section, false);
@@ -259,11 +262,11 @@ const EditGuardianPage = () => {
               givenName={guardian?.givenName}
               familyName={guardian?.familyName}
               dateOfBirth={guardian?.dateOfBirth ?? undefined}
-              isEditing={editingSections.basic}
+              isEditing={editingSections[SECTION_BASIC]}
               formContext={basicFormContext}
               onSave={handleBasicSave}
-              onCancel={() => handleCancel("basic")}
-              onEditToggle={(editing) => handleSectionEdit("basic", editing)}
+              onCancel={() => handleCancel(SECTION_BASIC)}
+              onEditToggle={(editing) => handleSectionEdit(SECTION_BASIC, editing)}
               loading={isLoading || updateGuardian.isPending}
             />
           </Grid>
@@ -279,11 +282,11 @@ const EditGuardianPage = () => {
                   type: p.type ?? "Mobile",
                 })) ?? []
               }
-              isEditing={editingSections.contact}
+              isEditing={editingSections[SECTION_CONTACT]}
               formContext={contactFormContext}
               onSave={handleContactSave}
-              onCancel={() => handleCancel("contact")}
-              onEditToggle={(editing) => handleSectionEdit("contact", editing)}
+              onCancel={() => handleCancel(SECTION_CONTACT)}
+              onEditToggle={(editing) => handleSectionEdit(SECTION_CONTACT, editing)}
               loading={isLoading || updateGuardian.isPending}
             />
           </Grid>

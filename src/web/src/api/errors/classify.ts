@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { ApiError } from "./types";
 
 export const classifyStatus = (status?: number): ApiError["type"] => {
@@ -37,16 +38,16 @@ export const buildApiError = (params: {
   const message =
     messageFromBody ??
     (status === 404
-      ? "Resource not found"
+      ? i18next.t("error.notFound", "Resource not found")
       : status === 401
-        ? "Unauthorized"
+        ? i18next.t("error.unauthorized", "Unauthorized")
         : status === 403
-          ? "Forbidden"
+          ? i18next.t("error.forbidden", "Forbidden")
           : status === 409
-            ? "Conflict"
+            ? i18next.t("error.conflict", "Conflict")
             : status && status >= 500
-              ? "Server error"
-              : "Unexpected error");
+              ? i18next.t("error.server", "Server error")
+              : i18next.t("error.unexpected", "Unexpected error"));
 
   const code = body?.code;
   const details = body?.errors ?? body?.details ?? body?.Extensions ?? body;

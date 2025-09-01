@@ -1,18 +1,35 @@
+import i18next from "i18next";
 import { GuardianRelationshipType } from "@api/models/guardianRelationshipType";
 
-// Get human-readable label from numeric value
+// Get human-readable label from numeric value (non-translated, internal)
 export const getRelationshipLabel = (type: GuardianRelationshipType | undefined): string => {
   switch (type) {
     case GuardianRelationshipType.Parent:
-      return "Parent";
+  return i18next.t("guardian.relationship.parent", "Parent");
     case GuardianRelationshipType.Guardian:
-      return "Guardian";
+  return i18next.t("guardian.relationship.guardian", "Guardian");
     case GuardianRelationshipType.Grandparent:
-      return "Grandparent";
+  return i18next.t("guardian.relationship.grandparent", "Grandparent");
     case GuardianRelationshipType.Other:
-      return "Other";
+  return i18next.t("guardian.relationship.other", "Other");
     default:
-      return "Unknown";
+  return i18next.t("guardian.relationship.unknown", "Unknown");
+  }
+};
+
+// Get translated label for UI
+export const getRelationshipLabelT = (type: GuardianRelationshipType | undefined): string => {
+  switch (type) {
+    case GuardianRelationshipType.Parent:
+      return i18next.t("guardian.relationship.parent", "Parent");
+    case GuardianRelationshipType.Guardian:
+      return i18next.t("guardian.relationship.guardian", "Guardian");
+    case GuardianRelationshipType.Grandparent:
+      return i18next.t("guardian.relationship.grandparent", "Grandparent");
+    case GuardianRelationshipType.Other:
+      return i18next.t("guardian.relationship.other", "Other");
+    default:
+      return i18next.t("guardian.relationship.unknown", "Unknown");
   }
 };
 
@@ -34,9 +51,9 @@ export const getRelationshipColor = (
 
 // Available relationship type options for forms
 export const relationshipTypeOptions = [
-  { value: "Mother" as const, label: "Mother" },
-  { value: "Father" as const, label: "Father" },
-  { value: "Guardian" as const, label: "Guardian" },
-  { value: "Grandparent" as const, label: "Grandparent" },
-  { value: "Other" as const, label: "Other" },
+  { value: "Mother" as const, label: i18next.t("guardian.relationship.mother", "Mother") },
+  { value: "Father" as const, label: i18next.t("guardian.relationship.father", "Father") },
+  { value: "Guardian" as const, label: i18next.t("guardian.relationship.guardian", "Guardian") },
+  { value: "Grandparent" as const, label: i18next.t("guardian.relationship.grandparent", "Grandparent") },
+  { value: "Other" as const, label: i18next.t("guardian.relationship.other", "Other") },
 ];

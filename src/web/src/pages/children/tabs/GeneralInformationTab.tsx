@@ -27,10 +27,14 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
   const queryClient = useQueryClient();
   const { mutateAsync: updateChild } = useUpdateChild();
 
+  const SECTION_BASIC = "basic";
+  const SECTION_MEDICAL = "medical";
+  const SECTION_CONTACT = "contact";
+
   const [editingSections, setEditingSections] = useState<Record<string, boolean>>({
-    basic: false,
-    medical: false,
-    contact: false,
+    [SECTION_BASIC]: false,
+    [SECTION_MEDICAL]: false,
+    [SECTION_CONTACT]: false,
   });
 
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -74,7 +78,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       const data = basicFormContext.getValues();
 
       if (!child.id) {
-        throw new Error("Child ID is required");
+        throw new Error(t("child.errors.idRequired", { defaultValue: "Child ID is required" }));
       }
 
       await updateChild({
@@ -94,8 +98,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         queryKey: getGetChildByIdQueryOptions(child.id).queryKey,
       });
 
-      enqueueSnackbar(t("Basic information updated successfully"), { variant: "success" });
-      handleSectionEdit("basic", false);
+  enqueueSnackbar(t("child.success.basicUpdated", "Basic information updated successfully"), { variant: "success" });
+  handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -106,15 +110,15 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           });
         });
       } else {
-        setSubmitError("Failed to update basic information. Please try again.");
+  setSubmitError(t("child.errors.updateBasicFailed", { defaultValue: "Failed to update basic information. Please try again." }));
       }
     }
   };
 
   const handleCancel = (section: string) => {
-    if (section === "basic") {
+    if (section === SECTION_BASIC) {
       basicFormContext.reset();
-    } else if (section === "medical") {
+    } else if (section === SECTION_MEDICAL) {
       medicalFormContext.reset();
     }
     handleSectionEdit(section, false);
@@ -143,8 +147,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
             isEditing={editingSections.basic}
             formContext={basicFormContext}
             onSave={handleBasicSave}
-            onCancel={() => handleCancel("basic")}
-            onEditToggle={(editing) => handleSectionEdit("basic", editing)}
+            onCancel={() => handleCancel(SECTION_BASIC)}
+            onEditToggle={(editing) => handleSectionEdit(SECTION_BASIC, editing)}
           />
         </Grid>
 

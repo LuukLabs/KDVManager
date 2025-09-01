@@ -50,7 +50,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
       "i18next/no-literal-string": [
         "error",
         {
-          mode: "jsx-only",
+          mode: "all",
           "jsx-attributes": {
             include: [
               "label",
@@ -223,6 +223,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
   {
     files: ["src/api/endpoints/**/*.{ts,tsx}"],
     rules: {
+      "i18next/no-literal-string": "off",
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/unified-signatures": "off",
     },

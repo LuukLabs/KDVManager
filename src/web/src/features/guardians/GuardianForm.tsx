@@ -93,7 +93,7 @@ export const GuardianForm = ({
       navigate("/guardians");
     } catch (error) {
       setSubmitError(
-        error instanceof Error ? error.message : "An error occurred while saving the guardian",
+        error instanceof Error ? error.message : t("guardian.errors.saveFailed", "An error occurred while saving the guardian"),
       );
     }
   };

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { type Auth0ContextInterface } from "@auth0/auth0-react";
 import { redirect, type LoaderFunction } from "react-router-dom";
 
@@ -11,10 +12,10 @@ export const authConfig = {
 
 export const validateAuthConfig = () => {
   if (!authConfig.domain || !authConfig.clientId) {
-    throw new Error("Auth0 configuration is missing domain or clientId");
+    throw new Error(i18next.t("auth.errors.missingConfig", "Auth0 configuration is missing domain or clientId"));
   }
   if (!authConfig.audience) {
-    console.warn("Auth0 audience is not set, using default: " + authConfig.audience);
+    console.warn(i18next.t("auth.warnings.audienceMissing", "Auth0 audience is not set, using default: ") + authConfig.audience);
   }
 };
 

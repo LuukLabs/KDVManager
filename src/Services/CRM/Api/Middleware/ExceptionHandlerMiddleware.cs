@@ -24,7 +24,7 @@ public class ExceptionHandlerMiddleware
         {
             await _next(context);
         }
-    catch (Exception exception)
+        catch (Exception exception)
         {
             // Increment error counter
             CrmApiMetrics.ErrorCounter.Add(1,
@@ -59,7 +59,7 @@ public class ExceptionHandlerMiddleware
             RemoteIp = context.Connection.RemoteIpAddress?.ToString()
         };
 
-    switch (exception)
+        switch (exception)
         {
             case ValidationException validationException:
                 httpStatusCode = HttpStatusCode.UnprocessableEntity;
@@ -175,17 +175,24 @@ public class ExceptionHandlerMiddleware
                 break;
         }
 
-        // Add OpenTelemetry span tags for better error tracking and record the exception
+        // Add OpenTelemetry span tags for better error tracking and record the exception (canonical approach)
         if (Activity.Current != null)
         {
-            Activity.Current.SetTag("error", "true");
-            Activity.Current.SetTag("error.type", exception.GetType().Name);
-            Activity.Current.SetTag("error.message", exception.Message);
-            Activity.Current.SetTag("http.status_code", ((int)httpStatusCode).ToString());
-            Activity.Current.SetStatus(ActivityStatusCode.Error, exception.Message);
-            // Record exception on the current Activity so OTEL exporters (SigNoz) get full exception telemetry
-            // Use a safe wrapper that either calls Activity.RecordException or falls back to an Activity event
-            Activity.Current.RecordExceptionSafe(exception);
+            Activity.Current.SetTag("error", true);
+            Activity.Current.SetTag("exception.type", exception.GetType().FullName);
+            Activity.Current.SetTag("http.status_code", (int)httpStatusCode);
+            // SetStatus with a generic message (avoid leaking full exception message)
+            Activity.Current.SetStatus(ActivityStatusCode.Error, (int)httpStatusCode >= 500 ? "internal_error" : "client_error");
+            try
+            {
+                // Attach an exception event (privacy-friendly: no message/stacktrace)
+                var tags = new ActivityTagsCollection
+                {
+                    { "exception.type", exception.GetType().FullName }
+                };
+                Activity.Current.AddEvent(new ActivityEvent("exception", tags: tags));
+            }
+            catch { }
         }
 
         context.Response.StatusCode = (int)httpStatusCode;

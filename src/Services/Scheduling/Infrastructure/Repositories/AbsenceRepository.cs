@@ -26,5 +26,14 @@ public class AbsenceRepository : BaseRepository<Absence>, IAbsenceRepository
         return await _dbContext.Absences.Where(a => ids.Contains(a.ChildId)).ToListAsync();
     }
 
+    public async Task<List<Absence>> GetByChildIdsAndDateRangeAsync(IEnumerable<Guid> childIds, DateOnly from, DateOnly to)
+    {
+        var ids = childIds.Distinct().ToList();
+        if (!ids.Any()) return new List<Absence>();
+        return await _dbContext.Absences
+            .Where(a => ids.Contains(a.ChildId) && a.StartDate <= to && a.EndDate >= from)
+            .ToListAsync();
+    }
+
 }
 

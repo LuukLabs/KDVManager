@@ -60,6 +60,7 @@ public static class ConfigureServices
         services.AddScoped<DeleteEndMarkCommandHandler>();
         services.AddScoped<GetEndMarksQueryHandler>();
         services.AddScoped<GetDailyOverviewQueryHandler>();
+    services.AddScoped<ICalendarService, CalendarService>();
 
         return services;
     }

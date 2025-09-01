@@ -75,6 +75,11 @@ export const GuardianBasicInformationCard: React.FC<GuardianBasicInformationCard
             name="dateOfBirth"
             label={t("Date of Birth")}
             inputProps={{ fullWidth: true }}
+            transform={{
+              output: (value) => {
+                return value ? value.format("YYYY-MM-DD") : null;
+              },
+            }}
           />
         </Grid>
       </Grid>

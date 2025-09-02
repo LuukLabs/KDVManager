@@ -14,7 +14,7 @@ export default function ErrorPage() {
   console.error(error);
 
   let status: number | undefined;
-  
+
   let message = t("error.unexpected");
   if (error instanceof ApiError) {
     status = error.status;

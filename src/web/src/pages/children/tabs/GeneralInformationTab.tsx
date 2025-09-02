@@ -98,8 +98,10 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         queryKey: getGetChildByIdQueryOptions(child.id).queryKey,
       });
 
-  enqueueSnackbar(t("child.success.basicUpdated", "Basic information updated successfully"), { variant: "success" });
-  handleSectionEdit(SECTION_BASIC, false);
+      enqueueSnackbar(t("child.success.basicUpdated", "Basic information updated successfully"), {
+        variant: "success",
+      });
+      handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -110,7 +112,11 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           });
         });
       } else {
-  setSubmitError(t("child.errors.updateBasicFailed", { defaultValue: "Failed to update basic information. Please try again." }));
+        setSubmitError(
+          t("child.errors.updateBasicFailed", {
+            defaultValue: "Failed to update basic information. Please try again.",
+          }),
+        );
       }
     }
   };

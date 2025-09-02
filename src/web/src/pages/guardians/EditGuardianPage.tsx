@@ -109,7 +109,9 @@ const EditGuardianPage = () => {
       const data = basicFormContext.getValues();
 
       if (!guardianId) {
-        throw new Error(t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }));
+        throw new Error(
+          t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }),
+        );
       }
 
       await updateGuardian.mutateAsync({
@@ -136,8 +138,11 @@ const EditGuardianPage = () => {
         queryKey: getGetGuardianByIdQueryOptions(guardianId).queryKey,
       });
 
-  enqueueSnackbar(t("guardian.success.basicUpdated", "Basic information updated successfully"), { variant: "success" });
-  handleSectionEdit(SECTION_BASIC, false);
+      enqueueSnackbar(
+        t("guardian.success.basicUpdated", "Basic information updated successfully"),
+        { variant: "success" },
+      );
+      handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -148,7 +153,11 @@ const EditGuardianPage = () => {
           });
         });
       } else {
-  setSubmitError(t("guardian.errors.updateBasicFailed", { defaultValue: "Failed to update basic information. Please try again." }));
+        setSubmitError(
+          t("guardian.errors.updateBasicFailed", {
+            defaultValue: "Failed to update basic information. Please try again.",
+          }),
+        );
       }
     }
   };
@@ -159,7 +168,9 @@ const EditGuardianPage = () => {
       const data = contactFormContext.getValues();
 
       if (!guardianId) {
-        throw new Error(t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }));
+        throw new Error(
+          t("guardian.errors.idRequired", { defaultValue: "Guardian ID is required" }),
+        );
       }
 
       await updateGuardian.mutateAsync({
@@ -186,8 +197,11 @@ const EditGuardianPage = () => {
         queryKey: getGetGuardianByIdQueryOptions(guardianId).queryKey,
       });
 
-  enqueueSnackbar(t("guardian.success.contactUpdated", "Contact information updated successfully"), { variant: "success" });
-  handleSectionEdit(SECTION_CONTACT, false);
+      enqueueSnackbar(
+        t("guardian.success.contactUpdated", "Contact information updated successfully"),
+        { variant: "success" },
+      );
+      handleSectionEdit(SECTION_CONTACT, false);
     } catch (error) {
       if (error && typeof error === "object" && "errors" in error) {
         const validationError = error as UnprocessableEntityResponse;
@@ -198,7 +212,11 @@ const EditGuardianPage = () => {
           });
         });
       } else {
-  setSubmitError(t("guardian.errors.updateContactFailed", { defaultValue: "Failed to update contact information. Please try again." }));
+        setSubmitError(
+          t("guardian.errors.updateContactFailed", {
+            defaultValue: "Failed to update contact information. Please try again.",
+          }),
+        );
       }
     }
   };

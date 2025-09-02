@@ -98,7 +98,14 @@ export const LinkGuardianToChildDialog = ({
       await onSubmit(data);
       handleClose();
     } catch (error) {
-  setSubmitError(error instanceof Error ? error.message : t("guardians:linkGuardianToChildDialog.errors.linkFailed", "Failed to link guardian to child"));
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : t(
+              "guardians:linkGuardianToChildDialog.errors.linkFailed",
+              "Failed to link guardian to child",
+            ),
+      );
     }
   };
 

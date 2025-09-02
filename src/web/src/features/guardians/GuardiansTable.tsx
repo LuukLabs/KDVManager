@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -10,16 +11,16 @@ import { type GuardianListVM } from "@api/models/guardianListVM";
 import Stack from "@mui/material/Stack";
 
 export const GuardiansTable = () => {
+  const { t } = useTranslation();
   const { apiParams, muiPagination } = useGuardiansListState();
   const { data, isLoading, isFetching } = useListGuardians(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
-
   const columns: GridColDef<GuardianListVM>[] = useMemo(
     () => [
       {
         field: "fullName",
-        headerName: "Fullname",
+        headerName: t("table.header.fullName"),
         flex: 2,
         sortable: false,
         disableColumnMenu: true,
@@ -27,7 +28,7 @@ export const GuardiansTable = () => {
       },
       {
         field: "email",
-        headerName: "Email",
+        headerName: t("table.header.email"),
         flex: 2,
         sortable: false,
         disableColumnMenu: true,
@@ -35,7 +36,7 @@ export const GuardiansTable = () => {
       },
       {
         field: "primaryPhoneNumber",
-        headerName: "Phone",
+        headerName: t("table.header.phone"),
         flex: 1,
         sortable: false,
         disableColumnMenu: true,
@@ -43,7 +44,7 @@ export const GuardiansTable = () => {
       },
       {
         field: "childrenCount",
-        headerName: "Children",
+        headerName: t("table.header.children"),
         width: 100,
         sortable: false,
         disableColumnMenu: true,
@@ -52,7 +53,7 @@ export const GuardiansTable = () => {
       },
       {
         field: "id",
-        headerName: "Actions",
+        headerName: t("table.header.actions"),
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
@@ -64,7 +65,7 @@ export const GuardiansTable = () => {
         ),
       },
     ],
-    [],
+    [t],
   );
 
   return (

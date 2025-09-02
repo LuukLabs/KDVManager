@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
@@ -11,6 +12,7 @@ import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
 
 export const ChildrenTable = () => {
+  const { t } = useTranslation();
   const { apiParams, muiPagination } = useChildrenListState();
   const { data, isLoading, isFetching } = useListChildren(
     { ...apiParams },
@@ -19,11 +21,11 @@ export const ChildrenTable = () => {
     },
   );
 
-  const columns: GridColDef[] = useMemo(
+  const columns: GridColDef<ChildListVM>[] = useMemo(
     () => [
       {
         field: "childNumber",
-        headerName: "Child #",
+        headerName: t("table.header.childNumber"),
         width: 100,
         sortable: false,
         disableColumnMenu: true,
@@ -31,7 +33,7 @@ export const ChildrenTable = () => {
       },
       {
         field: "fullName",
-        headerName: "Fullname",
+        headerName: t("table.header.fullName"),
         flex: 1,
         sortable: false,
         disableColumnMenu: true,
@@ -39,7 +41,7 @@ export const ChildrenTable = () => {
       },
       {
         field: "dateOfBirth",
-        headerName: "Birthdate",
+        headerName: t("table.header.dateOfBirth"),
         flex: 1,
         sortable: false,
         disableColumnMenu: true,
@@ -48,7 +50,7 @@ export const ChildrenTable = () => {
       },
       {
         field: "id",
-        headerName: "Actions",
+        headerName: t("table.header.actions"),
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
@@ -60,7 +62,7 @@ export const ChildrenTable = () => {
         ),
       },
     ],
-    [],
+    [t],
   );
 
   return (

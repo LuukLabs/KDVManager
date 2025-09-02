@@ -94,7 +94,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
             ],
           },
           "object-properties": {
-            include: ["required", "message", "error"],
+            include: ["required", "message", "error", "headerName"],
             exclude: [],
           },
           words: {
@@ -200,6 +200,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
             ],
           },
           object: {
+            include: ["headerName"],
             exclude: [
               "style",
               "className",

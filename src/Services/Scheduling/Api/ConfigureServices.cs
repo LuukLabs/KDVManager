@@ -6,6 +6,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using MassTransit.Logging;
 using KDVManager.Services.Scheduling.Api.Telemetry;
+using KDVManager.Shared.Infrastructure.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -89,11 +90,27 @@ public static class ConfigureServices
 
 
         var otel = services.AddOpenTelemetry();
+
+        // Outgoing HTTP correlation propagation
+        services.AddTransient<CorrelationIdPropagationHandler>();
+        services.AddHttpClient("default")
+            .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
         var otelEndpoint = configuration["Otel:Endpoint"];
         otel.ConfigureResource(resource => resource.AddService(serviceName: "scheduling-api"));
 
         otel.WithTracing(tracing =>
             {
+                // Configurable sampling ratio (default 1.0 = always sample). Supports config key Otel:TraceSamplingRatio or env OTEL_TRACE_SAMPLING_RATIO.
+                var ratio = configuration.GetValue<double?>("Otel:TraceSamplingRatio");
+                if (ratio is null)
+                {
+                    var envRatio = Environment.GetEnvironmentVariable("OTEL_TRACE_SAMPLING_RATIO");
+                    if (double.TryParse(envRatio, out var parsed)) ratio = parsed;
+                }
+                ratio ??= 1.0d;
+                ratio = Math.Clamp(ratio.Value, 0d, 1d);
+
+                tracing.SetSampler(new ParentBasedSampler(new TraceIdRatioBasedSampler(ratio.Value)));
                 tracing
                     .AddAspNetCoreInstrumentation(options =>
                     {

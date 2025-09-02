@@ -3,6 +3,7 @@ using System.Diagnostics;
 using KDVManager.Shared.Contracts.Tenancy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace KDVManager.Shared.Infrastructure.Tenancy;
 
@@ -15,7 +16,7 @@ public class TenancyMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, ITenancyContextAccessor accessor, IServiceProvider serviceProvider)
+    public async Task InvokeAsync(HttpContext context, ITenancyContextAccessor accessor, IServiceProvider serviceProvider, ILogger<TenancyMiddleware> logger)
     {
         var resolver = serviceProvider.GetRequiredService<ITenancyResolver>();
         var tenantContext = resolver.Resolve();
@@ -28,6 +29,14 @@ public class TenancyMiddleware
             if (currentActivity != null)
             {
                 currentActivity.SetTag("tenant.id", tenantContext.TenantId.ToString());
+            }
+            using (logger.BeginScope(new Dictionary<string, object>
+                   {
+                       {"tenant.id", tenantContext.TenantId }
+                   }))
+            {
+                await _next(context);
+                return;
             }
         }
 

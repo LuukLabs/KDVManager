@@ -5,6 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using KDVManager.Services.CRM.Api.Telemetry;
+using KDVManager.Shared.Infrastructure.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -70,51 +71,67 @@ public static class ConfigureServices
                     });
         services.AddAuthorization();
 
+        // Outgoing HTTP correlation propagation
+        services.AddTransient<CorrelationIdPropagationHandler>();
+        services.AddHttpClient("default")
+            .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
+
         var otel = services.AddOpenTelemetry();
         var otelEndpoint = configuration["Otel:Endpoint"];
         otel.ConfigureResource(resource => resource.AddService(serviceName: "crm-api"));
 
         otel.WithTracing(tracing =>
-            {
-                tracing
-                    .AddAspNetCoreInstrumentation(options =>
-                    {
-                        // Configure ASP.NET Core instrumentation for better error tracking
-                        options.RecordException = true;
-                        options.EnrichWithHttpRequest = (activity, httpRequest) =>
-                        {
-                            activity.SetTag("http.request.body.size", httpRequest.ContentLength);
-                            activity.SetTag("http.request.client_ip", httpRequest.HttpContext.Connection.RemoteIpAddress?.ToString());
-                        };
-                        options.EnrichWithHttpResponse = (activity, httpResponse) =>
-                        {
-                            activity.SetTag("http.response.body.size", httpResponse.ContentLength);
-                        };
-                        options.EnrichWithException = (activity, exception) =>
-                        {
-                            activity.SetTag("exception.type", exception.GetType().FullName);
-                            activity.SetTag("exception.stacktrace", exception.StackTrace);
-                        };
-                    })
-                    .AddHttpClientInstrumentation(options =>
-                    {
-                        options.RecordException = true;
-                        options.EnrichWithException = (activity, exception) =>
-                        {
-                            activity.SetTag("exception.type", exception.GetType().FullName);
-                            activity.SetTag("exception.message", exception.Message);
-                        };
-                    })
-                    .AddSource(DiagnosticHeaders.DefaultListenerName);
-
-                if (!string.IsNullOrWhiteSpace(otelEndpoint))
                 {
-                    tracing.AddOtlpExporter(options =>
+                    // Configurable sampling ratio (default 1.0 = always sample). Supports config key Otel:TraceSamplingRatio or env OTEL_TRACE_SAMPLING_RATIO.
+                    var ratio = configuration.GetValue<double?>("Otel:TraceSamplingRatio");
+                    if (ratio is null)
                     {
-                        options.Endpoint = new Uri(otelEndpoint);
-                    });
-                }
-            });
+                        var envRatio = Environment.GetEnvironmentVariable("OTEL_TRACE_SAMPLING_RATIO");
+                        if (double.TryParse(envRatio, out var parsed)) ratio = parsed;
+                    }
+                    ratio ??= 1.0d;
+                    ratio = Math.Clamp(ratio.Value, 0d, 1d);
+
+                    tracing.SetSampler(new ParentBasedSampler(new TraceIdRatioBasedSampler(ratio.Value)));
+                    tracing
+                        .AddAspNetCoreInstrumentation(options =>
+                        {
+                            // Configure ASP.NET Core instrumentation for better error tracking
+                            options.RecordException = true;
+                            options.EnrichWithHttpRequest = (activity, httpRequest) =>
+                            {
+                                activity.SetTag("http.request.body.size", httpRequest.ContentLength);
+                                activity.SetTag("http.request.client_ip", httpRequest.HttpContext.Connection.RemoteIpAddress?.ToString());
+                            };
+                            options.EnrichWithHttpResponse = (activity, httpResponse) =>
+                            {
+                                activity.SetTag("http.response.body.size", httpResponse.ContentLength);
+                            };
+                            options.EnrichWithException = (activity, exception) =>
+                            {
+                                activity.SetTag("exception.type", exception.GetType().FullName);
+                                activity.SetTag("exception.stacktrace", exception.StackTrace);
+                            };
+                        })
+                        .AddHttpClientInstrumentation(options =>
+                        {
+                            options.RecordException = true;
+                            options.EnrichWithException = (activity, exception) =>
+                            {
+                                activity.SetTag("exception.type", exception.GetType().FullName);
+                                activity.SetTag("exception.message", exception.Message);
+                            };
+                        })
+                        .AddSource(DiagnosticHeaders.DefaultListenerName);
+
+                    if (!string.IsNullOrWhiteSpace(otelEndpoint))
+                    {
+                        tracing.AddOtlpExporter(options =>
+                        {
+                            options.Endpoint = new Uri(otelEndpoint);
+                        });
+                    }
+                });
 
         otel.WithMetrics(metrics =>
             {

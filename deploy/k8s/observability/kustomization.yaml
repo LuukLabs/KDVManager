@@ -8,6 +8,8 @@ resources:
   - otel-collector-deployment.yaml
   - otel-collector-service.yaml
   - otel-collector-rbac.yaml
+  # Optional node-level agent (enable to deploy):
+  # - otel-collector-daemonset.yaml
   # - jaeger-deployment.yaml
   # - jaeger-service.yaml
   # - jaeger-ingress.yaml

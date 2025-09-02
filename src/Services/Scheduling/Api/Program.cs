@@ -1,6 +1,7 @@
 ﻿using KDVManager.Services.Scheduling.Api.Middleware;
+using KDVManager.Shared.Infrastructure.Logging;
+using KDVManager.Shared.Infrastructure.Middleware;
 using KDVManager.Shared.Infrastructure.Tenancy;
-using OpenTelemetry.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,23 +11,8 @@ builder.Services.AddApplicationServices();
 builder.Services.AddMassTransitServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
-var otelEndpoint = builder.Configuration["Otel:Endpoint"];
-if (!string.IsNullOrWhiteSpace(otelEndpoint))
-{
-    builder.Logging.ClearProviders();
-    builder.Logging.AddConsole();
-    builder.Logging.AddDebug();
-    builder.Logging.AddOpenTelemetry(options =>
-    {
-        options.IncludeScopes = true;
-        options.IncludeFormattedMessage = true;
-        options.ParseStateValues = true;
-        options.AddOtlpExporter(o =>
-        {
-            o.Endpoint = new Uri(otelEndpoint);
-        });
-    });
-}
+// Structured production logging (stdout JSON + OTLP if endpoint present)
+builder.Logging.AddKdvManagerLogging(builder.Configuration, "scheduling-api");
 
 var app = builder.Build();
 
@@ -39,6 +25,7 @@ app.UseCustomExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<TenancyMiddleware>();
 
 app.MapHealthChecks("/healthz");

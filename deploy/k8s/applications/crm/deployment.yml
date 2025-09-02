@@ -59,8 +59,12 @@ spec:
             containerPort: 443
             protocol: TCP
         env:
-          - name: OTEL__ENDPOINT
+          - name: OTEL__ENDPOINT # legacy key supported in code
             value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_SERVICE_NAME
+            value: "crm-api"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
           - name: ASPNETCORE_URLS
@@ -99,6 +103,10 @@ spec:
         env:
           - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_SERVICE_NAME
+            value: "crm-migrator"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER

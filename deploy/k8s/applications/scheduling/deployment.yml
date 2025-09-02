@@ -58,6 +58,10 @@ spec:
         env:
           - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_SERVICE_NAME
+            value: "scheduling-api"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Production"
           - name: ASPNETCORE_URLS
@@ -96,6 +100,10 @@ spec:
         env:
           - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_SERVICE_NAME
+            value: "scheduling-migrator"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER

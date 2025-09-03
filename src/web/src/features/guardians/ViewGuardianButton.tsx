@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -17,8 +17,8 @@ export const ViewGuardianButton = ({ id }: ViewGuardianButtonProps) => {
 
   return (
     <Tooltip title={t("View Guardian Details")}>
-      <IconButton size="small" onClick={handleView} color="primary">
-        <Visibility fontSize="small" />
+      <IconButton onClick={handleView}>
+        <EditIcon />
       </IconButton>
     </Tooltip>
   );

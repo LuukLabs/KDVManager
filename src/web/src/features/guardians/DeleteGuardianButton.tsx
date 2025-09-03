@@ -54,8 +54,8 @@ export const DeleteGuardianButton = ({ id, displayName }: DeleteGuardianButtonPr
   return (
     <>
       <Tooltip title={t("Delete Guardian")}>
-        <IconButton size="small" onClick={() => setOpen(true)}>
-          <Delete fontSize="small" />
+        <IconButton onClick={() => setOpen(true)}>
+          <Delete />
         </IconButton>
       </Tooltip>
 

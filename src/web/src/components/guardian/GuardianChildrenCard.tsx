@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, CircularProgress, Alert } from "@mui/material";
+import { Box, CircularProgress, Alert, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 import { People as PeopleIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,6 +20,8 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [unlinkingChild, setUnlinkingChild] = useState<string | null>(null);
+  const [unlinkDialogOpen, setUnlinkDialogOpen] = useState(false);
+  const [selectedChild, setSelectedChild] = useState<any | null>(null); // TODO: type with generated child type when available
 
   const {
     data: children = [],
@@ -37,6 +39,8 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
       // Intentionally swallow error (could surface toast notification later)
     } finally {
       setUnlinkingChild(null);
+      setUnlinkDialogOpen(false);
+      setSelectedChild(null);
     }
   };
 
@@ -75,7 +79,10 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
       onNavigate={(path) => navigate(path)}
       onUnlink={(id) => {
         const match = children.find((c) => c.childId === id);
-        if (match?.childId) handleUnlinkChild(match.childId);
+        if (match?.childId) {
+          setSelectedChild(match);
+          setUnlinkDialogOpen(true);
+        }
       }}
       unlinkLoadingId={unlinkingChild}
       emptyContent={<Alert severity="info">{t("No children linked to this guardian")}</Alert>}
@@ -90,6 +97,29 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
       collapsible={false}
     >
       {content}
+      <Dialog open={unlinkDialogOpen} onClose={() => setUnlinkDialogOpen(false)}>
+        <DialogTitle>{t("Unlink Child")}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t(
+              "Are you sure you want to unlink {{name}} from this guardian? This action can be reversed by linking them again.",
+              { name: selectedChild?.fullName }
+            )}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setUnlinkDialogOpen(false)}>{t("Cancel")}</Button>
+          <Button
+            onClick={() => {
+              if (selectedChild?.childId) handleUnlinkChild(selectedChild.childId);
+            }}
+            color="error"
+            disabled={unlinkMutation.isPending}
+          >
+            {unlinkMutation.isPending ? t("Unlinking...") : t("Unlink")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </EditableCard>
   );
 };

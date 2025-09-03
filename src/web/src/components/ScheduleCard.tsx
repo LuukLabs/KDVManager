@@ -119,7 +119,6 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
                     size="small"
                     onClick={() => onEdit(schedule)}
                     sx={{
-                      color: "primary.main",
                       "&:hover": {
                         backgroundColor: "primary.50",
                         transform: "scale(1.1)",

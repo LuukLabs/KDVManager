@@ -150,6 +150,16 @@ public class ExceptionHandlerMiddleware
                 }, jsonSerializerOptions);
                 break;
 
+            case ConflictException conflictException:
+                httpStatusCode = HttpStatusCode.Conflict;
+                _logger.LogWarning(conflictException,
+                    "Conflict in {Service} at {RequestPath}. TraceId: {TraceId}. Message: {Message}",
+                    errorDetails.Service,
+                    errorDetails.RequestPath,
+                    errorDetails.TraceId,
+                    conflictException.Message);
+                break;
+
             case NotFoundException notFoundException:
                 httpStatusCode = HttpStatusCode.NotFound;
 

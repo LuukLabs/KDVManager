@@ -1,7 +1,6 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
+using KDVManager.Services.CRM.Application.Exceptions;
 
 namespace KDVManager.Services.CRM.Application.Features.Guardians.Commands.DeleteGuardian
 {
@@ -22,13 +21,13 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Commands.Delete
 
             if (guardian == null)
             {
-                throw new ArgumentException($"Guardian with ID {command.Id} not found");
+                throw new NotFoundException(nameof(Domain.Entities.Guardian), command.Id);
             }
 
-            // Check if guardian has any children relationships
+            // Check if guardian has any children relationships -> treat as conflict (409)
             if (await _childGuardianRepository.IsGuardianLinkedAsync(command.Id))
             {
-                throw new InvalidOperationException($"Cannot delete guardian {command.Id} as they have active relationships with children. Please remove all child relationships first.");
+                throw new ConflictException(nameof(Domain.Entities.Guardian), command.Id);
             }
 
             await _guardianRepository.DeleteAsync(guardian);

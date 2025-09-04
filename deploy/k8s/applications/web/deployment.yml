@@ -39,4 +39,10 @@ spec:
           requests:
             memory: 50Mi
             cpu: 100m
+        env:
+          # Configure OpenTelemetry exporter URL exposed via an ingress to the collector (HTTP /v1/traces).
+          - name: VITE_OTEL_EXPORTER_URL
+            value: "https://otel.kdvmanager.nl"
+          - name: VITE_DEPLOY_ENV
+            value: "production"
         

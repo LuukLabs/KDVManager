@@ -31,7 +31,7 @@ const GroupAutocomplete: React.FC<GroupAutocompleteProps> = (props) => {
             ...params.InputProps,
             endAdornment: (
               <React.Fragment>
-                {(isLoading ?? isFetching) ? <CircularProgress color="inherit" size={20} /> : null}
+                {isLoading || isFetching ? <CircularProgress color="inherit" size={20} /> : null}
                 {params.InputProps.endAdornment}
               </React.Fragment>
             ),

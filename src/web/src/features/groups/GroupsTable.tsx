@@ -46,7 +46,7 @@ const GroupsTable = () => {
       autoHeight
       pageSizeOptions={[5, 10, 20]}
       rowCount={data?.meta.total ?? 0}
-      loading={isLoading ?? isFetching}
+      loading={isLoading || isFetching}
       columns={columns}
       rows={data?.value ?? []}
       disableRowSelectionOnClick

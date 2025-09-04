@@ -21,7 +21,7 @@ const TimeSlotAutocomplete: React.FC<TimeSlotAutocompleteProps> = (props) => {
     <Autocomplete
       {...props}
       options={data?.value ?? []}
-      loading={isLoading ?? isFetching}
+      loading={isLoading || isFetching}
       getOptionLabel={(option) => option.name ?? ""}
       renderInput={(params) => (
         <TextField

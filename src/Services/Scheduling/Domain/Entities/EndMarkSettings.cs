@@ -24,7 +24,7 @@ public class EndMarkSettings : IMustHaveTenant
     /// <summary>
     /// Description template for system-generated EndMarks. Can include placeholders like {YearsAfterBirth}
     /// </summary>
-    public string Description { get; private set; }
+    public string Description { get; private set; } = string.Empty;
 
     private EndMarkSettings() { }
 
@@ -92,6 +92,6 @@ public class EndMarkSettings : IMustHaveTenant
 
     private static string GetDefaultDescription(int years)
     {
-        return $"Automatic end mark for {{childName}} ({YearsAfterBirth} years after birth on {{birthDate}})";
+        return $"Automatic end mark for {{childName}} ({{YearsAfterBirth}} years after birth on {{birthDate}})";
     }
 }

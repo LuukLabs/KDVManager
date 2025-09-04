@@ -9,7 +9,7 @@ public class TimeSlot : IMustHaveTenant
 
     public Guid TenantId { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public TimeOnly StartTime { get; set; }
 

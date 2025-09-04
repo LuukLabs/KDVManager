@@ -14,13 +14,26 @@ public class EndMark : IMustHaveTenant
     public Guid ChildId { get; private set; }
     public DateOnly EndDate { get; private set; }
     public string? Reason { get; private set; }
+    public bool IsSystemGenerated { get; private set; }
 
     private EndMark() { }
 
-    public EndMark(Guid childId, DateOnly endDate, string? reason = null)
+    public EndMark(Guid childId, DateOnly endDate, string? reason = null, bool isSystemGenerated = false)
     {
         ChildId = childId;
         EndDate = endDate;
         Reason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
+        IsSystemGenerated = isSystemGenerated;
+    }
+
+    /// <summary>
+    /// Updates the end date for system-generated EndMarks. Only allowed for system-generated EndMarks.
+    /// </summary>
+    public void UpdateEndDate(DateOnly newEndDate)
+    {
+        if (!IsSystemGenerated)
+            throw new InvalidOperationException("Cannot update end date for manually created EndMarks.");
+
+        EndDate = newEndDate;
     }
 }

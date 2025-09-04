@@ -25,6 +25,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Absence> Absences { get; set; }
     public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
     public DbSet<EndMark> EndMarks { get; set; }
+    public DbSet<EndMarkSettings> EndMarkSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +38,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Absence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ClosurePeriod>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMark>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<EndMarkSettings>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);

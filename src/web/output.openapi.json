@@ -888,6 +888,62 @@
         }
       }
     },
+    "/scheduling/v1/endmarksettings": {
+      "get": {
+        "tags": ["EndMarkSettings"],
+        "operationId": "GetEndMarkSettings",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndMarkSettingsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndMarkSettingsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndMarkSettingsDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["EndMarkSettings"],
+        "operationId": "UpdateEndMarkSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEndMarkSettingsCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEndMarkSettingsCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEndMarkSettingsCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/scheduling/v1/groups": {
       "get": {
         "tags": ["Groups"],
@@ -2412,6 +2468,23 @@
         },
         "additionalProperties": false
       },
+      "EndMarkSettingsDto": {
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "yearsAfterBirth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GroupDailyOverviewVM": {
         "type": "object",
         "properties": {
@@ -2758,6 +2831,27 @@
             "items": {
               "$ref": "#/components/schemas/ValidationError1"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateEndMarkSettingsCommand": {
+        "required": ["description", "isEnabled", "yearsAfterBirth"],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "yearsAfterBirth": {
+            "maximum": 50,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

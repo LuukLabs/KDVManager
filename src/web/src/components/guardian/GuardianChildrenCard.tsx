@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, CircularProgress, Alert, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from "@mui/material";
 import { People as PeopleIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -103,7 +113,7 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
           <Typography>
             {t(
               "Are you sure you want to unlink {{name}} from this guardian? This action can be reversed by linking them again.",
-              { name: selectedChild?.fullName }
+              { name: selectedChild?.fullName },
             )}
           </Typography>
         </DialogContent>

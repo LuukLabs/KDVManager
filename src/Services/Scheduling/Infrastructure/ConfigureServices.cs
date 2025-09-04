@@ -8,6 +8,7 @@ using MassTransit;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Services.Scheduling.Infrastructure.Services;
 using KDVManager.Services.Scheduling.Application.Services;
+using KDVManager.Services.Scheduling.Application.Contracts.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +26,9 @@ public static class ConfigureServices
         services.AddScoped<IAbsenceRepository, AbsenceRepository>();
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
         services.AddScoped<IEndMarkRepository, EndMarkRepository>();
+        services.AddScoped<IEndMarkSettingsRepository, EndMarkSettingsRepository>();
         services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
+        services.AddScoped<IEndMarkAutomationService, EndMarkAutomationService>();
 
         services.AddTenancy();
 

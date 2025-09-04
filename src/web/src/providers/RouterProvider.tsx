@@ -184,6 +184,15 @@ const router = (t: TFunction<"translation">) =>
                     },
                   },
                 },
+                {
+                  path: "endmark-automation",
+                  lazy: () => import("@pages/settings/EndMarkSettingsPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("EndMark Automation");
+                    },
+                  },
+                },
               ],
             },
           ],

@@ -4,6 +4,7 @@ import { NextChildNumberCard } from "../../features/settings/NextChildNumberCard
 import Grid from "@mui/material/Grid";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import GroupsIcon from "@mui/icons-material/Groups";
+import AutoMode from "@mui/icons-material/AutoMode";
 import React from "react";
 
 const SettingsPage = () => {
@@ -27,6 +28,12 @@ const SettingsPage = () => {
       description: t("Manage closure periods for scheduling."),
       navigateTo: "/settings/closure-periods",
       icon: <CalendarMonth fontSize="large" />,
+    },
+    {
+      title: t("EndMark Automation"),
+      description: t("Configure automatic EndMark creation for children."),
+      navigateTo: "/settings/endmark-automation",
+      icon: <AutoMode fontSize="large" />,
     },
   ];
 

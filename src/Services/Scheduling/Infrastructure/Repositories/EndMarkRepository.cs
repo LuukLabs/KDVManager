@@ -16,4 +16,12 @@ public class EndMarkRepository : BaseRepository<EndMark>, IEndMarkRepository
     {
         return await _dbContext.EndMarks.Where(em => em.ChildId == childId).OrderBy(em => em.EndDate).ToListAsync();
     }
+
+    public async Task<IReadOnlyList<EndMark>> GetSystemGeneratedByChildIdAsync(Guid childId)
+    {
+        return await _dbContext.EndMarks
+            .Where(em => em.ChildId == childId && em.IsSystemGenerated)
+            .OrderBy(em => em.EndDate)
+            .ToListAsync();
+    }
 }

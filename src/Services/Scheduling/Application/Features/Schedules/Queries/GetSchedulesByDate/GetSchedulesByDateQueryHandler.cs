@@ -46,8 +46,20 @@ public class GetSchedulesByDateQueryHandler
                 DateOfBirth = child?.DateOfBirth,
                 Age = child?.Age(request.Date)
             };
-        }).ToList();
+        });
 
-        return scheduleByDateVMs;
+        // Sorting moved to backend (frontend no longer sorts):
+        // 1. DateOfBirth ascending (older first); nulls last
+        // 2. ChildFullName (case-insensitive)
+        // 3. ChildId as deterministic fallback
+        var ordered = scheduleByDateVMs
+            .OrderBy(vm => vm.DateOfBirth == null) // false (has DoB) comes before true (null)
+            .ThenBy(vm => vm.DateOfBirth)          // earlier dates (older children) first
+            .ThenBy(vm => vm.ChildFullName == null)
+            .ThenBy(vm => vm.ChildFullName?.ToLower())
+            .ThenBy(vm => vm.ChildId)
+            .ToList();
+
+        return ordered;
     }
 }

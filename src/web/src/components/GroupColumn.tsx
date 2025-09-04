@@ -5,7 +5,6 @@ import ChildCard from "./ChildCard";
 import GroupSummary from "./GroupSummary";
 import { useTranslation } from "react-i18next";
 import { Groups as GroupsIcon, EventBusy as EventBusyIcon } from "@mui/icons-material";
-import dayjs from "dayjs";
 
 type Group = {
   id: string;
@@ -35,26 +34,11 @@ const GroupColumn = ({
     groupId: group.id,
   });
 
-  // Order by birthdate ascending (older children first). Null DoB at end. Fallback to name.
-  const sortedSchedules = (schedules ?? []).slice().sort((a, b) => {
-    // Birthdate sorting (older first, nulls at end)
-    const dobA = a.dateOfBirth ? dayjs(a.dateOfBirth).valueOf() : Number.MAX_SAFE_INTEGER;
-    const dobB = b.dateOfBirth ? dayjs(b.dateOfBirth).valueOf() : Number.MAX_SAFE_INTEGER;
-    if (dobA !== dobB) return dobA - dobB;
-
-    // Fallback: name sorting (null/empty names go last)
-    const nameA = (a.childFullName ?? "").toLocaleLowerCase();
-    const nameB = (b.childFullName ?? "").toLocaleLowerCase();
-    if (nameA && nameB) return nameA.localeCompare(nameB);
-    if (!nameA && nameB) return 1;
-    if (nameA && !nameB) return -1;
-
-    // Final fallback: childId
-    return (a.childId ?? "").localeCompare(b.childId ?? "");
-  });
-
-  const present = sortedSchedules.filter((s) => !absentChildIds.includes(s.childId ?? ""));
-  const absent = sortedSchedules.filter((s) => absentChildIds.includes(s.childId ?? ""));
+  // Sorting is now handled in the backend (GetSchedulesByDateQueryHandler)
+  // Order: dateOfBirth asc (nulls last), name, childId
+  const backendSorted = schedules ?? [];
+  const present = backendSorted.filter((s) => !absentChildIds.includes(s.childId ?? ""));
+  const absent = backendSorted.filter((s) => absentChildIds.includes(s.childId ?? ""));
 
   return (
     <Paper

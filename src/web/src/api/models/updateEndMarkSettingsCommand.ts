@@ -6,15 +6,8 @@
  */
 
 export type UpdateEndMarkSettingsCommand = {
-  isEnabled: boolean;
-  /**
-   * @minimum 0
-   * @maximum 50
-   */
-  yearsAfterBirth: number;
-  /**
-   * @minLength 1
-   * @maxLength 500
-   */
-  description: string;
+  isEnabled?: boolean;
+  yearsAfterBirth?: number;
+  /** @nullable */
+  description?: string | null;
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { calculateAge } from "@utils/calculateAge";
 import {
   Box,
   Typography,
@@ -53,16 +54,10 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
     return "?";
   };
 
-  const calculateAge = () => {
+  const getAgeDisplay = () => {
     if (!dateOfBirth) return t("N/A");
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      return t("{{count}} years", { count: age - 1 });
-    }
+    const age = calculateAge(dateOfBirth);
+    if (age === undefined) return t("N/A");
     return t("{{count}} years", { count: age });
   };
 
@@ -144,7 +139,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
 
               <Stack direction="row" spacing={1} flexWrap="wrap">
                 <Chip
-                  label={calculateAge()}
+                  label={getAgeDisplay()}
                   size="small"
                   sx={{
                     backgroundColor: alpha("#fff", 0.2),

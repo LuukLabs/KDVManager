@@ -29,9 +29,9 @@ const NewChildPage = () => {
     mutate({ data: data }, { onSuccess: onSuccess, onError: onMutateError });
   };
 
-  const onSuccess = () => {
+  const onSuccess = (childId: string) => {
     void queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
-    navigate("/children");
+    navigate(`/children/${childId}`);
   };
 
   const onMutateError = (error: UnprocessableEntityResponse) => {
@@ -62,6 +62,7 @@ const NewChildPage = () => {
               <DatePickerElement
                 label={t("Date of birth")}
                 name="dateOfBirth"
+                required
                 transform={{
                   output: (value) => {
                     return value ? value.format("YYYY-MM-DD") : null;

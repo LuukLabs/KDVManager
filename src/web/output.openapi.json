@@ -2836,22 +2836,18 @@
         "additionalProperties": false
       },
       "UpdateEndMarkSettingsCommand": {
-        "required": ["description", "isEnabled", "yearsAfterBirth"],
         "type": "object",
         "properties": {
           "isEnabled": {
             "type": "boolean"
           },
           "yearsAfterBirth": {
-            "maximum": 50,
-            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "description": {
-            "maxLength": 500,
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

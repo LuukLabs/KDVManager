@@ -22,7 +22,7 @@ type EditTimeSlotDialogProps = {
   timeSlot: TimeSlotListVM;
 };
 
-export const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot }) => {
+const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot }) => {
   const { t } = useTranslation();
   const modal = useModal();
   const mutate = useUpdateTimeSlot();

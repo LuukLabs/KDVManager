@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Person as PersonIcon, Delete } from "@mui/icons-material";
 
-export type GuardianHeaderProps = {
+type GuardianHeaderProps = {
   givenName?: string;
   familyName?: string;
   email?: string;

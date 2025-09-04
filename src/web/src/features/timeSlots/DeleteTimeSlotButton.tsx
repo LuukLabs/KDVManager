@@ -10,7 +10,7 @@ type DeleteTimeSlotButtonProps = {
   displayName?: string;
 };
 
-export const DeleteTimeSlotButton = ({ id, displayName }: DeleteTimeSlotButtonProps) => {
+const DeleteTimeSlotButton = ({ id, displayName }: DeleteTimeSlotButtonProps) => {
   const { t } = useTranslation();
   const mutation = useDeleteTimeSlot();
   const queryClient = useQueryClient();

@@ -3,7 +3,7 @@ import { type DeleteTexts } from "../types/delete.types";
 import { ApiError } from "@api/errors/types";
 import { classifyStatus } from "@api/errors/classify";
 
-export const getErrorStatus = (error: unknown): number | undefined => {
+const getErrorStatus = (error: unknown): number | undefined => {
   if (!error) return undefined;
   if (error instanceof ApiError) return error.status;
   if (typeof error === "object" && "status" in (error as any)) return (error as any).status;

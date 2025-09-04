@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { LinkOff } from "@mui/icons-material";
 
-export type LinkedEntity = {
+type LinkedEntity = {
   id: string;
   primaryText: string;
   secondaryLines?: string[];
@@ -22,7 +22,7 @@ export type LinkedEntity = {
   unlinkDisabled?: boolean;
 };
 
-export type LinkedEntityListProps = {
+type LinkedEntityListProps = {
   items: LinkedEntity[];
   onNavigate: (path: string) => void;
   onUnlink: (id: string) => void | Promise<void>;

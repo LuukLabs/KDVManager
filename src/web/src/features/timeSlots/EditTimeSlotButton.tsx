@@ -3,7 +3,7 @@ import { Edit as EditIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
 import { type TimeSlotListVM } from "@api/models/timeSlotListVM";
-import { EditTimeSlotDialog } from "./EditTimeSlotDialog";
+import EditTimeSlotDialog from "./EditTimeSlotDialog";
 
 type EditTimeSlotButtonProps = {
   timeSlot: TimeSlotListVM;

@@ -10,7 +10,7 @@ type DevErrorPanelProps = {
   error: Error | ApiError;
 };
 
-export const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
+const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 

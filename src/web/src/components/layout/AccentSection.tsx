@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper, Box, alpha, useTheme } from "@mui/material";
 
-export type AccentSectionProps = React.PropsWithChildren<{
+type AccentSectionProps = React.PropsWithChildren<{
   borderColor?: string;
   variant?: "subtle" | "outlined" | "elevated" | "tonal";
   padding?: "compact" | "normal" | "spacious";

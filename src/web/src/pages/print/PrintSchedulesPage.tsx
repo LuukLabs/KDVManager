@@ -36,7 +36,7 @@ const currentYear = dayjs().year();
 const years = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1, currentYear + 2];
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-export const PrintSchedulesPage = () => {
+const PrintSchedulesPage = () => {
   const { data: groupsData } = useListGroups();
   const groups = groupsData?.value ?? [];
 

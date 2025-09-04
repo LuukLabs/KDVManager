@@ -54,10 +54,23 @@ public class EndMarkAutomationService : IEndMarkAutomationService
         // Get existing system-generated EndMarks for this child
         var existingSystemEndMarks = await _endMarkRepository.GetSystemGeneratedByChildIdAsync(child.Id);
 
+        // Also check if there are ANY EndMarks (system or manual) for this child
+        // If user has manually created EndMarks, we don't want to interfere
+        var allEndMarks = await _endMarkRepository.GetByChildIdAsync(child.Id);
+
         if (existingSystemEndMarks.Count == 0)
         {
-            // No system-generated EndMark exists, create one
-            await CreateSystemEndMarkAsync(child.Id, expectedEndDate, settings, cancellationToken);
+            // Only create a system EndMark if there are no existing EndMarks at all
+            // This respects user's decision to delete system EndMarks or create manual ones
+            if (allEndMarks?.Count == 0)
+            {
+                await CreateSystemEndMarkAsync(child.Id, expectedEndDate, settings, cancellationToken);
+            }
+            else
+            {
+                _logger.LogDebug("EndMarks already exist for child {ChildId}, not creating system EndMark", child.Id);
+                return;
+            }
         }
         else if (existingSystemEndMarks.Count == 1)
         {

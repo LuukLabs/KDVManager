@@ -42,6 +42,8 @@
   "Are you sure you want to unlink {{name}} from this guardian? This action can be reversed by linking them again.": "",
   "auth.errors.missingConfig": "Auth0 configuration is missing domain or clientId",
   "auth.warnings.audienceMissing": "Auth0 audience is not set, using default: ",
+  "Auto": "Auto",
+  "Automatically managed": "Automatically managed",
   "Basic Information": "Basic Information",
   "breadcrumb": "breadcrumb",
   "Calendar": "Calendar",

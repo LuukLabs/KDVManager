@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, IconButton, Chip, Stack, Tooltip } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import {
@@ -70,6 +71,17 @@ export const EndMarksList: React.FC<EndMarksListProps> = ({ childId }) => {
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Chip size="small" label={t("End Mark") as string} color="warning" />
+                {mark.isSystemGenerated && (
+                  <Tooltip title={t("Automatically managed") as string}>
+                    <Chip 
+                      size="small" 
+                      icon={<SmartToyIcon />} 
+                      label={t("Auto") as string} 
+                      color="info" 
+                      variant="outlined"
+                    />
+                  </Tooltip>
+                )}
                 <Tooltip title={t("Delete") as string}>
                   <span>
                     <IconButton

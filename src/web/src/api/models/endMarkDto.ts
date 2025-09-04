@@ -10,4 +10,5 @@ export type EndMarkDto = {
   endDate?: string;
   /** @nullable */
   reason?: string | null;
+  isSystemGenerated?: boolean;
 };

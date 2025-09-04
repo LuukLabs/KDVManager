@@ -2464,6 +2464,9 @@
           "reason": {
             "type": "string",
             "nullable": true
+          },
+          "isSystemGenerated": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

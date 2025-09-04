@@ -17,7 +17,8 @@ public class GetEndMarksQueryHandler
         {
             Id = m.Id,
             EndDate = m.EndDate,
-            Reason = m.Reason
+            Reason = m.Reason,
+            IsSystemGenerated = m.IsSystemGenerated
         }).ToList();
     }
 }
@@ -27,4 +28,5 @@ public class EndMarkDto
     public System.Guid Id { get; set; }
     public System.DateOnly EndDate { get; set; }
     public string? Reason { get; set; }
+    public bool IsSystemGenerated { get; set; }
 }

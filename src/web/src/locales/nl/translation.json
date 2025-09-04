@@ -42,6 +42,8 @@
   "Are you sure you want to unlink {{name}} from this guardian? This action can be reversed by linking them again.": "Weet je zeker dat je {{name}} wilt ontkoppelen van deze voogd? Deze actie kan worden teruggedraaid door ze opnieuw te koppelen.",
   "auth.errors.missingConfig": "Auth0-configuratie mist domein of clientId",
   "auth.warnings.audienceMissing": "Auth0-audience is niet ingesteld, standaard wordt gebruikt: ",
+  "Auto": "Auto",
+  "Automatically managed": "Automatisch beheerd",
   "Basic Information": "Basisinformatie",
   "breadcrumb": "broodkruimel",
   "Calendar": "Kalender",

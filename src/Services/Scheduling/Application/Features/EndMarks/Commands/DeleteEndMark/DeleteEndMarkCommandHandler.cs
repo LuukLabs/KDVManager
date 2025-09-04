@@ -11,7 +11,9 @@ public class DeleteEndMarkCommandHandler
     private readonly IEndMarkRepository _repo;
     private readonly IScheduleTimelineService _timeline;
 
-    public DeleteEndMarkCommandHandler(IEndMarkRepository repo, IScheduleTimelineService timeline)
+    public DeleteEndMarkCommandHandler(
+        IEndMarkRepository repo,
+        IScheduleTimelineService timeline)
     {
         _repo = repo;
         _timeline = timeline;

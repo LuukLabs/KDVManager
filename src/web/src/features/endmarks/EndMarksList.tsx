@@ -73,11 +73,11 @@ export const EndMarksList: React.FC<EndMarksListProps> = ({ childId }) => {
                 <Chip size="small" label={t("End Mark") as string} color="warning" />
                 {mark.isSystemGenerated && (
                   <Tooltip title={t("Automatically managed") as string}>
-                    <Chip 
-                      size="small" 
-                      icon={<SmartToyIcon />} 
-                      label={t("Auto") as string} 
-                      color="info" 
+                    <Chip
+                      size="small"
+                      icon={<SmartToyIcon />}
+                      label={t("Auto") as string}
+                      color="info"
                       variant="outlined"
                     />
                   </Tooltip>

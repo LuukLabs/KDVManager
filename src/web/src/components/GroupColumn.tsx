@@ -34,7 +34,11 @@ const GroupColumn = ({
     groupId: group.id,
   });
 
-  const sortedSchedules = (schedules ?? []).sort((a, b) => {
+  // Order by birthdate ascending (older children first). Null DoB at end. Fallback to name.
+  const sortedSchedules = (schedules ?? []).slice().sort((a, b) => {
+    const dobA = a.dateOfBirth ? new Date(a.dateOfBirth).getTime() : Number.MAX_SAFE_INTEGER;
+    const dobB = b.dateOfBirth ? new Date(b.dateOfBirth).getTime() : Number.MAX_SAFE_INTEGER;
+    if (dobA !== dobB) return dobA - dobB;
     const nameA = (a.childFullName ?? "").toLocaleLowerCase();
     const nameB = (b.childFullName ?? "").toLocaleLowerCase();
     if (nameA && nameB) return nameA.localeCompare(nameB);

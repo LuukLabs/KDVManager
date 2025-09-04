@@ -5,6 +5,7 @@ import ChildCard from "./ChildCard";
 import GroupSummary from "./GroupSummary";
 import { useTranslation } from "react-i18next";
 import { Groups as GroupsIcon, EventBusy as EventBusyIcon } from "@mui/icons-material";
+import dayjs from "dayjs";
 
 type Group = {
   id: string;
@@ -36,14 +37,19 @@ const GroupColumn = ({
 
   // Order by birthdate ascending (older children first). Null DoB at end. Fallback to name.
   const sortedSchedules = (schedules ?? []).slice().sort((a, b) => {
-    const dobA = a.dateOfBirth ? new Date(a.dateOfBirth).getTime() : Number.MAX_SAFE_INTEGER;
-    const dobB = b.dateOfBirth ? new Date(b.dateOfBirth).getTime() : Number.MAX_SAFE_INTEGER;
+    // Birthdate sorting (older first, nulls at end)
+    const dobA = a.dateOfBirth ? dayjs(a.dateOfBirth).valueOf() : Number.MAX_SAFE_INTEGER;
+    const dobB = b.dateOfBirth ? dayjs(b.dateOfBirth).valueOf() : Number.MAX_SAFE_INTEGER;
     if (dobA !== dobB) return dobA - dobB;
+
+    // Fallback: name sorting (null/empty names go last)
     const nameA = (a.childFullName ?? "").toLocaleLowerCase();
     const nameB = (b.childFullName ?? "").toLocaleLowerCase();
     if (nameA && nameB) return nameA.localeCompare(nameB);
-    if (nameA) return -1;
-    if (nameB) return 1;
+    if (!nameA && nameB) return 1;
+    if (nameA && !nameB) return -1;
+
+    // Final fallback: childId
     return (a.childId ?? "").localeCompare(b.childId ?? "");
   });
 

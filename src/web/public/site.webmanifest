@@ -14,9 +14,9 @@
       "type": "image/png"
     },
     {
-      "src": "/logo_transparent.png",
+      "src": "/logo_transparent.webp",
       "sizes": "any",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any maskable"
     },
     {

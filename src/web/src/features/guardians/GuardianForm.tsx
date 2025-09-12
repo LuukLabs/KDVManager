@@ -21,6 +21,8 @@ import {
 import { Add, Remove } from "@mui/icons-material";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { DatePickerElement } from "react-hook-form-mui/date-pickers";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 
 type PhoneNumber = {
   id?: string;
@@ -56,12 +58,7 @@ export const GuardianForm = ({
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { t } = useTranslation();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<GuardianFormData>({
+  const formContext = useForm<GuardianFormData>({
     defaultValues: initialData ?? {
       givenName: "",
       familyName: "",
@@ -70,6 +67,13 @@ export const GuardianForm = ({
       phoneNumbers: [],
     },
   });
+
+ const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = formContext;
 
   const {
     fields: phoneFields,
@@ -92,6 +96,7 @@ export const GuardianForm = ({
       await onSubmit(data);
       navigate("/guardians");
     } catch (error) {
+      // TODO: Map server side validation errors similar to NewChildPage when backend provides shape
       setSubmitError(
         error instanceof Error
           ? error.message
@@ -107,7 +112,7 @@ export const GuardianForm = ({
   const removePhoneNumber = (index: number) => removePhone(index);
 
   return (
-    <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+    <FormContainer formContext={formContext} handleSubmit={handleSubmit(handleFormSubmit)}>
       <Typography variant="h4" gutterBottom>
         {t(title)}
       </Typography>
@@ -126,42 +131,24 @@ export const GuardianForm = ({
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="givenName"
-                control={control}
-                rules={{ required: t("Given name is required") }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    label={t("Given Name")}
-                    error={!!errors.givenName}
-                  />
-                )}
-              />
+              <TextFieldElement name="givenName" label={t("Given name")} required fullWidth />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="familyName"
-                control={control}
-                rules={{ required: t("Family name is required") }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    label={t("Family Name")}
-                    error={!!errors.familyName}
-                  />
-                )}
-              />
+              <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Controller
+              <DatePickerElement
+                label={t("Date of birth")}
                 name="dateOfBirth"
-                control={control}
-                render={({ field }) => (
-                  <TextField {...field} fullWidth label={t("Date of Birth")} type="date" />
-                )}
+                required
+                transform={{
+                  output: (value) => {
+                    return value ? value.format("YYYY-MM-DD") : null;
+                  },
+                }}
+                inputProps={{
+                  fullWidth: true
+                }}
               />
             </Grid>
           </Grid>
@@ -176,25 +163,7 @@ export const GuardianForm = ({
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
-              <Controller
-                name="email"
-                control={control}
-                rules={{
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: t("Invalid email address"),
-                  },
-                }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    label={t("Email")}
-                    type="email"
-                    helperText={errors.email?.message}
-                  />
-                )}
-              />
+              <TextFieldElement name="email" label={t("Email")} required fullWidth />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider sx={{ my: 1 }} />
@@ -305,6 +274,6 @@ export const GuardianForm = ({
           {isLoading ? t("Saving...") : guardianId ? t("Update Guardian") : t("Create Guardian")}
         </Button>
       </Box>
-    </Box>
+    </FormContainer>
   );
 };

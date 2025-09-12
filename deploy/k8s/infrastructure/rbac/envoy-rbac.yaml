@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kdvmanager-envoy-role
+  namespace: kdvmanager-prod
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kdvmanager-envoy-binding
+  namespace: kdvmanager-prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kdvmanager-envoy-role
+subjects:
+- kind: ServiceAccount
+  name: kdvmanager-sa
+  namespace: kdvmanager-prod

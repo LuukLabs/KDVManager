@@ -38,10 +38,18 @@ CMD [ "pnpm", "start" ]
 # Run stage
 FROM nginx:1.29-alpine
 
+# Minimal updates (no need for libcap since we use high port 8080)
+RUN apk update && apk upgrade && \
+    chown -R nginx:nginx /etc/nginx
+
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Copy nginx config
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Ensure proper permissions
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
 
-EXPOSE 80
+USER nginx
+
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- default-deny-all.yaml
+- allow-envoy-ingress.yaml
+- allow-web-ingress.yaml
+- allow-envoy-to-crm.yaml
+- allow-envoy-to-scheduling.yaml
+- allow-dns-egress.yaml
+- allow-external-egress.yaml
+- allow-database-egress.yaml
+- allow-otel-egress.yaml
+- allow-envoy-egress.yaml
+- allow-rabbitmq-egress-backends.yaml
+
+labels:
+- pairs:
+    component: network-policy
+    app.kubernetes.io/name: kdvmanager-network-policies
+    app.kubernetes.io/part-of: kdvmanager
+    app.kubernetes.io/managed-by: kustomize

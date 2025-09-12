@@ -24,10 +24,25 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: kdvmanager-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: scheduling-pod
         image: ghcr.io/luuklabs/kdvmanager/scheduling.api:linux-main
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
         livenessProbe:
           httpGet:
             port: 8080
@@ -97,6 +112,14 @@ spec:
       - name: scheduling-migration
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
         env:
           - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"

@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: envoy-pdb
+  namespace: kdvmanager-prod
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: envoy

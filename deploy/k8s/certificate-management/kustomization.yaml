@@ -4,11 +4,13 @@ kind: Kustomization
 resources:
 - letsencrypt/
 
-commonLabels:
-  app.kubernetes.io/name: certificate-management
-  app.kubernetes.io/part-of: certificate-management
-  app.kubernetes.io/managed-by: kustomize
-  environment: production
 
 commonAnnotations:
   argocd.argoproj.io/managed: "true"
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: certificate-management
+    app.kubernetes.io/part-of: certificate-management
+    environment: production

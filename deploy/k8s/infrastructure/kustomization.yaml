@@ -7,6 +7,10 @@ resources:
 - secrets/
 - envoy/
 - rabbitmq/
+- network-policies/
+- rbac/
+- resource-management/
+- pod-disruption-budgets/
 
 labels:
 - pairs:

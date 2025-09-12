@@ -161,7 +161,7 @@ static_resources:
             address:
               socket_address:
                 address: crm-api
-                port_value: 80
+                port_value: 8080
     health_checks:
     - timeout: 1s
       interval: 5s

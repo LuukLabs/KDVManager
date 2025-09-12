@@ -24,17 +24,39 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: kdvmanager-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: scheduling-pod
         image: ghcr.io/luuklabs/kdvmanager/scheduling.api:linux-main
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 30
         livenessProbe:
           httpGet:
             port: 8080
             path: /healthz
           initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 5
+          timeoutSeconds: 3
           failureThreshold: 3
         readinessProbe:
           httpGet:
@@ -42,8 +64,13 @@ spec:
             path: /healthz
           initialDelaySeconds: 20
           periodSeconds: 5
-          timeoutSeconds: 5
+          timeoutSeconds: 3
           failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              # give the app a short chance to drain requests before SIGTERM
+              command: ["/bin/sh","-c","sleep 10"]
         resources:
           limits:
             memory: 200Mi
@@ -56,7 +83,9 @@ spec:
             containerPort: 8080
             protocol: TCP
         env:
-          - name: OTEL__ENDPOINT
+          - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
+            value: "/tmp/dotnet_bundle_extract"
+          - name: OTEL__ENDPOINT # legacy key supported in code
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
@@ -93,10 +122,22 @@ spec:
                 key: RABBITMQ_DEFAULT_PASS
           - name: ConnectionStrings__RabbitMQ
             value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq.kdvmanager-prod.svc.cluster.local:5672/"
+        volumeMounts:
+        - name: dotnet-bundle-cache
+          mountPath: /tmp/dotnet_bundle_extract
+          readOnly: false
       initContainers:
       - name: scheduling-migration
         image: ghcr.io/luuklabs/kdvmanager/scheduling.migrator:linux-main
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
         env:
           - name: OTEL__ENDPOINT
             value: "http://otel-collector.observability.svc.cluster.local:4317"
@@ -119,3 +160,13 @@ spec:
             value: "KDVManagerSchedulingDB"
           - name: ConnectionStrings__KDVManagerSchedulingConnectionString
             value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require; Maximum Pool Size=2; Minimum Pool Size=1; Connection Idle Lifetime=300; Connection Pruning Interval=10"
+          - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
+            value: "/tmp/dotnet_bundle_extract"
+        volumeMounts:
+          - name: dotnet-bundle-cache
+            mountPath: /tmp/dotnet_bundle_extract
+            readOnly: false
+      # end initContainers
+      volumes:
+      - name: dotnet-bundle-cache
+        emptyDir: {}

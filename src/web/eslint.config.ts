@@ -9,7 +9,7 @@ import react from "eslint-plugin-react";
 import i18next from "eslint-plugin-i18next";
 
 const config: FlatConfig.ConfigArray = tseslint.config([
-  globalIgnores(["dist", "eslint.config.ts", "i18next-parser.config.ts", "orval.config.ts"]),
+  globalIgnores(["dist", "eslint.config.ts", "i18next-parser.config.ts", "orval.config.ts", "knip.config.ts"]),
   {
     files: ["**/*.{ts,tsx}"],
     plugins: {

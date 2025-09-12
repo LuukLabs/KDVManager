@@ -2,17 +2,19 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - deployment.yml
-  - service.yml
+- deployment.yml
+- service.yml
 
 labels:
-  - pairs:
-      app: scheduling-api
-      component: api
-      service: scheduling
+- pairs:
+    app: scheduling-api
+    component: api
+    service: scheduling
 
 images:
-  - name: ghcr.io/luuklabs/kdvmanager/scheduling.api
-    newTag: linux-main
-  - name: ghcr.io/luuklabs/kdvmanager/scheduling.migrator
-    newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/scheduling.api
+  newName: ghcr.io/luuklabs/kdvmanager/scheduling.api
+  newTag: linux-333d461
+- name: ghcr.io/luuklabs/kdvmanager/scheduling.migrator
+  newName: ghcr.io/luuklabs/kdvmanager/scheduling.migrator
+  newTag: linux-333d461

@@ -54,7 +54,7 @@ export default function ErrorPage() {
     >
       <Box
         component="img"
-        src="/logo_transparent.png"
+        src="/logo_transparent.webp"
         alt={t("KDVManager Logo")}
         sx={{
           maxWidth: { xs: "200px", sm: "250px", md: "300px" },

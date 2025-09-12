@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-envoy-to-scheduling
+  namespace: kdvmanager-prod
+spec:
+  podSelector:
+    matchLabels:
+      app: scheduling-api
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: envoy
+    ports:
+    - protocol: TCP
+      port: 8080

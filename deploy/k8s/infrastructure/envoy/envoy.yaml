@@ -33,6 +33,16 @@ static_resources:
               use_request_id_for_trace_sampling: true
           generate_request_id: true
           preserve_external_request_id: true
+          normalize_path: true
+          merge_slashes: true
+          path_with_escaped_slashes_action: UNESCAPE_AND_REDIRECT
+          common_http_protocol_options:
+            max_headers_count: 100
+            max_stream_duration: 300s
+            headers_with_underscores_action: REJECT_REQUEST
+          http_protocol_options:
+            accept_http_10: false
+          request_timeout: 30s
           tracing:
             provider:
               name: envoy.tracers.opentelemetry
@@ -161,7 +171,7 @@ static_resources:
             address:
               socket_address:
                 address: crm-api
-                port_value: 80
+                port_value: 8080
     health_checks:
     - timeout: 1s
       interval: 5s

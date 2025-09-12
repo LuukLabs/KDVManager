@@ -21,17 +21,37 @@ spec:
         release: production
     spec:
       serviceAccountName: kdvmanager-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: web
         image: ghcr.io/luuklabs/kdvmanager/web:linux-main
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          capabilities:
+            drop:
+            - ALL
         ports:
           - name: http
-            containerPort: 80
+            containerPort: 8080
             protocol: TCP
           - name: https
             containerPort: 443
             protocol: TCP
+        volumeMounts:
+          - name: nginx-cache
+            mountPath: /var/cache/nginx
+          - name: nginx-run
+            mountPath: /var/run
         resources:
           limits:
             memory: 100Mi
@@ -42,7 +62,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
           failureThreshold: 3
@@ -50,8 +70,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 30
           periodSeconds: 30
           failureThreshold: 3
+      volumes:
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
         

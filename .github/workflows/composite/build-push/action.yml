@@ -38,6 +38,8 @@ runs:
       currentbranch=$(echo ${GITHUB_REF##*/})
       echo "running on $currentbranch"
       echo "BRANCH=$currentbranch" >> $GITHUB_ENV
+      SHORT_SHA=${GITHUB_SHA::7}
+      echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
     shell: bash
 
   - name: Compose build ${{ inputs.service }}
@@ -49,6 +51,14 @@ runs:
       REGISTRY: ${{ inputs.registry_endpoint }}
       NUGET_GITHUB_TOKEN: ${{ inputs.nuget_github_token }}
 
+  - name: Tag image with short SHA
+    shell: bash
+    run: |
+      image="${{ inputs.registry_endpoint }}/${{ inputs.image_name }}:linux-${{ env.BRANCH }}"
+      sha_tag="${{ inputs.registry_endpoint }}/${{ inputs.image_name }}:linux-${{ env.SHORT_SHA }}"
+      echo "Tagging $image as $sha_tag"
+      docker tag "$image" "$sha_tag"
+
   - name: Compose push  -f docker-compose.yml ${{ inputs.service }}
     shell: bash
     run: sudo -E docker compose push ${{ inputs.service }}
@@ -56,3 +66,8 @@ runs:
     env:
       TAG: ${{ env.BRANCH }}
       REGISTRY: ${{ inputs.registry_endpoint }}
+
+  - name: Push short SHA tag
+    shell: bash
+    run: |
+      docker push "${{ inputs.registry_endpoint }}/${{ inputs.image_name }}:linux-${{ env.SHORT_SHA }}"

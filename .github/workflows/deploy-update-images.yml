@@ -1,0 +1,77 @@
+name: update-kustomize-images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/web/**'
+      - 'src/Services/CRM/**'
+      - 'src/Services/Scheduling/**'
+      - '.github/workflows/web.yml'
+      - '.github/workflows/crm-api.yml'
+      - '.github/workflows/scheduling-api.yml'
+      - '.github/workflows/deploy-update-images.yml'
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: read
+
+env:
+  REGISTRY: ghcr.io/luuklabs/kdvmanager
+
+jobs:
+  update-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install kustomize
+        run: |
+          curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Update kustomize image tags (changed services)
+        env:
+          CHANGED_ONLY: true
+          BASE_REF: origin/main
+        run: |
+          bash scripts/update-kustomize-images.sh
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet deploy/k8s/applications; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create / Update PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: automation-update-images
+          commit-message: "chore(kustomize): update image tags to linux-${{ github.sha }}"
+          title: "chore(kustomize): update image tags"
+          body: |
+            Automated update of kustomize image tags.
+            Head SHA: `${{ github.sha }}`
+            This PR is maintained as a rolling branch (automation-update-images) to avoid path conflicts with historical per-SHA branches.
+          labels: automation,images,kustomize
+          add-paths: |
+            deploy/k8s/applications/*/kustomization.yaml
+          signoff: false
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "PR created/updated (branch chore/update-images)." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No changes detected; no PR action." >> $GITHUB_STEP_SUMMARY
+          fi

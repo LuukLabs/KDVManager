@@ -19,7 +19,7 @@ on:
 env:
   REGISTRY: ghcr.io
   SERVICE: scheduling-migrator
-  IMAGE: scheduling-migrator
+  IMAGE: scheduling.migrator
 
 jobs:
 

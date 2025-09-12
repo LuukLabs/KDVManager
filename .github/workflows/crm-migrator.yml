@@ -16,7 +16,7 @@ on:
 env:
   REGISTRY: ghcr.io
   SERVICE: crm-migrator
-  IMAGE: crm-migrator
+  IMAGE: crm.migrator
 
 jobs:
 

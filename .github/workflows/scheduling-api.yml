@@ -16,7 +16,7 @@ on:
 env:
   REGISTRY: ghcr.io
   SERVICE: scheduling-api
-  IMAGE: scheduling-api
+  IMAGE: scheduling.api
 
 jobs:
 

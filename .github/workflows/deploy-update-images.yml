@@ -1,0 +1,76 @@
+name: update-kustomize-images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/web/**'
+      - 'src/Services/CRM/**'
+      - 'src/Services/Scheduling/**'
+      - '.github/workflows/web.yml'
+      - '.github/workflows/crm-api.yml'
+      - '.github/workflows/scheduling-api.yml'
+      - '.github/workflows/deploy-update-images.yml'
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: read
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io/luuklabs/kdvmanager
+
+jobs:
+  update-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install kustomize
+        run: |
+          curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Update kustomize image tags (changed services)
+        env:
+          CHANGED_ONLY: true
+          BASE_REF: origin/main
+        run: |
+          bash scripts/update-kustomize-images.sh
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --quiet deploy/k8s/applications; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(kustomize): update image tags to linux-${{ github.sha }}"
+          branch: "chore/update-images/${{ github.sha }}"
+          title: "chore(kustomize): update image tags to linux-${{ github.sha }}"
+          body: |
+            Automated update of kustomize image tags.
+            Short SHA: `${{ github.sha }}`
+          labels: automation,images,kustomize
+          add-paths: |
+            deploy/k8s/applications/*/kustomization.yaml
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.changes.outputs.changed }}" = "true" ]; then
+            echo "PR created (or updated) for image tag bump." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No service changes; no PR created." >> $GITHUB_STEP_SUMMARY
+          fi

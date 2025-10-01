@@ -67,12 +67,13 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 3
         resources:
-          limits:
-            memory: 256Mi
-            cpu: 500m
+          # Lowered for minimal edge traffic; monitor p99 latency before reducing further
           requests:
-            memory: 128Mi
-            cpu: 100m
+            cpu: 50m
+            memory: 96Mi
+          limits:
+            cpu: 300m
+            memory: 192Mi
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false

@@ -53,12 +53,13 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
           resources:
+            # Lowered for minimal telemetry volume; adjust if export queue backs up
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 80m
+              memory: 192Mi
             limits:
-              cpu: 1000m
-              memory: 1Gi
+              cpu: 400m
+              memory: 512Mi
           volumeMounts:
             - name: otel-collector-config
               mountPath: /etc/otel-collector-config.yaml

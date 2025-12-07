@@ -26,6 +26,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
     public DbSet<EndMark> EndMarks { get; set; }
     public DbSet<EndMarkSettings> EndMarkSettings { get; set; }
+    public DbSet<GroupStaffLevel> GroupStaffLevels { get; set; }
+    public DbSet<GroupComplianceSnapshot> GroupComplianceSnapshots { get; set; }
+    public DbSet<ComplianceDocument> ComplianceDocuments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +42,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ClosurePeriod>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMark>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMarkSettings>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+    modelBuilder.Entity<GroupStaffLevel>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+    modelBuilder.Entity<GroupComplianceSnapshot>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+    modelBuilder.Entity<ComplianceDocument>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
 
         modelBuilder.Entity<Schedule>()
             .HasMany(si => si.ScheduleRules);

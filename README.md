@@ -41,3 +41,7 @@ ArgoCD then syncs after the PR is merged, giving an approval gate and audit trai
 
 ## Local Development
 See `src/web/README.md` and service-specific docs.
+
+## Documentation
+- [Daycare MVP scope](docs/daycare-mvp.md)
+- [BKR compliance extension design](docs/compliance/bkr-compliance-extension.md)

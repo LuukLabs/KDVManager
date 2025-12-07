@@ -29,6 +29,13 @@ using KDVManager.Services.Scheduling.Application.Features.Overview.Queries.GetDa
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using KDVManager.Services.Scheduling.Application.Features.EndMarkSettings.Queries.GetEndMarkSettings;
 using KDVManager.Services.Scheduling.Application.Features.EndMarkSettings.Commands.UpdateEndMarkSettings;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Commands.RecordGroupStaffLevel;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Commands.UploadComplianceDocument;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Queries.GetGroupComplianceSnapshot;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Queries.GetComplianceDocument;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Queries.ListComplianceDocuments;
+using KDVManager.Services.Scheduling.Application.Features.Compliance.Queries.ListGroupComplianceSnapshots;
+using KDVManager.Services.Scheduling.Domain.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -65,6 +72,13 @@ public static class ConfigureServices
         services.AddScoped<GetDailyOverviewQueryHandler>();
         services.AddScoped<GetEndMarkSettingsQueryHandler>();
         services.AddScoped<UpdateEndMarkSettingsCommandHandler>();
+        services.AddScoped<RecordGroupStaffLevelCommandHandler>();
+        services.AddScoped<UploadComplianceDocumentCommandHandler>();
+        services.AddScoped<GetGroupComplianceSnapshotQueryHandler>();
+        services.AddScoped<GetComplianceDocumentQueryHandler>();
+        services.AddScoped<ListComplianceDocumentsQueryHandler>();
+        services.AddScoped<ListGroupComplianceSnapshotsQueryHandler>();
+        services.AddScoped<BkrComplianceCalculator>();
 
         return services;
     }

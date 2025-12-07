@@ -27,6 +27,9 @@ public static class ConfigureServices
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
         services.AddScoped<IEndMarkRepository, EndMarkRepository>();
         services.AddScoped<IEndMarkSettingsRepository, EndMarkSettingsRepository>();
+    services.AddScoped<IGroupStaffLevelRepository, GroupStaffLevelRepository>();
+    services.AddScoped<IGroupComplianceSnapshotRepository, GroupComplianceSnapshotRepository>();
+    services.AddScoped<IComplianceDocumentRepository, ComplianceDocumentRepository>();
         services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
         services.AddScoped<IEndMarkAutomationService, EndMarkAutomationService>();
 

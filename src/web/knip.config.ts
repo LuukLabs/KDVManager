@@ -29,7 +29,7 @@ const config: KnipConfig = {
         "@features/*": ["src/features/*"],
         "@hooks/*": ["src/hooks/*"],
         "@lib/*": ["src/lib/*"],
-        "@utils/*": ["src/utils/*"]
+        "@utils/*": ["src/utils/*"],
       },
 
       // Avoid false positives from generated files, public assets and node modules

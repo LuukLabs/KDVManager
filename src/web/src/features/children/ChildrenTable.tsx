@@ -7,6 +7,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useListChildren } from "@api/endpoints/children/children";
 import { useChildrenListState } from "@hooks/useChildrenListState";
 import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
@@ -47,6 +48,22 @@ export const ChildrenTable = () => {
         disableColumnMenu: true,
         disableReorder: true,
         valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
+      },
+      {
+        field: "isActive",
+        headerName: t("table.header.status"),
+        width: 120,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+        renderCell: (params: GridRenderCellParams<ChildListVM, boolean>) => (
+          <Chip
+            label={params.value ? t("Active") : t("Inactive")}
+            color={params.value ? "success" : "default"}
+            size="small"
+            variant="outlined"
+          />
+        ),
       },
       {
         field: "id",

@@ -25,5 +25,20 @@ namespace KDVManager.Services.CRM.Domain.Entities
         /// </summary>
         public int ChildNumber { get; set; }
 
+        /// <summary>
+        /// Indicates whether this child currently has an active schedule.
+        /// A child is considered active when they have at least one schedule where
+        /// today's date falls between the StartDate and EndDate (or EndDate is null).
+        /// This value is synchronized from the Scheduling service.
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// The end date of the last active schedule, if applicable.
+        /// Null if the child has no schedules or the latest schedule is open-ended.
+        /// This value is synchronized from the Scheduling service.
+        /// </summary>
+        public DateOnly? LastActiveDate { get; set; }
+
     }
 }

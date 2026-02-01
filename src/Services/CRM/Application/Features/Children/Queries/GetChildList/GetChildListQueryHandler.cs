@@ -25,7 +25,9 @@ public class GetChildListQueryHandler
             Id = child.Id,
             FullName = (child.GivenName + " " + child.FamilyName).Trim(),
             DateOfBirth = child.DateOfBirth,
-            ChildNumber = child.ChildNumber
+            ChildNumber = child.ChildNumber,
+            IsActive = child.IsActive,
+            LastActiveDate = child.LastActiveDate
         }).ToList();
 
         return new PagedList<ChildListVM>(childListVMs, count);

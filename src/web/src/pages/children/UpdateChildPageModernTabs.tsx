@@ -102,6 +102,8 @@ const UpdateChildPageModernTabs = () => {
           lastName={child.familyName}
           dateOfBirth={child.dateOfBirth}
           cid={child.cid ?? undefined}
+          isActive={child.isActive}
+          lastActiveDate={child.lastActiveDate}
         />
       </Box>
 

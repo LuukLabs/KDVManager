@@ -29,6 +29,10 @@ public static class ConfigureServices
         services.AddScoped<IEndMarkSettingsRepository, EndMarkSettingsRepository>();
         services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
         services.AddScoped<IEndMarkAutomationService, EndMarkAutomationService>();
+        services.AddScoped<IScheduleStatusService, ScheduleStatusService>();
+
+        // Background service for periodic sync of child active status
+        services.AddHostedService<ScheduleStatusSyncHostedService>();
 
         services.AddTenancy();
 

@@ -29,7 +29,7 @@ export type DeleteConfig = {
 
 // More flexible mutation type using existing TanStack types
 export type DeleteMutation<
-  TData = void,
+  TData = undefined | null,
   TError = unknown,
   TVariables extends Record<string, unknown> = { id: string },
 > = UseMutationResult<TData, TError, TVariables>;

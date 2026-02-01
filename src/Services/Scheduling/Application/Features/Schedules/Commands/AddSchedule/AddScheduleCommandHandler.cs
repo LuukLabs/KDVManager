@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
+using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -14,12 +15,18 @@ public class AddScheduleCommandHandler
     private readonly IScheduleRepository _scheduleRepository;
     private readonly ITimeSlotRepository _timeSlotRepository;
     private readonly IScheduleTimelineService _timelineService;
+    private readonly IScheduleStatusService _scheduleStatusService;
 
-    public AddScheduleCommandHandler(IScheduleRepository scheduleRepository, ITimeSlotRepository timeSlotRepository, IScheduleTimelineService timelineService)
+    public AddScheduleCommandHandler(
+        IScheduleRepository scheduleRepository,
+        ITimeSlotRepository timeSlotRepository,
+        IScheduleTimelineService timelineService,
+        IScheduleStatusService scheduleStatusService)
     {
         _scheduleRepository = scheduleRepository;
         _timeSlotRepository = timeSlotRepository;
         _timelineService = timelineService;
+        _scheduleStatusService = scheduleStatusService;
     }
 
     public async Task<Guid> Handle(AddScheduleCommand request)
@@ -57,7 +64,9 @@ public class AddScheduleCommandHandler
         // Recalculate timeline to set EndDates appropriately
         await _timelineService.RecalculateAsync(schedule.ChildId);
 
+        // Publish schedule status change event
+        await _scheduleStatusService.PublishStatusForChildAsync(schedule.ChildId);
+
         return schedule.Id;
     }
 }
-

@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { calculateAge } from "@utils/calculateAge";
+import dayjs from "dayjs";
 import {
   Box,
   Typography,
@@ -20,6 +21,8 @@ type ChildHeaderProps = {
   dateOfBirth?: string;
   group?: string;
   cid?: string;
+  isActive?: boolean;
+  lastActiveDate?: string | null;
   onEdit?: () => void;
   onDelete?: () => void;
   loading?: boolean;
@@ -31,6 +34,8 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
   lastName,
   dateOfBirth,
   group,
+  isActive,
+  lastActiveDate,
   onEdit,
   onDelete,
   loading = false,
@@ -147,6 +152,25 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     "& .MuiChip-label": { fontWeight: 600 },
                   }}
                 />
+                {isActive !== undefined && (
+                  <Chip
+                    label={
+                      isActive
+                        ? t("Active")
+                        : lastActiveDate
+                          ? t("Active until {{date}}", {
+                              date: dayjs(lastActiveDate).format("DD/MM/YYYY"),
+                            })
+                          : t("Inactive")
+                    }
+                    size="small"
+                    sx={{
+                      backgroundColor: isActive ? alpha("#4caf50", 0.3) : alpha("#9e9e9e", 0.3),
+                      color: "white",
+                      "& .MuiChip-label": { fontWeight: 600 },
+                    }}
+                  />
+                )}
               </Stack>
             </Box>
           </Box>

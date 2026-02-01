@@ -1,5 +1,6 @@
 ﻿using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Application.Contracts.Services;
+using KDVManager.Services.CRM.Application.Events;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Services.CRM.Infrastructure.Repositories;
 using KDVManager.Services.CRM.Infrastructure.Services;
@@ -34,6 +35,8 @@ public static class ConfigureServices
 
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<ChildScheduleStatusChangedEventConsumer>();
+
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("RabbitMQ"));

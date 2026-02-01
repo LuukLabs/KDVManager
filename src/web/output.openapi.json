@@ -1810,6 +1810,14 @@
           "childNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "lastActiveDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
           }
         }
       },
@@ -1844,7 +1852,7 @@
         }
       },
       "ChildListVM": {
-        "required": ["id", "fullName", "dateOfBirth", "childNumber"],
+        "required": ["id", "fullName", "dateOfBirth", "childNumber", "isActive"],
         "type": "object",
         "properties": {
           "id": {
@@ -1861,6 +1869,14 @@
           "childNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "lastActiveDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
           }
         }
       },

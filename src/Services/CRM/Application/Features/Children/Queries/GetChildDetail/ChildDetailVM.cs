@@ -17,5 +17,15 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
         /// This number is automatically assigned and incremental per tenant.
         /// </summary>
         public int ChildNumber { get; set; }
+
+        /// <summary>
+        /// Indicates whether this child currently has an active schedule.
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// The end date of the last active schedule, if applicable.
+        /// </summary>
+        public DateOnly? LastActiveDate { get; set; }
     }
 }

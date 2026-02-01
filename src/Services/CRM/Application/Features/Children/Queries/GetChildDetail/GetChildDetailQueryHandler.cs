@@ -29,7 +29,9 @@ public class GetChildDetailQueryHandler
             FamilyName = child.FamilyName,
             DateOfBirth = child.DateOfBirth,
             CID = child.CID,
-            ChildNumber = child.ChildNumber
+            ChildNumber = child.ChildNumber,
+            IsActive = child.IsActive,
+            LastActiveDate = child.LastActiveDate
         };
     }
 }

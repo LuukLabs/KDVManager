@@ -16,5 +16,16 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
 
         [property: Required]
         public required int ChildNumber { get; set; }
+
+        /// <summary>
+        /// Indicates whether this child currently has an active schedule.
+        /// </summary>
+        [property: Required]
+        public required bool IsActive { get; set; }
+
+        /// <summary>
+        /// The end date of the last active schedule, if applicable.
+        /// </summary>
+        public DateOnly? LastActiveDate { get; set; }
     }
 }

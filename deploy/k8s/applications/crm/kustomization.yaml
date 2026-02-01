@@ -14,7 +14,7 @@ labels:
 images:
 - name: ghcr.io/luuklabs/kdvmanager/crm.api
   newName: ghcr.io/luuklabs/kdvmanager/crm.api
-  newTag: linux-587aa33
+  newTag: linux-711509c
 - name: ghcr.io/luuklabs/kdvmanager/crm.migrator
   newName: ghcr.io/luuklabs/kdvmanager/crm.migrator
-  newTag: linux-587aa33
+  newTag: linux-711509c

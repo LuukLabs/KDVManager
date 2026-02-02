@@ -221,6 +221,35 @@
         }
       }
     },
+    "/crm/v1/children/phone-list": {
+      "get": {
+        "tags": ["children"],
+        "operationId": "GetPhoneList",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhoneListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/crm/v1/guardians": {
       "get": {
         "tags": ["guardians"],
@@ -2023,6 +2052,104 @@
           },
           "isEmergencyContact": {
             "type": "boolean"
+          }
+        }
+      },
+      "PhoneListChildVM": {
+        "required": ["id", "fullName", "dateOfBirth", "childNumber", "guardians"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "childNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "guardians": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneListGuardianVM"
+            }
+          }
+        }
+      },
+      "PhoneListGuardianVM": {
+        "required": [
+          "id",
+          "fullName",
+          "relationshipType",
+          "isPrimaryContact",
+          "isEmergencyContact",
+          "phoneNumbers"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "relationshipType": {
+            "$ref": "#/components/schemas/GuardianRelationshipType"
+          },
+          "isPrimaryContact": {
+            "type": "boolean"
+          },
+          "isEmergencyContact": {
+            "type": "boolean"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneListPhoneNumberVM"
+            }
+          }
+        }
+      },
+      "PhoneListPhoneNumberVM": {
+        "required": ["number", "type"],
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PhoneNumberType"
+          }
+        }
+      },
+      "PhoneListResponse": {
+        "required": ["year", "generatedAt", "children"],
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneListChildVM"
+            }
           }
         }
       },

@@ -3,6 +3,10 @@ import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/models/childListVM";
+import {
+  ChildSchedulingStatus,
+  type ChildSchedulingStatus as ChildSchedulingStatusType,
+} from "@api/models/childSchedulingStatus";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useListChildren } from "@api/endpoints/children/children";
 import { useChildrenListState } from "@hooks/useChildrenListState";
@@ -11,6 +15,40 @@ import Chip from "@mui/material/Chip";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
+
+const getStatusConfig = (
+  status: ChildSchedulingStatusType,
+  statusRelevantDate: string | null | undefined,
+  t: (key: string, options?: Record<string, unknown>) => string,
+) => {
+  switch (status) {
+    case ChildSchedulingStatus.Active:
+      return {
+        label: statusRelevantDate
+          ? t("status.activeUntil", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          : t("status.active"),
+        color: "success" as const,
+      };
+    case ChildSchedulingStatus.Upcoming:
+      return {
+        label: statusRelevantDate
+          ? t("status.upcomingFrom", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          : t("status.upcoming"),
+        color: "info" as const,
+      };
+    case ChildSchedulingStatus.Past:
+      return {
+        label: t("status.past"),
+        color: "default" as const,
+      };
+    case ChildSchedulingStatus.NoPlanning:
+    default:
+      return {
+        label: t("status.noPlanning"),
+        color: "warning" as const,
+      };
+  }
+};
 
 export const ChildrenTable = () => {
   const { t } = useTranslation();
@@ -50,20 +88,20 @@ export const ChildrenTable = () => {
         valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
       },
       {
-        field: "isActive",
+        field: "schedulingStatus",
         headerName: t("table.header.status"),
-        width: 120,
+        width: 200,
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
-        renderCell: (params: GridRenderCellParams<ChildListVM, boolean>) => (
-          <Chip
-            label={params.value ? t("Active") : t("Inactive")}
-            color={params.value ? "success" : "default"}
-            size="small"
-            variant="outlined"
-          />
-        ),
+        renderCell: (params: GridRenderCellParams<ChildListVM, ChildSchedulingStatusType>) => {
+          const config = getStatusConfig(
+            params.value ?? ChildSchedulingStatus.NoPlanning,
+            params.row.statusRelevantDate,
+            t,
+          );
+          return <Chip label={config.label} color={config.color} size="small" variant="outlined" />;
+        },
       },
       {
         field: "id",

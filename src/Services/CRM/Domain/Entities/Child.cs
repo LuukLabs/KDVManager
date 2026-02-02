@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using KDVManager.Services.CRM.Domain.Interfaces;
+using KDVManager.Shared.Contracts.Enums;
 using KDVManager.Shared.Domain.Interfaces;
 
 namespace KDVManager.Services.CRM.Domain.Entities
@@ -26,19 +29,60 @@ namespace KDVManager.Services.CRM.Domain.Entities
         public int ChildNumber { get; set; }
 
         /// <summary>
-        /// Indicates whether this child currently has an active schedule.
-        /// A child is considered active when they have at least one schedule where
-        /// today's date falls between the StartDate and EndDate (or EndDate is null).
-        /// This value is synchronized from the Scheduling service.
+        /// Activity intervals representing periods when this child has scheduled attendance.
+        /// These are synchronized from the Scheduling service.
         /// </summary>
-        public bool IsActive { get; set; }
+        public ICollection<ChildActivityInterval> ActivityIntervals { get; set; } = [];
 
         /// <summary>
-        /// The end date of the last active schedule, if applicable.
-        /// Null if the child has no schedules or the latest schedule is open-ended.
-        /// This value is synchronized from the Scheduling service.
+        /// Calculates the scheduling status based on activity intervals and today's date.
         /// </summary>
-        public DateOnly? LastActiveDate { get; set; }
+        public ChildSchedulingStatus GetSchedulingStatus(DateOnly today)
+        {
+            if (ActivityIntervals == null || ActivityIntervals.Count == 0)
+                return ChildSchedulingStatus.NoPlanning;
 
+            // Check for active interval (today falls within StartDate and EndDate)
+            var hasActive = ActivityIntervals.Any(i =>
+                i.StartDate <= today &&
+                (!i.EndDate.HasValue || i.EndDate >= today));
+
+            if (hasActive)
+                return ChildSchedulingStatus.Active;
+
+            // Check for upcoming interval (StartDate is in the future)
+            var hasUpcoming = ActivityIntervals.Any(i => i.StartDate > today);
+
+            if (hasUpcoming)
+                return ChildSchedulingStatus.Upcoming;
+
+            // All intervals are in the past
+            return ChildSchedulingStatus.Past;
+        }
+
+        /// <summary>
+        /// Gets the end date of the currently active interval, if any.
+        /// Returns null if no active interval or if the active interval is open-ended.
+        /// </summary>
+        public DateOnly? GetActiveEndDate(DateOnly today)
+        {
+            return ActivityIntervals?
+                .Where(i => i.StartDate <= today && (!i.EndDate.HasValue || i.EndDate >= today))
+                .Select(i => i.EndDate)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the start date of the next upcoming interval, if any.
+        /// </summary>
+        public DateOnly? GetNextUpcomingStartDate(DateOnly today)
+        {
+            return ActivityIntervals?
+                .Where(i => i.StartDate > today)
+                .OrderBy(i => i.StartDate)
+                .Select(i => i.StartDate)
+                .Cast<DateOnly?>()
+                .FirstOrDefault();
+        }
     }
 }

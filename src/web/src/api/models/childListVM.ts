@@ -4,13 +4,14 @@
  * KDVManager CRM API
  * OpenAPI spec version: v1
  */
+import type { ChildSchedulingStatus } from "./childSchedulingStatus";
 
 export type ChildListVM = {
   id: string;
   fullName: string;
   dateOfBirth: string;
   childNumber: number;
-  isActive: boolean;
+  schedulingStatus: ChildSchedulingStatus;
   /** @nullable */
-  lastActiveDate?: string | null;
+  statusRelevantDate?: string | null;
 };

@@ -52,4 +52,33 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
         }
         return await children.CountAsync();
     }
+
+    public async Task<IReadOnlyList<Child>> PagedWithIntervalsAsync(IPaginationFilter paginationFilter, string? search)
+    {
+        IQueryable<Child> children = _dbContext.Set<Child>()
+            .Include(c => c.ActivityIntervals)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var pattern = $"%{search.Trim()}%".ToLower();
+            children = children.Where(child =>
+                EF.Functions.Like((child.GivenName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like((child.FamilyName ?? "").ToLower(), pattern) ||
+                EF.Functions.Like(((child.GivenName ?? "") + " " + (child.FamilyName ?? "")).ToLower(), pattern)
+            );
+        }
+
+        children = children.OrderBy(child => child.GivenName).ThenBy(child => child.FamilyName);
+        children = children.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
+
+        return await children.ToListAsync();
+    }
+
+    public async Task<Child?> GetByIdWithIntervalsAsync(Guid id)
+    {
+        return await _dbContext.Set<Child>()
+            .Include(c => c.ActivityIntervals)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
 }

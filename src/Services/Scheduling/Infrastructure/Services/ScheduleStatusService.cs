@@ -15,137 +15,134 @@ using Microsoft.Extensions.Logging;
 namespace KDVManager.Services.Scheduling.Infrastructure.Services;
 
 /// <summary>
-/// Service responsible for computing and publishing child schedule active status changes.
-/// A child is considered active when they have at least one schedule where
-/// today's date falls between the StartDate and EndDate (or EndDate is null).
+/// Service responsible for computing and publishing child activity intervals.
+/// Activity intervals represent periods when a child has scheduled attendance,
+/// derived from their schedules (including EndDates calculated from endmarks).
 /// </summary>
 public class ScheduleStatusService : IScheduleStatusService
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly ITenancyContextAccessor _tenancyContextAccessor;
-    private readonly IPublishEndpoint _publishEndpoint;
-    private readonly ILogger<ScheduleStatusService> _logger;
+  private readonly ApplicationDbContext _dbContext;
+  private readonly ITenancyContextAccessor _tenancyContextAccessor;
+  private readonly IPublishEndpoint _publishEndpoint;
+  private readonly ILogger<ScheduleStatusService> _logger;
 
-    public ScheduleStatusService(
-        ApplicationDbContext dbContext,
-        ITenancyContextAccessor tenancyContextAccessor,
-        IPublishEndpoint publishEndpoint,
-        ILogger<ScheduleStatusService> logger)
+  public ScheduleStatusService(
+      ApplicationDbContext dbContext,
+      ITenancyContextAccessor tenancyContextAccessor,
+      IPublishEndpoint publishEndpoint,
+      ILogger<ScheduleStatusService> logger)
+  {
+    _dbContext = dbContext;
+    _tenancyContextAccessor = tenancyContextAccessor;
+    _publishEndpoint = publishEndpoint;
+    _logger = logger;
+  }
+
+  public async Task<int> SyncAllChildrenStatusAsync(CancellationToken cancellationToken = default)
+  {
+    _logger.LogInformation("Starting activity interval sync for all children across all tenants");
+
+    // Get all distinct tenant IDs from children (bypassing tenant filter)
+    var tenantIds = await _dbContext.Children
+        .IgnoreQueryFilters()
+        .Select(c => c.TenantId)
+        .Distinct()
+        .ToListAsync(cancellationToken);
+
+    _logger.LogInformation("Found {TenantCount} tenants to process", tenantIds.Count);
+
+    var totalProcessedCount = 0;
+
+    foreach (var tenantId in tenantIds)
     {
-        _dbContext = dbContext;
-        _tenancyContextAccessor = tenancyContextAccessor;
-        _publishEndpoint = publishEndpoint;
-        _logger = logger;
+      if (cancellationToken.IsCancellationRequested)
+      {
+        _logger.LogWarning("Activity interval sync cancelled after processing {Count} children", totalProcessedCount);
+        break;
+      }
+
+      try
+      {
+        // Set tenant context for this iteration
+        _tenancyContextAccessor.Current = new StaticTenancyContext(tenantId);
+
+        var processedCount = await SyncChildrenForCurrentTenantAsync(cancellationToken);
+        totalProcessedCount += processedCount;
+
+        _logger.LogInformation(
+            "Processed {Count} children for tenant {TenantId}",
+            processedCount, tenantId);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error processing tenant {TenantId}", tenantId);
+      }
     }
 
-    public async Task<int> SyncAllChildrenStatusAsync(CancellationToken cancellationToken = default)
+    _logger.LogInformation("Activity interval sync completed. Processed {Count} children across {TenantCount} tenants",
+        totalProcessedCount, tenantIds.Count);
+    return totalProcessedCount;
+  }
+
+  private async Task<int> SyncChildrenForCurrentTenantAsync(CancellationToken cancellationToken)
+  {
+    // Now the tenant filter is active, so this returns only children for current tenant
+    var children = await _dbContext.Children.ToListAsync(cancellationToken);
+    var processedCount = 0;
+
+    foreach (var child in children)
     {
-        _logger.LogInformation("Starting schedule status sync for all children across all tenants");
+      if (cancellationToken.IsCancellationRequested)
+        break;
 
-        // Get all distinct tenant IDs from children (bypassing tenant filter)
-        var tenantIds = await _dbContext.Children
-            .IgnoreQueryFilters()
-            .Select(c => c.TenantId)
-            .Distinct()
-            .ToListAsync(cancellationToken);
+      try
+      {
+        await PublishStatusForChildInternalAsync(child.Id, cancellationToken);
+        processedCount++;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error processing activity intervals for child {ChildId}", child.Id);
+      }
+    }
 
-        _logger.LogInformation("Found {TenantCount} tenants to process", tenantIds.Count);
+    return processedCount;
+  }
 
-        var now = DateOnly.FromDateTime(DateTime.UtcNow);
-        var totalProcessedCount = 0;
+  public async Task PublishStatusForChildAsync(Guid childId, CancellationToken cancellationToken = default)
+  {
+    await PublishStatusForChildInternalAsync(childId, cancellationToken);
+  }
 
-        foreach (var tenantId in tenantIds)
+  private async Task PublishStatusForChildInternalAsync(Guid childId, CancellationToken cancellationToken)
+  {
+    // Get all schedules for this child, ordered by start date
+    var schedules = await _dbContext.Schedules
+        .Where(s => s.ChildId == childId)
+        .OrderBy(s => s.StartDate)
+        .ToListAsync(cancellationToken);
+
+    // Convert schedules to activity intervals
+    // Each schedule represents an interval from StartDate to EndDate
+    // EndDate comes from the schedule's calculated end (based on next schedule or endmark)
+    var intervals = schedules
+        .Select(s => new ActivityInterval
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _logger.LogWarning("Schedule status sync cancelled after processing {Count} children", totalProcessedCount);
-                break;
-            }
+          StartDate = s.StartDate,
+          EndDate = s.EndDate
+        })
+        .ToList();
 
-            try
-            {
-                // Set tenant context for this iteration
-                _tenancyContextAccessor.Current = new StaticTenancyContext(tenantId);
-
-                var processedCount = await SyncChildrenForCurrentTenantAsync(now, cancellationToken);
-                totalProcessedCount += processedCount;
-
-                _logger.LogInformation(
-                    "Processed {Count} children for tenant {TenantId}",
-                    processedCount, tenantId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing tenant {TenantId}", tenantId);
-            }
-        }
-
-        _logger.LogInformation("Schedule status sync completed. Processed {Count} children across {TenantCount} tenants",
-            totalProcessedCount, tenantIds.Count);
-        return totalProcessedCount;
-    }
-
-    private async Task<int> SyncChildrenForCurrentTenantAsync(DateOnly today, CancellationToken cancellationToken)
+    var evt = new ChildActivityIntervalsChangedEvent
     {
-        // Now the tenant filter is active, so this returns only children for current tenant
-        var children = await _dbContext.Children.ToListAsync(cancellationToken);
-        var processedCount = 0;
+      ChildId = childId,
+      Intervals = intervals
+    };
 
-        foreach (var child in children)
-        {
-            if (cancellationToken.IsCancellationRequested)
-                break;
+    await _publishEndpoint.Publish(evt, cancellationToken);
 
-            try
-            {
-                await PublishStatusForChildInternalAsync(child.Id, today, cancellationToken);
-                processedCount++;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing schedule status for child {ChildId}", child.Id);
-            }
-        }
-
-        return processedCount;
-    }
-
-    public async Task PublishStatusForChildAsync(Guid childId, CancellationToken cancellationToken = default)
-    {
-        var now = DateOnly.FromDateTime(DateTime.UtcNow);
-        await PublishStatusForChildInternalAsync(childId, now, cancellationToken);
-    }
-
-    private async Task PublishStatusForChildInternalAsync(Guid childId, DateOnly today, CancellationToken cancellationToken)
-    {
-        var schedules = await _dbContext.Schedules
-            .Where(s => s.ChildId == childId)
-            .ToListAsync(cancellationToken);
-
-        // A child is active if they have at least one schedule where today falls between StartDate and EndDate
-        var hasActiveSchedule = schedules.Any(s =>
-            s.StartDate <= today &&
-            (!s.EndDate.HasValue || s.EndDate >= today));
-
-        // Get the latest end date from all schedules (for showing "last active until" in UI)
-        DateOnly? lastActiveDate = null;
-        var schedulesWithEndDate = schedules.Where(s => s.EndDate.HasValue).ToList();
-        if (schedulesWithEndDate.Any())
-        {
-            lastActiveDate = schedulesWithEndDate.Max(s => s.EndDate!.Value);
-        }
-
-        var evt = new ChildScheduleStatusChangedEvent
-        {
-            ChildId = childId,
-            IsActive = hasActiveSchedule,
-            LastActiveDate = lastActiveDate
-        };
-
-        await _publishEndpoint.Publish(evt, cancellationToken);
-
-        _logger.LogDebug(
-            "Published schedule status for child {ChildId}: IsActive={IsActive}, LastActiveDate={LastActiveDate}",
-            childId, hasActiveSchedule, lastActiveDate);
-    }
+    _logger.LogDebug(
+        "Published activity intervals for child {ChildId}: {IntervalCount} intervals",
+        childId, intervals.Count);
+  }
 }

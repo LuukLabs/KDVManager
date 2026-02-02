@@ -1,4 +1,6 @@
 ﻿using System;
+using KDVManager.Shared.Contracts.Enums;
+
 namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail
 {
     public class ChildDetailVM
@@ -19,13 +21,15 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChild
         public int ChildNumber { get; set; }
 
         /// <summary>
-        /// Indicates whether this child currently has an active schedule.
+        /// The current scheduling status of this child based on their activity intervals.
         /// </summary>
-        public bool IsActive { get; set; }
+        public ChildSchedulingStatus SchedulingStatus { get; set; }
 
         /// <summary>
-        /// The end date of the last active schedule, if applicable.
+        /// For Active status: the end date of the current interval.
+        /// For Upcoming status: the start date of the next interval.
+        /// Null otherwise.
         /// </summary>
-        public DateOnly? LastActiveDate { get; set; }
+        public DateOnly? StatusRelevantDate { get; set; }
     }
 }

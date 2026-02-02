@@ -14,6 +14,10 @@ import {
   alpha,
 } from "@mui/material";
 import { Person as PersonIcon, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import {
+  ChildSchedulingStatus,
+  type ChildSchedulingStatus as ChildSchedulingStatusType,
+} from "@api/models/childSchedulingStatus";
 
 type ChildHeaderProps = {
   firstName?: string;
@@ -21,8 +25,8 @@ type ChildHeaderProps = {
   dateOfBirth?: string;
   group?: string;
   cid?: string;
-  isActive?: boolean;
-  lastActiveDate?: string | null;
+  schedulingStatus?: ChildSchedulingStatusType;
+  statusRelevantDate?: string | null;
   onEdit?: () => void;
   onDelete?: () => void;
   loading?: boolean;
@@ -34,8 +38,8 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
   lastName,
   dateOfBirth,
   group,
-  isActive,
-  lastActiveDate,
+  schedulingStatus,
+  statusRelevantDate,
   onEdit,
   onDelete,
   loading = false,
@@ -64,6 +68,38 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
     const age = calculateAge(dateOfBirth);
     if (age === undefined) return t("N/A");
     return t("{{count}} years", { count: age });
+  };
+
+  const getStatusLabel = () => {
+    switch (schedulingStatus) {
+      case ChildSchedulingStatus.Active:
+        return statusRelevantDate
+          ? t("status.activeUntil", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          : t("status.active");
+      case ChildSchedulingStatus.Upcoming:
+        return statusRelevantDate
+          ? t("status.upcomingFrom", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          : t("status.upcoming");
+      case ChildSchedulingStatus.Past:
+        return t("status.past");
+      case ChildSchedulingStatus.NoPlanning:
+      default:
+        return t("status.noPlanning");
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (schedulingStatus) {
+      case ChildSchedulingStatus.Active:
+        return alpha("#4caf50", 0.3);
+      case ChildSchedulingStatus.Upcoming:
+        return alpha("#2196f3", 0.3);
+      case ChildSchedulingStatus.Past:
+        return alpha("#9e9e9e", 0.3);
+      case ChildSchedulingStatus.NoPlanning:
+      default:
+        return alpha("#ff9800", 0.3);
+    }
   };
 
   return (
@@ -152,20 +188,12 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                     "& .MuiChip-label": { fontWeight: 600 },
                   }}
                 />
-                {isActive !== undefined && (
+                {schedulingStatus !== undefined && (
                   <Chip
-                    label={
-                      isActive
-                        ? t("Active")
-                        : lastActiveDate
-                          ? t("Active until {{date}}", {
-                              date: dayjs(lastActiveDate).format("DD/MM/YYYY"),
-                            })
-                          : t("Inactive")
-                    }
+                    label={getStatusLabel()}
                     size="small"
                     sx={{
-                      backgroundColor: isActive ? alpha("#4caf50", 0.3) : alpha("#9e9e9e", 0.3),
+                      backgroundColor: getStatusColor(),
                       color: "white",
                       "& .MuiChip-label": { fontWeight: 600 },
                     }}

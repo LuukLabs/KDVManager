@@ -1,5 +1,5 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 WORKDIR /src
 COPY ["Services/CRM/Api/Api.csproj", "Services/CRM/Api/"]
 COPY ["Services/CRM/Application/Application.csproj", "Services/CRM/Application/"]

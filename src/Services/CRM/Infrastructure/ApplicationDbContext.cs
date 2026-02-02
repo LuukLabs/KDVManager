@@ -19,6 +19,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Guardian> Guardians { get; set; }
     public DbSet<ChildGuardian> ChildGuardians { get; set; }
     public DbSet<ChildNumberSequence> ChildNumberSequences { get; set; }
+    public DbSet<ChildActivityInterval> ChildActivityIntervals { get; set; }
     // PhoneNumbers owned by Guardian; no separate DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +29,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Guardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ChildGuardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ChildNumberSequence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<ChildActivityInterval>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         // PhoneNumbers owned; query filter handled via Guardian
 
         modelBuilder.Entity<ChildGuardian>()
@@ -46,6 +48,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ChildGuardian>()
             .HasIndex(cg => new { cg.ChildId, cg.GuardianId })
             .IsUnique();
+
+        // Configure ChildActivityInterval relationship
+        modelBuilder.Entity<ChildActivityInterval>()
+            .HasOne(i => i.Child)
+            .WithMany(c => c.ActivityIntervals)
+            .HasForeignKey(i => i.ChildId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }

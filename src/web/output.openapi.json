@@ -1811,10 +1811,10 @@
             "type": "integer",
             "format": "int32"
           },
-          "isActive": {
-            "type": "boolean"
+          "schedulingStatus": {
+            "$ref": "#/components/schemas/ChildSchedulingStatus"
           },
-          "lastActiveDate": {
+          "statusRelevantDate": {
             "type": "string",
             "format": "date",
             "nullable": true
@@ -1852,7 +1852,7 @@
         }
       },
       "ChildListVM": {
-        "required": ["id", "fullName", "dateOfBirth", "childNumber", "isActive"],
+        "required": ["id", "fullName", "dateOfBirth", "childNumber", "schedulingStatus"],
         "type": "object",
         "properties": {
           "id": {
@@ -1870,10 +1870,10 @@
             "type": "integer",
             "format": "int32"
           },
-          "isActive": {
-            "type": "boolean"
+          "schedulingStatus": {
+            "$ref": "#/components/schemas/ChildSchedulingStatus"
           },
-          "lastActiveDate": {
+          "statusRelevantDate": {
             "type": "string",
             "format": "date",
             "nullable": true
@@ -1905,6 +1905,9 @@
             "type": "boolean"
           }
         }
+      },
+      "ChildSchedulingStatus": {
+        "enum": ["NoPlanning", "Past", "Active", "Upcoming"]
       },
       "GuardianChildVM": {
         "required": ["fullName"],

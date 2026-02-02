@@ -81,4 +81,16 @@ public class ChildRepository : BaseRepository<Child>, IChildRepository
             .Include(c => c.ActivityIntervals)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
+
+    public async Task<IReadOnlyList<Child>> GetActiveChildrenInPeriodAsync(DateOnly startDate, DateOnly endDate)
+    {
+        // A child is active in a period if any of their activity intervals overlap with the period.
+        // Overlap occurs when: interval.StartDate <= endDate AND (interval.EndDate >= startDate OR interval.EndDate is null)
+        return await _dbContext.Set<Child>()
+            .Include(c => c.ActivityIntervals)
+            .Where(c => c.ActivityIntervals.Any(i =>
+                i.StartDate <= endDate &&
+                (!i.EndDate.HasValue || i.EndDate >= startDate)))
+            .ToListAsync();
+    }
 }

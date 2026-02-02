@@ -26,7 +26,11 @@ import type { ChildDetailVM } from "../../models/childDetailVM";
 
 import type { ChildListVM } from "../../models/childListVM";
 
+import type { GetPhoneListParams } from "../../models/getPhoneListParams";
+
 import type { ListChildrenParams } from "../../models/listChildrenParams";
+
+import type { PhoneListResponse } from "../../models/phoneListResponse";
 
 import type { UnprocessableEntityResponse } from "../../models/unprocessableEntityResponse";
 
@@ -500,6 +504,101 @@ export function useGetNextChildNumber<
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetNextChildNumberQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getPhoneList = (params: GetPhoneListParams, signal?: AbortSignal) => {
+  return executeFetch<PhoneListResponse>({
+    url: `/crm/v1/children/phone-list`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getGetPhoneListQueryKey = (params?: GetPhoneListParams) => {
+  return [`/crm/v1/children/phone-list`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetPhoneListQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPhoneList>>,
+  TError = unknown,
+>(
+  params: GetPhoneListParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPhoneList>>, TError, TData>>;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPhoneListQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPhoneList>>> = ({ signal }) =>
+    getPhoneList(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPhoneList>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetPhoneListQueryResult = NonNullable<Awaited<ReturnType<typeof getPhoneList>>>;
+export type GetPhoneListQueryError = unknown;
+
+export function useGetPhoneList<TData = Awaited<ReturnType<typeof getPhoneList>>, TError = unknown>(
+  params: GetPhoneListParams,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPhoneList>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPhoneList>>,
+          TError,
+          Awaited<ReturnType<typeof getPhoneList>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPhoneList<TData = Awaited<ReturnType<typeof getPhoneList>>, TError = unknown>(
+  params: GetPhoneListParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPhoneList>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPhoneList>>,
+          TError,
+          Awaited<ReturnType<typeof getPhoneList>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPhoneList<TData = Awaited<ReturnType<typeof getPhoneList>>, TError = unknown>(
+  params: GetPhoneListParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPhoneList>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetPhoneList<TData = Awaited<ReturnType<typeof getPhoneList>>, TError = unknown>(
+  params: GetPhoneListParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPhoneList>>, TError, TData>>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetPhoneListQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

@@ -3,6 +3,7 @@ using KDVManager.Services.CRM.Application.Features.Children.Commands.DeleteChild
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNextChildNumber;
+using KDVManager.Services.CRM.Application.Features.Children.Queries.GetPhoneList;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
@@ -55,5 +56,11 @@ public static class ChildrenEndpoints
             await handler.Handle(command);
             return Results.NoContent();
         }).WithName("DeleteChild").WithTags("children").Produces(StatusCodes.Status204NoContent);
+
+        endpoints.MapGet("/v1/children/phone-list", async ([AsParameters] GetPhoneListQuery query, [FromServices] GetPhoneListQueryHandler handler) =>
+        {
+            var response = await handler.Handle(query);
+            return Results.Ok(response);
+        }).WithName("GetPhoneList").WithTags("children").Produces<PhoneListResponse>(StatusCodes.Status200OK);
     }
 }

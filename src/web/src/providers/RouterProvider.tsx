@@ -59,6 +59,14 @@ const router = (t: TFunction<"translation">) =>
               },
             },
             {
+              path: "print-phone-list",
+              loader: requireAuth,
+              lazy: () => import("@pages/print/PrintPhoneListPage"),
+              handle: {
+                crumb: () => t("Phone List"),
+              },
+            },
+            {
               path: "children",
               loader: requireAuth,
               handle: {

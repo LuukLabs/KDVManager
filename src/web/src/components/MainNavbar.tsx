@@ -12,6 +12,7 @@ import { AppBar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AccountMenu from "./AccountMenu";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 type MainNavbarProps = {
   children: React.ReactNode;
@@ -21,12 +22,16 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElReporting, setAnchorElReporting] = React.useState<null | HTMLElement>(null);
 
   // Define navigation items for better maintainability
   const navigationItems = [
     { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
     { key: "children", label: t("Children"), path: "/children" },
     { key: "guardians", label: t("Guardians"), path: "/guardians" },
+  ];
+
+  const reportingItems = [
     { key: "print", label: t("Print Schedules"), path: "/print-schedules" },
     { key: "phone-list", label: t("Phone List"), path: "/print-phone-list" },
   ];
@@ -39,9 +44,18 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
     setAnchorElNav(null);
   };
 
+  const handleOpenReportingMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElReporting(event.currentTarget);
+  };
+
+  const handleCloseReportingMenu = () => {
+    setAnchorElReporting(null);
+  };
+
   const handleNavigation = (path: string) => {
     navigate(path);
     handleCloseNavMenu();
+    handleCloseReportingMenu();
   };
 
   return (
@@ -112,6 +126,20 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                     <Typography textAlign="center">{item.label}</Typography>
                   </MenuItem>
                 ))}
+                <MenuItem disabled>
+                  <Typography variant="caption" color="text.secondary">
+                    {t("Reporting")}
+                  </Typography>
+                </MenuItem>
+                {reportingItems.map((item) => (
+                  <MenuItem
+                    key={item.key}
+                    onClick={() => handleNavigation(item.path)}
+                    sx={{ pl: 4 }}
+                  >
+                    <Typography textAlign="center">{item.label}</Typography>
+                  </MenuItem>
+                ))}
               </Menu>
             </Box>
             <Box
@@ -153,6 +181,37 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                   {item.label}
                 </Button>
               ))}
+              <Box>
+                <Button
+                  sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}
+                  onClick={handleOpenReportingMenu}
+                  endIcon={<KeyboardArrowDownIcon />}
+                >
+                  {t("Reporting")}
+                </Button>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar-reporting"
+                  anchorEl={anchorElReporting}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElReporting)}
+                  onClose={handleCloseReportingMenu}
+                >
+                  {reportingItems.map((item) => (
+                    <MenuItem key={item.key} onClick={() => handleNavigation(item.path)}>
+                      <Typography textAlign="center">{item.label}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
             </Box>
             <AccountMenu />
           </Toolbar>

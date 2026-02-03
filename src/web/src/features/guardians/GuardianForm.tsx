@@ -140,7 +140,6 @@ export const GuardianForm = ({
               <DatePickerElement
                 label={t("Date of birth")}
                 name="dateOfBirth"
-                required
                 transform={{
                   output: (value) => {
                     return value ? value.format("YYYY-MM-DD") : null;
@@ -163,7 +162,18 @@ export const GuardianForm = ({
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
-              <TextFieldElement name="email" label={t("Email")} required fullWidth />
+              <TextFieldElement
+                name="email"
+                label={t("Email")}
+                fullWidth
+                type="email"
+                rules={{
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: t("Invalid email address"),
+                  },
+                }}
+              />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider sx={{ my: 1 }} />

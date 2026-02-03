@@ -248,16 +248,7 @@ const PrintPhoneListPage = () => {
           >
             <Table size="small" sx={{ minWidth: 650 }}>
               <TableHead>
-                <TableRow
-                  sx={{
-                    backgroundColor: theme.palette.grey[100],
-                    "@media print": {
-                      backgroundColor: "#f5f5f5 !important",
-                      WebkitPrintColorAdjust: "exact",
-                      printColorAdjust: "exact",
-                    },
-                  }}
-                >
+                <TableRow>
                   <TableCell sx={{ fontWeight: 600, width: "20%" }}>{t("Child")}</TableCell>
                   <TableCell sx={{ fontWeight: 600, width: "25%" }}>{t("Guardians")}</TableCell>
                   <TableCell sx={{ fontWeight: 600, width: "30%" }}>{t("Phone Numbers")}</TableCell>
@@ -265,142 +256,133 @@ const PrintPhoneListPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.children?.map((child, index) => (
-                  <TableRow
-                    key={child.id}
-                    sx={{
-                      "&:nth-of-type(odd)": {
-                        backgroundColor: alpha(theme.palette.grey[100], 0.5),
-                      },
-                      "@media print": {
-                        "&:nth-of-type(odd)": {
-                          backgroundColor: "#fafafa !important",
-                          WebkitPrintColorAdjust: "exact",
-                          printColorAdjust: "exact",
-                        },
-                        pageBreakInside: "avoid",
-                      },
-                      verticalAlign: "top",
-                    }}
-                  >
-                    {/* Child column */}
-                    <TableCell>
-                      <Box>
-                        <Typography variant="body2" fontWeight={600}>
-                          {`${String(index + 1)}. ${child.fullName}`}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {t("DOB")}: {dayjs(child.dateOfBirth).format("DD-MM-YYYY")}
-                        </Typography>
-                        <br />
-                        <Typography variant="caption" color="text.secondary">
-                          #{child.childNumber}
-                        </Typography>
-                      </Box>
-                    </TableCell>
+                {[...(data.children || [])]
+                  .sort((a, b) => a.fullName.localeCompare(b.fullName))
+                  .map((child) => {
+                    const guardians =
+                      child.guardians && child.guardians.length > 0 ? child.guardians : [null];
 
-                    {/* Guardians column */}
-                    <TableCell>
-                      <Stack spacing={1}>
-                        {child.guardians?.map((guardian) => (
-                          <Box key={guardian.id}>
-                            <Typography variant="body2" fontWeight={500}>
-                              {guardian.fullName}
-                            </Typography>
-                            <Stack direction="row" spacing={0.5} flexWrap="wrap" sx={{ mt: 0.5 }}>
-                              <Chip
-                                label={getRelationshipLabel(guardian.relationshipType)}
-                                size="small"
-                                variant="outlined"
-                                sx={{ fontSize: "0.65rem", height: 18 }}
-                              />
-                              {guardian.isPrimaryContact && (
-                                <Chip
-                                  label={t("Primary")}
-                                  size="small"
-                                  color="primary"
-                                  sx={{ fontSize: "0.65rem", height: 18 }}
-                                />
-                              )}
-                              {guardian.isEmergencyContact && (
-                                <Chip
-                                  label={t("Emergency")}
-                                  size="small"
-                                  color="error"
-                                  sx={{ fontSize: "0.65rem", height: 18 }}
-                                />
-                              )}
-                            </Stack>
-                          </Box>
-                        ))}
-                        {(!child.guardians || child.guardians.length === 0) && (
-                          <Typography variant="body2" color="text.secondary" fontStyle="italic">
-                            {t("No guardians linked")}
-                          </Typography>
-                        )}
-                      </Stack>
-                    </TableCell>
-
-                    {/* Phone numbers column */}
-                    <TableCell>
-                      <Stack spacing={1}>
-                        {child.guardians?.map((guardian) => (
-                          <Box key={guardian.id}>
-                            <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                              {guardian.fullName}:
-                            </Typography>
-                            {guardian.phoneNumbers && guardian.phoneNumbers.length > 0 ? (
-                              <Stack spacing={0.25}>
-                                {guardian.phoneNumbers.map((phone, idx) => (
-                                  <Box
-                                    key={idx}
-                                    sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                                  >
-                                    <PhoneIcon sx={{ fontSize: 12, color: "text.secondary" }} />
-                                    <Typography variant="body2">
-                                      {formatPhoneNumber(phone.number)}
-                                    </Typography>
-                                    <Typography variant="caption" color="text.secondary">
-                                      {`(${getPhoneTypeLabel(phone.type)})`}
-                                    </Typography>
-                                  </Box>
-                                ))}
-                              </Stack>
-                            ) : (
-                              <Typography variant="body2" color="text.secondary" fontStyle="italic">
-                                {t("No phone")}
-                              </Typography>
-                            )}
-                            {guardian.email && (
-                              <Box
-                                sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.25 }}
-                              >
-                                <EmailIcon sx={{ fontSize: 12, color: "text.secondary" }} />
-                                <Typography variant="caption" color="text.secondary">
-                                  {guardian.email}
-                                </Typography>
-                              </Box>
-                            )}
-                          </Box>
-                        ))}
-                      </Stack>
-                    </TableCell>
-
-                    {/* Notes column - empty for user to fill in */}
-                    <TableCell>
-                      <Box
+                    return guardians.map((guardian, gIndex) => (
+                      <TableRow
+                        key={`${child.id}-${gIndex}`}
                         sx={{
-                          minHeight: 40,
-                          borderBottom: "1px solid",
-                          borderColor: "divider",
                           "@media print": {
-                            borderBottom: "1px solid #ccc",
+                            pageBreakInside: "avoid",
                           },
+                          verticalAlign: "top",
                         }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      >
+                        {/* Child column */}
+                        {gIndex === 0 && (
+                          <TableCell rowSpan={guardians.length}>
+                            <Box>
+                              <Typography variant="body2" fontWeight={600}>
+                                {child.fullName}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {t("DOB")}: {dayjs(child.dateOfBirth).format("DD-MM-YYYY")}
+                              </Typography>
+                              <br />
+                              <Typography variant="caption" color="text.secondary">
+                                #{child.childNumber}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        )}
+
+                        {/* Guardians column */}
+                        <TableCell>
+                          {guardian ? (
+                            <Box>
+                              <Typography variant="body2" fontWeight={500}>
+                                {guardian.fullName}
+                              </Typography>
+                              <Stack direction="row" spacing={0.5} flexWrap="wrap" sx={{ mt: 0.5 }}>
+                                <Chip
+                                  label={getRelationshipLabel(guardian.relationshipType)}
+                                  size="small"
+                                  variant="outlined"
+                                  sx={{ fontSize: "0.65rem", height: 18 }}
+                                />
+                                {guardian.isEmergencyContact && (
+                                  <Chip
+                                    label={t("Emergency")}
+                                    size="small"
+                                    color="error"
+                                    sx={{ fontSize: "0.65rem", height: 18 }}
+                                  />
+                                )}
+                              </Stack>
+                            </Box>
+                          ) : (
+                            <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                              {t("No guardians linked")}
+                            </Typography>
+                          )}
+                        </TableCell>
+
+                        {/* Phone numbers column */}
+                        <TableCell>
+                          {guardian ? (
+                            <Box>
+                              {guardian.phoneNumbers && guardian.phoneNumbers.length > 0 ? (
+                                <Stack spacing={0.25}>
+                                  {guardian.phoneNumbers.map((phone, idx) => (
+                                    <Box
+                                      key={idx}
+                                      sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                                    >
+                                      <PhoneIcon sx={{ fontSize: 12, color: "text.secondary" }} />
+                                      <Typography variant="body2">
+                                        {formatPhoneNumber(phone.number)}
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary">
+                                        {`(${getPhoneTypeLabel(phone.type)})`}
+                                      </Typography>
+                                    </Box>
+                                  ))}
+                                </Stack>
+                              ) : (
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  fontStyle="italic"
+                                >
+                                  {t("No phone")}
+                                </Typography>
+                              )}
+                              {guardian.email && (
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 0.5,
+                                    mt: 0.25,
+                                  }}
+                                >
+                                  <EmailIcon sx={{ fontSize: 12, color: "text.secondary" }} />
+                                  <Typography variant="caption" color="text.secondary">
+                                    {guardian.email}
+                                  </Typography>
+                                </Box>
+                              )}
+                            </Box>
+                          ) : null}
+                        </TableCell>
+
+                        {/* Notes column - empty for user to fill in */}
+                        {gIndex === 0 && (
+                          <TableCell rowSpan={guardians.length}>
+                            <Box
+                              sx={{
+                                minHeight: 40,
+                              }}
+                            />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ));
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -417,15 +399,6 @@ const PrintPhoneListPage = () => {
             }}
             className="print-legend"
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Chip
-                label={t("Primary")}
-                size="small"
-                color="primary"
-                sx={{ height: 18, fontSize: "0.65rem" }}
-              />
-              <Typography variant="caption">{`= ${t("Primary contact")}`}</Typography>
-            </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Chip
                 label={t("Emergency")}

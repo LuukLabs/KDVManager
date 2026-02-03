@@ -27,5 +27,13 @@
   "No end marks defined": "Geen eindmarkeringen gedefinieerd",
   "End Mark": "Eindmarkering",
   "Delete": "Verwijderen",
-  "Unknown date": "Onbekende datum"
+  "Unknown date": "Onbekende datum",
+  "Parent": "Ouder",
+  "Guardian": "Voogd",
+  "Grandparent": "Grootouder",
+  "Mobile": "Mobiel",
+  "Home": "Thuis",
+  "Work": "Werk",
+  "Primary": "Primair",
+  "Emergency": "Noodgeval"
 }

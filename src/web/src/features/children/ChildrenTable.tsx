@@ -15,6 +15,15 @@ import Chip from "@mui/material/Chip";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Pagination from "@mui/material/Pagination";
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 const getStatusConfig = (
   status: ChildSchedulingStatusType,
@@ -52,6 +61,8 @@ const getStatusConfig = (
 
 export const ChildrenTable = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { apiParams, muiPagination } = useChildrenListState();
   const { data, isLoading, isFetching } = useListChildren(
     { ...apiParams },
@@ -119,6 +130,91 @@ export const ChildrenTable = () => {
     ],
     [t],
   );
+
+  if (isMobile) {
+    if (isLoading && !data) {
+      return (
+        <Stack spacing={2}>
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} variant="rectangular" height={150} sx={{ borderRadius: 1 }} />
+          ))}
+        </Stack>
+      );
+    }
+
+    const paginationModel = muiPagination.paginationModel;
+    const pageSize = paginationModel?.pageSize ?? 10;
+    const totalPages = Math.ceil((data?.meta.total ?? 0) / pageSize);
+    const currentPage = (paginationModel?.page ?? 0) + 1;
+
+    return (
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        {data?.value?.map((child) => {
+          const statusConfig = getStatusConfig(
+            child.schedulingStatus ?? ChildSchedulingStatus.NoPlanning,
+            child.statusRelevantDate,
+            t,
+          );
+          return (
+            <Card key={child.id} variant="outlined">
+              <CardContent sx={{ pb: 1 }}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  mb={1}
+                  spacing={1}
+                >
+                  <Typography variant="h6" component="div" sx={{ wordBreak: "break-word" }}>
+                    {child.fullName}
+                  </Typography>
+                  <Chip
+                    label={statusConfig.label}
+                    color={statusConfig.color}
+                    size="small"
+                    variant="outlined"
+                    sx={{ flexShrink: 0 }}
+                  />
+                </Stack>
+                <Typography color="text.secondary" variant="body2" gutterBottom>
+                  {t("table.header.childNumber")}: {child.childNumber}
+                </Typography>
+                <Typography color="text.secondary" variant="body2">
+                  {t("table.header.dateOfBirth")}:{" "}
+                  {/* eslint-disable-next-line i18next/no-literal-string */}
+                  {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
+                <EditChildButton id={child.id!} />
+                <DeleteChildButton id={child.id!} displayName={child.fullName} />
+              </CardActions>
+            </Card>
+          );
+        })}
+
+        {totalPages > 1 && (
+          <Box display="flex" justifyContent="center" py={2}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(_, page) =>
+                muiPagination.onPaginationModelChange?.(
+                  {
+                    page: page - 1,
+                    pageSize: pageSize,
+                  },
+                  { reason: undefined } as any,
+                )
+              }
+              color="primary"
+              size="small"
+            />
+          </Box>
+        )}
+      </Stack>
+    );
+  }
 
   return (
     <Stack spacing={1} sx={{ width: "100%" }}>

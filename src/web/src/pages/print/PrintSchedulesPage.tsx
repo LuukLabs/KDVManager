@@ -68,8 +68,13 @@ const PrintSchedulesPage = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Paper sx={{ p: 2, mb: 3 }} className="print-controls">
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom fontWeight={600}>
           {t("Print Attendance Schedules")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {t(
+            "Generate printable attendance schedules for groups with optional filtering by year, month, and specific groups.",
+          )}
         </Typography>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <FormControl sx={{ minWidth: 140 }} size="small">

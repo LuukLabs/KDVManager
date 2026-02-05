@@ -249,10 +249,9 @@ const PrintPhoneListPage = () => {
             <Table size="small" sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600, width: "20%" }}>{t("Child")}</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: "25%" }}>{t("Guardians")}</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: "30%" }}>{t("Phone Numbers")}</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: "25%" }}>{t("Notes")}</TableCell>
+                  <TableCell sx={{ fontWeight: 600, width: "30%" }}>{t("Child")}</TableCell>
+                  <TableCell sx={{ fontWeight: 600, width: "30%" }}>{t("Guardians")}</TableCell>
+                  <TableCell sx={{ fontWeight: 600, width: "40%" }}>{t("Phone Numbers")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -369,17 +368,6 @@ const PrintPhoneListPage = () => {
                             </Box>
                           ) : null}
                         </TableCell>
-
-                        {/* Notes column - empty for user to fill in */}
-                        {gIndex === 0 && (
-                          <TableCell rowSpan={guardians.length}>
-                            <Box
-                              sx={{
-                                minHeight: 40,
-                              }}
-                            />
-                          </TableCell>
-                        )}
                       </TableRow>
                     ));
                   })}

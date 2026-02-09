@@ -64,7 +64,7 @@
     "@types/node": "^24.10.11",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/utils": "^8.54.0",
+    "@typescript-eslint/utils": "^8.55.0",
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "~9.32.0",
     "eslint-plugin-i18next": "^6.1.3",

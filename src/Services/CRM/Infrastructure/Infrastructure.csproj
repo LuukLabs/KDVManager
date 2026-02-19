@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\..\Shared\KDVManager.Shared.Infrastructure\KDVManager.Shared.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>

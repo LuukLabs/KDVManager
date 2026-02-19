@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>KDVManager.Shared.Contracts</AssemblyName>
     <RootNamespace>KDVManager.Shared.Contracts</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 WORKDIR /src
 COPY ["Services/Scheduling/Api/Api.csproj", "Services/Scheduling/Api/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]
@@ -29,7 +29,7 @@ RUN dotnet tool install -g dotnet-ef --version 9.0.7
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --project ./Infrastructure --startup-project ./Api
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0 as migrator-runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0 as migrator-runtime
 
 COPY --from=build-migrator /src/Services/Scheduling/efbundle .
 

@@ -1,5 +1,5 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 WORKDIR /src
 COPY ["Services/Scheduling/Api/Api.csproj", "Services/Scheduling/Api/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]
@@ -36,7 +36,7 @@ RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --no-build \
     /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 as runtime
 
 EXPOSE 80
 EXPOSE 443

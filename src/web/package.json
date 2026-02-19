@@ -29,7 +29,7 @@
     "react-hook-form-mui": "^7.6.2",
     "react-i18next": "^15.7.4",
     "react-router-dom": "7.13.0",
-    "vite-tsconfig-paths": "^6.1.0"
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "scripts": {
     "api:generate": "orval --clean",

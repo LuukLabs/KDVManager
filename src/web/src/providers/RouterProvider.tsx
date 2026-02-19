@@ -67,6 +67,14 @@ const router = (t: TFunction<"translation">) =>
               },
             },
             {
+              path: "newsletter",
+              loader: requireAuth,
+              lazy: () => import("@pages/newsletter/NewsletterPage"),
+              handle: {
+                crumb: () => t("Newsletter"),
+              },
+            },
+            {
               path: "children",
               loader: requireAuth,
               handle: {

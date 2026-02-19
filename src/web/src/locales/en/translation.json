@@ -440,5 +440,12 @@
   "Work": "Work",
   "Year": "Year",
   "years": "years",
-  "Years after birth": ""
+  "Years after birth": "",
+  "Newsletter": "Newsletter",
+  "Collect email addresses of guardians linked to active children for a specific month to send a newsletter.": "Collect email addresses of guardians linked to active children for a specific month to send a newsletter.",
+  "Send Email": "Send Email",
+  "Month": "Month",
+  "active children": "active children",
+  "email addresses": "email addresses",
+  "No email addresses found for this period.": "No email addresses found for this period."
 }

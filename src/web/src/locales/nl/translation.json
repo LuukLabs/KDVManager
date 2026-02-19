@@ -445,5 +445,12 @@
   "Grandparent": "Grootouder",
   "Guardian": "Voogd",
   "Home": "Thuis",
-  "Parent": "Ouder"
+  "Parent": "Ouder",
+  "Newsletter": "Nieuwsbrief",
+  "Collect email addresses of guardians linked to active children for a specific month to send a newsletter.": "Verzamel e-mailadressen van voogden gekoppeld aan actieve kinderen voor een specifieke maand om een nieuwsbrief te versturen.",
+  "Send Email": "E-mail versturen",
+  "Month": "Maand",
+  "active children": "actieve kinderen",
+  "email addresses": "e-mailadressen",
+  "No email addresses found for this period.": "Geen e-mailadressen gevonden voor deze periode."
 }

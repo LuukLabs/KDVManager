@@ -4,6 +4,7 @@ using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNextChildNumber;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetPhoneList;
+using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNewsletterRecipients;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using Microsoft.AspNetCore.Mvc;
 using KDVManager.Services.CRM.Application.Contracts.Pagination;
@@ -62,5 +63,11 @@ public static class ChildrenEndpoints
             var response = await handler.Handle(query);
             return Results.Ok(response);
         }).WithName("GetPhoneList").WithTags("children").Produces<PhoneListResponse>(StatusCodes.Status200OK);
+
+        endpoints.MapGet("/v1/children/newsletter-recipients", async ([AsParameters] GetNewsletterRecipientsQuery query, [FromServices] GetNewsletterRecipientsQueryHandler handler) =>
+        {
+            var response = await handler.Handle(query);
+            return Results.Ok(response);
+        }).WithName("GetNewsletterRecipients").WithTags("children").Produces<NewsletterRecipientsResponse>(StatusCodes.Status200OK);
     }
 }

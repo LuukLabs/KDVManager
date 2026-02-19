@@ -34,6 +34,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
   const reportingItems = [
     { key: "print-schedules", label: t("Scheduling"), path: "/print-schedules" },
     { key: "print-phone-list", label: t("Phone List"), path: "/print-phone-list" },
+    { key: "newsletter", label: t("Newsletter"), path: "/newsletter" },
   ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

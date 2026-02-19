@@ -6,6 +6,7 @@ using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNextChildNumber;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildDetail;
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetPhoneList;
+using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNewsletterRecipients;
 using KDVManager.Services.CRM.Application.Features.Guardians.Commands.UpdateGuardian;
 using KDVManager.Services.CRM.Application.Features.Guardians.Commands.DeleteGuardian;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianList;
@@ -31,6 +32,7 @@ public static class ConfigureServices
         services.AddScoped<GetNextChildNumberQueryHandler>();
         services.AddScoped<GetChildDetailQueryHandler>();
         services.AddScoped<GetPhoneListQueryHandler>();
+        services.AddScoped<GetNewsletterRecipientsQueryHandler>();
         services.AddScoped<AddGuardianCommandHandler>();
         services.AddScoped<UpdateGuardianCommandHandler>();
         services.AddScoped<DeleteGuardianCommandHandler>();

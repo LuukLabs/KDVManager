@@ -1,6 +1,6 @@
 using MassTransit.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -53,7 +53,10 @@ public static class ConfigureServices
                 {
                     foreach (var parameter in operation.Parameters)
                     {
-                        parameter.Name = Char.ToLowerInvariant(parameter.Name[0]) + parameter.Name[1..];
+                        if (parameter is OpenApiParameter p)
+                        {
+                            p.Name = Char.ToLowerInvariant(p.Name[0]) + p.Name[1..];
+                        }
                     }
                 }
 

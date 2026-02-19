@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi;
+using System.Text.Json.Nodes;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
@@ -41,9 +41,9 @@ public static class ConfigureServices
             // Add a custom schema filter to handle TimeSpan as string with time format
             options.MapType<TimeSpan>(() => new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "time",
-                Example = new OpenApiString("14:30:00")
+                Example = JsonValue.Create("14:30:00")
             });
         });
 

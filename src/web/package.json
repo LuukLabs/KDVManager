@@ -7,7 +7,7 @@
     "pnpm": "10.x"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.13.0",
+    "@auth0/auth0-react": "^2.15.0",
     "@ebay/nice-modal-react": "^1.2.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

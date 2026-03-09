@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: arp-flush
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: arp-flush
+  template:
+    metadata:
+      labels:
+        name: arp-flush
+    spec:
+      hostPID: true
+      hostNetwork: true
+      containers:
+      - name: arp-flush
+        image: alpine
+        securityContext:
+          privileged: true
+        command:
+          - /bin/sh
+          - -c
+          - |
+            while true; do
+              nsenter -t 1 -n ip neigh flush all
+              sleep 300
+            done
+      tolerations:
+      - operator: Exists

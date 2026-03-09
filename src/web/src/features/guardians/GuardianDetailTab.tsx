@@ -9,9 +9,9 @@ import {
   useUpdateGuardian,
   getListGuardiansQueryKey,
   getGetGuardianByIdQueryOptions,
-} from "@api/endpoints/guardians/guardians";
-import { type GuardianDetailVM } from "@api/models/guardianDetailVM";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+} from "@api/crm/endpoints/guardians/guardians";
+import { type GuardianDetailVM } from "@api/crm/models/guardianDetailVM";
+import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
 
 import { GuardianBasicInformationCard } from "../../components/guardian/GuardianBasicInformationCard";
 import { GuardianContactInformationCard } from "../../components/guardian/GuardianContactInformationCard";

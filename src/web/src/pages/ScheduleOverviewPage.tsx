@@ -30,8 +30,8 @@ import {
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useTranslation } from "react-i18next";
-import { useListGroups } from "@api/endpoints/groups/groups";
-import { useGetDailyOverview } from "@api/endpoints/overview/overview";
+import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
+import { useGetDailyOverview } from "@api/scheduling/endpoints/overview/overview";
 import GroupColumn from "../components/GroupColumn";
 import { useSearchParams } from "react-router-dom";
 

@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { type LoaderFunctionArgs } from "react-router-dom";
 import { type QueryClient } from "@tanstack/react-query";
-import { getGetChildByIdQueryOptions } from "@api/endpoints/children/children";
+import { getGetChildByIdQueryOptions } from "@api/crm/endpoints/children/children";
 
 export const updateChildPageLoader =
   (queryClient: QueryClient) =>

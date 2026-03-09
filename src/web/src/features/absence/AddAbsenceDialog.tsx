@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import dayjs from "dayjs";
 import { useForm, useWatch } from "react-hook-form";
-import { useAddAbsence } from "@api/endpoints/absences/absences";
+import { useAddAbsence } from "@api/scheduling/endpoints/absences/absences";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { useQueryClient } from "@tanstack/react-query";
 

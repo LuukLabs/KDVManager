@@ -18,11 +18,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useListGroups } from "@api/endpoints/groups/groups";
+import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
 // import { useListChildren } from "@api/endpoints/children/children";
-import { useGetPrintSchedules } from "@api/endpoints/schedules/schedules";
-import type { PrintGroupWeekdayPageVM } from "@api/models/printGroupWeekdayPageVM";
-import type { PrintCellVM } from "@api/models/printCellVM";
+import { useGetPrintSchedules } from "@api/scheduling/endpoints/schedules/schedules";
+import type { PrintGroupWeekdayPageVM } from "@api/scheduling/models/printGroupWeekdayPageVM";
+import type { PrintCellVM } from "@api/scheduling/models/printCellVM";
 import i18n from "@lib/i18n/i18n";
 
 type Filters = {

@@ -32,8 +32,8 @@ import {
 import { useTranslation } from "react-i18next";
 
 import type dayjs from "dayjs";
-import { useGetGroupSummary } from "@api/endpoints/schedules/schedules";
-import { type TimeBlockSummary } from "@api/models/timeBlockSummary";
+import { useGetGroupSummary } from "@api/scheduling/endpoints/schedules/schedules";
+import { type TimeBlockSummary } from "@api/scheduling/models/timeBlockSummary";
 
 type GroupSummaryProps = {
   groupId: string;

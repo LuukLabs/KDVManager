@@ -1,6 +1,6 @@
 import { Box, Paper, Typography, CircularProgress, useTheme, useMediaQuery } from "@mui/material";
 import { type Dayjs } from "dayjs";
-import { useGetSchedulesByDate } from "@api/endpoints/schedules/schedules";
+import { useGetSchedulesByDate } from "@api/scheduling/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
 import GroupSummary from "./GroupSummary";
 import { useTranslation } from "react-i18next";

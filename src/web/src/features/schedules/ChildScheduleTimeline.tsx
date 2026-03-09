@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import { useGetChildSchedules } from "@api/endpoints/schedules/schedules";
-import { useListEndMarks } from "@api/endpoints/end-marks/end-marks";
+import { useGetChildSchedules } from "@api/scheduling/endpoints/schedules/schedules";
+import { useListEndMarks } from "@api/scheduling/endpoints/end-marks/end-marks";
 import { ScheduleCard } from "../../components/ScheduleCard";
 import { EndMarkCard } from "../endmarks/EndMarkCard";
 import dayjs from "dayjs";

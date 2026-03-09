@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Box, Button, TextField, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useAddEndMark } from "@api/endpoints/end-marks/end-marks";
+import { useAddEndMark } from "@api/scheduling/endpoints/end-marks/end-marks";
 import { useQueryClient } from "@tanstack/react-query";
-import { getListEndMarksQueryKey } from "@api/endpoints/end-marks/end-marks";
-import { getGetChildSchedulesQueryKey } from "@api/endpoints/schedules/schedules";
+import { getListEndMarksQueryKey } from "@api/scheduling/endpoints/end-marks/end-marks";
+import { getGetChildSchedulesQueryKey } from "@api/scheduling/endpoints/schedules/schedules";
 
 type AddEndMarkFormProps = {
   childId: string;

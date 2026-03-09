@@ -24,11 +24,11 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Search } from "@mui/icons-material";
-import { useLinkGuardianToChild, useListGuardians } from "@api/endpoints/guardians/guardians";
+import { useLinkGuardianToChild, useListGuardians } from "@api/crm/endpoints/guardians/guardians";
 
 // Type definitions (to be replaced with generated API types)
-import type { GuardianListVM } from "@api/models/guardianListVM";
-import { GuardianRelationshipType } from "@api/models/guardianRelationshipType";
+import type { GuardianListVM } from "@api/crm/models/guardianListVM";
+import { GuardianRelationshipType } from "@api/crm/models/guardianRelationshipType";
 
 type LinkGuardianFormData = {
   guardianId: string;

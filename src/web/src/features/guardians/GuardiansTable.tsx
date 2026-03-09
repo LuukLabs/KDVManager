@@ -6,8 +6,8 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useGuardiansListState } from "@hooks/useGuardiansListState";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
 import { ViewGuardianButton } from "./ViewGuardianButton";
-import { useListGuardians } from "@api/endpoints/guardians/guardians";
-import { type GuardianListVM } from "@api/models/guardianListVM";
+import { useListGuardians } from "@api/crm/endpoints/guardians/guardians";
+import { type GuardianListVM } from "@api/crm/models/guardianListVM";
 import Stack from "@mui/material/Stack";
 
 export const GuardiansTable = () => {

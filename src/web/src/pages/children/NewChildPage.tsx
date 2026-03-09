@@ -1,16 +1,16 @@
-import { type AddChildCommand } from "@api/models/addChildCommand";
+import { type AddChildCommand } from "@api/crm/models/addChildCommand";
 import { useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
-import { getListChildrenQueryKey, useAddChild } from "@api/endpoints/children/children";
+import { getListChildrenQueryKey, useAddChild } from "@api/crm/endpoints/children/children";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
 
 const NewChildPage = () => {
   const { t } = useTranslation();

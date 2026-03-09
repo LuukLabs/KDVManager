@@ -15,8 +15,8 @@ import { useTranslation } from "react-i18next";
 import {
   useGetEndMarkSettings,
   useUpdateEndMarkSettings,
-} from "../../api/endpoints/end-mark-settings/end-mark-settings";
-import type { UpdateEndMarkSettingsCommand } from "../../api/models/updateEndMarkSettingsCommand";
+} from "@api/scheduling/endpoints/end-mark-settings/end-mark-settings";
+import type { UpdateEndMarkSettingsCommand } from "@api/scheduling/models/updateEndMarkSettingsCommand";
 
 export const EndMarkSettingsCard: React.FC = () => {
   const { t } = useTranslation();

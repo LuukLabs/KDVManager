@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getListClosurePeriodsQueryKey,
   useDeleteClosurePeriod,
-} from "@api/endpoints/closure-periods/closure-periods";
+} from "@api/scheduling/endpoints/closure-periods/closure-periods";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";

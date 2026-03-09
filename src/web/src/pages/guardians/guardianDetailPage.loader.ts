@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { type LoaderFunctionArgs } from "react-router-dom";
 import { type QueryClient } from "@tanstack/react-query";
-import { getGetGuardianByIdQueryOptions } from "@api/endpoints/guardians/guardians";
+import { getGetGuardianByIdQueryOptions } from "@api/crm/endpoints/guardians/guardians";
 
 export const guardianDetailPageLoader =
   (queryClient: QueryClient) =>

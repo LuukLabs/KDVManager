@@ -1,8 +1,8 @@
 import { Container } from "@mui/material";
 import { GuardianForm } from "../../features/guardians/GuardianForm";
 import { useTranslation } from "react-i18next";
-import { useAddGuardian } from "@api/endpoints/guardians/guardians";
-import { type PhoneNumberType } from "@api/models/phoneNumberType";
+import { useAddGuardian } from "@api/crm/endpoints/guardians/guardians";
+import { type PhoneNumberType } from "@api/crm/models/phoneNumberType";
 
 type GuardianFormData = {
   givenName: string;

@@ -10,9 +10,12 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
-import { getListTimeSlotsQueryKey, useAddTimeSlot } from "@api/endpoints/time-slots/time-slots";
-import { type AddTimeSlotCommand } from "@api/models/addTimeSlotCommand";
+import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
+import {
+  getListTimeSlotsQueryKey,
+  useAddTimeSlot,
+} from "@api/scheduling/endpoints/time-slots/time-slots";
+import { type AddTimeSlotCommand } from "@api/scheduling/models/addTimeSlotCommand";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 

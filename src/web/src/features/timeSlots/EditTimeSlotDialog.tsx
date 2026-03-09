@@ -10,11 +10,14 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse1 } from "@api/models/unprocessableEntityResponse1";
-import { type ProblemDetails } from "@api/models/problemDetails";
-import { getListTimeSlotsQueryKey, useUpdateTimeSlot } from "@api/endpoints/time-slots/time-slots";
-import { type UpdateTimeSlotCommand } from "@api/models/updateTimeSlotCommand";
-import { type TimeSlotListVM } from "@api/models/timeSlotListVM";
+import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
+import { type ProblemDetails } from "@api/scheduling/models/problemDetails";
+import {
+  getListTimeSlotsQueryKey,
+  useUpdateTimeSlot,
+} from "@api/scheduling/endpoints/time-slots/time-slots";
+import { type UpdateTimeSlotCommand } from "@api/scheduling/models/updateTimeSlotCommand";
+import { type TimeSlotListVM } from "@api/scheduling/models/timeSlotListVM";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 
@@ -66,7 +69,7 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
     reset();
   };
 
-  const onMutateError = (error: ProblemDetails | UnprocessableEntityResponse1) => {
+  const onMutateError = (error: ProblemDetails | UnprocessableEntityResponse) => {
     if ("errors" in error && Array.isArray(error.errors)) {
       error.errors.forEach((propertyError: any) => {
         setError(propertyError.property as any, {

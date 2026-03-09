@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { getListTimeSlotsQueryKey, useDeleteTimeSlot } from "@api/endpoints/time-slots/time-slots";
+import {
+  getListTimeSlotsQueryKey,
+  useDeleteTimeSlot,
+} from "@api/scheduling/endpoints/time-slots/time-slots";
 import { useQueryClient } from "@tanstack/react-query";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";

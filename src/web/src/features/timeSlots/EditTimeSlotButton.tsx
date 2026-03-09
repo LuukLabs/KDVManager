@@ -2,7 +2,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
-import { type TimeSlotListVM } from "@api/models/timeSlotListVM";
+import { type TimeSlotListVM } from "@api/scheduling/models/timeSlotListVM";
 import EditTimeSlotDialog from "./EditTimeSlotDialog";
 
 type EditTimeSlotButtonProps = {

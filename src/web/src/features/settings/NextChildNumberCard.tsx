@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NumbersIcon from "@mui/icons-material/Numbers";
-import { useGetNextChildNumber } from "@api/endpoints/children/children";
+import { useGetNextChildNumber } from "@api/crm/endpoints/children/children";
 import { Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
 

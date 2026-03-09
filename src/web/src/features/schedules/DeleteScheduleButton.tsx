@@ -6,7 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getGetChildSchedulesQueryKey,
   useDeleteSchedule,
-} from "@api/endpoints/schedules/schedules";
+} from "@api/scheduling/endpoints/schedules/schedules";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 
 type DeleteScheduleButtonProps = {

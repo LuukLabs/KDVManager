@@ -14,7 +14,7 @@ import {
 import { Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
-import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
+import { type ChildScheduleListVMScheduleRule } from "@api/scheduling/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
 import { DeleteScheduleButton } from "../features/schedules/DeleteScheduleButton";
 

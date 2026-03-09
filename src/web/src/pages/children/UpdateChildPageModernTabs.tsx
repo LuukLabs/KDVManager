@@ -3,7 +3,7 @@ import { Box, Tabs, Tab, useTheme, useMediaQuery, Fade, Divider, Paper } from "@
 import { Person as PersonIcon, Schedule as ScheduleIcon } from "@mui/icons-material";
 import { useParams, useLoaderData, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useGetChildById } from "@api/endpoints/children/children";
+import { useGetChildById } from "@api/crm/endpoints/children/children";
 import { type updateChildPageLoader } from "./updateChildPage.loader";
 import { ChildHeader } from "../../components/child/ChildHeader";
 import { GeneralInformationTab } from "./tabs/GeneralInformationTab";

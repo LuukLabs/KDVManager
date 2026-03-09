@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDeleteGuardian } from "@api/endpoints/guardians/guardians";
+import { useDeleteGuardian } from "@api/crm/endpoints/guardians/guardians";
 
 type DeleteGuardianButtonProps = {
   id: string;

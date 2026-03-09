@@ -147,11 +147,7 @@ const NewsletterPage = () => {
               {t("Generate")}
             </Button>
             {data && !isFetching && data.recipients.length > 0 && (
-              <Button
-                variant="outlined"
-                startIcon={<EmailIcon />}
-                onClick={handleOpenMailClient}
-              >
+              <Button variant="outlined" startIcon={<EmailIcon />} onClick={handleOpenMailClient}>
                 {t("Send Email")}
               </Button>
             )}

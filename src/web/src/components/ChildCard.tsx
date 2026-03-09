@@ -11,8 +11,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Schedule, AccessTime, Person } from "@mui/icons-material";
-import { useGetChildById } from "@api/endpoints/children/children";
-import type { ScheduleByDateVM } from "@api/models/scheduleByDateVM";
+import { useGetChildById } from "@api/crm/endpoints/children/children";
+import type { ScheduleByDateVM } from "@api/scheduling/models/scheduleByDateVM";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";

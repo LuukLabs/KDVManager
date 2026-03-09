@@ -10,9 +10,9 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
-import { type AddScheduleCommand } from "@api/models/addScheduleCommand";
-import { type DayOfWeek } from "@api/models/dayOfWeek";
+import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
+import { type AddScheduleCommand } from "@api/scheduling/models/addScheduleCommand";
+import { type DayOfWeek } from "@api/scheduling/models/dayOfWeek";
 import {
   Box,
   Typography,
@@ -41,7 +41,7 @@ import {
   getGetChildSchedulesQueryKey,
   useAddSchedule,
   useDeleteSchedule,
-} from "@api/endpoints/schedules/schedules";
+} from "@api/scheduling/endpoints/schedules/schedules";
 import { useState, useCallback } from "react";
 import dayjs from "dayjs";
 
@@ -61,8 +61,8 @@ type EditChildScheduleDialogProps = {
   };
 };
 
-import { useListGroups } from "@api/endpoints/groups/groups";
-import { useListTimeSlots } from "@api/endpoints/time-slots/time-slots";
+import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
+import { useListTimeSlots } from "@api/scheduling/endpoints/time-slots/time-slots";
 
 export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogProps>(
   ({ childId, schedule }) => {

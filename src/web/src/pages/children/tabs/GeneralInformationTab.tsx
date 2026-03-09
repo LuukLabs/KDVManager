@@ -9,10 +9,10 @@ import {
   useUpdateChild,
   getListChildrenQueryKey,
   getGetChildByIdQueryOptions,
-} from "@api/endpoints/children/children";
-import { type UpdateChildCommand } from "@api/models/updateChildCommand";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
-import { type ChildDetailVM } from "@api/models/childDetailVM";
+} from "@api/crm/endpoints/children/children";
+import { type UpdateChildCommand } from "@api/crm/models/updateChildCommand";
+import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
+import { type ChildDetailVM } from "@api/crm/models/childDetailVM";
 
 import { ChildGuardiansCard } from "../../../features/guardians/ChildGuardiansCard";
 import { BasicInformationCard } from "@components/child/BasicInformationCard";

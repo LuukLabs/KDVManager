@@ -21,6 +21,8 @@ public static class ConfigureServices
 
         services.AddOpenApi(options =>
         {
+            options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+
             options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
                 document.Info = new()
@@ -44,6 +46,13 @@ public static class ConfigureServices
                         prop => prop.Value
                     );
                     schema.Properties = newProperties;
+                }
+                // ASP.NET Core 9 OpenAPI emits a `pattern` on integer fields and omits the `type`,
+                // which causes Orval to generate `unknown` instead of `number`. Fix both.
+                if (schema.Format == "int32" || schema.Format == "int64")
+                {
+                    schema.Pattern = null;
+                    schema.Type = JsonSchemaType.Integer;
                 }
                 return Task.CompletedTask;
             });

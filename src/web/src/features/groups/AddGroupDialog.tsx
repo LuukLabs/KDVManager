@@ -1,8 +1,8 @@
-import { type AddGroupCommand } from "@api/models/addGroupCommand";
+import { type AddGroupCommand } from "@api/scheduling/models/addGroupCommand";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import Button from "@mui/material/Button";
-import { getListGroupsQueryKey, useAddGroup } from "@api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useAddGroup } from "@api/scheduling/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
@@ -12,7 +12,7 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
+import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();

@@ -17,7 +17,7 @@ import { Person as PersonIcon, Edit as EditIcon, Delete as DeleteIcon } from "@m
 import {
   ChildSchedulingStatus,
   type ChildSchedulingStatus as ChildSchedulingStatusType,
-} from "@api/models/childSchedulingStatus";
+} from "@api/crm/models/childSchedulingStatus";
 
 type ChildHeaderProps = {
   firstName?: string;

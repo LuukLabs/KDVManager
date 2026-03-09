@@ -10,10 +10,10 @@ import { useSnackbar } from "notistack";
 import {
   useAddClosurePeriod,
   getListClosurePeriodsQueryKey,
-} from "@api/endpoints/closure-periods/closure-periods";
+} from "@api/scheduling/endpoints/closure-periods/closure-periods";
 import { useQueryClient } from "@tanstack/react-query";
-import type { UnprocessableEntityResponse } from "@api/models/unprocessableEntityResponse";
-import type { AddClosurePeriodCommand } from "@api/models/addClosurePeriodCommand";
+import type { UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
+import type { AddClosurePeriodCommand } from "@api/scheduling/models/addClosurePeriodCommand";
 import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 

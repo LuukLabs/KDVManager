@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
-import { type ChildListVM } from "@api/models/childListVM";
+import { type ChildListVM } from "@api/crm/models/childListVM";
 import {
   ChildSchedulingStatus,
   type ChildSchedulingStatus as ChildSchedulingStatusType,
-} from "@api/models/childSchedulingStatus";
+} from "@api/crm/models/childSchedulingStatus";
 import { keepPreviousData } from "@tanstack/react-query";
-import { useListChildren } from "@api/endpoints/children/children";
+import { useListChildren } from "@api/crm/endpoints/children/children";
 import { useChildrenListState } from "@hooks/useChildrenListState";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";

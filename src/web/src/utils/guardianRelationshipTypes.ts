@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { GuardianRelationshipType } from "@api/models/guardianRelationshipType";
+import { GuardianRelationshipType } from "@api/crm/models/guardianRelationshipType";
 
 // Get human-readable label from numeric value (non-translated, internal)
 export const getRelationshipLabel = (type: GuardianRelationshipType | undefined): string => {

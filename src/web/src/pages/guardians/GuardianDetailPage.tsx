@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, useLoaderData } from "react-router-dom";
 import { GuardianHeader } from "../../components/guardian/GuardianHeader";
 import { GuardianDetailTab } from "../../features/guardians/GuardianDetailTab";
-import { useGetGuardianById, useDeleteGuardian } from "@api/endpoints/guardians/guardians";
+import { useGetGuardianById, useDeleteGuardian } from "@api/crm/endpoints/guardians/guardians";
 
 const GuardianDetailPage = () => {
   const { t } = useTranslation();

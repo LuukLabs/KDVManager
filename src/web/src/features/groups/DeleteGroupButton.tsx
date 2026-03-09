@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { getListGroupsQueryKey, useDeleteGroup } from "@api/endpoints/groups/groups";
+import { getListGroupsQueryKey, useDeleteGroup } from "@api/scheduling/endpoints/groups/groups";
 import { useQueryClient } from "@tanstack/react-query";
 import { createDeleteTexts } from "../../utils/createDeleteTexts";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";

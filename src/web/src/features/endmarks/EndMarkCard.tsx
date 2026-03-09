@@ -5,9 +5,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import type { EndMarkDto } from "@api/models/endMarkDto";
-import { useDeleteEndMark, getListEndMarksQueryKey } from "@api/endpoints/end-marks/end-marks";
-import { getGetChildSchedulesQueryKey } from "@api/endpoints/schedules/schedules";
+import type { EndMarkDto } from "@api/scheduling/models/endMarkDto";
+import {
+  useDeleteEndMark,
+  getListEndMarksQueryKey,
+} from "@api/scheduling/endpoints/end-marks/end-marks";
+import { getGetChildSchedulesQueryKey } from "@api/scheduling/endpoints/schedules/schedules";
 import { useQueryClient } from "@tanstack/react-query";
 
 type EndMarkCardProps = {

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useGetGuardianChildren,
   useUnlinkGuardianFromChild,
-} from "@api/endpoints/guardians/guardians";
+} from "@api/crm/endpoints/guardians/guardians";
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
 import { formatDate } from "../../utils/formatDate";
 import { EditableCard } from "../cards/EditableCard";

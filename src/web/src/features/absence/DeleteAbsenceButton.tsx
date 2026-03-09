@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getGetAbsencesByChildIdQueryKey,
   useDeleteAbsence,
-} from "@api/endpoints/absences/absences";
+} from "@api/scheduling/endpoints/absences/absences";
 
 type DeleteAbsenceButton = {
   id: string;

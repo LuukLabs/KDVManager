@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useListClosurePeriods } from "@api/endpoints/closure-periods/closure-periods";
+import { useListClosurePeriods } from "@api/scheduling/endpoints/closure-periods/closure-periods";
 import { DeleteClosurePeriodButton } from "./DeleteClosurePeriodButton";
 
 // columns inside component using useMemo so translations update on language change

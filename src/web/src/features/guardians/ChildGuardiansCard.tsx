@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ChildGuardianVM } from "../../api/models/childGuardianVM";
+import type { ChildGuardianVM } from "@api/crm/models/childGuardianVM";
 import {
   Typography,
   Box,
@@ -21,7 +21,7 @@ import { AccentSection } from "../../components/layout/AccentSection";
 import {
   useGetChildGuardians,
   useUnlinkGuardianFromChild,
-} from "@api/endpoints/guardians/guardians";
+} from "@api/crm/endpoints/guardians/guardians";
 import { getRelationshipLabel, getRelationshipColor } from "@utils/guardianRelationshipTypes";
 import { LinkedEntityList } from "../../components/linked/LinkedEntityList";
 

@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createDeleteTexts } from "../../utils/createDeleteTexts";
 import { IconDeleteButton } from "@components/delete/IconDeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getListChildrenQueryKey, useDeleteChild } from "@api/endpoints/children/children";
+import { getListChildrenQueryKey, useDeleteChild } from "@api/crm/endpoints/children/children";
 
 type DeleteChildButton = {
   id: string;

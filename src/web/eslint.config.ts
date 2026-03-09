@@ -228,10 +228,11 @@ const config: FlatConfig.ConfigArray = tseslint.config([
     },
   },
   {
-    files: ["src/api/endpoints/**/*.{ts,tsx}"],
+    files: ["src/api/**/*.{ts,tsx}"],
     rules: {
       "i18next/no-literal-string": "off",
       "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/unified-signatures": "off",
     },
   },

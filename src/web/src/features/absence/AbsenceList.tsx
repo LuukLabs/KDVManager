@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
 import { useTranslation } from "react-i18next";
-import { useGetAbsencesByChildId } from "@api/endpoints/absences/absences";
+import { useGetAbsencesByChildId } from "@api/scheduling/endpoints/absences/absences";
 import { DeleteAbsenceButton } from "./DeleteAbsenceButton";
 
 type AbsenceListProps = { childId: string };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Chip, Typography, Paper } from "@mui/material";
-import { type ChildScheduleListVMScheduleRule } from "@api/models/childScheduleListVMScheduleRule";
+import { type ChildScheduleListVMScheduleRule } from "@api/scheduling/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 

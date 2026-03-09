@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   Box,
   Paper,
@@ -44,42 +44,19 @@ const ScheduleOverviewPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  // Get date from URL parameter or default to today
-  const getInitialDate = () => {
-    const dateParam = searchParams.get("date");
-    if (dateParam) {
-      const parsedDate = dayjs(dateParam);
-      if (parsedDate.isValid()) {
-        return parsedDate; // Keep as local time for calendar
-      }
-    }
-    return dayjs(); // Local time for calendar
-  };
-
-  const [selectedDate, setSelectedDate] = useState(getInitialDate);
+  // Derive selected date directly from URL params
+  const dateParam = searchParams.get("date");
+  const selectedDate = dateParam && dayjs(dateParam).isValid() ? dayjs(dateParam) : dayjs();
 
   // Update URL when date changes
   const handleDateChange = (newDate: dayjs.Dayjs | null) => {
     if (newDate) {
-      setSelectedDate(newDate); // Store as local time for calendar
-
       // Update URL search params with date-only format
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set("date", newDate.format("YYYY-MM-DD"));
       setSearchParams(newSearchParams, { replace: true });
     }
   };
-
-  // Update state when URL changes (e.g., browser back/forward)
-  useEffect(() => {
-    const dateParam = searchParams.get("date");
-    if (dateParam) {
-      const parsedDate = dayjs(dateParam);
-      if (parsedDate.isValid()) {
-        setSelectedDate(parsedDate); // Keep as local time for calendar
-      }
-    }
-  }, [searchParams]);
 
   const { data, isLoading: isLoadingGroups } = useListGroups();
   const groups = data?.value ?? [];

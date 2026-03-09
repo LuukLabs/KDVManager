@@ -1,8 +1,7 @@
 FROM node:25.7.0-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g corepack@0.31
-RUN corepack enable
+RUN npm install -g pnpm@10
 WORKDIR /app
 
 FROM base AS deps

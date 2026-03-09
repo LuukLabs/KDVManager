@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { Box, Tabs, Tab, useTheme, useMediaQuery, Fade, Divider, Paper } from "@mui/material";
 import { Person as PersonIcon, Schedule as ScheduleIcon } from "@mui/icons-material";
 import { useParams, useLoaderData, useNavigate, useLocation } from "react-router-dom";
@@ -58,23 +58,10 @@ const UpdateChildPageModernTabs = () => {
     query: { initialData: loaderData },
   });
 
-  // Determine active tab from URL
-  const getActiveTab = useCallback(() => {
-    const path = location.pathname;
-    if (path.includes("/planning")) return 1;
-    return 0; // Default to general information
-  }, [location.pathname]);
-
-  const [activeTab, setActiveTab] = useState(getActiveTab());
-
-  // Update tab when URL changes
-  useEffect(() => {
-    setActiveTab(getActiveTab());
-  }, [location.pathname, getActiveTab]);
+  // Derive active tab directly from URL
+  const activeTab = location.pathname.includes("/planning") ? 1 : 0;
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
-
     // Update URL based on tab
     const basePath = `/children/${childId}`;
     if (newValue === 0) {

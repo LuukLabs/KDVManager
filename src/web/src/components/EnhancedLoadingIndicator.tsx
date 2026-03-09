@@ -14,21 +14,14 @@ const EnhancedLoadingIndicator = () => {
 
   // Show backdrop for longer loading times
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (isLoading) {
-      timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowBackdrop(true);
       }, 500); // Show backdrop after 500ms of loading
-    } else {
-      setShowBackdrop(false);
+      return () => clearTimeout(timer);
     }
-
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
+    const timer = setTimeout(() => setShowBackdrop(false), 0);
+    return () => clearTimeout(timer);
   }, [isLoading]);
 
   if (!isLoading && !isSubmitting) {

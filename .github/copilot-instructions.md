@@ -1,174 +1,88 @@
-# KDVManager - Coding Agent Instructions
+# KDVManager — Project Guidelines
 
-## Repository Overview
+## Architecture
 
-**KDVManager** is a microservices-based child daycare management system with separate CRM and Scheduling APIs, a React frontend, and comprehensive observability. The system is containerized and deployed to Kubernetes using ArgoCD.
+KDVManager is a multi-tenant childcare management platform with a monorepo structure:
 
-**Architecture**: Microservices with Clean Architecture (.NET 9) + React SPA frontend  
-**Deployment**: Docker containers orchestrated by Kubernetes with ArgoCD for GitOps  
-**Languages**: C# (.NET 9), TypeScript/React, YAML (Kubernetes manifests)  
-**Size**: ~15 services across API gateways, backend services, frontend, and infrastructure
+- **Frontend**: `src/web/` — React 19 + TypeScript + Vite + MUI 7
+- **Backend services**: `src/Services/CRM/` and `src/Services/Scheduling/` — .NET 10, Clean Architecture
+- **Shared libraries**: `src/Shared/` — Contracts, Domain, Infrastructure shared across services
+- **Infrastructure**: `deploy/k8s/` — Kustomize manifests, ArgoCD, Envoy gateway
 
-## Key Technologies
+Each backend service follows **Clean Architecture** with four layers:
+`Api → Application → Domain ← Infrastructure`
 
-- **Backend**: .NET 9, ASP.NET Core, Entity Framework Core, FluentValidation
-- **Frontend**: React 19, TypeScript, Vite, Material UI (MUI), React Query, i18next
-- **Infrastructure**: Docker, Kubernetes, Envoy Gateway, PostgreSQL, RabbitMQ
-- **Observability**: SigNoz (official Helm chart), OpenTelemetry
-- **Build Tools**: pnpm 10.x, Node.js 24.x, .NET SDK 9.x, Docker Compose
+Commands and queries use a handler pattern (not MediatR): each has its own `Command`/`Query` class, `Validator` (FluentValidation), and `Handler` class in a feature folder.
 
-## Project Structure
+## Backend (.NET)
 
-```
-├── src/
-│   ├── Services/                 # Microservices (Clean Architecture)
-│   │   ├── CRM/                 # Customer relationship management API
-│   │   │   ├── Api/             # Web API layer
-│   │   │   ├── Application/     # Use cases, commands, queries
-│   │   │   ├── Domain/          # Domain entities and business logic
-│   │   │   └── Infrastructure/  # Data access, external services
-│   │   ├── Scheduling/          # Child scheduling API (same structure)
-│   │   └── ApiGateways/Envoy/   # API gateway configuration
-│   ├── Shared/                  # Shared libraries across services
-│   ├── web/                     # React frontend (Vite + TypeScript)
-│   └── docker-compose.yml       # Local development stack
-├── deploy/k8s/                  # Kubernetes manifests and ArgoCD apps
-└── docs/                        # Documentation
-```
+### Conventions
 
-## Build & Development Commands
+- **Feature folders**: `Application/Features/{Entity}/Commands/{Action}/` and `Queries/{Action}/`
+- Each feature folder contains: `{Action}Command.cs`, `{Action}CommandValidator.cs`, `{Action}CommandHandler.cs`
+- Handlers have `public async Task<T> Handle(TRequest request)` — no interfaces, no MediatR
+- Validation: instantiate validator inside `Handle()`, throw `ValidationException` on failure
+- Events: publish via MassTransit `IPublishEndpoint` after successful persistence
+- Repository pattern for data access (`IChildRepository`, etc.)
+- CRM uses Minimal API endpoints as static extension methods (`MapChildrenEndpoints`)
+- Scheduling uses traditional Controllers
+- Multi-tenancy via JWT claims, resolved by `JwtTenancyResolver`
 
-### Frontend (src/web/)
+### Key dependencies
 
-**ALWAYS run commands from `src/web/` directory for frontend work.**
+- Entity Framework Core 10 + Npgsql (PostgreSQL)
+- FluentValidation 12
+- MassTransit 8 + RabbitMQ
+- OpenTelemetry for tracing/metrics
 
-**Prerequisites**: Node.js 24.x, pnpm 10.x  
-**Install dependencies**: `pnpm install --frozen-lockfile` (always use frozen lockfile)
+### Do NOT
 
-**Development**:
-- `pnpm start` - Starts dev server on http://localhost:3000
-- `pnpm build` - Production build (outputs to `dist/`)
-- `pnpm preview` - Preview production build locally
+- Use MediatR — handlers are injected directly via DI
+- Put business logic in endpoints/controllers — it belongs in handlers
+- Skip validation — every command needs a FluentValidation validator
 
-**Code Quality** (runs automatically in CI):
-- `pnpm eslint` - Lint TypeScript/React code  
-- `pnpm tsc -b` - TypeScript type checking (must pass for CI)
-- `pnpm lint:fix` - Auto-fix linting issues
+## Frontend (React + TypeScript)
 
-**API Generation**:
-- `pnpm api:merge` - Merge OpenAPI specs from backend services
-- `pnpm api:generate` - Generate TypeScript API clients using Orval
-- `pnpm reset` - Full API regeneration + formatting (when backend APIs change)
+### Conventions
 
-### Backend (.NET Services)
+- Functional components with hooks, exported as `export const Component = ...` for lazy loading
+- MUI 7 components — import from top-level (`@mui/material/Button`), never deep paths
+- All user-visible strings wrapped in `t()` from `react-i18next` (en + nl locales)
+- Forms: `react-hook-form` + `react-hook-form-mui` for MUI bindings
+- Styling: MUI `styled()` API with Emotion
+- Path aliases: `@api/*`, `@hooks/*`, `@lib/*`, `@providers/*`, `@pages/*`, `@components/*`, `@features/*`, `@utils/*`
 
-**Prerequisites**: .NET SDK 9.x  
-**Root directory commands**:
+### API layer
 
-- `dotnet build KDVManager.sln` - Build entire solution
-- `dotnet run --project src/Services/{Service}/Api` - Run specific service
-- Individual services use standard .NET project structure
+- **Generated by Orval** from OpenAPI specs into `src/api/{service}/` — **never edit these files manually**
+- Uses TanStack React Query hooks for data fetching and mutations
+- Custom fetch mutators in `src/api/mutator/`
+- After mutations, invalidate related query keys: `queryClient.invalidateQueries({ queryKey: get{List}QueryKey({}) })`
 
-### Docker & Local Stack
+### Routing
 
-**From `src/` directory**:
-- `docker compose build {service}` - Build specific service container
-- `docker compose up -d` - Start full local development stack
-- Set `NUGET_GITHUB_TOKEN` environment variable if building .NET services
+- React Router 7 with lazy-loaded routes and `requireAuth`/`withAuth` loaders
+- Route loaders prefetch data; pages use hooks from Orval-generated code
+- Breadcrumbs via route `handle.crumb`
 
-**Available services**: web, crm-api, crm-migrator, scheduling-api, scheduling-migrator
+### Do NOT
 
-## CI/CD & Validation
+- Edit files under `src/api/` (except `src/api/mutator/`) — they are auto-generated by Orval
+- Use inline strings — always use `t()` for i18n
+- Import MUI components from deep paths like `@mui/material/esm/Button`
 
-### GitHub Actions Workflows
+## Build & Test
 
-**Triggers**: Push to main, PRs to main, workflow_dispatch  
-**Path-based triggering**: Only affected services build on changes
+| Task | Command | Directory |
+|------|---------|-----------|
+| Web dev server | `npm run dev` | `src/web/` |
+| Orval codegen | `npx orval` | `src/web/` |
+| Lint frontend | `npx eslint .` | `src/web/` |
+| .NET build | `dotnet build` | service root |
+| Docker Compose | `docker compose up` | `src/` |
 
-**Web** (`.github/workflows/web.yml`):
-1. pnpm install --frozen-lockfile
-2. pnpm eslint (MUST pass)
-3. pnpm tsc -b (MUST pass)
-4. Docker build (PR) or build+push (main)
+## Deployment
 
-**Backend Services** (crm-api.yml, scheduling-api.yml, etc.):
-1. Docker build (PR) or build+push (main)
-2. Uses composite actions in `.github/workflows/composite/`
-
-### Current Issues to be Aware Of
-
-**Frontend TypeScript errors** (as of last check):
-- Unused imports in Guardian components (`React` imports)  
-- Controller render prop returning null instead of React element
-- Multiple unused variables prefixed with `_` (intentional per TypeScript convention)
-
-**Backend warnings** (non-breaking):
-- Nullable reference warnings in Scheduling domain entities
-- Consider adding `required` modifiers to non-nullable properties
-
-## Key Configuration Files
-
-### Frontend Configuration
-- `package.json` - Dependencies, scripts, Node/pnpm versions
-- `vite.config.mts` - Vite bundler config with React and emotion
-- `eslint.config.ts` - Comprehensive ESLint rules including i18next
-- `tsconfig.json` - TypeScript configuration
-- `orval.config.ts` - API client generation from OpenAPI specs
-
-### Backend Configuration  
-- `KDVManager.sln` - Visual Studio solution file
-- Each service: `Api/Api.csproj`, `Application/Application.csproj`, etc.
-- `docker-compose.yml` - Local development orchestration
-
-### Deployment
-- `deploy/k8s/` - ArgoCD applications and Kubernetes manifests
-- Services deployed as separate ArgoCD applications
-- SigNoz observability deployed via official Helm chart
-
-## Development Workflow Best Practices
-
-### Making Changes
-
-1. **Frontend changes**: 
-   - Work in `src/web/`
-   - Always run `pnpm install --frozen-lockfile` first
-   - Fix ESLint errors before committing (`pnpm eslint`)
-   - Ensure TypeScript compiles (`pnpm tsc -b`)
-
-2. **Backend changes**:
-   - Use Clean Architecture patterns (Domain → Application → Infrastructure → Api)
-   - Follow existing MediatR command/query patterns
-   - Build solution to verify (`dotnet build KDVManager.sln`)
-
-3. **API changes**:
-   - Update OpenAPI specs if changing contracts
-   - Regenerate frontend clients (`pnpm reset` in web/)
-
-### Common Issues & Solutions
-
-**Frontend build failures**: 
-- ESLint errors are blocking - fix unused variables, missing translations
-- TypeScript strict checking - ensure proper typing, especially with React components
-
-**Docker build issues**:
-- Set `NUGET_GITHUB_TOKEN` environment variable for .NET services
-- Build from correct working directory (`src/` for compose commands)
-
-**Missing dependencies**: 
-- Frontend: use `pnpm install --frozen-lockfile` 
-- Backend: ensure .NET 9 SDK installed
-
-## Observability & Debugging
-
-**SigNoz**: Comprehensive APM platform deployed via official Helm chart  
-**URLs**: https://signoz.kdvmanager.nl
-**OTEL**: All services instrumented with OpenTelemetry for distributed tracing
-
-## Trust These Instructions
-
-These instructions are current and validated. Only search the codebase if:
-- Instructions appear incomplete for your specific task
-- You encounter errors not covered here  
-- You need specific implementation details not documented
-
-Focus on the documented commands and patterns - they work reliably when executed from the correct directories with proper prerequisites.
+- Kubernetes via Kustomize + ArgoCD in `deploy/k8s/`
+- Database migrations run as separate init containers (EF Core code-first)
+- Images tagged `linux-main` and `linux-<sha>` via GitHub Actions

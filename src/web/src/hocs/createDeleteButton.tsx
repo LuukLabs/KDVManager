@@ -9,7 +9,7 @@ import { useDeleteAction } from "@hooks/useDeleteAction";
 
 // Enhanced options with generic constraints
 type WithDeleteActionOptions<
-  TData = undefined | null,
+  TData = void,
   TError = unknown,
   TVariables extends Record<string, unknown> = { id: string },
 > = {

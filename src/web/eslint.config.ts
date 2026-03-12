@@ -11,7 +11,6 @@ import i18next from "eslint-plugin-i18next";
 const config: FlatConfig.ConfigArray = tseslint.config([
   globalIgnores([
     "dist",
-    "src/api/**",
     "eslint.config.ts",
     "i18next-parser.config.ts",
     "orval.config.ts",
@@ -235,6 +234,7 @@ const config: FlatConfig.ConfigArray = tseslint.config([
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/unified-signatures": "off",
+      "react-hooks/immutability": "off",
     },
   },
 ]);

@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
     if: ${{ github.event_name == 'pull_request' }}
 
     steps:
@@ -34,7 +35,7 @@ jobs:
       with:
         service: ${{ env.SERVICE }}
         registry_endpoint: ${{ vars.REGISTRY_ENDPOINT }}
-        nuget_github_token: ${{ secrets.NUGET_GITHUB_TOKEN }}
+        nuget_github_token: ${{ secrets.GITHUB_TOKEN }}
 
   BuildLinux:
     runs-on: ubuntu-latest

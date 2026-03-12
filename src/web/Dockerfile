@@ -1,4 +1,4 @@
-FROM node:25.8.0-slim AS base
+FROM node:25.8.1-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@10

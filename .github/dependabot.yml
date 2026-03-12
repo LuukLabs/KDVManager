@@ -11,7 +11,9 @@ registries:
     token: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
 updates:
   - package-ecosystem: "github-actions"
-    directory: '/'
+    directories:
+      - '/'
+      - '.github/workflows/composite/*'
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5

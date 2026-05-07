@@ -66,8 +66,8 @@ importers:
         specifier: ^7.71.2
         version: 7.71.2(react@19.2.4)
       react-hook-form-mui:
-        specifier: ^7.6.2
-        version: 7.6.2(d53ec2da06f6ac780afbc29cbb1284ae)
+        specifier: ^9.0.1
+        version: 9.0.1(d37c0d6600552d0a9141cc3595110685)
       react-i18next:
         specifier: ^15.7.4
         version: 15.7.4(i18next@25.8.17(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
@@ -3186,15 +3186,16 @@ packages:
     peerDependencies:
       react: ^19.2.4
 
-  react-hook-form-mui@7.6.2:
-    resolution: {integrity: sha512-mRzQHHxh45CD/89vxpTAGLeMYos78EmREG5J8TX4J2UOBT3gMUCPElp3Xr2b+ky1jI30UsqPEkQK44vThVSlkQ==}
+  react-hook-form-mui@9.0.1:
+    resolution: {integrity: sha512-PkgKccWWK+ZB4HH/WjCuphiVIE0JN/z/k2ksfwReLeIg70iAS0luzI4LZn9NzqzWOXIJ90jpsOs5m/4jdDkzGA==}
     engines: {node: '>=14'}
     peerDependencies:
-      '@mui/icons-material': '>= 5.x <8'
-      '@mui/material': '>= 5.x <8'
-      '@mui/x-date-pickers': '>=7.17.0 <8'
-      react: '>=17 <20'
-      react-hook-form: '>=7.33.1'
+      '@mui/icons-material': ^9.0.0
+      '@mui/material': ^9.0.0
+      '@mui/system': ^9.0.0
+      '@mui/x-date-pickers': ^9.0.0
+      react: '>=18 <21'
+      react-hook-form: '>=7.62.0'
     peerDependenciesMeta:
       '@mui/icons-material':
         optional: true
@@ -7334,9 +7335,10 @@ snapshots:
       react: 19.2.4
       scheduler: 0.27.0
 
-  react-hook-form-mui@7.6.2(d53ec2da06f6ac780afbc29cbb1284ae):
+  react-hook-form-mui@9.0.1(d37c0d6600552d0a9141cc3595110685):
     dependencies:
       '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mui/system': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       react: 19.2.4
       react-hook-form: 7.71.2(react@19.2.4)
     optionalDependencies:

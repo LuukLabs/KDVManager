@@ -35,6 +35,13 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      masstransit:
+        patterns:
+          - "MassTransit*"
+    ignore:
+      - dependency-name: "MassTransit*"
+        versions: ["[9.0.0,)"]
 
   - package-ecosystem: "docker"
     directories:

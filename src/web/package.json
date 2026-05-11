@@ -39,7 +39,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "translations:extract": "i18next -c ./i18next-parser.config.ts",
-    "typecheck": "tsc",
+    "typecheck": "tsc -b",
     "reset": "orval --clean && eslint --fix ./src/api && prettier --write ."
   },
   "browserslist": {

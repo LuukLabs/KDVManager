@@ -6,17 +6,17 @@ import {
   type RegisterOptions,
 } from "react-hook-form";
 import { TimeField, type TimeFieldProps } from "@mui/x-date-pickers/TimeField";
-import dayjs, { type Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
 export type FormTimeFieldProps<T extends FieldValues> = Omit<
-  TimeFieldProps<Dayjs>,
+  TimeFieldProps,
   "value" | "onChange" | "name" | "defaultValue"
 > & {
   name: Path<T>;
   required?: boolean;
   rules?: Omit<
-    RegisterOptions<T, Path<T>>,
+    RegisterOptions,
     "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
   >;
   /** Format used for the displayed input. Default: "HH:mm". */

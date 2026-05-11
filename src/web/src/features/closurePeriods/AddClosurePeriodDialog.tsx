@@ -14,8 +14,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import type { UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
 import type { AddClosurePeriodCommand } from "@api/scheduling/models/addClosurePeriodCommand";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { Form, FormTextField, FormDatePicker } from "@components/forms";
 
 export const AddClosurePeriodDialog = NiceModal.create(() => {
   const modal = useModal();
@@ -72,39 +71,25 @@ export const AddClosurePeriodDialog = NiceModal.create(() => {
       <DialogTitle>{t("Add Closure Period")}</DialogTitle>
 
       <DialogContent>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <TextFieldElement name="reason" label={t("Reason")} fullWidth margin="normal" />
-          <DatePickerElement
+        <Form formContext={formContext} onSubmit={onSubmit}>
+          <FormTextField name="reason" label={t("Reason")} fullWidth margin="normal" />
+          <FormDatePicker
             label={t("Start Date")}
             name="startDate"
-            slotProps={{
-              textField: {
-                size: "small",
-                fullWidth: true,
-              },
-            }}
+            slotProps={{ textField: { size: "small", fullWidth: true } }}
             transform={{
-              output: (value) => {
-                return value ? value.format("YYYY-MM-DD") : null;
-              },
+              output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
           />
-          <DatePickerElement
+          <FormDatePicker
             label={t("End Date")}
             name="endDate"
-            slotProps={{
-              textField: {
-                size: "small",
-                fullWidth: true,
-              },
-            }}
+            slotProps={{ textField: { size: "small", fullWidth: true } }}
             transform={{
-              output: (value) => {
-                return value ? value.format("YYYY-MM-DD") : null;
-              },
+              output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
           />
-        </FormContainer>
+        </Form>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>

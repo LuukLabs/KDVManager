@@ -8,9 +8,8 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { FormContainer, TextFieldElement, SelectElement } from "react-hook-form-mui";
+import { FieldDisplay, Form, FormTextField, FormSelect } from "../forms";
 import { EditableCard } from "../cards/EditableCard";
-import { FieldDisplay } from "../forms/FieldDisplay";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 type PhoneNumber = {
   id?: string;
@@ -99,11 +98,11 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
   );
   // Edit mode content
   const editContent = formContext ? (
-    <FormContainer formContext={formContext}>
+    <Form formContext={formContext}>
       <Grid container spacing={3}>
         {/* Email */}
         <Grid size={{ xs: 12 }}>
-          <TextFieldElement
+          <FormTextField
             name="email"
             label={t("Email")}
             type="email"
@@ -163,7 +162,7 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
                   <Grid container spacing={2}>
                     {/* Type Selector */}
                     <Grid size={{ xs: 12, sm: 4 }}>
-                      <SelectElement
+                      <FormSelect
                         name={`phoneNumbers.${index}.type`}
                         label={t("Type")}
                         options={[
@@ -180,7 +179,7 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
                     {/* Phone Number */}
                     <Grid size={{ xs: 12, sm: 8 }}>
                       <Box sx={{ display: "flex", gap: 1, alignItems: "start" }}>
-                        <TextFieldElement
+                        <FormTextField
                           name={`phoneNumbers.${index}.number`}
                           label={t("Phone Number")}
                           placeholder="+31612345678"
@@ -238,7 +237,7 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
           )}
         </Grid>
       </Grid>
-    </FormContainer>
+    </Form>
   ) : null;
 
   return (

@@ -1,6 +1,5 @@
 import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
-import { FormContainer } from "react-hook-form-mui";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
+import { Form, FormDatePicker } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -710,7 +709,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
         </DialogTitle>
 
         <DialogContent sx={{ p: 0, backgroundColor: "#f8f9fa", position: "relative" }}>
-          <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+          <Form formContext={formContext} onSubmit={onSubmit}>
             {/* Date Range Section */}
             <Box
               sx={{
@@ -742,7 +741,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               </Box>
 
               <Stack spacing={isMobile ? 2 : 3} direction={isMobile ? "column" : "row"}>
-                <DatePickerElement
+                <FormDatePicker
                   label={t("Start Date")}
                   name="startDate"
                   slotProps={{
@@ -893,7 +892,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                 </Stack>
               )}
             </Box>
-          </FormContainer>
+          </Form>
         </DialogContent>
 
         {/* Mobile Floating Action Button */}

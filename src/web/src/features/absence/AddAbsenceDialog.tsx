@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { Form, FormTextField, FormDatePicker } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,7 +13,6 @@ import { useSnackbar } from "notistack";
 import dayjs from "dayjs";
 import { useForm, useWatch } from "react-hook-form";
 import { useAddAbsence } from "@api/scheduling/endpoints/absences/absences";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { useQueryClient } from "@tanstack/react-query";
 
 type AddAbsenceDialogProps = {
@@ -107,20 +106,13 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
         <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
           {t("To add an absence, please enter the details below.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <DatePickerElement
+        <Form formContext={formContext} onSubmit={onSubmit}>
+          <FormDatePicker
             label={t("Start Date")}
             name="startDate"
-            slotProps={{
-              textField: {
-                size: "small",
-                fullWidth: true,
-              },
-            }}
+            slotProps={{ textField: { size: "small", fullWidth: true } }}
             transform={{
-              output: (value) => {
-                return value ? value.format("YYYY-MM-DD") : null;
-              },
+              output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
           />
           <FormControlLabel
@@ -136,24 +128,17 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
             sx={{ mt: 1, mb: 1 }}
           />
           {multiDay && (
-            <DatePickerElement
+            <FormDatePicker
               label={t("Start Date")}
               name="endDate"
-              slotProps={{
-                textField: {
-                  size: "small",
-                  fullWidth: true,
-                },
-              }}
+              slotProps={{ textField: { size: "small", fullWidth: true } }}
               transform={{
-                output: (value) => {
-                  return value ? value.format("YYYY-MM-DD") : null;
-                },
+                output: (value) => (value ? value.format("YYYY-MM-DD") : null),
               }}
             />
           )}
-          <TextFieldElement name="reason" label={t("Reason")} fullWidth margin="normal" />
-        </FormContainer>
+          <FormTextField name="reason" label={t("Reason")} fullWidth margin="normal" />
+        </Form>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>

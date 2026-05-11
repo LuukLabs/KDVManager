@@ -14,7 +14,7 @@ export type FormTextFieldProps<T extends FieldValues> = Omit<
 > & {
   name: Path<T>;
   rules?: Omit<
-    RegisterOptions<T, Path<T>>,
+    RegisterOptions,
     "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
   >;
 };

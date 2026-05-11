@@ -10,13 +10,13 @@ import dayjs, { type Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 
 export type FormDatePickerProps<T extends FieldValues> = Omit<
-  DatePickerProps<Dayjs>,
+  DatePickerProps,
   "value" | "onChange" | "name" | "defaultValue"
 > & {
   name: Path<T>;
   required?: boolean;
   rules?: Omit<
-    RegisterOptions<T, Path<T>>,
+    RegisterOptions,
     "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
   >;
   helperText?: string;
@@ -63,7 +63,9 @@ export const FormDatePicker = <T extends FieldValues>({
       control={control}
       rules={mergedRules}
       render={({ field, fieldState }) => {
-        const value = transform?.input ? transform.input(field.value) : defaultInputTransform(field.value);
+        const value = transform?.input
+          ? transform.input(field.value)
+          : defaultInputTransform(field.value);
         const existingTextField = (slotProps?.textField ?? {}) as Record<string, unknown>;
         return (
           <DatePicker

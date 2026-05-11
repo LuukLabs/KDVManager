@@ -742,7 +742,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
                     },
                   }}
                   transform={{
-                    input: (value) => (value ? dayjs(value) : null),
+                    input: (value) => (value ? dayjs(value as string) : null),
                     output: (value) => (value ? value.format("YYYY-MM-DD") : null),
                   }}
                 />

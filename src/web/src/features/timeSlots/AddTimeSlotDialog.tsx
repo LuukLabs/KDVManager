@@ -1,5 +1,5 @@
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { Form, FormTextField, FormTimeField } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -16,8 +16,6 @@ import {
   useAddTimeSlot,
 } from "@api/scheduling/endpoints/time-slots/time-slots";
 import { type AddTimeSlotCommand } from "@api/scheduling/models/addTimeSlotCommand";
-import { TimeField } from "@mui/x-date-pickers/TimeField";
-import dayjs from "dayjs";
 
 export const AddTimeSlotDialog = NiceModal.create(() => {
   const { t } = useTranslation();
@@ -27,7 +25,6 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
   const formContext = useForm<AddTimeSlotCommand>();
 
   const {
-    control,
     handleSubmit,
     reset,
     setError,
@@ -70,8 +67,8 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
         <DialogContentText>
           {t("To add a time slot, please specify the name here and start and end times.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <TextFieldElement
+        <Form formContext={formContext} onSubmit={onSubmit}>
+          <FormTextField
             autoFocus
             name="name"
             label={t("Name")}
@@ -80,41 +77,19 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
             autoComplete="off"
             fullWidth
           />
-          <Controller
-            control={control}
+          <FormTimeField
             name="startTime"
-            render={({ field }) => (
-              <TimeField
-                label={t("Start time")}
-                defaultValue={field.value ? dayjs(field.value) : undefined}
-                inputRef={field.ref}
-                format="HH:mm"
-                variant="standard"
-                onChange={(date) => {
-                  field.onChange(date?.format("HH:mm:ss"));
-                }}
-                fullWidth
-              />
-            )}
+            label={t("Start time")}
+            variant="standard"
+            fullWidth
           />
-          <Controller
-            control={control}
+          <FormTimeField
             name="endTime"
-            render={({ field }) => (
-              <TimeField
-                label={t("End time")}
-                defaultValue={field.value ? dayjs(field.value) : undefined}
-                inputRef={field.ref}
-                format="HH:mm"
-                variant="standard"
-                onChange={(date) => {
-                  field.onChange(date?.format("HH:mm:ss"));
-                }}
-                fullWidth
-              />
-            )}
+            label={t("End time")}
+            variant="standard"
+            fullWidth
           />
-        </FormContainer>
+        </Form>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>

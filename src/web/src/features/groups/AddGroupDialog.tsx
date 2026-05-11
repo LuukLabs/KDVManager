@@ -1,6 +1,6 @@
 import { type AddGroupCommand } from "@api/scheduling/models/addGroupCommand";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { Form, FormTextField } from "@components/forms";
 import Button from "@mui/material/Button";
 import { getListGroupsQueryKey, useAddGroup } from "@api/scheduling/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent";
@@ -64,8 +64,8 @@ export const AddGroupDialog = NiceModal.create(() => {
         <DialogContentText>
           {t("To add a group, please enter the group name here.")}
         </DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <TextFieldElement
+        <Form formContext={formContext} onSubmit={onSubmit}>
+          <FormTextField
             autoFocus
             name="name"
             label={t("Name")}
@@ -74,7 +74,7 @@ export const AddGroupDialog = NiceModal.create(() => {
             autoComplete="off"
             fullWidth
           />
-        </FormContainer>
+        </Form>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>

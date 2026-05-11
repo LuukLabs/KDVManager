@@ -1,5 +1,5 @@
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { Form, FormTextField, FormTimeField } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -18,7 +18,6 @@ import {
 } from "@api/scheduling/endpoints/time-slots/time-slots";
 import { type UpdateTimeSlotCommand } from "@api/scheduling/models/updateTimeSlotCommand";
 import { type TimeSlotListVM } from "@api/scheduling/models/timeSlotListVM";
-import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 
 type EditTimeSlotDialogProps = {
@@ -42,7 +41,6 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
   });
 
   const {
-    control,
     handleSubmit,
     reset,
     setError,
@@ -87,8 +85,8 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
       <DialogTitle>{t("Edit time slot")}</DialogTitle>
       <DialogContent>
         <DialogContentText>{t("Update the time slot details below.")}</DialogContentText>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
-          <TextFieldElement
+        <Form formContext={formContext} onSubmit={onSubmit}>
+          <FormTextField
             autoFocus
             name="name"
             label={t("Name")}
@@ -108,35 +106,18 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
               },
             }}
           />
-          <Controller
-            control={control}
+          <FormTimeField
             name="startTime"
-            rules={{
-              required: t("Start time is required"),
-            }}
-            render={({ field, fieldState }) => (
-              <TimeField
-                label={t("Start time")}
-                defaultValue={field.value ? dayjs(field.value, "HH:mm:ss") : undefined}
-                inputRef={field.ref}
-                format="HH:mm"
-                variant="standard"
-                onChange={(date) => {
-                  field.onChange(date?.format("HH:mm:ss"));
-                }}
-                fullWidth
-                slotProps={{
-                  textField: {
-                    error: !!fieldState.error,
-                    helperText: fieldState.error?.message,
-                  },
-                }}
-              />
-            )}
+            label={t("Start time")}
+            variant="standard"
+            fullWidth
+            rules={{ required: t("Start time is required") }}
           />
-          <Controller
-            control={control}
+          <FormTimeField
             name="endTime"
+            label={t("End time")}
+            variant="standard"
+            fullWidth
             rules={{
               required: t("End time is required"),
               validate: (value, formValues) => {
@@ -146,27 +127,8 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
                 return endTime.isAfter(startTime) || t("End time must be after start time");
               },
             }}
-            render={({ field, fieldState }) => (
-              <TimeField
-                label={t("End time")}
-                defaultValue={field.value ? dayjs(field.value, "HH:mm:ss") : undefined}
-                inputRef={field.ref}
-                format="HH:mm"
-                variant="standard"
-                onChange={(date) => {
-                  field.onChange(date?.format("HH:mm:ss"));
-                }}
-                fullWidth
-                slotProps={{
-                  textField: {
-                    error: !!fieldState.error,
-                    helperText: fieldState.error?.message,
-                  },
-                }}
-              />
-            )}
           />
-        </FormContainer>
+        </Form>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleOnCancelClick}>

@@ -1,6 +1,6 @@
 import { type AddChildCommand } from "@api/crm/models/addChildCommand";
 import { useForm } from "react-hook-form";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { Form, FormDatePicker, FormTextField } from "@components/forms";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -9,7 +9,6 @@ import { getListChildrenQueryKey, useAddChild } from "@api/crm/endpoints/childre
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
 
 const NewChildPage = () => {
@@ -50,23 +49,21 @@ const NewChildPage = () => {
         <Alert severity="info" sx={{ mb: 2 }}>
           {t("A unique child identification number will be automatically assigned when you save.")}
         </Alert>
-        <FormContainer formContext={formContext} handleSubmit={handleSubmit(onSubmit)}>
+        <Form formContext={formContext} onSubmit={onSubmit}>
           <Grid container alignItems="flex-start" spacing={2}>
             <Grid size={12}>
-              <TextFieldElement name="givenName" label={t("Voornaam")} required fullWidth />
+              <FormTextField name="givenName" label={t("Voornaam")} required fullWidth />
             </Grid>
             <Grid size={12}>
-              <TextFieldElement name="familyName" label={t("Achternaam")} required fullWidth />
+              <FormTextField name="familyName" label={t("Achternaam")} required fullWidth />
             </Grid>
             <Grid size={12}>
-              <DatePickerElement
+              <FormDatePicker
                 label={t("Date of birth")}
                 name="dateOfBirth"
                 required
                 transform={{
-                  output: (value) => {
-                    return value ? value.format("YYYY-MM-DD") : null;
-                  },
+                  output: (value) => (value ? value.format("YYYY-MM-DD") : null),
                 }}
                 slotProps={{
                   textField: {
@@ -77,11 +74,11 @@ const NewChildPage = () => {
               />
             </Grid>
             <Grid size={12}>
-              <TextFieldElement name="CID" label={t("CID")} fullWidth />
+              <FormTextField name="CID" label={t("CID")} fullWidth />
             </Grid>
           </Grid>
           <Button onClick={handleSubmit(onSubmit)}>{t("Save", { ns: "common" })}</Button>
-        </FormContainer>
+        </Form>
       </Paper>
     </>
   );

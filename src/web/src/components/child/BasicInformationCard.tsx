@@ -4,10 +4,8 @@ import { Grid } from "@mui/material";
 import { calculateAge } from "@utils/calculateAge";
 import { formatDate } from "@utils/formatDate";
 import { Person as PersonIcon } from "@mui/icons-material";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
 import { EditableCard } from "../cards/EditableCard";
-import { FieldDisplay } from "../forms/FieldDisplay";
+import { FieldDisplay, Form, FormTextField, FormDatePicker } from "../forms";
 import { type UseFormReturn } from "react-hook-form";
 
 type BasicInformationCardProps = {
@@ -72,29 +70,27 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
 
   // Edit mode content (use correct field names for form)
   const editContent = formContext ? (
-    <FormContainer formContext={formContext}>
+    <Form formContext={formContext}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement name="givenName" label={t("First Name")} fullWidth required />
+          <FormTextField name="givenName" label={t("First Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement name="familyName" label={t("Last Name")} fullWidth required />
+          <FormTextField name="familyName" label={t("Last Name")} fullWidth required />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <DatePickerElement
+          <FormDatePicker
             name="dateOfBirth"
             label={t("Date of Birth")}
-            inputProps={{ fullWidth: true }}
+            slotProps={{ textField: { fullWidth: true } }}
             transform={{
-              output: (value) => {
-                return value ? value.format("YYYY-MM-DD") : null;
-              },
+              output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
             required
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextFieldElement
+          <FormTextField
             name="cid"
             label={t("CID")}
             fullWidth
@@ -103,7 +99,7 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
           />
         </Grid>
       </Grid>
-    </FormContainer>
+    </Form>
   ) : null;
 
   return (

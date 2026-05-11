@@ -3,26 +3,20 @@ import { useTranslation } from "react-i18next";
 import {
   Box,
   Grid,
-  TextField,
   Button,
   Card,
   CardContent,
   Typography,
   Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   IconButton,
   Stack,
   Divider,
   Paper,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { DatePickerElement } from "react-hook-form-mui/date-pickers";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { Form, FormDatePicker, FormSelect, FormTextField } from "@components/forms";
 
 type PhoneNumber = {
   id?: string;
@@ -70,8 +64,6 @@ export const GuardianForm = ({
 
   const {
     control,
-    handleSubmit,
-    formState: { errors },
     reset,
   } = formContext;
 
@@ -112,7 +104,7 @@ export const GuardianForm = ({
   const removePhoneNumber = (index: number) => removePhone(index);
 
   return (
-    <FormContainer formContext={formContext} handleSubmit={handleSubmit(handleFormSubmit)}>
+    <Form formContext={formContext} onSubmit={handleFormSubmit}>
       <Typography variant="h4" gutterBottom>
         {t(title)}
       </Typography>
@@ -131,23 +123,19 @@ export const GuardianForm = ({
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextFieldElement name="givenName" label={t("Given name")} required fullWidth />
+              <FormTextField name="givenName" label={t("Given name")} required fullWidth />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextFieldElement name="familyName" label={t("Family name")} required fullWidth />
+              <FormTextField name="familyName" label={t("Family name")} required fullWidth />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <DatePickerElement
+              <FormDatePicker
                 label={t("Date of birth")}
                 name="dateOfBirth"
                 transform={{
-                  output: (value) => {
-                    return value ? value.format("YYYY-MM-DD") : null;
-                  },
+                  output: (value) => (value ? value.format("YYYY-MM-DD") : null),
                 }}
-                inputProps={{
-                  fullWidth: true,
-                }}
+                slotProps={{ textField: { fullWidth: true } }}
               />
             </Grid>
           </Grid>
@@ -162,7 +150,7 @@ export const GuardianForm = ({
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
-              <TextFieldElement
+              <FormTextField
                 name="email"
                 label={t("Email")}
                 fullWidth
@@ -203,42 +191,32 @@ export const GuardianForm = ({
                   >
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 12, sm: 4 }}>
-                        <Controller
+                        <FormSelect
                           name={`phoneNumbers.${index}.type`}
-                          control={control}
-                          render={({ field }) => (
-                            <FormControl fullWidth size="small">
-                              <InputLabel>{t("Type")}</InputLabel>
-                              <Select {...field} label={t("Type")}>
-                                <MenuItem value="Mobile">{t("Mobile")}</MenuItem>
-                                <MenuItem value="Home">{t("Home")}</MenuItem>
-                                <MenuItem value="Work">{t("Work")}</MenuItem>
-                                <MenuItem value="Other">{t("Other")}</MenuItem>
-                              </Select>
-                            </FormControl>
-                          )}
+                          label={t("Type")}
+                          options={[
+                            { id: "Mobile", label: t("Mobile") },
+                            { id: "Home", label: t("Home") },
+                            { id: "Work", label: t("Work") },
+                            { id: "Other", label: t("Other") },
+                          ]}
+                          fullWidth
+                          size="small"
                         />
                       </Grid>
                       <Grid size={{ xs: 12, sm: 8 }}>
-                        <Controller
+                        <FormTextField
                           name={`phoneNumbers.${index}.number`}
-                          control={control}
                           rules={{
                             validate: (val) =>
                               !val ||
                               /^\+?[1-9]\d{7,18}$/.test(val) ||
                               t("Must be E.164 format (e.g. +31612345678)"),
                           }}
-                          render={({ field }) => (
-                            <TextField
-                              {...field}
-                              fullWidth
-                              label={t("Phone Number")}
-                              error={!!errors.phoneNumbers?.[index]?.number}
-                              placeholder={t("+31612345678")}
-                              size="small"
-                            />
-                          )}
+                          fullWidth
+                          label={t("Phone Number")}
+                          placeholder={t("+31612345678")}
+                          size="small"
                         />
                       </Grid>
                     </Grid>
@@ -284,6 +262,6 @@ export const GuardianForm = ({
           {isLoading ? t("Saving...") : guardianId ? t("Update Guardian") : t("Create Guardian")}
         </Button>
       </Box>
-    </FormContainer>
+    </Form>
   );
 };

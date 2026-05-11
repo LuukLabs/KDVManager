@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import viteTsconfigPaths from "vite-tsconfig-paths";
+import babel from "@rolldown/plugin-babel";
 
 export default defineConfig({
   // depending on your application, base can also be "/"
@@ -8,12 +8,14 @@ export default defineConfig({
   plugins: [
     react({
       jsxImportSource: "@emotion/react",
-      babel: {
-        plugins: ["@emotion/babel-plugin"],
-      },
     }),
-    viteTsconfigPaths(),
+    babel({
+      plugins: ["@emotion/babel-plugin"],
+    }),
   ],
+  resolve: {
+    tsconfigPaths: true,
+  },
   server: {
     // this ensures that the browser opens upon server start
     open: true,

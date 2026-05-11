@@ -67,7 +67,6 @@ const NewChildPage = () => {
                 }}
                 slotProps={{
                   textField: {
-                    size: "small",
                     fullWidth: true,
                   },
                 }}

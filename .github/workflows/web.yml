@@ -52,7 +52,80 @@ jobs:
       run: pnpm eslint
     
     - name: Run typecheck
-      run: pnpm tsc -b
+      run: pnpm run typecheck
+
+  Test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ./src/web
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - uses: pnpm/action-setup@v6
+      with:
+        version: 11.0.8
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: '24.x'
+        cache: 'pnpm'
+        cache-dependency-path: src/web/pnpm-lock.yaml
+
+    - name: Install pnpm dependencies
+      run: pnpm install --frozen-lockfile
+
+    # Cache the Playwright browser binary keyed on the playwright-core version
+    # pinned in the lockfile so a fresh download only happens when Playwright
+    # itself changes.
+    - name: Resolve Playwright version
+      id: pw-version
+      run: |
+        version=$(node -p "require('playwright-core/package.json').version")
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      id: pw-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.pw-version.outputs.version }}-chromium
+
+    - name: Install Playwright Chromium
+      if: steps.pw-cache.outputs.cache-hit != 'true'
+      run: pnpm exec playwright install --with-deps chromium
+
+    - name: Install Chromium system deps only
+      if: steps.pw-cache.outputs.cache-hit == 'true'
+      run: pnpm exec playwright install-deps chromium
+
+    - name: Run tests with coverage
+      env:
+        CI: 'true'
+      run: pnpm run test:ci
+
+    - name: Upload coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-coverage
+        path: src/web/coverage
+        if-no-files-found: ignore
+        retention-days: 14
+
+    - name: Upload failure screenshots
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-test-screenshots
+        path: src/web/**/__screenshots__/**
+        if-no-files-found: ignore
+        retention-days: 7
 
   BuildContainersForPR_Linux:
     runs-on: ubuntu-latest

@@ -24,7 +24,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "notistack": "^3.0.2",
     "react": "^19.2.6",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.2.6",
     "react-hook-form": "^7.75.0",
     "react-i18next": "^15.7.4",
     "react-router-dom": "7.15.0"
@@ -38,8 +38,13 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "translations:extract": "i18next -c ./i18next-parser.config.ts",
-    "typecheck": "tsc -b",
-    "reset": "orval --clean && eslint --fix ./src/api && prettier --write ."
+    "typecheck": "tsc -b && tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "reset": "orval --clean && eslint --fix ./src/api && prettier --write .",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "vitest run --reporter=dot --reporter=github-actions --coverage"
   },
   "browserslist": {
     "production": [
@@ -59,12 +64,18 @@
     "@eslint/js": "^9.39.4",
     "@react-router/dev": "^7.15.0",
     "@rolldown/plugin-babel": "^0.2.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/utils": "^8.57.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser": "^4.1.6",
+    "@vitest/browser-playwright": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.6",
     "eslint": "~9.32.0",
     "eslint-plugin-i18next": "^6.1.3",
     "eslint-plugin-react": "^7.37.5",
@@ -75,9 +86,12 @@
     "jiti": "^2.6.1",
     "knip": "^5.83.0",
     "orval": "7.21.0",
+    "playwright": "^1.60.0",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6",
+    "vitest-browser-react": "^2.2.0"
   }
 }

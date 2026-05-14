@@ -35,6 +35,14 @@
       "@utils/*": ["./src/utils/*"]
     }
   },
-  "exclude": ["node_modules", "dist"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/test"
+  ],
   "include": ["src", "src/lib/i18n/i18n.ts"]
 }

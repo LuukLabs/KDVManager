@@ -32,7 +32,7 @@ const config = tseslint.config([
       ecmaVersion: 2022,
       globals: globals.browser,
       parserOptions: {
-        project: "./tsconfig.app.json",
+        project: ["./tsconfig.app.json", "./tsconfig.test.json"],
         tsconfigRootDir: __dirname,
       },
     },
@@ -234,6 +234,18 @@ const config = tseslint.config([
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/unified-signatures": "off",
       "react-hooks/immutability": "off",
+    },
+  },
+  {
+    files: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "src/test/**/*.{ts,tsx}",
+      "vitest.config.ts",
+    ],
+    rules: {
+      "i18next/no-literal-string": "off",
+      "@typescript-eslint/consistent-type-imports": "off",
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);

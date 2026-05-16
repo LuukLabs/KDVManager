@@ -58,7 +58,12 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
   const cardActions = undefined;
 
   const content = childrenLoading ? (
-    <Box display="flex" justifyContent="center" p={2}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        p: 2
+      }}>
       <CircularProgress size={28} />
     </Box>
   ) : (

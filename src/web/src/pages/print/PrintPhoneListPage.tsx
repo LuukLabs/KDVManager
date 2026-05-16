@@ -147,15 +147,24 @@ const PrintPhoneListPage = () => {
     <Box sx={{ p: 2 }}>
       {/* Controls - hidden when printing */}
       <Paper sx={{ p: 2, mb: 3 }} className="print-controls">
-        <Typography variant="h5" gutterBottom fontWeight={600}>
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: 600
+        }}>
           {t("Phone List Export")}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 2
+          }}>
           {t(
             "Generate a printable phone list of all active children and their guardians for a specific year.",
           )}
         </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{
+          alignItems: "center"
+        }}>
           <FormControl sx={{ minWidth: 120 }} size="small">
             <InputLabel id="year-label">{t("Year")}</InputLabel>
             <Select
@@ -186,7 +195,6 @@ const PrintPhoneListPage = () => {
           </Stack>
         </Stack>
       </Paper>
-
       {isFetching && (
         <Box
           sx={{ display: "flex", alignItems: "center", gap: 1, justifyContent: "center", py: 4 }}
@@ -195,7 +203,6 @@ const PrintPhoneListPage = () => {
           <Typography>{t("Loading...")}</Typography>
         </Box>
       )}
-
       {/* Printable content */}
       {data && !isFetching && (
         <Box className="print-content">
@@ -210,10 +217,20 @@ const PrintPhoneListPage = () => {
               },
             }}
           >
-            <Typography variant="h4" fontWeight="bold" textAlign="center">
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center"
+              }}>
               {t("Phone List")} {data.year}
             </Typography>
-            <Typography variant="body2" textAlign="center" color="text.secondary">
+            <Typography
+              variant="body2"
+              sx={{
+                textAlign: "center",
+                color: "text.secondary"
+              }}>
               {t("Generated on")}: {dayjs(data.generatedAt).format("DD MMMM YYYY HH:mm")}
             </Typography>
           </Box>
@@ -228,10 +245,14 @@ const PrintPhoneListPage = () => {
               "@media print": { display: "none" },
             }}
           >
-            <Typography variant="h6" fontWeight={600}>
+            <Typography variant="h6" sx={{
+              fontWeight: 600
+            }}>
               {t("Phone List")} {data.year}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {t("Total children")}: {data.children?.length || 0} • {t("Generated on")}:{" "}
               {dayjs(data.generatedAt).format("DD MMMM YYYY HH:mm")}
             </Typography>
@@ -275,14 +296,20 @@ const PrintPhoneListPage = () => {
                         {gIndex === 0 && (
                           <TableCell rowSpan={guardians.length}>
                             <Box>
-                              <Typography variant="body2" fontWeight={600}>
+                              <Typography variant="body2" sx={{
+                                fontWeight: 600
+                              }}>
                                 {child.fullName}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" sx={{
+                                color: "text.secondary"
+                              }}>
                                 {t("DOB")}: {dayjs(child.dateOfBirth).format("DD-MM-YYYY")}
                               </Typography>
                               <br />
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" sx={{
+                                color: "text.secondary"
+                              }}>
                                 #{child.childNumber}
                               </Typography>
                             </Box>
@@ -293,10 +320,18 @@ const PrintPhoneListPage = () => {
                         <TableCell>
                           {guardian ? (
                             <Box>
-                              <Typography variant="body2" fontWeight={500}>
+                              <Typography variant="body2" sx={{
+                                fontWeight: 500
+                              }}>
                                 {guardian.fullName}
                               </Typography>
-                              <Stack direction="row" spacing={0.5} flexWrap="wrap" sx={{ mt: 0.5 }}>
+                              <Stack
+                                direction="row"
+                                spacing={0.5}
+                                sx={{
+                                  flexWrap: "wrap",
+                                  mt: 0.5
+                                }}>
                                 <Chip
                                   label={getRelationshipLabel(guardian.relationshipType)}
                                   size="small"
@@ -314,7 +349,12 @@ const PrintPhoneListPage = () => {
                               </Stack>
                             </Box>
                           ) : (
-                            <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontStyle: "italic"
+                              }}>
                               {t("No guardians linked")}
                             </Typography>
                           )}
@@ -335,7 +375,9 @@ const PrintPhoneListPage = () => {
                                       <Typography variant="body2">
                                         {formatPhoneNumber(phone.number)}
                                       </Typography>
-                                      <Typography variant="caption" color="text.secondary">
+                                      <Typography variant="caption" sx={{
+                                        color: "text.secondary"
+                                      }}>
                                         {`(${getPhoneTypeLabel(phone.type)})`}
                                       </Typography>
                                     </Box>
@@ -344,9 +386,10 @@ const PrintPhoneListPage = () => {
                               ) : (
                                 <Typography
                                   variant="body2"
-                                  color="text.secondary"
-                                  fontStyle="italic"
-                                >
+                                  sx={{
+                                    color: "text.secondary",
+                                    fontStyle: "italic"
+                                  }}>
                                   {t("No phone")}
                                 </Typography>
                               )}
@@ -360,7 +403,9 @@ const PrintPhoneListPage = () => {
                                   }}
                                 >
                                   <EmailIcon sx={{ fontSize: 12, color: "text.secondary" }} />
-                                  <Typography variant="caption" color="text.secondary">
+                                  <Typography variant="caption" sx={{
+                                    color: "text.secondary"
+                                  }}>
                                     {guardian.email}
                                   </Typography>
                                 </Box>

@@ -87,7 +87,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           }}
         >
           <CircularProgress size={24} />
-          <Typography variant="body2" sx={{ ml: 2 }} color="text.secondary">
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              ml: 2
+            }}>
             {t("Loading summary...")}
           </Typography>
         </CardContent>
@@ -144,7 +149,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             <Schedule />
             {t("Daily Summary")}
           </Typography>
-          <Typography variant="body2" color="text.secondary" textAlign="center">
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              textAlign: "center"
+            }}>
             {t("No children scheduled for this day")}
           </Typography>
         </CardContent>
@@ -307,10 +317,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           onClose={handleCloseDetails}
           maxWidth="sm"
           fullWidth
-          PaperProps={{
-            sx: {
-              borderRadius: 3,
-              boxShadow: 3,
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: 3,
+                boxShadow: 3,
+              },
             },
           }}
         >
@@ -332,7 +344,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
 
           <DialogContent sx={{ p: 3 }}>
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: "text.secondary",
+                  mb: 1
+                }}>
                 {t("Overview")}
               </Typography>
               <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
@@ -351,7 +368,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
               </Box>
             </Box>
 
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: "text.secondary",
+                mb: 1
+              }}>
               {t("Age Group Distribution")}
             </Typography>
 

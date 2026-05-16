@@ -135,7 +135,9 @@ const ScheduleOverviewPage = () => {
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {selectedDate.locale(i18n.language).format("dddd")}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {selectedDate.locale(i18n.language).format("MMMM D, YYYY")}
               </Typography>
               {dailyOverview?.isClosed && (
@@ -178,7 +180,6 @@ const ScheduleOverviewPage = () => {
           </Stack>
         </Paper>
       )}
-
       {/* Desktop Layout */}
       <Grid container spacing={3}>
         {/* Desktop Title and Date Controls */}
@@ -242,10 +243,17 @@ const ScheduleOverviewPage = () => {
           {!groups || groups.length === 0 ? (
             <Paper sx={{ p: 4, textAlign: "center" }}>
               <GroupsIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-              <Typography variant="h6" gutterBottom color="text.secondary">
+              <Typography variant="h6" gutterBottom sx={{
+                color: "text.secondary"
+              }}>
                 {t("No groups found")}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mb: 3
+                }}>
                 {t("Create groups to start managing schedules")}
               </Typography>
               <Button variant="contained" startIcon={<GroupsIcon />}>
@@ -314,7 +322,6 @@ const ScheduleOverviewPage = () => {
 
         {/* Desktop calendar removed to allow columns to occupy full width */}
       </Grid>
-
       {/* Mobile Calendar Drawer */}
       <Drawer
         anchor="bottom"
@@ -345,7 +352,6 @@ const ScheduleOverviewPage = () => {
           />
         </Box>
       </Drawer>
-
       {/* Mobile Floating Action Button (alternative) */}
       {/* Floating Action Button for mobile and desktop (desktop opens popper) */}
       <ClickAwayListener onClickAway={handleClosePopper}>

@@ -114,7 +114,6 @@ export const GuardianForm = ({
           {submitError}
         </Alert>
       )}
-
       {/* Personal Information */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
@@ -141,7 +140,6 @@ export const GuardianForm = ({
           </Grid>
         </CardContent>
       </Card>
-
       {/* Contact Information */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
@@ -243,7 +241,9 @@ export const GuardianForm = ({
                   </Button>
                 )}
                 {phoneFields.length >= 10 && (
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     {t("Maximum phone numbers reached")}
                   </Typography>
                 )}
@@ -252,9 +252,8 @@ export const GuardianForm = ({
           </Grid>
         </CardContent>
       </Card>
-
       {/* Actions */}
-      <Box display="flex" gap={2} justifyContent="flex-end">
+      <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
         <Button variant="outlined" onClick={() => navigate("/guardians")} disabled={isLoading}>
           {t("Cancel")}
         </Button>

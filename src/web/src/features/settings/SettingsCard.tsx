@@ -29,13 +29,15 @@ export const SettingsCard: React.FC<SettingsCardProps> = ({
     <Card sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <CardActionArea onClick={handleClick} sx={{ flexGrow: 1, alignItems: "stretch" }}>
         <CardContent sx={{ height: "100%" }}>
-          <Box display="flex" alignItems="center">
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             {icon}
-            <Box ml={2}>
+            <Box sx={{ ml: 2 }}>
               <Typography variant="h5" component="div">
                 {title}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {description}
               </Typography>
             </Box>

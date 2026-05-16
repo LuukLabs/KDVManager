@@ -68,10 +68,17 @@ const PrintSchedulesPage = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Paper sx={{ p: 2, mb: 3 }} className="print-controls">
-        <Typography variant="h5" gutterBottom fontWeight={600}>
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: 600
+        }}>
           {t("Print Attendance Schedules")}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 2
+          }}>
           {t(
             "Generate printable attendance schedules for groups with optional filtering by year, month, and specific groups.",
           )}
@@ -151,14 +158,12 @@ const PrintSchedulesPage = () => {
           </Stack>
         </Stack>
       </Paper>
-
       {isFetching && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <CircularProgress size={20} />
           <Typography>{t("Loading...")}</Typography>
         </Box>
       )}
-
       <Box
         className="print-pages"
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}

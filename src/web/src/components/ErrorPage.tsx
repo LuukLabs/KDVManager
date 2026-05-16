@@ -66,7 +66,12 @@ export default function ErrorPage() {
         <Typography variant="h3" component="h1" gutterBottom>
           {status ? `${status} – ${t("error.oops")}` : t("error.oops")}
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.secondary",
+            mb: 2
+          }}>
           {message}
         </Typography>
         {process.env.NODE_ENV === "development" && error instanceof Error && (

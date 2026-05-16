@@ -93,7 +93,9 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
 
   if (!scheduleRules || scheduleRules.length === 0) {
     return (
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{
+        color: "text.secondary"
+      }}>
         {t("No schedule rules")}
       </Typography>
     );

@@ -19,7 +19,11 @@ const ClosurePeriodsSettingsPage = () => {
     <NiceModal.Provider>
       <Paper>
         <Toolbar>
-          <Box display="flex" flexGrow={1} />
+          <Box
+            sx={{
+              display: "flex",
+              flexGrow: 1
+            }} />
           <Button variant="contained" onClick={onAddClickHandler} startIcon={<AddIcon />}>
             {t("Add Closure Period")}
           </Button>

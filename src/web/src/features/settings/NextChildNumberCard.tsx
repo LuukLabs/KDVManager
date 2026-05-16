@@ -15,13 +15,15 @@ export const NextChildNumberCard: React.FC = () => {
   return (
     <Card sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <CardContent sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-        <Box display="flex" alignItems="center">
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <NumbersIcon fontSize="large" />
-          <Box ml={2}>
+          <Box sx={{ ml: 2 }}>
             <Typography variant="h5" component="div">
               {t("Next Child Number")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {isLoading ? (
                 <Skeleton width={40} />
               ) : error ? (

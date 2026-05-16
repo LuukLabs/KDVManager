@@ -78,7 +78,7 @@ export const EndMarkSettingsCard: React.FC = () => {
     return (
       <Card>
         <CardContent>
-          <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", p: 3 }}>
             <CircularProgress />
           </Box>
         </CardContent>
@@ -99,7 +99,7 @@ export const EndMarkSettingsCard: React.FC = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" component="h2" mb={2}>
+        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
           {t("EndMark Automation Settings")}
         </Typography>
 
@@ -109,7 +109,7 @@ export const EndMarkSettingsCard: React.FC = () => {
           </Alert>
         )}
 
-        <Box component="form" display="flex" flexDirection="column" gap={3}>
+        <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <FormControlLabel
             control={
               <Switch checked={formData.isEnabled} onChange={handleInputChange("isEnabled")} />
@@ -122,7 +122,7 @@ export const EndMarkSettingsCard: React.FC = () => {
             type="number"
             value={formData.yearsAfterBirth}
             onChange={handleInputChange("yearsAfterBirth")}
-            inputProps={{ min: 0, max: 50 }}
+            slotProps={{ htmlInput: { min: 0, max: 50 } }}
             helperText={t("Number of years after birth to create the EndMark")}
             fullWidth
           />
@@ -137,10 +137,10 @@ export const EndMarkSettingsCard: React.FC = () => {
               "Description for automatically created EndMarks. Use {childName} and {birthDate} as placeholders.",
             )}
             fullWidth
-            inputProps={{ maxLength: 500 }}
+            slotProps={{ htmlInput: { maxLength: 500 } }}
           />
 
-          <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               variant="contained"
               onClick={handleSave}

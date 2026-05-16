@@ -155,7 +155,6 @@ export const LinkExistingGuardianDialog = ({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>{t("Link Existing Guardian")}</DialogTitle>
-
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <DialogContent>
           {submitError && (
@@ -175,15 +174,17 @@ export const LinkExistingGuardianDialog = ({
                 placeholder={t("Search by name...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: <Search sx={{ mr: 1, color: "action.active" }} />,
+                slotProps={{
+                  input: {
+                    startAdornment: <Search sx={{ mr: 1, color: "action.active" }} />,
+                  },
                 }}
                 sx={{ mb: 2 }}
               />
 
               {/* Search Results */}
               {searching ? (
-                <Box display="flex" justifyContent="center" py={2}>
+                <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
                   <CircularProgress size={24} />
                 </Box>
               ) : searchTerm && guardians.length === 0 ? (
@@ -199,16 +200,18 @@ export const LinkExistingGuardianDialog = ({
                 </Alert>
               ) : guardians.length > 0 ? (
                 <Box>
-                  <Typography variant="subtitle2" gutterBottom color="text.secondary">
+                  <Typography variant="subtitle2" gutterBottom sx={{
+                    color: "text.secondary"
+                  }}>
                     {t("Found {{count}} guardian(s)", { count: guardians.length })}
                   </Typography>
                   <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    maxHeight={300}
-                    overflow="auto"
                     sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      maxHeight: 300,
+                      overflow: "auto",
                       "&::-webkit-scrollbar": {
                         width: 6,
                       },
@@ -239,19 +242,23 @@ export const LinkExistingGuardianDialog = ({
                         onClick={() => handleGuardianSelect(guardian)}
                       >
                         <CardContent sx={{ py: 2, px: 2, "&:last-child": { pb: 2 } }}>
-                          <Box display="flex" alignItems="center" gap={2}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                             <Avatar sx={{ bgcolor: "primary.main", width: 40, height: 40 }}>
                               {getInitials(guardian.fullName)}
                             </Avatar>
-                            <Box flex={1}>
-                              <Typography variant="subtitle2" fontWeight="medium">
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: "medium" }}>
                                 {guardian.fullName}
                               </Typography>
-                              <Box display="flex" gap={2} mt={0.5}>
-                                <Typography variant="body2" color="text.secondary">
+                              <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
+                                <Typography variant="body2" sx={{
+                                  color: "text.secondary"
+                                }}>
                                   {guardian.email ?? t("No email")}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" sx={{
+                                  color: "text.secondary"
+                                }}>
                                   {guardian.primaryPhoneNumber ?? t("No phone")}
                                 </Typography>
                               </Box>

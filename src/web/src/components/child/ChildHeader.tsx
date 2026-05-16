@@ -178,7 +178,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
                 {t("Child Record")} {group && `• ${t("Group")}: ${group}`}
               </Typography>
 
-              <Stack direction="row" spacing={1} flexWrap="wrap">
+              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
                 <Chip
                   label={getAgeDisplay()}
                   size="small"

@@ -72,12 +72,12 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
-        alignItems={{ xs: "stretch", sm: "center" }}
-        justifyContent="space-between"
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, alignItems: { xs: "stretch", sm: "center" }, justifyContent: "space-between" }}
       >
         <Box sx={{ flex: 1 }}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             {t("Total future absences")}:{" "}
             <Box component="span" sx={{ fontWeight: 600 }}>
               {totalFuture}
@@ -108,10 +108,14 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-
       {isLoading && loadingSkeleton}
       {!isLoading && relevantAbsences.length === 0 && (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            py: 2
+          }}>
           {view === "past" ? t("No past absences recorded") : t("No future absences recorded")}
         </Typography>
       )}
@@ -167,9 +171,10 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
                             {absence.reason && (
                               <Typography
                                 variant="caption"
-                                color="text.secondary"
-                                sx={{ lineHeight: 1.3 }}
-                              >
+                                sx={{
+                                  color: "text.secondary",
+                                  lineHeight: 1.3
+                                }}>
                                 {absence.reason}
                               </Typography>
                             )}

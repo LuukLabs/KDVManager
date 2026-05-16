@@ -83,16 +83,23 @@ const IndexChildPage = () => {
     <Stack spacing={2} sx={{ pb: 2 }}>
       <HeaderPaper elevation={0} role="region" aria-labelledby="children-heading">
         <Box
-          display="flex"
-          flexDirection={{ xs: "column", sm: "row" }}
-          gap={1.5}
-          alignItems={{ sm: "center" }}
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 1.5,
+            alignItems: { sm: "center" },
+          }}
         >
-          <Box flexGrow={1}>
-            <Typography id="children-heading" variant="h5" fontWeight={600} lineHeight={1.2}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography id="children-heading" variant="h5" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
               {t("Children")}
             </Typography>
-            <Typography variant="body2" color="text.secondary" mt={0.5}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 0.5
+              }}>
               {t("Manage and explore the registered children records.")}
             </Typography>
           </Box>
@@ -114,23 +121,25 @@ const IndexChildPage = () => {
             placeholder={t("Search children…")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <Fade in={hasSearch} unmountOnExit>
-                  <InputAdornment
-                    position="end"
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => setSearchInput("")}
-                  >
-                    <ClearIcon fontSize="small" />
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
                   </InputAdornment>
-                </Fade>
-              ),
+                ),
+                endAdornment: (
+                  <Fade in={hasSearch} unmountOnExit>
+                    <InputAdornment
+                      position="end"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => setSearchInput("")}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </InputAdornment>
+                  </Fade>
+                ),
+              },
             }}
           />
           {hasSearch && (

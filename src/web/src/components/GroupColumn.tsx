@@ -84,18 +84,17 @@ const GroupColumn = ({
         </Box>
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ fontSize: { xs: "0.8rem", md: "0.875rem" } }}
-        >
+          sx={{
+            color: "text.secondary",
+            fontSize: { xs: "0.8rem", md: "0.875rem" }
+          }}>
           {selectedDate.format("dddd, MMMM D")}
         </Typography>
       </Box>
-
       {/* Group Summary (hidden on closed days) */}
       {!isClosed && (
         <GroupSummary groupId={group.id} selectedDate={selectedDate} absentCount={absent.length} />
       )}
-
       {isClosed && (
         <Box
           sx={{
@@ -117,7 +116,6 @@ const GroupColumn = ({
           </Typography>
         </Box>
       )}
-
       {/* Content hidden entirely when closed */}
       {isClosed ? null : isLoading ? (
         <Box
@@ -125,7 +123,9 @@ const GroupColumn = ({
         >
           <Box sx={{ textAlign: "center" }}>
             <CircularProgress size={32} sx={{ mb: 2 }} />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {t("Loading schedules...")}
             </Typography>
           </Box>
@@ -172,14 +172,21 @@ const GroupColumn = ({
                 <EventBusyIcon
                   sx={{ fontSize: { xs: 40, md: 48 }, color: "text.secondary", mb: 1 }}
                 />
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 1, fontWeight: 500 }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 1,
+                    fontWeight: 500
+                  }}>
                   {t("No schedules for this date")}
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: { xs: "0.8rem", md: "0.875rem" } }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    fontSize: { xs: "0.8rem", md: "0.875rem" }
+                  }}>
                   {t("Children will appear here when scheduled")}
                 </Typography>
               </Box>

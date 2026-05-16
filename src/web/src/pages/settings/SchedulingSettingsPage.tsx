@@ -16,7 +16,11 @@ const SchedulingSettingsPage = () => {
   return (
     <Paper>
       <Toolbar>
-        <Box display="flex" flexGrow={1} />
+        <Box
+          sx={{
+            display: "flex",
+            flexGrow: 1
+          }} />
         <Button variant="contained" onClick={onAddTimeSlotClickHandler} startIcon={<AddIcon />}>
           {t("Time slot")}
         </Button>

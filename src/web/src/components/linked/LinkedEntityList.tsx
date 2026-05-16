@@ -101,16 +101,17 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
             )}
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Box
-                display="flex"
-                alignItems="center"
-                gap={1}
-                flexWrap="wrap"
-                mb={item.secondaryLines?.length ? 0.5 : 0}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  flexWrap: "wrap",
+                  mb: item.secondaryLines?.length ? 0.5 : 0,
+                }}
               >
                 <Typography
                   variant="body1"
-                  fontWeight={600}
-                  sx={{ fontSize: { xs: ".95rem", sm: "1rem" } }}
+                  sx={{ fontWeight: 600, fontSize: { xs: ".95rem", sm: "1rem" } }}
                 >
                   {item.primaryText}
                 </Typography>
@@ -134,9 +135,10 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                     <Typography
                       key={i}
                       variant="body2"
-                      color="text.secondary"
-                      sx={{ fontSize: { xs: ".7rem", sm: ".75rem" } }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        fontSize: { xs: ".7rem", sm: ".75rem" }
+                      }}>
                       {line}
                     </Typography>
                   ))}

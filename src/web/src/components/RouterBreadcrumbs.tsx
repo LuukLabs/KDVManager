@@ -62,7 +62,12 @@ const RouterBreadcrumbs: React.FC = () => {
         {displayCrumbs.map((c, idx) => {
           const isLast = idx === displayCrumbs.length - 1;
           return isLast ? (
-            <Typography key={c.pathname} color="text.primary" sx={{ fontWeight: 500 }}>
+            <Typography
+              key={c.pathname}
+              sx={{
+                color: "text.primary",
+                fontWeight: 500
+              }}>
               {c.element}
             </Typography>
           ) : (

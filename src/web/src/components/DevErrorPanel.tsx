@@ -54,8 +54,13 @@ const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
         width: "100%",
       }}
     >
-      <Stack direction="row" alignItems="center" spacing={1}>
-        <Typography variant="body2" fontWeight={600} color="error.main">
+      <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "error.main",
+            fontWeight: 600
+          }}>
           {t("devError.title", "Dev Error")}
         </Typography>
         <Divider flexItem orientation="vertical" />
@@ -88,7 +93,7 @@ const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
         </Box>
         {error instanceof ApiError && error.rawBody && (
           <Box sx={{ mt: 2 }}>
-            <Typography variant="overline" display="block" gutterBottom>
+            <Typography variant="overline" gutterBottom sx={{ display: "block" }}>
               {t("devError.rawResponse", "Raw Response")}
             </Typography>
             <Box

@@ -124,11 +124,13 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
               >
                 {navigationItems.map((item) => (
                   <MenuItem key={item.key} onClick={() => handleNavigation(item.path)}>
-                    <Typography textAlign="center">{item.label}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>{item.label}</Typography>
                   </MenuItem>
                 ))}
                 <MenuItem disabled>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     {t("Reporting")}
                   </Typography>
                 </MenuItem>
@@ -138,7 +140,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                     onClick={() => handleNavigation(item.path)}
                     sx={{ pl: 4 }}
                   >
-                    <Typography textAlign="center">{item.label}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>{item.label}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -208,7 +210,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                 >
                   {reportingItems.map((item) => (
                     <MenuItem key={item.key} onClick={() => handleNavigation(item.path)}>
-                      <Typography textAlign="center">{item.label}</Typography>
+                      <Typography sx={{ textAlign: "center" }}>{item.label}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>
@@ -219,7 +221,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
         </Container>
       </AppBar>
       <Container maxWidth={false}>
-        <Box display="flex" alignItems="center" marginY={1} className="app-breadcrumbs">
+        <Box sx={{ display: "flex", alignItems: "center", my: 1 }} className="app-breadcrumbs">
           <RouterBreadcrumbs />
         </Box>
         {children}

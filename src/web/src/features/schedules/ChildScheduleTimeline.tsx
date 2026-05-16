@@ -96,7 +96,9 @@ export const ChildScheduleTimeline: React.FC<ChildScheduleTimelineProps> = ({ ch
 
   if (items.length === 0) {
     return (
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{
+        color: "text.secondary"
+      }}>
         {t("No schedules found")}
       </Typography>
     );

@@ -97,15 +97,20 @@ const NewsletterPage = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Typography variant="h5" gutterBottom fontWeight={600}>
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
           {t("Newsletter")}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 2
+          }}>
           {t(
             "Collect email addresses of guardians linked to active children for a specific month to send a newsletter.",
           )}
         </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: "center" }}>
           <FormControl sx={{ minWidth: 120 }} size="small">
             <InputLabel id="year-label">{t("Year")}</InputLabel>
             <Select
@@ -154,7 +159,6 @@ const NewsletterPage = () => {
           </Stack>
         </Stack>
       </Paper>
-
       {isFetching && (
         <Box
           sx={{ display: "flex", alignItems: "center", gap: 1, justifyContent: "center", py: 4 }}
@@ -163,10 +167,9 @@ const NewsletterPage = () => {
           <Typography>{t("Loading...")}</Typography>
         </Box>
       )}
-
       {data && !isFetching && (
         <Paper sx={{ p: 2 }}>
-          <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center", mb: 2 }}>
             <Typography variant="h6">
               {getMonthName(data.month)} {data.year}
             </Typography>
@@ -183,12 +186,21 @@ const NewsletterPage = () => {
               variant="outlined"
             />
           </Stack>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             {t("Generated on")}: {dayjs(data.generatedAt).format("DD-MM-YYYY HH:mm")}
           </Typography>
 
           {data.recipients.length === 0 ? (
-            <Typography color="text.secondary" sx={{ py: 2 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                py: 2
+              }}>
               {t("No email addresses found for this period.")}
             </Typography>
           ) : (

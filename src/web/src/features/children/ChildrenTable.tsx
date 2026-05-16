@@ -160,10 +160,8 @@ export const ChildrenTable = () => {
               <CardContent sx={{ pb: 1 }}>
                 <Stack
                   direction="row"
-                  justifyContent="space-between"
-                  alignItems="flex-start"
-                  mb={1}
                   spacing={1}
+                  sx={{ justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}
                 >
                   <Typography variant="h6" component="div" sx={{ wordBreak: "break-word" }}>
                     {child.fullName}
@@ -176,10 +174,14 @@ export const ChildrenTable = () => {
                     sx={{ flexShrink: 0 }}
                   />
                 </Stack>
-                <Typography color="text.secondary" variant="body2" gutterBottom>
+                <Typography variant="body2" gutterBottom sx={{
+                  color: "text.secondary"
+                }}>
                   {t("table.header.childNumber")}: {child.childNumber}
                 </Typography>
-                <Typography color="text.secondary" variant="body2">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   {t("table.header.dateOfBirth")}:{" "}
                   {/* eslint-disable-next-line i18next/no-literal-string */}
                   {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
@@ -192,9 +194,8 @@ export const ChildrenTable = () => {
             </Card>
           );
         })}
-
         {totalPages > 1 && (
-          <Box display="flex" justifyContent="center" py={2}>
+          <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
             <Pagination
               count={totalPages}
               page={currentPage}

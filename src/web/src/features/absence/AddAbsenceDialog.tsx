@@ -121,7 +121,7 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
                 checked={multiDay}
                 onChange={(_, checked) => setMultiDay(checked)}
                 color="primary"
-                inputProps={{ "aria-label": "multi-day absence" }}
+                slotProps={{ input: { "aria-label": "multi-day absence" } }}
               />
             }
             label={t("Multi-day absence")}

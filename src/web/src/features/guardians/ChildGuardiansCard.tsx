@@ -98,19 +98,23 @@ export const ChildGuardiansCard = ({
       <AccentSection variant="outlined" borderColor="primary.main" padding="normal">
         <Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems={{ xs: "flex-start", md: "center" }}
-            mb={2}
-            flexDirection={{ xs: "column", sm: "row" }}
-            gap={{ xs: 2, sm: 1 }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", md: "center" },
+              mb: 2,
+              flexDirection: { xs: "column", sm: "row" },
+              gap: { xs: 2, sm: 1 },
+            }}
           >
             <Typography variant="h6">{t("Guardians")}</Typography>
             <Box
-              display="flex"
-              gap={1}
-              flexDirection={{ xs: "column", sm: "row" }}
-              width={{ xs: "100%", sm: "auto" }}
+              sx={{
+                display: "flex",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row" },
+                width: { xs: "100%", sm: "auto" },
+              }}
             >
               <Button
                 variant="outlined"
@@ -131,7 +135,7 @@ export const ChildGuardiansCard = ({
           </Box>
 
           {loading ? (
-            <Box display="flex" justifyContent="center" py={3}>
+            <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
               <CircularProgress size={24} />
             </Box>
           ) : guardians.length === 0 ? (

@@ -83,7 +83,12 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
           {isLoadingChild ? (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, minHeight: 48 }}>
               <CircularProgress size={16} />
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.8rem" }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  fontSize: "0.8rem"
+                }}>
                 {t("Loading child details...")}
               </Typography>
             </Box>

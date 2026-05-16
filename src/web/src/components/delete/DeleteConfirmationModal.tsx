@@ -66,7 +66,6 @@ export const DeleteConfirmationModal = NiceModal.create<DeleteConfirmationModalP
           onClose={handleClose}
           aria-labelledby="delete-confirmation-title"
           aria-describedby="delete-confirmation-description"
-          disableEscapeKeyDown={isDeleting}
           {...dialogProps}
         >
           <DialogTitle id="delete-confirmation-title">{title}</DialogTitle>

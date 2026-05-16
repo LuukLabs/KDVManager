@@ -245,7 +245,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     },
                   }}
                 >
-                  <Stack alignItems="center" spacing={0.5}>
+                  <Stack spacing={0.5} sx={{ alignItems: "center" }}>
                     <Box sx={{ fontSize: isMobile ? "1.5rem" : "1.2rem" }}>{day.emoji}</Box>
                     <Typography
                       variant="caption"
@@ -305,7 +305,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     },
                   }}
                 >
-                  <Stack direction="row" alignItems="center" spacing={2} sx={{ width: "100%" }}>
+                  <Stack direction="row" spacing={2} sx={{ alignItems: "center", width: "100%" }}>
                     <Avatar
                       sx={{
                         width: 40,
@@ -320,7 +320,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
                         {slot.name}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {slot.time}
                       </Typography>
                     </Box>
@@ -373,7 +375,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     },
                   }}
                 >
-                  <Stack direction="row" alignItems="center" spacing={2} sx={{ width: "100%" }}>
+                  <Stack direction="row" spacing={2} sx={{ alignItems: "center", width: "100%" }}>
                     <Avatar
                       sx={{
                         width: 40,
@@ -459,7 +461,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                   {t("Rule")} {index + 1}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {isComplete ? t("Complete") : t("Incomplete")}
                 </Typography>
               </Box>
@@ -492,7 +496,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               </IconButton>
             </Box>
           </Box>
-
           {/* Rule Content */}
           <Box sx={{ p: 2 }}>
             <Collapse in={isEditing} timeout={300}>
@@ -573,7 +576,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                         borderColor: "warning.200",
                       }}
                     >
-                      <Typography variant="body2" color="warning.dark" sx={{ fontWeight: 500 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "warning.dark",
+                          fontWeight: 500
+                        }}>
                         {!rule?.day && t("Please select a day")}
                         {!rule?.timeSlotId && rule?.day && t("Please select a time slot")}
                         {!rule?.groupId &&
@@ -599,12 +607,14 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
         maxWidth="md"
         fullWidth
         fullScreen={isMobile}
-        PaperProps={{
-          sx: {
-            borderRadius: isMobile ? 0 : 4,
-            maxHeight: isMobile ? "100vh" : "95vh",
-            background: "#fff",
-            overflow: "hidden",
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: isMobile ? 0 : 4,
+              maxHeight: isMobile ? "100vh" : "95vh",
+              background: "#fff",
+              overflow: "hidden",
+            },
           },
         }}
       >
@@ -707,7 +717,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             )}
           </Box>
         </DialogTitle>
-
         <DialogContent sx={{ p: 0, backgroundColor: "#f8f9fa", position: "relative" }}>
           <Form formContext={formContext} onSubmit={onSubmit}>
             {/* Date Range Section */}
@@ -734,7 +743,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                   <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem", mb: 0.5 }}>
                     {t("Schedule Period")}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     {t("Select the start and end dates for this schedule")}
                   </Typography>
                 </Box>
@@ -791,7 +802,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem", mb: 0.5 }}>
                       {t("Schedule Rules")}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: "text.secondary"
+                    }}>
                       {getTotalRules() === 0
                         ? t("Add rules to define weekly activities")
                         : t(`${getTotalRules()} rule(s) created`)}
@@ -859,9 +872,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     </Typography>
                     <Typography
                       variant="body1"
-                      color="text.secondary"
-                      sx={{ mb: 4, maxWidth: 400, mx: "auto" }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        mb: 4,
+                        maxWidth: 400,
+                        mx: "auto"
+                      }}>
                       {t(
                         "Get started by creating your first schedule rule. Define days, time slots, and groups for your activities.",
                       )}
@@ -894,7 +910,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             </Box>
           </Form>
         </DialogContent>
-
         {/* Mobile Floating Action Button */}
         {isMobile && getTotalRules() > 0 && (
           <Fade in={!editingRule}>
@@ -915,7 +930,6 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             </Fab>
           </Fade>
         )}
-
         {/* Enhanced Footer */}
         <DialogActions
           sx={{

@@ -54,7 +54,7 @@ export const AddEndMarkForm: React.FC<AddEndMarkFormProps> = ({
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
+          slotProps={{ inputLabel: { shrink: true } }}
           size="small"
           required
         />

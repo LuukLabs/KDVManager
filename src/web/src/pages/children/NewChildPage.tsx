@@ -50,7 +50,7 @@ const NewChildPage = () => {
           {t("A unique child identification number will be automatically assigned when you save.")}
         </Alert>
         <Form formContext={formContext} onSubmit={onSubmit}>
-          <Grid container alignItems="flex-start" spacing={2}>
+          <Grid container spacing={2} sx={{ alignItems: "flex-start" }}>
             <Grid size={12}>
               <FormTextField name="givenName" label={t("Voornaam")} required fullWidth />
             </Grid>

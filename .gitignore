@@ -410,3 +410,4 @@ ASALocalRun/
 
 # Ignore development secrets
 appsettings.Development.json
+*.lscache

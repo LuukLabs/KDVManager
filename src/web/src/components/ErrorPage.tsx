@@ -74,7 +74,7 @@ export default function ErrorPage() {
           }}>
           {message}
         </Typography>
-        {process.env.NODE_ENV === "development" && error instanceof Error && (
+        {import.meta.env.DEV && error instanceof Error && (
           <DevErrorPanel error={error} />
         )}
       </Box>

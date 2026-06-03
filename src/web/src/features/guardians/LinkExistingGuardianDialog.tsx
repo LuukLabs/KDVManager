@@ -87,7 +87,6 @@ export const LinkExistingGuardianDialog = ({
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<LinkGuardianFormData>({
     defaultValues: {
       guardianId: "",
@@ -96,8 +95,6 @@ export const LinkExistingGuardianDialog = ({
       isEmergencyContact: false,
     },
   });
-
-  const watchedGuardianId = watch("guardianId");
 
   const handleFormSubmit = async (data: LinkGuardianFormData) => {
     try {
@@ -351,7 +348,7 @@ export const LinkExistingGuardianDialog = ({
           <Button
             type="submit"
             variant="contained"
-            disabled={linkMutation.isPending || !watchedGuardianId}
+            disabled={linkMutation.isPending || !selectedGuardian}
           >
             {linkMutation.isPending ? t("Linking...") : t("Link Guardian")}
           </Button>

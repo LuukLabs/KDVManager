@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,34 +25,25 @@ export const EndMarkSettingsCard: React.FC = () => {
   const { data: settings, isLoading, error, refetch } = useGetEndMarkSettings();
   const updateMutation = useUpdateEndMarkSettings();
 
-  // Form state
-  const [formData, setFormData] = useState<UpdateEndMarkSettingsCommand>({
-    isEnabled: settings?.isEnabled ?? false,
-    yearsAfterBirth: settings?.yearsAfterBirth ?? 5,
-    description: settings?.description ?? "EndMark for {childName} born on {birthDate}",
-  });
+  // Track only local user changes; merge with server state for display
+  const [localChanges, setLocalChanges] = useState<Partial<UpdateEndMarkSettingsCommand>>({});
 
-  // Track if form has been modified
-  const [isModified, setIsModified] = useState(false);
+  const isModified = Object.keys(localChanges).length > 0;
 
-  // Update form data when settings are loaded
-  React.useEffect(() => {
-    if (settings) {
-      const newFormData = {
-        isEnabled: settings.isEnabled ?? false,
-        yearsAfterBirth: settings.yearsAfterBirth ?? 5,
-        description: settings.description ?? "EndMark for {childName} born on {birthDate}",
-      };
-      setFormData(newFormData);
-      setIsModified(false);
-    }
-  }, [settings]);
+  const formData: UpdateEndMarkSettingsCommand = {
+    isEnabled: localChanges.isEnabled ?? settings?.isEnabled ?? false,
+    yearsAfterBirth: localChanges.yearsAfterBirth ?? settings?.yearsAfterBirth ?? 5,
+    description:
+      localChanges.description ??
+      settings?.description ??
+      "EndMark for {childName} born on {birthDate}",
+  };
 
   const handleSave = async () => {
     try {
       await updateMutation.mutateAsync({ data: formData });
       await refetch();
-      setIsModified(false);
+      setLocalChanges({});
     } catch (error) {
       console.error("Failed to update EndMark settings:", error);
     }
@@ -67,11 +58,10 @@ export const EndMarkSettingsCard: React.FC = () => {
             ? parseInt(event.target.value, 10) || 0
             : event.target.value;
 
-      setFormData((prev) => ({
+      setLocalChanges((prev) => ({
         ...prev,
         [field]: value,
       }));
-      setIsModified(true);
     };
 
   if (isLoading) {

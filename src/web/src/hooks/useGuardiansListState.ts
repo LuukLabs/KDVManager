@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { type DataGridProps, type GridPaginationModel } from "@mui/x-data-grid";
 
@@ -19,57 +19,71 @@ const parsePositiveInt = (value: string | null, fallback: number) => {
 export const useGuardiansListState = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Initial state from URL or localStorage
-  const [state, setState] = useState<GuardiansListState>(() => {
-    const ls = localStorage.getItem(STORAGE_KEY);
-    let fromStorage: Partial<GuardiansListState> = {};
-    if (ls) {
-      try {
-        fromStorage = JSON.parse(ls);
-      } catch {
-        /* ignore */
+  // Derive state directly from URL params — no local state needed
+  const state = useMemo<GuardiansListState>(
+    () => ({
+      pageNumber: parsePositiveInt(searchParams.get("page"), 1),
+      pageSize: parsePositiveInt(searchParams.get("size"), 10),
+      search: searchParams.get("q") ?? "",
+    }),
+    [searchParams],
+  );
+
+  // Initialize URL from localStorage on first mount if URL has no params
+  useEffect(() => {
+    if (!searchParams.has("page") && !searchParams.has("size")) {
+      const ls = localStorage.getItem(STORAGE_KEY);
+      if (ls) {
+        try {
+          const fromStorage: Partial<GuardiansListState> = JSON.parse(ls);
+          const params = new URLSearchParams(searchParams);
+          params.set("page", String(fromStorage.pageNumber ?? 1));
+          params.set("size", String(fromStorage.pageSize ?? 10));
+          if (fromStorage.search) params.set("q", fromStorage.search);
+          setSearchParams(params, { replace: true });
+        } catch {
+          /* ignore */
+        }
       }
     }
-    return {
-      pageNumber: parsePositiveInt(searchParams.get("page"), fromStorage.pageNumber ?? 1),
-      pageSize: parsePositiveInt(searchParams.get("size"), fromStorage.pageSize ?? 10),
-      search: searchParams.get("q") ?? fromStorage.search ?? "",
-    };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Persist to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  // Sync URL (replace to avoid history spam)
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", state.pageNumber.toString());
-    params.set("size", state.pageSize.toString());
-    if (state.search) params.set("q", state.search);
-    else params.delete("q");
-    setSearchParams(params, { replace: true });
-  }, [state, searchParams, setSearchParams]);
+  const onPaginationModelChange = useCallback(
+    (model: GridPaginationModel) => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          params.set("page", String(model.page + 1));
+          params.set("size", String(model.pageSize));
+          return params;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
-  // React to external URL changes (e.g. another hook instance updated params)
-  useEffect(() => {
-    const spPage = parsePositiveInt(searchParams.get("page"), state.pageNumber);
-    const spSize = parsePositiveInt(searchParams.get("size"), state.pageSize);
-    const spSearch = searchParams.get("q") ?? "";
-    if (spPage !== state.pageNumber || spSize !== state.pageSize || spSearch !== state.search) {
-      setState({ pageNumber: spPage, pageSize: spSize, search: spSearch });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  const onPaginationModelChange = useCallback((model: GridPaginationModel) => {
-    setState((s) => ({ ...s, pageNumber: model.page + 1, pageSize: model.pageSize }));
-  }, []);
-
-  const setSearch = useCallback((value: string) => {
-    setState((s) => ({ ...s, pageNumber: 1, search: value }));
-  }, []);
+  const setSearch = useCallback(
+    (value: string) => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          params.set("page", "1");
+          if (value) params.set("q", value);
+          else params.delete("q");
+          return params;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
   const apiParams = useMemo(() => {
     const p: { pageNumber: number; pageSize: number; search?: string } = {

@@ -35,37 +35,29 @@ export const AccentSection: React.FC<AccentSectionProps> = ({
     transition: "background-color .25s ease, border-color .25s ease, box-shadow .25s ease",
   } as const;
 
-  let variantStyles: any = {};
-  switch (variant) {
-    case "outlined":
-      variantStyles = {
-        border: 1,
-        borderColor: "divider",
-        backgroundColor: theme.palette.background.paper,
-      };
-      break;
-    case "elevated":
-      variantStyles = {
-        boxShadow: theme.shadows[2],
-        backgroundColor: theme.palette.background.paper,
-      };
-      break;
-    case "tonal":
-      variantStyles = {
-        backgroundColor: alpha(theme.palette.primary.main, 0.04),
-        border: 1,
-        borderColor: alpha(theme.palette.primary.main, 0.15),
-      };
-      break;
-    case "subtle":
-    default:
-      variantStyles = {
-        border: 1,
-        borderColor: "divider",
-        backgroundColor: alpha(theme.palette.background.paper, 0.9),
-      };
-      break;
-  }
+  const variantStyles: any =
+    variant === "outlined"
+      ? {
+          border: 1,
+          borderColor: "divider",
+          backgroundColor: theme.palette.background.paper,
+        }
+      : variant === "elevated"
+      ? {
+          boxShadow: theme.shadows[2],
+          backgroundColor: theme.palette.background.paper,
+        }
+      : variant === "tonal"
+      ? {
+          backgroundColor: alpha(theme.palette.primary.main, 0.04),
+          border: 1,
+          borderColor: alpha(theme.palette.primary.main, 0.15),
+        }
+      : {
+          border: 1,
+          borderColor: "divider",
+          backgroundColor: alpha(theme.palette.background.paper, 0.9),
+        };
 
   // Accent stripe (left) only for outlined & tonal variants to reduce noise
   const accentStyles = ["outlined", "tonal"].includes(variant)

@@ -18,7 +18,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
     cooldown:
-      default: "2 days"
+      default-days: 2
 
   - package-ecosystem: "npm"
     directory: "src/web"
@@ -26,7 +26,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
     cooldown:
-      default: "2 days"
+      default-days: 2
     groups:
       react:
         patterns:
@@ -44,7 +44,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
     cooldown:
-      default: "2 days"
+      default-days: 2
     groups:
       masstransit:
         patterns:
@@ -64,4 +64,4 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 3
     cooldown:
-      default: "2 days"
+      default-days: 2

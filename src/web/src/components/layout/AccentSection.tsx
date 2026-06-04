@@ -35,7 +35,7 @@ export const AccentSection: React.FC<AccentSectionProps> = ({
     transition: "background-color .25s ease, border-color .25s ease, box-shadow .25s ease",
   } as const;
 
-  let variantStyles: any = {};
+  let variantStyles: any;
   switch (variant) {
     case "outlined":
       variantStyles = {

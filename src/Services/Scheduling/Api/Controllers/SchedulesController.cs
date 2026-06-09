@@ -85,7 +85,7 @@ public class SchedulesController : ControllerBase
     /// Deletes a schedule by ID.
     /// </summary>
     /// <param name="Id">The ID of the schedule to delete.</param>
-    [HttpDelete("{Id:guid}", Name = "DeleteSchedule")]
+    [HttpDelete("{id:guid}", Name = "DeleteSchedule")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [Produces("application/json")]

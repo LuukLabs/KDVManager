@@ -50,7 +50,7 @@ public class AbsencesController : ControllerBase
     /// Deletes a group by ID.
     /// </summary>
     /// <param name="Id">The ID of the group to delete.</param>
-    [HttpDelete("{Id:guid}", Name = "DeleteAbsence")]
+    [HttpDelete("{id:guid}", Name = "DeleteAbsence")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Conflict)]

@@ -49,7 +49,7 @@ public class GroupsController : ControllerBase
     /// Deletes a group by ID.
     /// </summary>
     /// <param name="Id">The ID of the group to delete.</param>
-    [HttpDelete("{Id:guid}", Name = "DeleteGroup")]
+    [HttpDelete("{id:guid}", Name = "DeleteGroup")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Conflict)]

@@ -39,7 +39,7 @@ public class EndMarksController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{Id:guid}", Name = "DeleteEndMark")]
+    [HttpDelete("{id:guid}", Name = "DeleteEndMark")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<ActionResult> DeleteEndMark([FromRoute] DeleteEndMarkCommand command)
     {

@@ -77,6 +77,19 @@ const idToken = (clientId, nonce) =>
 // code -> { nonce, clientId }
 const issuedCodes = new Map();
 
+/** JSON-encode for safe embedding inside a <script> block (no </script> breakout). */
+const jsonForScript = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
+
+/** Only redirect within the local e2e stack. */
+const isAllowedRedirect = (value) => {
+  try {
+    const target = new URL(value);
+    return ["localhost", "127.0.0.1"].includes(target.hostname);
+  } catch {
+    return false;
+  }
+};
+
 const sendJson = (res, status, body, extraHeaders = {}) => {
   res.writeHead(status, { "Content-Type": "application/json", ...extraHeaders });
   res.end(JSON.stringify(body));
@@ -148,12 +161,14 @@ const server = http.createServer(async (req, res) => {
       return res.end(`<!DOCTYPE html><html><body><script>
         parent.postMessage({
           type: "authorization_response",
-          response: { code: ${JSON.stringify(code)}, state: ${JSON.stringify(state)} }
+          response: { code: ${jsonForScript(code)}, state: ${jsonForScript(state)} }
         }, "*");
       </script></body></html>`);
     }
 
-    if (!redirectUri) return sendJson(res, 400, { error: "invalid_request" });
+    if (!redirectUri || !isAllowedRedirect(redirectUri)) {
+      return sendJson(res, 400, { error: "invalid_request" });
+    }
     const target = new URL(redirectUri);
     target.searchParams.set("code", code);
     target.searchParams.set("state", state);
@@ -212,7 +227,7 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === "/v2/logout" || url.pathname === "/oidc/logout") {
     const returnTo = url.searchParams.get("returnTo") ?? url.searchParams.get("post_logout_redirect_uri");
-    if (returnTo) {
+    if (returnTo && isAllowedRedirect(returnTo)) {
       res.writeHead(302, { Location: returnTo });
       return res.end();
     }

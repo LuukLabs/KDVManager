@@ -21,9 +21,12 @@ export const NextChildNumberCard: React.FC = () => {
             <Typography variant="h5" component="div">
               {t("Next Child Number")}
             </Typography>
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
               {isLoading ? (
                 <Skeleton width={40} />
               ) : error ? (

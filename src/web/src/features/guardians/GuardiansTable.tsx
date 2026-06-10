@@ -7,6 +7,7 @@ import { useGuardiansListState } from "@hooks/useGuardiansListState";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
 import { ViewGuardianButton } from "./ViewGuardianButton";
 import { useListGuardians } from "@api/crm/endpoints/guardians/guardians";
+import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GuardianListVM } from "@api/crm/models/guardianListVM";
 import Stack from "@mui/material/Stack";
 
@@ -73,10 +74,10 @@ export const GuardiansTable = () => {
       <DataGrid<GuardianListVM>
         autoHeight
         pageSizeOptions={[5, 10, 20]}
-        rowCount={data?.meta.total ?? 0}
+        rowCount={getTotal(data)}
         loading={isLoading || isFetching}
         columns={columns}
-        rows={data?.value ?? []}
+        rows={data ?? []}
         disableRowSelectionOnClick
         {...muiPagination}
       />

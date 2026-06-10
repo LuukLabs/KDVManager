@@ -128,9 +128,12 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                   </MenuItem>
                 ))}
                 <MenuItem disabled>
-                  <Typography variant="caption" sx={{
-                    color: "text.secondary"
-                  }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
                     {t("Reporting")}
                   </Typography>
                 </MenuItem>

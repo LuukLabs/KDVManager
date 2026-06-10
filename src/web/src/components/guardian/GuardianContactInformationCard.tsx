@@ -76,8 +76,9 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
             variant="body2"
             sx={{
               color: "text.secondary",
-              mb: 1
-            }}>
+              mb: 1,
+            }}
+          >
             {t("Phone Numbers")}
           </Typography>
           {(phoneNumbers ?? []).length > 0 ? (
@@ -93,9 +94,12 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
               ))}
             </Stack>
           ) : (
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
               {t("No phone numbers")}
             </Typography>
           )}
@@ -144,8 +148,9 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
                 variant="body2"
                 sx={{
                   color: "text.secondary",
-                  mb: 2
-                }}>
+                  mb: 2,
+                }}
+              >
                 {t("No phone numbers added yet")}
               </Typography>
               <Button
@@ -241,9 +246,12 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
 
               {/* Max limit warning */}
               {phoneFields.length >= 10 && (
-                <Typography variant="caption" sx={{
-                  color: "text.secondary"
-                }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                  }}
+                >
                   {t("Maximum phone numbers reached (10)")}
                 </Typography>
               )}

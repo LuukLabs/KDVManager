@@ -237,11 +237,7 @@ const config = tseslint.config([
     },
   },
   {
-    files: [
-      "src/**/*.{test,spec}.{ts,tsx}",
-      "src/test/**/*.{ts,tsx}",
-      "vitest.config.ts",
-    ],
+    files: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**/*.{ts,tsx}", "vitest.config.ts"],
     rules: {
       "i18next/no-literal-string": "off",
       "@typescript-eslint/consistent-type-imports": "off",

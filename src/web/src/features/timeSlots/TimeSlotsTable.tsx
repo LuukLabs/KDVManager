@@ -7,6 +7,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { usePagination } from "@hooks/usePagination";
 import { type GroupListVM } from "@api/scheduling/models/groupListVM";
 import { useListTimeSlots } from "@api/scheduling/endpoints/time-slots/time-slots";
+import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import DeleteTimeSlotButton from "./DeleteTimeSlotButton";
@@ -86,10 +87,10 @@ const TimeSlotsTable = () => {
     <DataGrid<GroupListVM>
       autoHeight
       pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total ?? 0}
+      rowCount={getTotal(data)}
       loading={isLoading || isFetching}
       columns={columns}
-      rows={data?.value ?? []}
+      rows={data ?? []}
       disableRowSelectionOnClick
       {...muiPagination}
     />

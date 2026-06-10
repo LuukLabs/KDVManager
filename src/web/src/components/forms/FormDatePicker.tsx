@@ -15,10 +15,7 @@ export type FormDatePickerProps<T extends FieldValues> = Omit<
 > & {
   name: Path<T>;
   required?: boolean;
-  rules?: Omit<
-    RegisterOptions,
-    "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
-  >;
+  rules?: Omit<RegisterOptions, "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled">;
   helperText?: string;
   /**
    * Map between the form value (typically a string like "YYYY-MM-DD")

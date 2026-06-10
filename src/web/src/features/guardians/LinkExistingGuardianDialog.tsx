@@ -63,7 +63,7 @@ const useSearchGuardians = (searchTerm: string) => {
   );
 
   return {
-    data: shouldSearch ? (data?.value ?? []) : [],
+    data: shouldSearch ? (data ?? []) : [],
     isLoading: shouldSearch ? isLoading : false,
   };
 };
@@ -197,9 +197,13 @@ export const LinkExistingGuardianDialog = ({
                 </Alert>
               ) : guardians.length > 0 ? (
                 <Box>
-                  <Typography variant="subtitle2" gutterBottom sx={{
-                    color: "text.secondary"
-                  }}>
+                  <Typography
+                    variant="subtitle2"
+                    gutterBottom
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
                     {t("Found {{count}} guardian(s)", { count: guardians.length })}
                   </Typography>
                   <Box
@@ -248,14 +252,20 @@ export const LinkExistingGuardianDialog = ({
                                 {guardian.fullName}
                               </Typography>
                               <Box sx={{ display: "flex", gap: 2, mt: 0.5 }}>
-                                <Typography variant="body2" sx={{
-                                  color: "text.secondary"
-                                }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "text.secondary",
+                                  }}
+                                >
                                   {guardian.email ?? t("No email")}
                                 </Typography>
-                                <Typography variant="body2" sx={{
-                                  color: "text.secondary"
-                                }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "text.secondary",
+                                  }}
+                                >
                                   {guardian.primaryPhoneNumber ?? t("No phone")}
                                 </Typography>
                               </Box>

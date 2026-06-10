@@ -31,6 +31,9 @@ const config: ReturnType<typeof defineConfig> = {
       baseUrl: "/crm",
       override: {
         mutator: mutatorFetch,
+        fetch: {
+          includeHttpResponseReturnType: false,
+        },
         operations: {
           ListChildren: queryPaginated,
           ListGuardians: queryPaginated,
@@ -53,6 +56,9 @@ const config: ReturnType<typeof defineConfig> = {
       baseUrl: "/scheduling",
       override: {
         mutator: mutatorFetch,
+        fetch: {
+          includeHttpResponseReturnType: false,
+        },
         operations: {
           ListGroups: queryPaginated,
           ListTimeSlots: queryPaginated,

@@ -59,7 +59,7 @@ const ScheduleOverviewPage = () => {
   };
 
   const { data, isLoading: isLoadingGroups } = useListGroups();
-  const groups = data?.value ?? [];
+  const groups = data ?? [];
 
   // Daily overview (closure + absences)
   const overviewDate = selectedDate.format("YYYY-MM-DD");
@@ -135,9 +135,12 @@ const ScheduleOverviewPage = () => {
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {selectedDate.locale(i18n.language).format("dddd")}
               </Typography>
-              <Typography variant="body2" sx={{
-                color: "text.secondary"
-              }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
                 {selectedDate.locale(i18n.language).format("MMMM D, YYYY")}
               </Typography>
               {dailyOverview?.isClosed && (
@@ -243,17 +246,22 @@ const ScheduleOverviewPage = () => {
           {!groups || groups.length === 0 ? (
             <Paper sx={{ p: 4, textAlign: "center" }}>
               <GroupsIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-              <Typography variant="h6" gutterBottom sx={{
-                color: "text.secondary"
-              }}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
                 {t("No groups found")}
               </Typography>
               <Typography
                 variant="body2"
                 sx={{
                   color: "text.secondary",
-                  mb: 3
-                }}>
+                  mb: 3,
+                }}
+              >
                 {t("Create groups to start managing schedules")}
               </Typography>
               <Button variant="contained" startIcon={<GroupsIcon />}>

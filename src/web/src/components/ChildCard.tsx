@@ -87,8 +87,9 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                 variant="body2"
                 sx={{
                   color: "text.secondary",
-                  fontSize: "0.8rem"
-                }}>
+                  fontSize: "0.8rem",
+                }}
+              >
                 {t("Loading child details...")}
               </Typography>
             </Box>

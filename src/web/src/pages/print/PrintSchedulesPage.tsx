@@ -38,7 +38,7 @@ const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
 const PrintSchedulesPage = () => {
   const { data: groupsData } = useListGroups();
-  const groups = groupsData?.value ?? [];
+  const groups = groupsData ?? [];
 
   const [filters, setFilters] = useState<Filters>({
     month: dayjs().month() + 1,
@@ -68,17 +68,22 @@ const PrintSchedulesPage = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Paper sx={{ p: 2, mb: 3 }} className="print-controls">
-        <Typography variant="h5" gutterBottom sx={{
-          fontWeight: 600
-        }}>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{
+            fontWeight: 600,
+          }}
+        >
           {t("Print Attendance Schedules")}
         </Typography>
         <Typography
           variant="body2"
           sx={{
             color: "text.secondary",
-            mb: 2
-          }}>
+            mb: 2,
+          }}
+        >
           {t(
             "Generate printable attendance schedules for groups with optional filtering by year, month, and specific groups.",
           )}

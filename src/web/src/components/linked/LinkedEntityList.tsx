@@ -137,8 +137,9 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
                       variant="body2"
                       sx={{
                         color: "text.secondary",
-                        fontSize: { xs: ".7rem", sm: ".75rem" }
-                      }}>
+                        fontSize: { xs: ".7rem", sm: ".75rem" },
+                      }}
+                    >
                       {line}
                     </Typography>
                   ))}

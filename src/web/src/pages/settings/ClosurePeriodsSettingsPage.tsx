@@ -22,8 +22,9 @@ const ClosurePeriodsSettingsPage = () => {
           <Box
             sx={{
               display: "flex",
-              flexGrow: 1
-            }} />
+              flexGrow: 1,
+            }}
+          />
           <Button variant="contained" onClick={onAddClickHandler} startIcon={<AddIcon />}>
             {t("Add Closure Period")}
           </Button>

@@ -77,18 +77,8 @@ export const AddTimeSlotDialog = NiceModal.create(() => {
             autoComplete="off"
             fullWidth
           />
-          <FormTimeField
-            name="startTime"
-            label={t("Start time")}
-            variant="standard"
-            fullWidth
-          />
-          <FormTimeField
-            name="endTime"
-            label={t("End time")}
-            variant="standard"
-            fullWidth
-          />
+          <FormTimeField name="startTime" label={t("Start time")} variant="standard" fullWidth />
+          <FormTimeField name="endTime" label={t("End time")} variant="standard" fullWidth />
         </Form>
       </DialogContent>
       <DialogActions>

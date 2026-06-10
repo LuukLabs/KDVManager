@@ -1,0 +1,132 @@
+# Envoy config for e2e tests: identical routing to envoy.yaml, but JWTs are
+# validated against the local mock-auth OIDC server instead of Auth0, and
+# OpenTelemetry tracing is disabled.
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8001
+
+static_resources:
+  listeners:
+  - name: listener_0
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 8080
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          upgrade_configs:
+          - upgrade_type: websocket
+          route_config:
+            name: kdvmanager_backend_route
+            virtual_hosts:
+            - name: kdvmanager_backend
+              domains:
+              - "*"
+              typed_per_filter_config:
+                envoy.filters.http.cors:
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.CorsPolicy
+                  allow_origin_string_match:
+                  - safe_regex:
+                      regex: ".*"
+                  allow_headers: content-type,authorization
+                  allow_methods: GET, POST, PUT, HEAD, OPTIONS, DELETE
+                  expose_headers: x-Total
+              routes:
+              - name: "crm"
+                match:
+                  prefix: /crm/
+                route:
+                  prefix_rewrite: /
+                  cluster: crm-api
+              - name: "scheduling"
+                match:
+                  prefix: /scheduling/
+                route:
+                  prefix_rewrite: /
+                  cluster: scheduling-api
+          http_filters:
+          - name: envoy.filters.http.cors
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+          - name: envoy.filters.http.jwt_authn
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
+              providers:
+                mock_auth_provider:
+                  issuer: http://localhost:5300/
+                  audiences:
+                  - https://api.kdvmanager.nl/
+                  - https://api.kdvmanager.nl
+                  remote_jwks:
+                    http_uri:
+                      uri: http://mock-auth:5300/.well-known/jwks.json
+                      cluster: mock-auth
+                      timeout: 5s
+                    cache_duration: 300s
+                  from_headers:
+                  - name: Authorization
+                    value_prefix: "Bearer "
+                  forward: true
+                  payload_in_metadata: jwt_payload
+              rules:
+              - match:
+                  prefix: /crm/openapi/
+              - match:
+                  prefix: /scheduling/swagger/
+              - match:
+                  prefix: /crm/
+                requires:
+                  provider_name: mock_auth_provider
+              - match:
+                  prefix: /scheduling/
+                requires:
+                  provider_name: mock_auth_provider
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+  clusters:
+  - name: mock-auth
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: mock-auth
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: mock-auth
+                port_value: 5300
+  - name: crm-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: crm-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: crm-api
+                port_value: 80
+  - name: scheduling-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: scheduling-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: scheduling-api
+                port_value: 80

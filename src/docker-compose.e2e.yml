@@ -1,0 +1,86 @@
+# E2E test overrides. Use together with the base compose file (NOT the dev override):
+#
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build \
+#     envoy mock-auth web crm-api crm-migrator scheduling-api scheduling-migrator
+#
+# Differences from dev:
+#  - mock-auth replaces Auth0 (no external dependency, no secrets, auto-login)
+#  - Envoy uses envoy.e2e.yaml (JWT validation against mock-auth)
+#  - web is built against mock-auth and served with a CSP-free nginx config
+#  - postgres has no volume, so every run starts from a clean database
+services:
+  mock-auth:
+    image: node:24-alpine
+    command: ["node", "/mock-auth/server.mjs"]
+    volumes:
+      - ../tests/e2e/mock-auth/server.mjs:/mock-auth/server.mjs:ro
+    ports:
+      - "5300:5300"
+
+  envoy:
+    volumes:
+      - ./Services/ApiGateways/Envoy/config/envoy.e2e.yaml:/etc/envoy/envoy.yaml:ro
+    ports:
+      - "5200:8080"
+      - "8001:8001"
+    depends_on:
+      - mock-auth
+
+  postgres:
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=sammy
+      - POSTGRES_PASSWORD=shark
+
+  rabbitmq:
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_APP_AUTH0_DOMAIN: http://localhost:5300
+        VITE_APP_AUTH0_CLIENT_ID: e2e-client
+        VITE_API_BASE_URL: //localhost:5200
+    volumes:
+      - ./web/nginx/nginx.e2e.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "9090:80"
+
+  crm-migrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
+
+  crm-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - Auth0__Authority=http://mock-auth:5300
+      - Auth0__Audience=https://api.kdvmanager.nl/
+    depends_on:
+      - postgres
+      - rabbitmq
+      - mock-auth
+
+  scheduling-migrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
+
+  scheduling-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - Auth0__Authority=http://mock-auth:5300
+      - Auth0__Audience=https://api.kdvmanager.nl/
+    depends_on:
+      - postgres
+      - rabbitmq
+      - mock-auth

@@ -73,13 +73,15 @@ public static class ConfigureServices
             });
         });
 
-        string domain = $"https://{configuration["Auth0:Domain"]}/";
+        // Auth0:Authority overrides the Auth0:Domain-derived authority (lets e2e tests point at a local mock issuer)
+        string authority = configuration["Auth0:Authority"] ?? $"https://{configuration["Auth0:Domain"]}/";
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
-                        options.Authority = domain;
+                        options.Authority = authority;
                         options.Audience = configuration["Auth0:Audience"];
+                        options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
                     });
         services.AddAuthorization();
 

@@ -59,8 +59,9 @@ const DevErrorPanel = ({ error }: DevErrorPanelProps) => {
           variant="body2"
           sx={{
             color: "error.main",
-            fontWeight: 600
-          }}>
+            fontWeight: 600,
+          }}
+        >
           {t("devError.title", "Dev Error")}
         </Typography>
         <Divider flexItem orientation="vertical" />

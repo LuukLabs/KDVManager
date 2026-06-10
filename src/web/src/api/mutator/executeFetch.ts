@@ -1,27 +1,22 @@
-import { type RequestConfig } from "./requestConfig";
-import { determineUrl } from "./determineUrl";
 import { getAuthToken } from "@lib/auth/auth";
 import { buildApiError } from "../errors/classify";
+import { BASE_URL } from "../constants";
 
-export const executeFetch = async <T>(requestConfig: RequestConfig): Promise<T> => {
-  const { data, method, params, url, headers, signal } = requestConfig;
+/**
+ * Custom fetch mutator for orval (v8 calling convention: `(url, requestInit)`).
+ * Prepends the API base URL, injects the auth token, parses the body and
+ * normalises errors via {@link buildApiError}. Returns the parsed response body
+ * directly (orval is configured with `includeHttpResponseReturnType: false`).
+ */
+export const executeFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
   const token = await getAuthToken();
 
-  const fetchHeaders = {
-    ...headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
-  const fetchUrl = determineUrl(url, params);
+  const headers = new Headers(options.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
 
   let response: Response;
   try {
-    response = await fetch(fetchUrl, {
-      headers: fetchHeaders,
-      signal,
-      method,
-      ...(data ? { body: JSON.stringify(data) } : {}),
-    });
+    response = await fetch(`${BASE_URL}${url}`, { ...options, headers });
   } catch (networkError) {
     throw buildApiError({ cause: networkError });
   }
@@ -31,7 +26,7 @@ export const executeFetch = async <T>(requestConfig: RequestConfig): Promise<T> 
   }
 
   const contentType = response.headers.get("content-type") ?? "";
-  let parsed: any = undefined;
+  let parsed: unknown = undefined;
   let rawBody: string | undefined;
   if (contentType.includes("application/json")) {
     try {

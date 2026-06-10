@@ -35,9 +35,12 @@ export const SettingsCard: React.FC<SettingsCardProps> = ({
               <Typography variant="h5" component="div">
                 {title}
               </Typography>
-              <Typography variant="body2" sx={{
-                color: "text.secondary"
-              }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
                 {description}
               </Typography>
             </Box>

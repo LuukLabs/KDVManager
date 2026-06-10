@@ -91,8 +91,9 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             variant="body2"
             sx={{
               color: "text.secondary",
-              ml: 2
-            }}>
+              ml: 2,
+            }}
+          >
             {t("Loading summary...")}
           </Typography>
         </CardContent>
@@ -153,8 +154,9 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             variant="body2"
             sx={{
               color: "text.secondary",
-              textAlign: "center"
-            }}>
+              textAlign: "center",
+            }}
+          >
             {t("No children scheduled for this day")}
           </Typography>
         </CardContent>
@@ -348,8 +350,9 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                 variant="subtitle2"
                 sx={{
                   color: "text.secondary",
-                  mb: 1
-                }}>
+                  mb: 1,
+                }}
+              >
                 {t("Overview")}
               </Typography>
               <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
@@ -372,8 +375,9 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
               variant="subtitle2"
               sx={{
                 color: "text.secondary",
-                mb: 1
-              }}>
+                mb: 1,
+              }}
+            >
               {t("Age Group Distribution")}
             </Typography>
 

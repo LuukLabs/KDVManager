@@ -66,8 +66,9 @@ const RouterBreadcrumbs: React.FC = () => {
               key={c.pathname}
               sx={{
                 color: "text.primary",
-                fontWeight: 500
-              }}>
+                fontWeight: 500,
+              }}
+            >
               {c.element}
             </Typography>
           ) : (

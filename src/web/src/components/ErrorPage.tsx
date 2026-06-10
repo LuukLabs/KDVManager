@@ -70,13 +70,12 @@ export default function ErrorPage() {
           variant="body1"
           sx={{
             color: "text.secondary",
-            mb: 2
-          }}>
+            mb: 2,
+          }}
+        >
           {message}
         </Typography>
-        {import.meta.env.DEV && error instanceof Error && (
-          <DevErrorPanel error={error} />
-        )}
+        {import.meta.env.DEV && error instanceof Error && <DevErrorPanel error={error} />}
       </Box>
       <Stack direction="row" spacing={2}>
         <Button

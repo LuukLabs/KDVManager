@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
+import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
 import { DeleteGroupButton } from "./DeleteGroupButton";
@@ -45,10 +46,10 @@ const GroupsTable = () => {
     <DataGrid<GroupListVM>
       autoHeight
       pageSizeOptions={[5, 10, 20]}
-      rowCount={data?.meta.total ?? 0}
+      rowCount={getTotal(data)}
       loading={isLoading || isFetching}
       columns={columns}
-      rows={data?.value ?? []}
+      rows={data ?? []}
       disableRowSelectionOnClick
       {...muiPagination}
     />

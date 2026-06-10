@@ -9,6 +9,7 @@ import {
 } from "@api/crm/models/childSchedulingStatus";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useListChildren } from "@api/crm/endpoints/children/children";
+import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { useChildrenListState } from "@hooks/useChildrenListState";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
@@ -144,12 +145,12 @@ export const ChildrenTable = () => {
 
     const paginationModel = muiPagination.paginationModel;
     const pageSize = paginationModel?.pageSize ?? 10;
-    const totalPages = Math.ceil((data?.meta.total ?? 0) / pageSize);
+    const totalPages = Math.ceil(getTotal(data) / pageSize);
     const currentPage = (paginationModel?.page ?? 0) + 1;
 
     return (
       <Stack spacing={2} sx={{ width: "100%" }}>
-        {data?.value?.map((child) => {
+        {data?.map((child) => {
           const statusConfig = getStatusConfig(
             child.schedulingStatus ?? ChildSchedulingStatus.NoPlanning,
             child.statusRelevantDate,
@@ -174,14 +175,21 @@ export const ChildrenTable = () => {
                     sx={{ flexShrink: 0 }}
                   />
                 </Stack>
-                <Typography variant="body2" gutterBottom sx={{
-                  color: "text.secondary"
-                }}>
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  sx={{
+                    color: "text.secondary",
+                  }}
+                >
                   {t("table.header.childNumber")}: {child.childNumber}
                 </Typography>
-                <Typography variant="body2" sx={{
-                  color: "text.secondary"
-                }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                  }}
+                >
                   {t("table.header.dateOfBirth")}:{" "}
                   {/* eslint-disable-next-line i18next/no-literal-string */}
                   {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
@@ -222,10 +230,10 @@ export const ChildrenTable = () => {
       <DataGrid<ChildListVM>
         autoHeight
         pageSizeOptions={[5, 10, 20]}
-        rowCount={data?.meta.total ?? 0}
+        rowCount={getTotal(data)}
         loading={isLoading || isFetching}
         columns={columns}
-        rows={data?.value ?? []}
+        rows={data ?? []}
         disableRowSelectionOnClick
         {...muiPagination}
       />

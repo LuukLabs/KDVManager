@@ -67,13 +67,13 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     const { data: timeSlotsData } = useListTimeSlots(undefined, {});
 
     // Map API data to UI format
-    const groups = (groupsData?.value ?? []).map((g) => ({
+    const groups = (groupsData ?? []).map((g) => ({
       id: g.id,
       name: g.name,
       color: "#4ECDC4", // fallback color, could be improved if API provides
       icon: "👥", // fallback icon, could be improved if API provides
     }));
-    const timeSlots = (timeSlotsData?.value ?? []).map((t) => ({
+    const timeSlots = (timeSlotsData ?? []).map((t) => ({
       id: t.id,
       name: t.name,
       time: `${t.startTime} - ${t.endTime}`,
@@ -320,9 +320,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
                         {slot.name}
                       </Typography>
-                      <Typography variant="caption" sx={{
-                        color: "text.secondary"
-                      }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "text.secondary",
+                        }}
+                      >
                         {slot.time}
                       </Typography>
                     </Box>
@@ -461,9 +464,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                   {t("Rule")} {index + 1}
                 </Typography>
-                <Typography variant="caption" sx={{
-                  color: "text.secondary"
-                }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                  }}
+                >
                   {isComplete ? t("Complete") : t("Incomplete")}
                 </Typography>
               </Box>
@@ -580,8 +586,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                         variant="body2"
                         sx={{
                           color: "warning.dark",
-                          fontWeight: 500
-                        }}>
+                          fontWeight: 500,
+                        }}
+                      >
                         {!rule?.day && t("Please select a day")}
                         {!rule?.timeSlotId && rule?.day && t("Please select a time slot")}
                         {!rule?.groupId &&
@@ -743,9 +750,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                   <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem", mb: 0.5 }}>
                     {t("Schedule Period")}
                   </Typography>
-                  <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                  }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
                     {t("Select the start and end dates for this schedule")}
                   </Typography>
                 </Box>
@@ -802,9 +812,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem", mb: 0.5 }}>
                       {t("Schedule Rules")}
                     </Typography>
-                    <Typography variant="body2" sx={{
-                      color: "text.secondary"
-                    }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                      }}
+                    >
                       {getTotalRules() === 0
                         ? t("Add rules to define weekly activities")
                         : t(`${getTotalRules()} rule(s) created`)}
@@ -876,8 +889,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                         color: "text.secondary",
                         mb: 4,
                         maxWidth: 400,
-                        mx: "auto"
-                      }}>
+                        mx: "auto",
+                      }}
+                    >
                       {t(
                         "Get started by creating your first schedule rule. Define days, time slots, and groups for your activities.",
                       )}

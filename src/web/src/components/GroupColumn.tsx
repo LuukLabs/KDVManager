@@ -86,8 +86,9 @@ const GroupColumn = ({
           variant="body2"
           sx={{
             color: "text.secondary",
-            fontSize: { xs: "0.8rem", md: "0.875rem" }
-          }}>
+            fontSize: { xs: "0.8rem", md: "0.875rem" },
+          }}
+        >
           {selectedDate.format("dddd, MMMM D")}
         </Typography>
       </Box>
@@ -123,9 +124,12 @@ const GroupColumn = ({
         >
           <Box sx={{ textAlign: "center" }}>
             <CircularProgress size={32} sx={{ mb: 2 }} />
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
               {t("Loading schedules...")}
             </Typography>
           </Box>
@@ -177,16 +181,18 @@ const GroupColumn = ({
                   sx={{
                     color: "text.secondary",
                     mb: 1,
-                    fontWeight: 500
-                  }}>
+                    fontWeight: 500,
+                  }}
+                >
                   {t("No schedules for this date")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{
                     color: "text.secondary",
-                    fontSize: { xs: "0.8rem", md: "0.875rem" }
-                  }}>
+                    fontSize: { xs: "0.8rem", md: "0.875rem" },
+                  }}
+                >
                   {t("Children will appear here when scheduled")}
                 </Typography>
               </Box>

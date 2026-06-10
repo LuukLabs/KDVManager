@@ -44,13 +44,16 @@ const useGetNewsletterRecipients = (
 ) => {
   return useQuery<NewsletterRecipientsResponse>({
     queryKey: ["/crm/v1/children/newsletter-recipients", params],
-    queryFn: ({ signal }) =>
-      executeFetch<NewsletterRecipientsResponse>({
-        url: `/crm/v1/children/newsletter-recipients`,
-        method: "GET",
-        params,
-        signal,
-      }),
+    queryFn: ({ signal }) => {
+      const search = new URLSearchParams({
+        year: String(params.year),
+        month: String(params.month),
+      });
+      return executeFetch<NewsletterRecipientsResponse>(
+        `/crm/v1/children/newsletter-recipients?${search.toString()}`,
+        { method: "GET", signal },
+      );
+    },
     staleTime: options?.query?.staleTime,
     enabled: options?.query?.enabled,
   });
@@ -104,8 +107,9 @@ const NewsletterPage = () => {
           variant="body2"
           sx={{
             color: "text.secondary",
-            mb: 2
-          }}>
+            mb: 2,
+          }}
+        >
           {t(
             "Collect email addresses of guardians linked to active children for a specific month to send a newsletter.",
           )}
@@ -190,8 +194,9 @@ const NewsletterPage = () => {
             variant="body2"
             sx={{
               color: "text.secondary",
-              mb: 2
-            }}>
+              mb: 2,
+            }}
+          >
             {t("Generated on")}: {dayjs(data.generatedAt).format("DD-MM-YYYY HH:mm")}
           </Typography>
 
@@ -199,8 +204,9 @@ const NewsletterPage = () => {
             <Typography
               sx={{
                 color: "text.secondary",
-                py: 2
-              }}>
+                py: 2,
+              }}
+            >
               {t("No email addresses found for this period.")}
             </Typography>
           ) : (

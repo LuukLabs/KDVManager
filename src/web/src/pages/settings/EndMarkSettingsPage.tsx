@@ -13,14 +13,18 @@ const EndMarkSettingsPage = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: 3
-        }}>
+          gap: 3,
+        }}
+      >
         <Typography variant="h4" component="h1">
           {t("EndMark Automation Settings")}
         </Typography>
-        <Typography variant="body1" sx={{
-          color: "text.secondary"
-        }}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.secondary",
+          }}
+        >
           {t("Configure automatic EndMark creation for children based on their birth dates.")}
         </Typography>
 

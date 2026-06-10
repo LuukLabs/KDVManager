@@ -62,8 +62,9 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
       sx={{
         display: "flex",
         justifyContent: "center",
-        p: 2
-      }}>
+        p: 2,
+      }}
+    >
       <CircularProgress size={28} />
     </Box>
   ) : (

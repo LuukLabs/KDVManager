@@ -15,10 +15,7 @@ export type FormTimeFieldProps<T extends FieldValues> = Omit<
 > & {
   name: Path<T>;
   required?: boolean;
-  rules?: Omit<
-    RegisterOptions,
-    "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
-  >;
+  rules?: Omit<RegisterOptions, "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled">;
   /** Format used for the displayed input. Default: "HH:mm". */
   displayFormat?: string;
   /** Format used to store the value in the form state. Default: "HH:mm:ss". */
@@ -69,8 +66,7 @@ export const FormTimeField = <T extends FieldValues>({
                 ...existingTextField,
                 error: !!fieldState.error,
                 helperText:
-                  fieldState.error?.message ??
-                  (existingTextField.helperText as string | undefined),
+                  fieldState.error?.message ?? (existingTextField.helperText as string | undefined),
                 required,
                 onBlur: field.onBlur,
               },

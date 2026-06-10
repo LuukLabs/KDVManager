@@ -75,9 +75,12 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
         sx={{ mb: 2, alignItems: { xs: "stretch", sm: "center" }, justifyContent: "space-between" }}
       >
         <Box sx={{ flex: 1 }}>
-          <Typography variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+            }}
+          >
             {t("Total future absences")}:{" "}
             <Box component="span" sx={{ fontWeight: 600 }}>
               {totalFuture}
@@ -114,8 +117,9 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
           variant="body2"
           sx={{
             color: "text.secondary",
-            py: 2
-          }}>
+            py: 2,
+          }}
+        >
           {view === "past" ? t("No past absences recorded") : t("No future absences recorded")}
         </Typography>
       )}
@@ -173,8 +177,9 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
                                 variant="caption"
                                 sx={{
                                   color: "text.secondary",
-                                  lineHeight: 1.3
-                                }}>
+                                  lineHeight: 1.3,
+                                }}
+                              >
                                 {absence.reason}
                               </Typography>
                             )}

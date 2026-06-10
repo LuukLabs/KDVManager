@@ -62,10 +62,7 @@ export const GuardianForm = ({
     },
   });
 
-  const {
-    control,
-    reset,
-  } = formContext;
+  const { control, reset } = formContext;
 
   const {
     fields: phoneFields,
@@ -241,9 +238,12 @@ export const GuardianForm = ({
                   </Button>
                 )}
                 {phoneFields.length >= 10 && (
-                  <Typography variant="caption" sx={{
-                    color: "text.secondary"
-                  }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
                     {t("Maximum phone numbers reached")}
                   </Typography>
                 )}

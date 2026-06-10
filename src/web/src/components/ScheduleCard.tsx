@@ -98,9 +98,12 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
             <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom>
               {t("Schedule Period")}
             </Typography>
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
               {getDateRangeDisplay()}
             </Typography>
           </Box>
@@ -182,9 +185,12 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
                 )}
               </>
             ) : (
-              <Typography variant="body2" sx={{
-                color: "text.secondary"
-              }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
                 {t("No schedule rules defined")}
               </Typography>
             )}

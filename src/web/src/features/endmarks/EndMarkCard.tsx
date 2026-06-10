@@ -60,9 +60,13 @@ export const EndMarkCard: React.FC<EndMarkCardProps> = ({ mark, childId }) => {
             {date ? date.format("YYYY-MM-DD") : t("Unknown date")}
           </Typography>
           {mark.reason && (
-            <Typography variant="caption" noWrap sx={{
-              color: "text.secondary"
-            }}>
+            <Typography
+              variant="caption"
+              noWrap
+              sx={{
+                color: "text.secondary",
+              }}
+            >
               {mark.reason}
             </Typography>
           )}

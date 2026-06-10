@@ -91,15 +91,20 @@ const GuardiansPage = () => {
           }}
         >
           <Box sx={{ flexGrow: 1 }}>
-            <Typography id="guardians-heading" variant="h5" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+            <Typography
+              id="guardians-heading"
+              variant="h5"
+              sx={{ fontWeight: 600, lineHeight: 1.2 }}
+            >
               {t("Guardians")}
             </Typography>
             <Typography
               variant="body2"
               sx={{
                 color: "text.secondary",
-                mt: 0.5
-              }}>
+                mt: 0.5,
+              }}
+            >
               {t("Manage and explore the registered guardian records.")}
             </Typography>
           </Box>

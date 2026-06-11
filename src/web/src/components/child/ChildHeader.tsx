@@ -90,14 +90,14 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
   const getStatusColor = () => {
     switch (schedulingStatus) {
       case ChildSchedulingStatus.Active:
-        return alpha("#4caf50", 0.3);
+        return alpha(theme.palette.success.light, 0.3);
       case ChildSchedulingStatus.Upcoming:
-        return alpha("#2196f3", 0.3);
+        return alpha(theme.palette.info.light, 0.3);
       case ChildSchedulingStatus.Past:
-        return alpha("#9e9e9e", 0.3);
+        return alpha(theme.palette.grey[500], 0.3);
       case ChildSchedulingStatus.NoPlanning:
       default:
-        return alpha("#ff9800", 0.3);
+        return alpha(theme.palette.warning.light, 0.3);
     }
   };
 

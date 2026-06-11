@@ -197,7 +197,7 @@ const ScheduleOverviewPage = () => {
                   mb: 2,
                 }}
               >
-                <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                <Typography variant="h5" component="h1">
                   {t("Schedule Overview")}
                 </Typography>
                 <Button

@@ -76,6 +76,7 @@ export const EndMarkCard: React.FC<EndMarkCardProps> = ({ mark, childId }) => {
             <span>
               <IconButton
                 size="small"
+                aria-label={t("Delete") as string}
                 onClick={() => del.mutate({ id: mark.id! })}
                 disabled={del.status === "pending"}
               >

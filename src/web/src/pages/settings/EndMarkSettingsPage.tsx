@@ -1,35 +1,23 @@
 import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import { useTranslation } from "react-i18next";
 import { EndMarkSettingsCard } from "../../features/settings/EndMarkSettingsCard";
+import { ListPageHeader } from "@components/layout/ListPageHeader";
 
 const EndMarkSettingsPage = () => {
   const { t } = useTranslation();
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-        }}
-      >
-        <Typography variant="h4" component="h1">
-          {t("EndMark Automation Settings")}
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{
-            color: "text.secondary",
-          }}
-        >
-          {t("Configure automatic EndMark creation for children based on their birth dates.")}
-        </Typography>
-
+    <Container maxWidth="lg" disableGutters>
+      <Stack spacing={2} sx={{ pb: 2 }}>
+        <ListPageHeader
+          title={t("EndMark Automation Settings")}
+          description={t(
+            "Configure automatic EndMark creation for children based on their birth dates.",
+          )}
+        />
         <EndMarkSettingsCard />
-      </Box>
+      </Stack>
     </Container>
   );
 };

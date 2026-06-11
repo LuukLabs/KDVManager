@@ -10,6 +10,7 @@ import { useListGuardians } from "@api/crm/endpoints/guardians/guardians";
 import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GuardianListVM } from "@api/crm/models/guardianListVM";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 
 export const GuardiansTable = () => {
   const { t } = useTranslation();
@@ -56,13 +57,25 @@ export const GuardiansTable = () => {
         field: "id",
         headerName: t("table.header.actions"),
         sortable: false,
+        filterable: false,
         disableColumnMenu: true,
         disableReorder: true,
+        width: 120,
+        align: "center",
+        headerAlign: "center",
         renderCell: (params: GridRenderCellParams<any, string>) => (
-          <>
-            <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
             <ViewGuardianButton id={params.value!} />
-          </>
+            <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
+          </Box>
         ),
       },
     ],

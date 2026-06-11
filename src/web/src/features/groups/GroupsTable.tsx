@@ -6,6 +6,7 @@ import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
 import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
 import { keepPreviousData } from "@tanstack/react-query";
 import { DeleteGroupButton } from "./DeleteGroupButton";
 import { usePagination } from "@hooks/usePagination";
@@ -33,9 +34,24 @@ const GroupsTable = () => {
         field: "id",
         headerName: t("table.header.actions"),
         sortable: false,
+        filterable: false,
         disableColumnMenu: true,
+        disableReorder: true,
+        width: 120,
+        align: "center" as const,
+        headerAlign: "center" as const,
         renderCell: (params: GridRenderCellParams<any, string>) => (
-          <DeleteGroupButton id={params.value!} displayName={params.row.name} />
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <DeleteGroupButton id={params.value!} displayName={params.row.name} />
+          </Box>
         ),
       },
     ],

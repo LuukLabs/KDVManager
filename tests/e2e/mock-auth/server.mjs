@@ -228,8 +228,19 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === "/v2/logout" || url.pathname === "/oidc/logout") {
     const returnTo = url.searchParams.get("returnTo") ?? url.searchParams.get("post_logout_redirect_uri");
     if (returnTo && isAllowedRedirect(returnTo)) {
-      res.writeHead(302, { Location: returnTo });
-      return res.end();
+      try {
+        const issuerOrigin = new URL(ISSUER).origin;
+        const normalizedReturnTo = new URL(returnTo, ISSUER);
+        if (
+          (normalizedReturnTo.protocol === "http:" || normalizedReturnTo.protocol === "https:") &&
+          normalizedReturnTo.origin === issuerOrigin
+        ) {
+          res.writeHead(302, { Location: normalizedReturnTo.toString() });
+          return res.end();
+        }
+      } catch {
+        // Ignore invalid URLs and fall through to non-redirect response.
+      }
     }
     res.writeHead(200);
     return res.end("Logged out");

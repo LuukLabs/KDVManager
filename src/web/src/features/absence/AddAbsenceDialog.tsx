@@ -96,6 +96,8 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
           message: propertyError.title,
         });
       });
+    } else {
+      enqueueSnackbar(t("Failed to add absence"), { variant: "error" });
     }
   };
 

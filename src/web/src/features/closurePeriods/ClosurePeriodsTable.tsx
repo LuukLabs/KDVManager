@@ -1,6 +1,7 @@
 // GridColDef type intentionally not imported here because columns are declared inline in the component
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
+import Box from "@mui/material/Box";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useListClosurePeriods } from "@api/scheduling/endpoints/closure-periods/closure-periods";
@@ -42,12 +43,27 @@ export const ClosurePeriodsTable = () => {
       },
       {
         field: "actions",
-        headerName: t("table.header.delete"),
-        flex: 0.5,
+        headerName: t("table.header.actions"),
+        width: 120,
+        align: "center" as const,
+        headerAlign: "center" as const,
         sortable: false,
+        filterable: false,
         disableColumnMenu: true,
         disableReorder: true,
-        renderCell: (params: any) => <DeleteClosurePeriodButton id={params.row.id} />,
+        renderCell: (params: any) => (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <DeleteClosurePeriodButton id={params.row.id} />
+          </Box>
+        ),
       },
     ],
     [t],

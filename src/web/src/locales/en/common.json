@@ -1,7 +1,9 @@
 {
   "Add": "Add",
+  "Back": "Back",
   "cancel": "Cancel",
   "Cancel": "Cancel",
+  "Clear search": "Clear search",
   "delete": "Delete",
   "delete_aria-label": "delete",
   "deleting": "Deleting...",

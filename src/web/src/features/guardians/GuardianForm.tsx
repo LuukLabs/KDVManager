@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Box,
-  Grid,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Alert,
-  IconButton,
-  Stack,
-  Divider,
-  Paper,
-} from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
+import { Box, Grid, Button, Alert, IconButton, Stack, Typography, alpha } from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
+import ContactPhoneOutlinedIcon from "@mui/icons-material/ContactPhoneOutlined";
+import PhoneIphoneRoundedIcon from "@mui/icons-material/PhoneIphoneRounded";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Form, FormDatePicker, FormSelect, FormTextField } from "@components/forms";
+import {
+  Form,
+  FormActions,
+  FormDatePicker,
+  FormSection,
+  FormSelect,
+  FormTextField,
+} from "@components/forms";
+
+const MAX_PHONE_NUMBERS = 10;
 
 type PhoneNumber = {
   id?: string;
@@ -34,20 +35,12 @@ type GuardianFormData = {
 };
 
 type GuardianFormProps = {
-  guardianId?: string;
   initialData?: GuardianFormData;
   onSubmit: (data: GuardianFormData) => Promise<void>;
   isLoading?: boolean;
-  title: string;
 };
 
-export const GuardianForm = ({
-  guardianId,
-  initialData,
-  onSubmit,
-  isLoading = false,
-  title,
-}: GuardianFormProps) => {
+export const GuardianForm = ({ initialData, onSubmit, isLoading = false }: GuardianFormProps) => {
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -95,29 +88,31 @@ export const GuardianForm = ({
   };
 
   const addPhone = () => {
-    if (phoneFields.length >= 10) return;
+    if (phoneFields.length >= MAX_PHONE_NUMBERS) return;
     appendPhone({ number: "", type: "Mobile" });
   };
-  const removePhoneNumber = (index: number) => removePhone(index);
+
+  const phoneTypeOptions = [
+    { id: "Mobile", label: t("Mobile") },
+    { id: "Home", label: t("Home") },
+    { id: "Work", label: t("Work") },
+    { id: "Other", label: t("Other") },
+  ];
 
   return (
     <Form formContext={formContext} onSubmit={handleFormSubmit}>
-      <Typography variant="h4" gutterBottom>
-        {t(title)}
-      </Typography>
-      {/* Error Alert */}
-      {submitError && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setSubmitError(null)}>
-          {submitError}
-        </Alert>
-      )}
-      {/* Personal Information */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            {t("Personal Information")}
-          </Typography>
-          <Grid container spacing={2}>
+      <Stack spacing={3}>
+        {submitError && (
+          <Alert severity="error" onClose={() => setSubmitError(null)}>
+            {submitError}
+          </Alert>
+        )}
+        <FormSection
+          title={t("Personal Information")}
+          description={t("Name and date of birth.")}
+          icon={<PersonOutlineRoundedIcon />}
+        >
+          <Grid container spacing={2.5}>
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormTextField name="givenName" label={t("Given name")} required fullWidth />
             </Grid>
@@ -135,68 +130,64 @@ export const GuardianForm = ({
               />
             </Grid>
           </Grid>
-        </CardContent>
-      </Card>
-      {/* Contact Information */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            {t("Contact Information")}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
-              <FormTextField
-                name="email"
-                label={t("Email")}
-                fullWidth
-                type="email"
-                rules={{
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: t("Invalid email address"),
-                  },
-                }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <Divider sx={{ my: 1 }} />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
+        </FormSection>
+        <FormSection
+          title={t("Contact Information")}
+          description={t("How this guardian can be reached.")}
+          icon={<ContactPhoneOutlinedIcon />}
+        >
+          <Stack spacing={2.5}>
+            <FormTextField
+              name="email"
+              label={t("Email")}
+              fullWidth
+              type="email"
+              rules={{
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t("Invalid email address"),
+                },
+              }}
+            />
+            {phoneFields.length === 0 ? (
+              <Box
+                sx={(theme) => ({
+                  p: 3,
+                  textAlign: "center",
+                  borderRadius: 2,
+                  border: `1px dashed ${theme.palette.divider}`,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                })}
+              >
+                <PhoneIphoneRoundedIcon sx={{ color: "text.disabled", mb: 0.5 }} />
+                <Typography variant="body2" sx={{ color: "text.secondary", mb: 1.5 }}>
+                  {t("No phone numbers added")}
+                </Typography>
+                <Button
+                  startIcon={<AddRoundedIcon />}
+                  variant="outlined"
+                  size="small"
+                  onClick={addPhone}
+                >
+                  {t("Add Phone")}
+                </Button>
+              </Box>
+            ) : (
               <Stack spacing={2}>
-                {phoneFields.length === 0 && (
-                  <Paper variant="outlined" sx={{ p: 2, textAlign: "center" }}>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      {t("No phone numbers added")}
-                    </Typography>
-                    <Button
-                      startIcon={<Add />}
-                      size="small"
-                      onClick={addPhone}
-                      disabled={phoneFields.length >= 10}
-                    >
-                      {t("Add Phone")}
-                    </Button>
-                  </Paper>
-                )}
                 {phoneFields.map((field, index) => (
-                  <Paper
+                  <Stack
                     key={field.id}
-                    variant="outlined"
-                    sx={{ p: 2, position: "relative", borderRadius: 2 }}
+                    direction="row"
+                    spacing={1.5}
+                    sx={{ alignItems: "flex-start" }}
                   >
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1.5} sx={{ flexGrow: 1 }}>
                       <Grid size={{ xs: 12, sm: 4 }}>
                         <FormSelect
                           name={`phoneNumbers.${index}.type`}
                           label={t("Type")}
-                          options={[
-                            { id: "Mobile", label: t("Mobile") },
-                            { id: "Home", label: t("Home") },
-                            { id: "Work", label: t("Work") },
-                            { id: "Other", label: t("Other") },
-                          ]}
+                          options={phoneTypeOptions}
                           fullWidth
-                          size="small"
                         />
                       </Grid>
                       <Grid size={{ xs: 12, sm: 8 }}>
@@ -210,57 +201,41 @@ export const GuardianForm = ({
                           }}
                           fullWidth
                           label={t("Phone Number")}
-                          placeholder={t("+31612345678")}
-                          size="small"
+                          placeholder="+31612345678"
                         />
                       </Grid>
                     </Grid>
                     <IconButton
                       color="error"
-                      onClick={() => removePhoneNumber(index)}
-                      size="small"
+                      onClick={() => removePhone(index)}
                       aria-label={t("Remove phone number")}
-                      sx={{ position: "absolute", top: 4, right: 4 }}
+                      sx={{ mt: 1 }}
                     >
-                      <Remove fontSize="small" />
+                      <DeleteOutlineRoundedIcon fontSize="small" />
                     </IconButton>
-                  </Paper>
+                  </Stack>
                 ))}
-                {phoneFields.length > 0 && phoneFields.length < 10 && (
+                {phoneFields.length < MAX_PHONE_NUMBERS ? (
                   <Button
-                    startIcon={<Add />}
-                    variant="outlined"
+                    startIcon={<AddRoundedIcon />}
+                    variant="text"
                     size="small"
                     onClick={addPhone}
                     sx={{ alignSelf: "flex-start" }}
                   >
                     {t("Add Phone")}
                   </Button>
-                )}
-                {phoneFields.length >= 10 && (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "text.secondary",
-                    }}
-                  >
+                ) : (
+                  <Typography variant="caption" sx={{ color: "text.secondary" }}>
                     {t("Maximum phone numbers reached")}
                   </Typography>
                 )}
               </Stack>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-      {/* Actions */}
-      <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
-        <Button variant="outlined" onClick={() => navigate("/guardians")} disabled={isLoading}>
-          {t("Cancel")}
-        </Button>
-        <Button type="submit" variant="contained" disabled={isLoading}>
-          {isLoading ? t("Saving...") : guardianId ? t("Update Guardian") : t("Create Guardian")}
-        </Button>
-      </Box>
+            )}
+          </Stack>
+        </FormSection>
+        <FormActions onCancel={() => navigate("/guardians")} isSubmitting={isLoading} />
+      </Stack>
     </Form>
   );
 };

@@ -1,5 +1,7 @@
-import { Container } from "@mui/material";
-import { GuardianForm } from "../../features/guardians/GuardianForm";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import { GuardianForm } from "@features/guardians/GuardianForm";
+import { FormPageHeader } from "@components/layout/FormPageHeader";
 import { useTranslation } from "react-i18next";
 import { useAddGuardian } from "@api/crm/endpoints/guardians/guardians";
 import { type PhoneNumberType } from "@api/crm/models/phoneNumberType";
@@ -33,12 +35,15 @@ const NewGuardianPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <GuardianForm
-        title={t("Add New Guardian")}
-        onSubmit={handleSubmit}
-        isLoading={createGuardian.isPending}
-      />
+    <Container maxWidth="md" disableGutters>
+      <Stack spacing={3} sx={{ pb: 4 }}>
+        <FormPageHeader
+          title={t("New Guardian")}
+          subtitle={t("Add a new guardian and their contact details.")}
+          backTo="/guardians"
+        />
+        <GuardianForm onSubmit={handleSubmit} isLoading={createGuardian.isPending} />
+      </Stack>
     </Container>
   );
 };

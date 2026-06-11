@@ -49,12 +49,16 @@ export const AddGroupDialog = NiceModal.create(() => {
   };
 
   const onMutateError = (error: UnprocessableEntityResponse) => {
-    error.errors.forEach((propertyError) => {
-      setError(propertyError.property as any, {
-        type: "server",
-        message: propertyError.title,
+    if (Array.isArray(error?.errors)) {
+      error.errors.forEach((propertyError) => {
+        setError(propertyError.property as any, {
+          type: "server",
+          message: propertyError.title,
+        });
       });
-    });
+    } else {
+      enqueueSnackbar(t("Failed to add group"), { variant: "error" });
+    }
   };
 
   return (

@@ -23,6 +23,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
+import { useSnackbar } from "notistack";
 import { Search } from "@mui/icons-material";
 import { FormErrorAlert } from "@components/forms";
 import { useLinkGuardianToChild, useListGuardians } from "@api/crm/endpoints/guardians/guardians";
@@ -79,6 +80,7 @@ export const LinkExistingGuardianDialog = ({
   const [selectedGuardian, setSelectedGuardian] = useState<GuardianListVM | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: guardians = [], isLoading: searching } = useSearchGuardians(searchTerm);
   const linkMutation = useLinkGuardianToChild();
@@ -110,6 +112,7 @@ export const LinkExistingGuardianDialog = ({
           isEmergencyContact: data.isEmergencyContact,
         },
       });
+      enqueueSnackbar(t("Guardian linked"), { variant: "success" });
       onSuccess();
       handleClose();
     } catch (error) {

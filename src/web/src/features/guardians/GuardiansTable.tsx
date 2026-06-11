@@ -15,6 +15,7 @@ import { EntityCard } from "@components/cards/EntityCard";
 import { MobileCardList } from "@components/cards/MobileCardList";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
@@ -62,11 +63,22 @@ export const GuardiansTable = () => {
       staticColumn({
         field: "id",
         headerName: t("table.header.actions"),
+        width: 120,
+        align: "center",
+        headerAlign: "center",
         renderCell: (params: GridRenderCellParams<GuardianListVM, string>) => (
-          <>
-            <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
             <ViewGuardianButton id={params.value!} />
-          </>
+            <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
+          </Box>
         ),
       }),
     ],

@@ -221,9 +221,10 @@ test("link a child to a guardian", async ({ page }) => {
   await expect(dialog).toBeHidden();
 
   // The guardian appears in the child's guardian list with the translated
-  // relationship chip ("Guardian" -> "Verzorger").
+  // relationship chip ("Guardian" -> "Verzorger"). Exact match avoids matching
+  // the "Verzorger gekoppeld" success snackbar shown right after linking.
   await expect(page.getByText(guardian.fullName)).toBeVisible();
-  await expect(page.getByText("Verzorger")).toBeVisible();
+  await expect(page.getByText("Verzorger", { exact: true })).toBeVisible();
 
   // And the child appears in the guardian's linked-children card.
   await gotoApp(page, `/guardians/${guardian.id}`);

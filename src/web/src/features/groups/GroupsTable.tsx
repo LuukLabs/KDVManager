@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
 import { keepPreviousData } from "@tanstack/react-query";
 import { type GroupListVM } from "@api/scheduling/models/groupListVM";
 import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
@@ -29,8 +30,21 @@ const GroupsTable = () => {
       staticColumn({
         field: "id",
         headerName: t("table.header.actions"),
+        width: 120,
+        align: "center",
+        headerAlign: "center",
         renderCell: (params: GridRenderCellParams<GroupListVM, string>) => (
-          <DeleteGroupButton id={params.value!} displayName={params.row.name ?? ""} />
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <DeleteGroupButton id={params.value!} displayName={params.row.name ?? ""} />
+          </Box>
         ),
       }),
     ],

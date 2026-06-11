@@ -90,6 +90,7 @@ const UpdateChildPageModernTabs = () => {
           dateOfBirth={child.dateOfBirth}
           schedulingStatus={child.schedulingStatus}
           statusRelevantDate={child.statusRelevantDate}
+          backTo="/children"
         />
       </Box>
 

@@ -35,8 +35,8 @@ describe("NewChildPage — date field wire-up (browser)", () => {
 
     await renderWithProviders(<NewChildPage />);
 
-    await userEvent.fill(page.getByLabelText(/voornaam/i), "Jane");
-    await userEvent.fill(page.getByLabelText(/achternaam/i), "Doe");
+    await userEvent.fill(page.getByLabelText(/given name/i), "Jane");
+    await userEvent.fill(page.getByLabelText(/family name/i), "Doe");
 
     // Open calendar.
     await userEvent.click(page.getByRole("button", { name: /choose date/i }));
@@ -73,8 +73,8 @@ describe("NewChildPage — date field wire-up (browser)", () => {
 
     await renderWithProviders(<NewChildPage />);
 
-    await userEvent.fill(page.getByLabelText(/voornaam/i), "Jane");
-    await userEvent.fill(page.getByLabelText(/achternaam/i), "Doe");
+    await userEvent.fill(page.getByLabelText(/given name/i), "Jane");
+    await userEvent.fill(page.getByLabelText(/family name/i), "Doe");
 
     await userEvent.click(page.getByRole("button", { name: /^save$/i }));
 

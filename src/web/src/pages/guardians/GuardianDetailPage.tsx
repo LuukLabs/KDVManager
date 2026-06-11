@@ -27,7 +27,7 @@ const GuardianDetailPage = () => {
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-        <CircularProgress />
+        <CircularProgress aria-label={t("Loading...")} />
       </Box>
     );
   }
@@ -63,6 +63,7 @@ const GuardianDetailPage = () => {
           phone={guardian.phoneNumbers?.[0]?.number}
           onDelete={handleDelete}
           loading={deleteGuardian.isPending}
+          backTo="/guardians"
         />
       </Box>
 

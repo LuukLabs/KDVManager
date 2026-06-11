@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import Box from "@mui/material/Box";
 import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
@@ -34,10 +35,24 @@ export const ClosurePeriodsTable = () => {
       }),
       staticColumn({
         field: "actions",
-        headerName: t("table.header.delete"),
-        flex: 0.5,
-        renderCell: (params: GridRenderCellParams<ClosurePeriod>) =>
-          params.row.id ? <DeleteClosurePeriodButton id={params.row.id} /> : null,
+        headerName: t("table.header.actions"),
+        width: 120,
+        align: "center",
+        headerAlign: "center",
+        filterable: false,
+        renderCell: (params: GridRenderCellParams<ClosurePeriod>) => (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 0.5,
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            {params.row.id && <DeleteClosurePeriodButton id={params.row.id} />}
+          </Box>
+        ),
       }),
     ],
     [t],

@@ -5,12 +5,14 @@ import {
   Avatar,
   Stack,
   Button,
+  IconButton,
   useTheme,
   useMediaQuery,
   alpha,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Person as PersonIcon, Delete } from "@mui/icons-material";
+import { Person as PersonIcon, Delete, ArrowBackRounded } from "@mui/icons-material";
 
 type GuardianHeaderProps = {
   givenName?: string;
@@ -19,6 +21,8 @@ type GuardianHeaderProps = {
   phone?: string;
   onDelete?: () => void;
   loading?: boolean;
+  /** Route to navigate to via the back button; omit to hide the button. */
+  backTo?: string;
 };
 
 export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
@@ -28,6 +32,7 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
   phone,
   onDelete,
   loading = false,
+  backTo,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -66,6 +71,20 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
+            {backTo && (
+              <IconButton
+                component={Link}
+                to={backTo}
+                aria-label={t("Back", { ns: "common" })}
+                sx={{
+                  color: "white",
+                  backgroundColor: alpha("#fff", 0.15),
+                  "&:hover": { backgroundColor: alpha("#fff", 0.25) },
+                }}
+              >
+                <ArrowBackRounded />
+              </IconButton>
+            )}
             <Avatar
               sx={{
                 width: { xs: 56, md: 64 },
@@ -111,16 +130,15 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
             {onDelete && (
               <Button
                 variant="outlined"
-                color="error"
                 startIcon={<Delete />}
                 onClick={onDelete}
                 disabled={loading}
                 sx={{
-                  borderColor: alpha(theme.palette.error.main, 0.7),
-                  color: theme.palette.error.main,
+                  borderColor: alpha("#fff", 0.5),
+                  color: "white",
                   "&:hover": {
-                    borderColor: theme.palette.error.main,
-                    backgroundColor: alpha(theme.palette.error.main, 0.1),
+                    borderColor: "white",
+                    backgroundColor: alpha("#fff", 0.1),
                   },
                 }}
               >

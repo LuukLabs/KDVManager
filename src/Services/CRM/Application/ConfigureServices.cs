@@ -17,6 +17,10 @@ using Microsoft.Extensions.Configuration;
 using KDVManager.Services.CRM.Application.Features.Guardians.Commands.AddGuardian;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetChildGuardians;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren;
+using KDVManager.Services.CRM.Application.Features.Administrators.Queries.GetAdministratorList;
+using KDVManager.Services.CRM.Application.Features.Administrators.Commands.InviteAdministrator;
+using KDVManager.Services.CRM.Application.Features.Administrators.Commands.DeleteAdministrator;
+using KDVManager.Services.CRM.Application.Features.Administrators.Commands.RevokeInvitation;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -43,6 +47,11 @@ public static class ConfigureServices
         services.AddScoped<LinkGuardianToChildCommandHandler>();
         services.AddScoped<UnlinkGuardianFromChildCommandHandler>();
 
+        // Administrators (Auth0-backed)
+        services.AddScoped<GetAdministratorListQueryHandler>();
+        services.AddScoped<InviteAdministratorCommandHandler>();
+        services.AddScoped<DeleteAdministratorCommandHandler>();
+        services.AddScoped<RevokeInvitationCommandHandler>();
 
         return services;
     }

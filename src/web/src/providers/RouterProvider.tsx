@@ -209,6 +209,15 @@ const router = (t: TFunction<"translation">) =>
                     },
                   },
                 },
+                {
+                  path: "administrators",
+                  lazy: () => import("@pages/administrators/AdministratorsPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("Administrators");
+                    },
+                  },
+                },
               ],
             },
           ],

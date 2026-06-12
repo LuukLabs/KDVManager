@@ -37,6 +37,7 @@ app.MapHealthChecks("/healthz");
 // Map minimal API endpoints
 app.MapChildrenEndpoints();
 app.MapGuardiansEndpoints();
+app.MapAdministratorsEndpoints();
 // app.MapPeopleEndpoints();
 
 app.Run();

@@ -1,7 +1,9 @@
-﻿using KDVManager.Services.CRM.Application.Contracts.Persistence;
+﻿using KDVManager.Services.CRM.Application.Contracts.Identity;
+using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Application.Contracts.Services;
 using KDVManager.Services.CRM.Application.Events;
 using KDVManager.Services.CRM.Infrastructure;
+using KDVManager.Services.CRM.Infrastructure.Identity;
 using KDVManager.Services.CRM.Infrastructure.Repositories;
 using KDVManager.Services.CRM.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,12 @@ public static class ConfigureServices
         services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
 
         services.AddTenancy();
+
+        // Auth0-backed administrator management
+        services.AddMemoryCache();
+        services.Configure<Auth0ManagementOptions>(configuration.GetSection(Auth0ManagementOptions.SectionName));
+        services.AddScoped<IOrganizationContext, OrganizationContext>();
+        services.AddHttpClient<IAuth0ManagementService, Auth0ManagementService>();
 
         return services;
     }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace KDVManager.Services.Scheduling.Application.Events;
 
 /// <summary>
-/// Keeps the local tenant trial read model in sync with the CRM service. The
+/// Keeps the local tenant trial read model in sync with the TenantManagement service. The
 /// tenant id is provided via the message's TenantId header (set on the tenancy
 /// context by the MassTransit consume filter).
 /// </summary>

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace KDVManager.Services.CRM.Infrastructure.Migrations
+namespace KDVManager.Services.TenantManagement.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTenantTrial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -1,11 +1,11 @@
 using System;
 
-namespace KDVManager.Services.CRM.Domain.Entities
+namespace KDVManager.Services.TenantManagement.Domain.Entities
 {
     /// <summary>
-    /// A tenant of the platform. The CRM service is the source of truth for the
-    /// tenant's 30-day trial. <see cref="Id"/> matches the tenant identifier from
-    /// the authentication token.
+    /// A tenant of the platform. The TenantManagement service is the source of
+    /// truth for the tenant's lifecycle and 30-day trial. <see cref="Id"/> matches
+    /// the tenant identifier from the authentication token.
     /// </summary>
     public class Tenant
     {

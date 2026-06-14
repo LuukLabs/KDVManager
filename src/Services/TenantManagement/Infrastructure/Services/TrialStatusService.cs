@@ -1,15 +1,15 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.CRM.Infrastructure;
+using KDVManager.Services.TenantManagement.Domain.Entities;
+using KDVManager.Services.TenantManagement.Infrastructure;
 using KDVManager.Shared.Contracts.Events;
 using KDVManager.Shared.Contracts.Tenancy;
 using KDVManager.Shared.Contracts.Trial;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace KDVManager.Services.CRM.Infrastructure.Services
+namespace KDVManager.Services.TenantManagement.Infrastructure.Services
 {
     /// <summary>
     /// Source-of-truth trial status service. The first time a tenant is seen, a

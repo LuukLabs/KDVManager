@@ -1,9 +1,7 @@
-﻿using KDVManager.Services.CRM.Api.Endpoints;
-using KDVManager.Services.CRM.Api.Middleware;
+using KDVManager.Services.TenantManagement.Api.Endpoints;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Shared.Infrastructure.Middleware;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,32 +12,31 @@ builder.Services.AddMassTransitServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
 // Structured production logging (stdout JSON + OTLP if endpoint present)
-builder.Logging.AddKdvManagerLogging(builder.Configuration, "crm-api");
+builder.Logging.AddKdvManagerLogging(builder.Configuration, "tenantmanagement-api");
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().AllowAnonymous();
+    app.MapOpenApi();
 }
 
 app.UseRouting();
-
-app.UseCustomExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
-app.UseTenancy();
+app.UseMiddleware<TenancyMiddleware>();
 
-// Liveness: process-up only; readiness: all registered checks (postgres, MassTransit bus)
-app.MapHealthChecks("/healthz", new HealthCheckOptions { Predicate = _ => false }).AllowAnonymous();
-app.MapHealthChecks("/readyz").AllowAnonymous();
+// NOTE: this service intentionally does NOT apply trial enforcement. It owns the
+// trial-status endpoint, which must stay reachable even after a trial expires so
+// the web app can render the lock screen. Enforcement happens in the consuming
+// services (e.g. Scheduling) via the shared TrialEnforcement middleware.
+
+app.MapHealthChecks("/healthz");
 
 // Map minimal API endpoints
-app.MapChildrenEndpoints();
-app.MapGuardiansEndpoints();
-// app.MapPeopleEndpoints();
+app.MapTrialEndpoints();
 
 app.Run();

@@ -8,10 +8,12 @@ namespace KDVManager.Services.Scheduling.Infrastructure.Services;
 
 /// <summary>
 /// Read-model trial status for the Scheduling service. The trial start date is
-/// synced from the CRM service (source of truth) via <c>TenantRegisteredEvent</c>.
+/// synced from the TenantManagement service (source of truth) via <c>TenantRegisteredEvent</c>.
 /// When the read model has not been populated yet (event not yet received), the
 /// trial is treated as active so the service fails open rather than locking out a
-/// freshly-registered tenant; the CRM service still enforces authoritatively.
+/// freshly-registered tenant. This only affects the brief window before the
+/// TenantRegisteredEvent is consumed, during which the tenant is by definition
+/// still within its trial.
 /// </summary>
 public class TrialStatusService : ITrialStatusService
 {
@@ -33,7 +35,7 @@ public class TrialStatusService : ITrialStatusService
 
         if (tenant is null)
         {
-            // Not yet synced: fail open (CRM enforces authoritatively).
+            // Not yet synced: fail open (a just-registered tenant is still within trial).
             return new TrialStatus { IsExpired = false, DaysRemaining = TrialStatus.TrialDurationDays };
         }
 

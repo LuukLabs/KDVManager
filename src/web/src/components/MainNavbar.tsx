@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, MenuItem } from "@mui/material";
+import { Box, ListSubheader, MenuItem } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -61,6 +61,10 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
 
   return (
     <>
+      {/* WCAG 2.4.1: let keyboard users bypass the navigation. */}
+      <a href="#main-content" className="skip-link">
+        {t("Skip to main content")}
+      </a>
       <AppBar position="static" className="app-navbar">
         <Container maxWidth={false}>
           <Toolbar disableGutters>
@@ -127,16 +131,9 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
                     <Typography sx={{ textAlign: "center" }}>{item.label}</Typography>
                   </MenuItem>
                 ))}
-                <MenuItem disabled>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "text.secondary",
-                    }}
-                  >
-                    {t("Reporting")}
-                  </Typography>
-                </MenuItem>
+                <ListSubheader sx={{ bgcolor: "transparent", lineHeight: 2.5 }}>
+                  {t("Reporting")}
+                </ListSubheader>
                 {reportingItems.map((item) => (
                   <MenuItem
                     key={item.key}
@@ -163,7 +160,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
               variant="h5"
               noWrap
               component="a"
-              href=""
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -177,11 +174,15 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
             >
               {t("KDVManager")}
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Box
+              component="nav"
+              aria-label={t("Main navigation")}
+              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+            >
               {navigationItems.map((item) => (
                 <Button
                   key={item.key}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{ my: 2, color: "inherit", display: "block" }}
                   onClick={() => navigate(item.path)}
                 >
                   {item.label}
@@ -189,7 +190,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
               ))}
               <Box>
                 <Button
-                  sx={{ my: 2, color: "white", display: "flex", alignItems: "center" }}
+                  sx={{ my: 2, color: "inherit", display: "flex", alignItems: "center" }}
                   onClick={handleOpenReportingMenu}
                   endIcon={<KeyboardArrowDownIcon />}
                 >
@@ -227,7 +228,10 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
         <Box sx={{ display: "flex", alignItems: "center", my: 1 }} className="app-breadcrumbs">
           <RouterBreadcrumbs />
         </Box>
-        {children}
+        {/* WCAG 1.3.1 / 2.4.1: the primary landmark and skip-link target. */}
+        <Box component="main" id="main-content" tabIndex={-1} sx={{ outline: "none" }}>
+          {children}
+        </Box>
       </Container>
     </>
   );

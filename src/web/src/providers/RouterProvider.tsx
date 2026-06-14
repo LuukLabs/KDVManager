@@ -36,6 +36,11 @@ const router = (t: TFunction<"translation">) =>
           ],
         },
         {
+          path: "onboarding",
+          loader: requireAuth,
+          lazy: () => import("@pages/onboarding/OnboardingPage"),
+        },
+        {
           element: <MainLayout />,
           children: [
             {

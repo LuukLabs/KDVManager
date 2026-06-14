@@ -38,5 +38,6 @@ app.MapHealthChecks("/healthz");
 
 // Map minimal API endpoints
 app.MapTrialEndpoints();
+app.MapTenantEndpoints();
 
 app.Run();

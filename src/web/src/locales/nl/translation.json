@@ -537,6 +537,14 @@
   "Sign out": "Uitloggen",
   "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.": "Je proefperiode van 30 dagen is afgelopen. Neem een abonnement om je kinderdagverblijf te blijven beheren met KDVManager.",
   "Your free trial has ended": "Je gratis proefperiode is afgelopen",
+  "Create organization": "Organisatie aanmaken",
+  "Organization name": "Naam organisatie",
+  "Welcome to KDVManager": "Welkom bij KDVManager",
+  "Setting up…": "Bezig met instellen…",
+  "Let's set up your organization to get started with your 30-day free trial.": "Laten we je organisatie instellen om te beginnen met je gratis proefperiode van 30 dagen.",
+  "Something went wrong creating your organization. Please try again.": "Er is iets misgegaan bij het aanmaken van je organisatie. Probeer het opnieuw.",
+  "Single user Creation": "Enkele gebruiker aanmaken",
+  "auth.warnings.audienceMissing": "Auth0-audience is niet ingesteld, standaard wordt gebruikt: ",
   "trial.daysLeft_one": "Je hebt nog {{count}} dag in je gratis proefperiode.",
   "trial.daysLeft_other": "Je hebt nog {{count}} dagen in je gratis proefperiode."
 }

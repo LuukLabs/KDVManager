@@ -123,6 +123,21 @@ spec:
                 key: RABBITMQ_DEFAULT_PASS
           - name: ConnectionStrings__RabbitMQ
             value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq.kdvmanager-prod.svc.cluster.local:5672/"
+          # Auth0 Management API credentials for writing app_metadata.tenant_id.
+          # Optional: when the secret is absent the service falls back to a no-op
+          # provisioner (tenant is still created in the DB). See deploy/auth0/README.md.
+          - name: Auth0__ManagementClientId
+            valueFrom:
+              secretKeyRef:
+                name: auth0-management-secret
+                key: ManagementClientId
+                optional: true
+          - name: Auth0__ManagementClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: auth0-management-secret
+                key: ManagementClientSecret
+                optional: true
         volumeMounts:
         - name: dotnet-bundle-cache
           mountPath: /tmp/dotnet_bundle_extract

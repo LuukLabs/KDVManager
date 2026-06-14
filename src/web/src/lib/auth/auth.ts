@@ -98,6 +98,53 @@ export const getAuthToken = async (): Promise<string | null> => {
   }
 };
 
+// The access-token claim the backend resolves tenancy from.
+export const TENANT_CLAIM = "https://kdvmanager.nl/tenant";
+
+// Reads the tenant id from the current access token, or null when absent. Used to
+// decide whether onboarding is needed without a backend round-trip — a token that
+// already carries the tenant claim means the user has a tenant.
+export const getTenantIdFromToken = async (): Promise<string | null> => {
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  /* eslint-disable i18next/no-literal-string -- technical JWT (base64url) parsing, not user-facing text */
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+
+  try {
+    const json = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+    const payload = JSON.parse(
+      decodeURIComponent(
+        json
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      ),
+    );
+    return payload[TENANT_CLAIM] ?? null;
+  } catch {
+    return null;
+  }
+  /* eslint-enable i18next/no-literal-string */
+};
+
+// Forces a brand-new access token (bypassing the cache) so freshly-changed
+// claims — e.g. the tenant claim set right after onboarding — are picked up.
+export const refreshAuthToken = async (): Promise<string | null> => {
+  if (!auth0Client) return null;
+
+  try {
+    return await auth0Client.getAccessTokenSilently({
+      authorizationParams: { audience: authConfig.audience },
+      cacheMode: "off",
+    });
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    return null;
+  }
+};
+
 /** Auth loader for protected routes. */
 export const requireAuth: LoaderFunction = async ({ request }) => {
   const client = await waitForAuth0Client();

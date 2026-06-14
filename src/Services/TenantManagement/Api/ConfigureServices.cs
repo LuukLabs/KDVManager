@@ -5,6 +5,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using KDVManager.Shared.Infrastructure.Http;
+using KDVManager.Services.TenantManagement.Api.Services;
+using KDVManager.Services.TenantManagement.Application.Contracts.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +17,8 @@ public static class ConfigureServices
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         services.AddHttpContextAccessor();
+
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services.AddHealthChecks();
 

@@ -537,6 +537,14 @@
   "Sign out": "Sign out",
   "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.": "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.",
   "Your free trial has ended": "Your free trial has ended",
+  "Create organization": "Create organization",
+  "Organization name": "Organization name",
+  "Welcome to KDVManager": "Welcome to KDVManager",
+  "Setting up…": "Setting up…",
+  "Let's set up your organization to get started with your 30-day free trial.": "Let's set up your organization to get started with your 30-day free trial.",
+  "Something went wrong creating your organization. Please try again.": "Something went wrong creating your organization. Please try again.",
+  "Single user Creation": "Single user Creation",
+  "auth.warnings.audienceMissing": "Auth0 audience is not set, using default: ",
   "trial.daysLeft_one": "You have {{count}} day left in your free trial.",
   "trial.daysLeft_other": "You have {{count}} days left in your free trial."
 }

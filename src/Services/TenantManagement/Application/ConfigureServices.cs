@@ -1,12 +1,15 @@
+using KDVManager.Services.TenantManagement.Application.Features.Tenants.Commands.ProvisionTenant;
+using KDVManager.Services.TenantManagement.Application.Features.Tenants.Queries.GetMyTenant;
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        // No application-layer handlers yet; the trial status is served directly
-        // from infrastructure. Kept for parity with the other services so the API
-        // composition root stays uniform.
+        services.AddScoped<ProvisionTenantCommandHandler>();
+        services.AddScoped<GetMyTenantQueryHandler>();
+
         return services;
     }
 }

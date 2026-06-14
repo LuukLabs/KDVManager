@@ -2,6 +2,7 @@
 using KDVManager.Services.CRM.Api.Middleware;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
+using KDVManager.Shared.Infrastructure.Trial;
 using KDVManager.Shared.Infrastructure.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,12 +32,14 @@ app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<TenancyMiddleware>();
+app.UseTrialEnforcement();
 
 app.MapHealthChecks("/healthz");
 
 // Map minimal API endpoints
 app.MapChildrenEndpoints();
 app.MapGuardiansEndpoints();
+app.MapTrialEndpoints();
 // app.MapPeopleEndpoints();
 
 app.Run();

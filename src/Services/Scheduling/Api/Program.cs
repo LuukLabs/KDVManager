@@ -2,6 +2,7 @@
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Middleware;
 using KDVManager.Shared.Infrastructure.Tenancy;
+using KDVManager.Shared.Infrastructure.Trial;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<TenancyMiddleware>();
+app.UseTrialEnforcement();
 
 app.MapHealthChecks("/healthz");
 

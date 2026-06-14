@@ -24,6 +24,7 @@ public static class ConfigureServices
         services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
         services.AddScoped<IChildActivityIntervalRepository, ChildActivityIntervalRepository>();
         services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
+        services.AddScoped<KDVManager.Shared.Contracts.Trial.ITrialStatusService, TrialStatusService>();
 
         services.AddTenancy();
 

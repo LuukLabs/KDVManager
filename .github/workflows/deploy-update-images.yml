@@ -9,9 +9,11 @@ on:
       - 'src/web/**'
       - 'src/Services/CRM/**'
       - 'src/Services/Scheduling/**'
+      - 'src/Services/TenantManagement/**'
       - '.github/workflows/web.yml'
       - '.github/workflows/crm-api.yml'
       - '.github/workflows/scheduling-api.yml'
+      - '.github/workflows/tenantmanagement-api.yml'
       - '.github/workflows/deploy-update-images.yml'
 
 permissions:

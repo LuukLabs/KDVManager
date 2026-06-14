@@ -1,4 +1,10 @@
 {
+  "trial.daysLeft_one": "You have {{count}} day left in your free trial.",
+  "trial.daysLeft_other": "You have {{count}} days left in your free trial.",
+  "Your free trial has ended": "Your free trial has ended",
+  "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.": "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.",
+  "Contact us to subscribe": "Contact us to subscribe",
+  "Sign out": "Sign out",
   "{{age}} year": "{{age}} year",
   "{{count}} years_one": "{{count}} year",
   "{{count}} years_other": "{{count}} years",

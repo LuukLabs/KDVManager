@@ -1,4 +1,10 @@
 {
+  "trial.daysLeft_one": "Je hebt nog {{count}} dag in je gratis proefperiode.",
+  "trial.daysLeft_other": "Je hebt nog {{count}} dagen in je gratis proefperiode.",
+  "Your free trial has ended": "Je gratis proefperiode is afgelopen",
+  "Your 30-day trial has ended. Subscribe to keep managing your daycare with KDVManager.": "Je proefperiode van 30 dagen is afgelopen. Neem een abonnement om je kinderdagverblijf te blijven beheren met KDVManager.",
+  "Contact us to subscribe": "Neem contact op voor een abonnement",
+  "Sign out": "Uitloggen",
   "{{age}} year": "{{age}} jaar",
   "{{count}} years_one": "{{count}} jaar",
   "{{count}} years_other": "{{count}} jaren",

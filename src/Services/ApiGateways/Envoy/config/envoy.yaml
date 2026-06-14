@@ -63,6 +63,12 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: scheduling-api
+              - name: "tenantmanagement"
+                match:
+                  prefix: /tenantmanagement/
+                route:
+                  prefix_rewrite: /
+                  cluster: tenantmanagement-api
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:
@@ -98,6 +104,12 @@ static_resources:
                   provider_name: auth0_provider
               - match:
                   prefix: /scheduling/
+                requires:
+                  provider_name: auth0_provider
+              - match:
+                  prefix: /tenantmanagement/openapi/
+              - match:
+                  prefix: /tenantmanagement/
                 requires:
                   provider_name: auth0_provider
           - name: envoy.filters.http.router
@@ -166,4 +178,17 @@ static_resources:
             address:
               socket_address:
                 address: scheduling-api
+                port_value: 80
+  - name: tenantmanagement-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: tenantmanagement-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: tenantmanagement-api
                 port_value: 80

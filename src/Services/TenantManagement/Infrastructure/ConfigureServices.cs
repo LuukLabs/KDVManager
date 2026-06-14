@@ -1,0 +1,43 @@
+using KDVManager.Services.TenantManagement.Infrastructure;
+using KDVManager.Services.TenantManagement.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using KDVManager.Shared.Infrastructure.Tenancy;
+using MassTransit;
+
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class ConfigureServices
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("KDVManagerTenantManagementConnectionString")));
+
+        services.AddScoped<KDVManager.Shared.Contracts.Trial.ITrialStatusService, TrialStatusService>();
+
+        services.AddTenancy();
+
+        return services;
+    }
+
+    public static IServiceCollection AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped(typeof(MassTransitTenancySendFilter<>));
+
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration.GetConnectionString("RabbitMQ"));
+                cfg.ConfigureEndpoints(context);
+
+                cfg.UseConsumeFilter(typeof(MassTransitTenancyConsumeFilter<>), context);
+                cfg.UseSendFilter(typeof(MassTransitTenancySendFilter<>), context);
+                cfg.UsePublishFilter(typeof(MassTransitTenancyPublishFilter<>), context);
+            });
+        });
+
+        return services;
+    }
+}

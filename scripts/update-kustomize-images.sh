@@ -18,6 +18,7 @@ MAPPINGS=(
   "web|ghcr.io/luuklabs/kdvmanager/web"
   "crm|ghcr.io/luuklabs/kdvmanager/crm.api,ghcr.io/luuklabs/kdvmanager/crm.migrator"
   "scheduling|ghcr.io/luuklabs/kdvmanager/scheduling.api,ghcr.io/luuklabs/kdvmanager/scheduling.migrator"
+  "tenantmanagement|ghcr.io/luuklabs/kdvmanager/tenantmanagement.api,ghcr.io/luuklabs/kdvmanager/tenantmanagement.migrator"
 )
 
 for mapping in "${MAPPINGS[@]}"; do

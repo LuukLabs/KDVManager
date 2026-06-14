@@ -3,8 +3,8 @@
 namespace KDVManager.Services.Scheduling.Domain.Entities;
 
 /// <summary>
-/// Local read model of a tenant's trial, kept in sync with the CRM service (the
-/// source of truth) via <c>TenantRegisteredEvent</c>. <see cref="Id"/> matches the
+/// Local read model of a tenant's trial, kept in sync with the TenantManagement
+/// service (the source of truth) via <c>TenantRegisteredEvent</c>. <see cref="Id"/> matches the
 /// tenant identifier from the authentication token.
 /// </summary>
 public class Tenant

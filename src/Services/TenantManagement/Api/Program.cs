@@ -1,5 +1,4 @@
-﻿using KDVManager.Services.CRM.Api.Endpoints;
-using KDVManager.Services.CRM.Api.Middleware;
+using KDVManager.Services.TenantManagement.Api.Endpoints;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Shared.Infrastructure.Middleware;
@@ -13,7 +12,7 @@ builder.Services.AddMassTransitServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
 // Structured production logging (stdout JSON + OTLP if endpoint present)
-builder.Logging.AddKdvManagerLogging(builder.Configuration, "crm-api");
+builder.Logging.AddKdvManagerLogging(builder.Configuration, "tenantmanagement-api");
 
 var app = builder.Build();
 
@@ -24,19 +23,20 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.UseCustomExceptionHandler();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<TenancyMiddleware>();
 
+// NOTE: this service intentionally does NOT apply trial enforcement. It owns the
+// trial-status endpoint, which must stay reachable even after a trial expires so
+// the web app can render the lock screen. Enforcement happens in the consuming
+// services (e.g. Scheduling) via the shared TrialEnforcement middleware.
+
 app.MapHealthChecks("/healthz");
 
 // Map minimal API endpoints
-app.MapChildrenEndpoints();
-app.MapGuardiansEndpoints();
-// app.MapPeopleEndpoints();
+app.MapTrialEndpoints();
 
 app.Run();

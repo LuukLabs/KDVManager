@@ -1,12 +1,7 @@
-﻿using KDVManager.Services.CRM.Application.Contracts.Persistence;
-using KDVManager.Services.CRM.Application.Contracts.Services;
-using KDVManager.Services.CRM.Application.Events;
-using KDVManager.Services.CRM.Infrastructure;
-using KDVManager.Services.CRM.Infrastructure.Repositories;
-using KDVManager.Services.CRM.Infrastructure.Services;
+using KDVManager.Services.TenantManagement.Infrastructure;
+using KDVManager.Services.TenantManagement.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using KDVManager.Shared.Contracts.Tenancy;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using MassTransit;
 
@@ -17,13 +12,9 @@ public static class ConfigureServices
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("KDVManagerCRMConnectionString")));
+            options.UseNpgsql(configuration.GetConnectionString("KDVManagerTenantManagementConnectionString")));
 
-        services.AddScoped<IChildRepository, ChildRepository>();
-        services.AddScoped<IGuardianRepository, GuardianRepository>();
-        services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
-        services.AddScoped<IChildActivityIntervalRepository, ChildActivityIntervalRepository>();
-        services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
+        services.AddScoped<KDVManager.Shared.Contracts.Trial.ITrialStatusService, TrialStatusService>();
 
         services.AddTenancy();
 
@@ -36,8 +27,6 @@ public static class ConfigureServices
 
         services.AddMassTransit(x =>
         {
-            x.AddConsumer<ChildActivityIntervalsChangedEventConsumer>();
-
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("RabbitMQ"));
@@ -52,4 +41,3 @@ public static class ConfigureServices
         return services;
     }
 }
-

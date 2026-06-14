@@ -1,8 +1,8 @@
-using KDVManager.Services.CRM.Domain.Entities;
+using KDVManager.Services.TenantManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KDVManager.Services.CRM.Infrastructure.Configurations;
+namespace KDVManager.Services.TenantManagement.Infrastructure.Configurations;
 
 public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {

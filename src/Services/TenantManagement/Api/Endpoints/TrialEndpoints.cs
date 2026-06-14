@@ -1,6 +1,8 @@
 using KDVManager.Shared.Contracts.Trial;
 using Microsoft.AspNetCore.Mvc;
 
+namespace KDVManager.Services.TenantManagement.Api.Endpoints;
+
 public static class TrialEndpoints
 {
     public static void MapTrialEndpoints(this IEndpointRouteBuilder endpoints)

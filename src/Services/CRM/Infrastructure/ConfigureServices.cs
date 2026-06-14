@@ -24,6 +24,8 @@ public static class ConfigureServices
         services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
         services.AddScoped<IChildActivityIntervalRepository, ChildActivityIntervalRepository>();
         services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
+        services.AddScoped<KDVManager.Shared.Contracts.Trial.ITrialStatusService, TrialStatusService>();
 
         services.AddTenancy();
 
@@ -35,6 +37,7 @@ public static class ConfigureServices
         services.AddMassTransit(x =>
         {
             x.AddConsumer<ChildActivityIntervalsChangedEventConsumer>();
+            x.AddConsumer<TenantRegisteredEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {

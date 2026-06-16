@@ -25,7 +25,7 @@ jobs:
       uses: actions/checkout@v7.0.0
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v4
 
     # Build all stack images with GitHub Actions layer caching. Bake reads the
     # compose files, so image definitions stay in one place.

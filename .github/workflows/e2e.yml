@@ -49,7 +49,7 @@ jobs:
           mock-auth envoy postgres rabbitmq web \
           crm-migrator crm-api scheduling-migrator scheduling-api
 
-    - uses: pnpm/action-setup@v6
+    - uses: pnpm/action-setup@v6.0.8
       with:
         version: 11.0.8
 

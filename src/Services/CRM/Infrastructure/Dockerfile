@@ -29,7 +29,7 @@ RUN dotnet tool install -g dotnet-ef --version 9.0.7
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "./Api"
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.8 as migrator-runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.9 as migrator-runtime
 
 COPY --from=build-migrator /src/Services/CRM/efbundle .
 

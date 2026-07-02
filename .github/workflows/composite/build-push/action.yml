@@ -27,7 +27,7 @@ runs:
   using: "composite"
   steps:
   - name: Login to the Container Registry
-    uses: docker/login-action@v4
+    uses: docker/login-action@v4.2.0
     with:
       registry: ${{ inputs.registry_host }}
       username: ${{ inputs.registry_username }}

@@ -5,6 +5,12 @@ on:
   push:
     branches:
     - main
+    paths:
+    - src/Services/CRM/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/crm-api.yml
   
   pull_request:
     branches:
@@ -12,6 +18,9 @@ on:
 
     paths:
     - src/Services/CRM/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
     - .github/workflows/crm-api.yml
 env:
   REGISTRY: ghcr.io

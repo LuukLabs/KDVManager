@@ -8,13 +8,22 @@ on:
   push:
     branches:
     - main
+    paths:
+    - src/Services/Scheduling/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/scheduling-migrator.yml
   
   pull_request:
     branches:
     - main
 
     paths:
-    - src/Services/Scheduling/Persistence/**
+    - src/Services/Scheduling/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
     - .github/workflows/scheduling-migrator.yml
 env:
   REGISTRY: ghcr.io

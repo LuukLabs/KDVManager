@@ -20,7 +20,7 @@
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="MassTransit" Version="8.5.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
     <PackageReference Include="MassTransit.Abstractions" Version="8.5.10" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.10" />
   </ItemGroup>

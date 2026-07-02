@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -10,9 +11,11 @@ import { useListGuardians } from "@api/crm/endpoints/guardians/guardians";
 import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GuardianListVM } from "@api/crm/models/guardianListVM";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 
 export const GuardiansTable = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { apiParams, muiPagination } = useGuardiansListState();
   const { data, isLoading, isFetching } = useListGuardians(apiParams, {
     query: { placeholderData: keepPreviousData },
@@ -59,10 +62,11 @@ export const GuardiansTable = () => {
         disableColumnMenu: true,
         disableReorder: true,
         renderCell: (params: GridRenderCellParams<any, string>) => (
-          <>
+          // Keep action clicks from also triggering the row navigation
+          <Box onClick={(e) => e.stopPropagation()}>
             <DeleteGuardianButton id={params.value!} displayName={params.row.fullName} />
             <ViewGuardianButton id={params.value!} />
-          </>
+          </Box>
         ),
       },
     ],
@@ -79,6 +83,8 @@ export const GuardiansTable = () => {
         columns={columns}
         rows={data ?? []}
         disableRowSelectionOnClick
+        onRowClick={(params) => navigate(`/guardians/${params.id}`)}
+        sx={{ "& .MuiDataGrid-row": { cursor: "pointer" } }}
         {...muiPagination}
       />
     </Stack>

@@ -172,6 +172,7 @@ const config = tseslint.config([
               "YYYY-MM-DD",
               "DD MMM",
               "DD MMM YYYY",
+              "MMMM",
               "[\\+\\-]?\\d+",
               "page",
               "size",

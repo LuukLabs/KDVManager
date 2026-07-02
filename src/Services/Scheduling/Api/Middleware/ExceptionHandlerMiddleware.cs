@@ -135,7 +135,7 @@ public class ExceptionHandlerMiddleware
         {
             var errorResponse = new
             {
-                error = exception.Message,
+                error = (int)httpStatusCode >= 500 ? "An unexpected error occurred." : exception.Message,
                 status = (int)httpStatusCode,
                 traceId = traceId,
                 timestamp = errorDetails.Timestamp,

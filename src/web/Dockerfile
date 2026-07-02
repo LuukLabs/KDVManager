@@ -1,4 +1,4 @@
-FROM node:26.3.0-slim AS base
+FROM node:26.4.0-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@11.0.8
@@ -35,7 +35,7 @@ EXPOSE 8000
 CMD [ "pnpm", "start" ]
 
 # Run stage
-FROM nginx:1.31.1-alpine
+FROM nginx:1.31.2-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 

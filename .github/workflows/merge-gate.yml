@@ -1,0 +1,70 @@
+name: merge-gate
+
+# Runs on every PR (no paths filter) and waits for all other check runs on the
+# head commit to complete. Path-filtered workflows that never trigger simply
+# don't report a check run, so they don't block. Mark only the "all-checks"
+# job as a required status check in branch protection.
+#
+# Note: if you re-run a failed workflow and it passes, re-run this gate too so
+# it picks up the new conclusion.
+
+on:
+  pull_request:
+    branches:
+    - main
+
+permissions:
+  checks: read
+
+jobs:
+  all-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+    - name: Wait for all other checks
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const ownName = 'all-checks';
+          const ref = context.payload.pull_request.head.sha;
+          const failedConclusions = ['failure', 'timed_out', 'cancelled', 'action_required'];
+          const initialDelayMs = 30_000;
+          const pollIntervalMs = 30_000;
+          const timeoutMs = 55 * 60_000;
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+          // Give sibling workflows triggered by the same event time to
+          // register their check runs before the first poll.
+          await sleep(initialDelayMs);
+
+          const start = Date.now();
+          for (;;) {
+            const checkRuns = await github.paginate(github.rest.checks.listForRef, {
+              ...context.repo,
+              ref,
+              filter: 'latest',
+              per_page: 100,
+            });
+            const others = checkRuns.filter((run) => run.name !== ownName);
+
+            const failed = others.filter((run) => failedConclusions.includes(run.conclusion));
+            if (failed.length > 0) {
+              core.setFailed(`Failed checks: ${failed.map((run) => run.name).join(', ')}`);
+              return;
+            }
+
+            const pending = others.filter((run) => run.status !== 'completed');
+            if (pending.length === 0) {
+              core.info(`All ${others.length} other checks completed successfully or were skipped.`);
+              return;
+            }
+
+            if (Date.now() - start > timeoutMs) {
+              core.setFailed(`Timed out waiting for: ${pending.map((run) => run.name).join(', ')}`);
+              return;
+            }
+
+            core.info(`Waiting for: ${pending.map((run) => run.name).join(', ')}`);
+            await sleep(pollIntervalMs);
+          }

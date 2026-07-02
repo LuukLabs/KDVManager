@@ -15,9 +15,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Compose build ${{ inputs.service }}
+  - name: Set up Docker Buildx
+    uses: docker/setup-buildx-action@v4.1.0
+
+  - name: Expose GitHub Actions runtime for build cache
+    uses: crazy-max/ghaction-github-runtime@v4
+
+  - name: Build ${{ inputs.service }}
     shell: bash
-    run: sudo -E docker compose build ${{ inputs.service }}
+    run: |
+      docker buildx bake -f docker-compose.yml "${{ inputs.service }}" \
+        --set "${{ inputs.service }}.cache-from=type=gha,scope=${{ inputs.service }}" \
+        --set "${{ inputs.service }}.cache-to=type=gha,scope=${{ inputs.service }},mode=max"
     working-directory: ./src
     env:
       TAG: ${{ env.BRANCH }}

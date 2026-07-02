@@ -8,13 +8,22 @@ on:
   push:
     branches:
     - main
+    paths:
+    - src/Services/Scheduling/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/scheduling-migrator.yml
   
   pull_request:
     branches:
     - main
 
     paths:
-    - src/Services/Scheduling/Persistence/**
+    - src/Services/Scheduling/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
     - .github/workflows/scheduling-migrator.yml
 env:
   REGISTRY: ghcr.io
@@ -32,7 +41,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6.0.3
+      uses: actions/checkout@v7.0.0
 
     - uses: ./.github/workflows/composite/build
       with:
@@ -49,7 +58,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6.0.3
+      uses: actions/checkout@v7.0.0
 
     - uses: ./.github/workflows/composite/build-push
       with:

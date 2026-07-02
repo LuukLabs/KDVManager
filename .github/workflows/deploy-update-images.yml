@@ -10,10 +10,15 @@ on:
       - 'src/marketing/**'
       - 'src/Services/CRM/**'
       - 'src/Services/Scheduling/**'
+      - 'src/Shared/**'
+      - 'src/docker-compose.yml'
       - '.github/workflows/web.yml'
       - '.github/workflows/marketing.yml'
       - '.github/workflows/crm-api.yml'
+      - '.github/workflows/crm-migrator.yml'
       - '.github/workflows/scheduling-api.yml'
+      - '.github/workflows/scheduling-migrator.yml'
+      - '.github/workflows/composite/**'
       - '.github/workflows/deploy-update-images.yml'
 
 permissions:
@@ -29,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
 
@@ -38,10 +43,26 @@ jobs:
           curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
           sudo mv kustomize /usr/local/bin/
 
+      - name: Seed from existing automation PR branch
+        run: |
+          # peter-evans/create-pull-request rebuilds the PR branch from the base
+          # (main) plus the current working-tree diff on every run. Combined with
+          # CHANGED_ONLY, that drops tag bumps for services queued in a previous,
+          # not-yet-merged run. Restore the kustomization files from the automation
+          # branch first so those pending updates are carried forward, then this
+          # run's changed services are applied on top.
+          if git ls-remote --exit-code --heads origin automation-update-images >/dev/null 2>&1; then
+            echo "Automation branch exists; seeding kustomization tags to preserve pending (unmerged) updates"
+            git fetch --depth=1 origin automation-update-images
+            git checkout FETCH_HEAD -- deploy/k8s/applications/*/kustomization.yaml
+          else
+            echo "No existing automation branch; starting from ${GITHUB_REF_NAME:-main}"
+          fi
+
       - name: Update kustomize image tags (changed services)
         env:
           CHANGED_ONLY: true
-          BASE_REF: origin/main
+          BASE_SHA: ${{ github.event.before }}
         run: |
           bash scripts/update-kustomize-images.sh
 
@@ -73,7 +94,7 @@ jobs:
       - name: Summary
         run: |
           if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
-            echo "PR created/updated (branch chore/update-images)." >> $GITHUB_STEP_SUMMARY
+            echo "PR created/updated (branch automation-update-images)." >> $GITHUB_STEP_SUMMARY
           else
             echo "No changes detected; no PR action." >> $GITHUB_STEP_SUMMARY
           fi

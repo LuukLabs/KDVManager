@@ -51,7 +51,7 @@ updates:
           - "MassTransit*"
     ignore:
       - dependency-name: "MassTransit*"
-        versions: ["[9.0.0,)"]
+        versions: [">= 9.0.0"]
 
   - package-ecosystem: "docker"
     directories:

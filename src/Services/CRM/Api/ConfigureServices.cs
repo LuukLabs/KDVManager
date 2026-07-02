@@ -83,7 +83,12 @@ public static class ConfigureServices
                         options.Audience = configuration["Auth0:Audience"];
                         options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
                     });
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();

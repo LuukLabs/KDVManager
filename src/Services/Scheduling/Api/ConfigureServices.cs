@@ -89,6 +89,13 @@ public static class ConfigureServices
                 };
             });
 
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
+
 
         var otel = services.AddOpenTelemetry();
 

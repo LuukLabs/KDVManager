@@ -32,7 +32,7 @@ app.UseAuthorization();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<TenancyMiddleware>();
 
-app.MapHealthChecks("/healthz");
+app.MapHealthChecks("/healthz").AllowAnonymous();
 
 // Map minimal API endpoints
 app.MapChildrenEndpoints();

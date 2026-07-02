@@ -59,7 +59,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
+    "@babel/core": "^8.0.1",
     "@emotion/babel-plugin": "^11.13.5",
     "@eslint/js": "^10.0.1",
     "@react-router/dev": "^7.17.0",

@@ -4,7 +4,7 @@ namespace KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands
 
 public class AddTimeSlotCommand
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public TimeOnly StartTime { get; set; }
 

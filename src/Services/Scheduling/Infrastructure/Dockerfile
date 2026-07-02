@@ -11,25 +11,25 @@ COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared
 COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
 
 # Set up github source for NuGet packages
-ARG NUGET_GITHUB_TOKEN
-RUN dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$NUGET_GITHUB_TOKEN" --store-password-in-clear-text
+RUN --mount=type=secret,id=nuget_github_token \
+    dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$(cat /run/secrets/nuget_github_token)" --store-password-in-clear-text
 
 RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 
-FROM restore as build
+FROM restore AS build
 
 COPY Services/Scheduling Services/Scheduling
 COPY Shared Shared
 
 WORKDIR "/src/Services/Scheduling"
 
-FROM build as build-migrator
+FROM build AS build-migrator
 
 RUN dotnet tool install -g dotnet-ef --version 9.0.7
-ENV PATH $PATH:/root/.dotnet/tools
+ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --project ./Infrastructure --startup-project ./Api
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.9 as migrator-runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.9 AS migrator-runtime
 
 COPY --from=build-migrator /src/Services/Scheduling/efbundle .
 

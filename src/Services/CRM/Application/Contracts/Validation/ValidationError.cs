@@ -2,8 +2,8 @@
 {
     public class ValidationError
     {
-        public string Code { get; set; }
-        public string Property { get; set; }
-        public string Title { get; set; }
+        public required string Code { get; set; }
+        public required string Property { get; set; }
+        public required string Title { get; set; }
     }
 }

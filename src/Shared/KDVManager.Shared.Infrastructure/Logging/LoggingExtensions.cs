@@ -47,7 +47,7 @@ public static class LoggingExtensions
                 var instanceId = Environment.GetEnvironmentVariable("SERVICE_INSTANCE_ID") ?? Guid.NewGuid().ToString();
                 otel.SetResourceBuilder(ResourceBuilder.CreateDefault()
                     .AddService(serviceName: serviceName, serviceVersion: GetVersion(), serviceInstanceId: instanceId)
-                    .AddAttributes(new KeyValuePair<string, object?>[]
+                    .AddAttributes(new KeyValuePair<string, object>[]
                     {
                         new("deployment.environment", configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production"),
                         new("service.namespace", "KDVManager"),

@@ -31,7 +31,9 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
 
     public async Task<T> GetByIdAsync(Guid id)
     {
-        return await _dbContext.Set<T>().FindAsync(id);
+        // Interface expects non-null; callers should verify existence via ExistsAsync when needed.
+        // Suppress possible null warning with null-forgiving operator.
+        return (await _dbContext.Set<T>().FindAsync(id))!;
     }
 
     public async Task<IReadOnlyList<T>> ListAllAsync()

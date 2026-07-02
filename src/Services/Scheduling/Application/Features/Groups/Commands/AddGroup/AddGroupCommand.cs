@@ -4,5 +4,5 @@ namespace KDVManager.Services.Scheduling.Application.Features.Groups.Commands.Ad
 
 public class AddGroupCommand
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

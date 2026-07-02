@@ -9,8 +9,8 @@ public class ScheduleDto
     public Guid Id { get; set; }
     public Guid ChildId { get; set; }
     public Guid GroupId { get; set; }
-    public string GroupName { get; set; }
+    public string GroupName { get; set; } = string.Empty;
     public DateOnly StartDate { get; set; }
     public DateOnly? EndDate { get; set; }
-    public ICollection<ScheduleRule> ScheduleRules { get; set; }
+    public ICollection<ScheduleRule> ScheduleRules { get; set; } = new List<ScheduleRule>();
 }

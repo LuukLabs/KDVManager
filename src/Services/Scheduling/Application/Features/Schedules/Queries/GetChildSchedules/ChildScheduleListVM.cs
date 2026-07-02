@@ -17,11 +17,11 @@ public class ChildScheduleListVM
     {
         public DayOfWeek Day { get; set; }
         public Guid TimeSlotId { get; set; }
-        public string TimeSlotName { get; set; }
+        public string TimeSlotName { get; set; } = string.Empty;
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public Guid GroupId { get; set; }
-        public string GroupName { get; set; }
+        public string GroupName { get; set; } = string.Empty;
     }
 }
 

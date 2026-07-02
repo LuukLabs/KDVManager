@@ -1,4 +1,6 @@
-version: '3.4'
+secrets:
+  nuget_github_token:
+    environment: NUGET_GITHUB_TOKEN
 
 services:
   envoy:
@@ -55,8 +57,8 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Api/Dockerfile
-      args:
-        - NUGET_GITHUB_TOKEN=${NUGET_GITHUB_TOKEN}
+      secrets:
+        - nuget_github_token
     depends_on:
       - postgres
       - rabbitmq
@@ -66,8 +68,8 @@ services:
     build:
       context: .
       dockerfile: Services/Scheduling/Infrastructure/Dockerfile
-      args:
-        - NUGET_GITHUB_TOKEN=${NUGET_GITHUB_TOKEN}
+      secrets:
+        - nuget_github_token
     depends_on:
       - postgres
 

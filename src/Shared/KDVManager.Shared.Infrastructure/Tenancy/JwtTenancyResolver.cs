@@ -14,7 +14,7 @@ public class JwtTenancyResolver : ITenancyResolver
         _accessor = accessor;
     }
 
-    public ITenancyContext Resolve()
+    public ITenancyContext? Resolve()
     {
         var claims = _http.HttpContext?.User?.Claims;
         if (claims == null)

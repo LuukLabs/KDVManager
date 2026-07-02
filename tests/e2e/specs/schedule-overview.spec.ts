@@ -28,6 +28,15 @@ function addDays(iso: string, days: number): string {
   return isoDate(new Date(y, m - 1, d + days));
 }
 
+/**
+ * Today's YYYY-MM-DD in the browser timezone (Europe/Amsterdam, see
+ * playwright.config.ts). Node runs in the runner's timezone (UTC on CI),
+ * which is a day behind Amsterdam between 22:00 and midnight UTC.
+ */
+function todayInAppTimezone(): string {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam" }).format(new Date());
+}
+
 /** First Wednesday of the current month (a fixed, scheduled weekday). */
 function firstWednesdayOfCurrentMonth(): string {
   const now = new Date();
@@ -137,7 +146,7 @@ test.describe("schedule overview", () => {
   test("date navigation updates the date URL param", async ({ page }) => {
     // Start far away from today so next/previous never lands on today
     // (the "Vandaag" button is disabled when today is selected).
-    const start = addDays(isoDate(new Date()), 30);
+    const start = addDays(todayInAppTimezone(), 30);
     await gotoApp(page, `/schedule?date=${start}`);
 
     // The next/previous IconButtons have no accessible name, and MUI only emits
@@ -163,7 +172,7 @@ test.describe("schedule overview", () => {
     await expect(page).toHaveURL(new RegExp(`[?&]date=${addDays(start, -1)}`));
 
     await page.getByRole("button", { name: "Vandaag" }).click();
-    await expect(page).toHaveURL(new RegExp(`[?&]date=${isoDate(new Date())}`));
+    await expect(page).toHaveURL(new RegExp(`[?&]date=${todayInAppTimezone()}`));
   });
 
   test("shows the closure indication on a closed day", async ({ page }) => {

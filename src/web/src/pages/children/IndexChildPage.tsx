@@ -15,7 +15,6 @@ import ClearIcon from "@mui/icons-material/CloseRounded";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Fade from "@mui/material/Fade";
-import Divider from "@mui/material/Divider";
 import { useChildrenListState } from "@hooks/useChildrenListState";
 import { useState, useEffect } from "react";
 
@@ -158,7 +157,6 @@ const IndexChildPage = () => {
             />
           )}
         </StyledToolbar>
-        <Divider flexItem sx={{ mt: 1 }} />
       </HeaderPaper>
       <Paper elevation={0} sx={{ p: { xs: 1, sm: 2 }, borderRadius: 3 }}>
         <ChildrenTable />

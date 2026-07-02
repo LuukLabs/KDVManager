@@ -33,7 +33,8 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
     {
         // Interface expects non-null; callers should verify existence via ExistsAsync when needed.
         // Suppress possible null warning with null-forgiving operator.
-        return (await _dbContext.Set<T>().FindAsync(id))!;
+        // FirstOrDefaultAsync (unlike FindAsync) applies the global tenant query filter.
+        return (await _dbContext.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id))!;
     }
 
     public async Task<IReadOnlyList<T>> ListAllAsync()
@@ -49,6 +50,6 @@ public class BaseRepository<T> : IAsyncRepository<T> where T : class
 
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await _dbContext.Set<T>().FindAsync(id) != null;
+        return await _dbContext.Set<T>().AnyAsync(e => EF.Property<Guid>(e, "Id") == id);
     }
 }

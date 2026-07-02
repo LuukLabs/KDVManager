@@ -22,7 +22,7 @@ inputs:
     required: true
   nuget_github_token:
     description: "GitHub NuGet token for private packages"
-  
+
 runs:
   using: "composite"
   steps:
@@ -42,9 +42,19 @@ runs:
       echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
     shell: bash
 
-  - name: Compose build ${{ inputs.service }}
+  - name: Set up Docker Buildx
+    uses: docker/setup-buildx-action@v3
+
+  - name: Expose GitHub Actions runtime for build cache
+    uses: crazy-max/ghaction-github-runtime@v3
+
+  - name: Build ${{ inputs.service }}
     shell: bash
-    run: sudo -E docker compose  -f docker-compose.yml build ${{ inputs.service }}
+    run: |
+      docker buildx bake -f docker-compose.yml "${{ inputs.service }}" \
+        --set "${{ inputs.service }}.cache-from=type=gha,scope=${{ inputs.service }}" \
+        --set "${{ inputs.service }}.cache-to=type=gha,scope=${{ inputs.service }},mode=max" \
+        --load
     working-directory: ./src
     env:
       TAG: ${{ env.BRANCH }}
@@ -59,9 +69,9 @@ runs:
       echo "Tagging $image as $sha_tag"
       docker tag "$image" "$sha_tag"
 
-  - name: Compose push  -f docker-compose.yml ${{ inputs.service }}
+  - name: Push ${{ inputs.service }}
     shell: bash
-    run: sudo -E docker compose push ${{ inputs.service }}
+    run: docker compose -f docker-compose.yml push ${{ inputs.service }}
     working-directory: ./src
     env:
       TAG: ${{ env.BRANCH }}

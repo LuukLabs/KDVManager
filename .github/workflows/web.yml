@@ -5,6 +5,11 @@ on:
   push:
     branches:
     - main
+    paths:
+    - src/web/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/web.yml
   
   pull_request:
     branches:
@@ -12,6 +17,8 @@ on:
 
     paths:
     - src/web/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
     - .github/workflows/web.yml
 env:
   REGISTRY: ghcr.io

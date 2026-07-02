@@ -4,6 +4,7 @@ using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Application.Contracts.Services;
 using KDVManager.Services.CRM.Domain.Entities;
 using KDVManager.Shared.Contracts.Events;
+using KDVManager.Shared.Contracts.Tenancy;
 using MassTransit;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Commands.AddChild;
@@ -13,15 +14,18 @@ public class AddChildCommandHandler
     private readonly IChildRepository _childRepository;
     private readonly IChildNumberSequenceService _childNumberSequenceService;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
     public AddChildCommandHandler(
         IChildRepository childRepository,
         IChildNumberSequenceService childNumberSequenceService,
-        IPublishEndpoint publishEndpoint)
+        IPublishEndpoint publishEndpoint,
+        ITenancyContextAccessor tenancyContextAccessor)
     {
         _childRepository = childRepository;
         _childNumberSequenceService = childNumberSequenceService;
         _publishEndpoint = publishEndpoint;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public async Task<Guid> Handle(AddChildCommand request)
@@ -31,6 +35,8 @@ public class AddChildCommandHandler
 
         if (!validationResult.IsValid)
             throw new Exceptions.ValidationException(validationResult);
+
+        var tenantId = _tenancyContextAccessor.Current?.TenantId ?? throw new InvalidOperationException("Tenant context is required");
 
         // Get the next child number for this tenant
         var childNumber = await _childNumberSequenceService.GetNextChildNumberAsync();
@@ -43,7 +49,7 @@ public class AddChildCommandHandler
             DateOfBirth = (DateOnly)request.DateOfBirth!,
             CID = request.CID,
             ChildNumber = childNumber,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            TenantId = tenantId
         };
 
         child = await _childRepository.AddAsync(child);

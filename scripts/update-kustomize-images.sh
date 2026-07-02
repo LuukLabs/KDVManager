@@ -16,6 +16,7 @@ TAG="linux-${SHORT_SHA}"
 # Migrators share same tag as api builds.
 MAPPINGS=(
   "web|ghcr.io/luuklabs/kdvmanager/web"
+  "marketing|ghcr.io/luuklabs/kdvmanager/marketing"
   "crm|ghcr.io/luuklabs/kdvmanager/crm.api,ghcr.io/luuklabs/kdvmanager/crm.migrator"
   "scheduling|ghcr.io/luuklabs/kdvmanager/scheduling.api,ghcr.io/luuklabs/kdvmanager/scheduling.migrator"
 )

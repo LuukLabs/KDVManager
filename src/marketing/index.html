@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KDVManager — Kinderopvangsoftware met rust in de planning</title>
+  <meta name="description" content="KDVManager is dé planningssoftware voor kinderdagverblijven. Dagplanning, kindbeheer, oudergegevens en rapportages — alles op één plek. Probeer 30 dagen gratis.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ================= NAV ================= -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="KDVManager home">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="6" y="6" width="22" height="22" rx="6" fill="#2E5E4E"/>
+          <circle cx="47" cy="17" r="11" fill="#F2A93B"/>
+          <path d="M6 58 L6 47 A11 11 0 0 1 28 47 L28 58 Z" fill="#E2654B"/>
+          <path d="M36 58 A22 22 0 0 1 58 36 L58 58 Z" fill="#6FA287"/>
+        </svg>
+        KDVManager
+      </a>
+      <nav aria-label="Hoofdmenu">
+        <ul class="nav-links">
+          <li><a href="#functies">Functies</a></li>
+          <li><a href="#werkwijze">Zo werkt het</a></li>
+          <li><a href="#prijzen">Prijzen</a></li>
+          <li><a href="#faq">Vragen</a></li>
+          <li><a href="brand.html">Merk</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-ghost" href="https://app.kdvmanager.nl">Inloggen</a>
+        <a class="btn btn-sun" href="#prijzen">Probeer gratis</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <svg class="sticker sticker-sun" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="26" fill="#F2A93B" stroke="#1E2B23" stroke-width="3"/>
+        <g stroke="#1E2B23" stroke-width="3" stroke-linecap="round">
+          <line x1="50" y1="6" x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="94"/>
+          <line x1="6" y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="94" y2="50"/>
+          <line x1="19" y1="19" x2="27" y2="27"/><line x1="73" y1="73" x2="81" y2="81"/>
+          <line x1="73" y1="27" x2="81" y2="19"/><line x1="19" y1="81" x2="27" y2="73"/>
+        </g>
+      </svg>
+      <svg class="sticker sticker-arch" viewBox="0 0 110 70" aria-hidden="true">
+        <path d="M5 65 L5 40 A50 33 0 0 1 105 40 L105 65 L85 65 L85 42 A30 19 0 0 0 25 42 L25 65 Z" fill="#E2654B" stroke="#1E2B23" stroke-width="3"/>
+      </svg>
+      <svg class="sticker sticker-star" viewBox="0 0 50 50" aria-hidden="true">
+        <path d="M25 3 L30 19 L47 19 L33 29 L38 46 L25 36 L12 46 L17 29 L3 19 L20 19 Z" fill="#6FA287" stroke="#1E2B23" stroke-width="2.5"/>
+      </svg>
+
+      <div class="wrap hero-grid">
+        <div>
+          <span class="kicker" data-step="1">Software voor kinderdagverblijven</span>
+          <h1 data-step="2">
+            De rust van een
+            <span class="u-sun"><em>geregelde</em>
+              <svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M4 14 C 60 6, 140 18, 296 8"/>
+              </svg>
+            </span>
+            dag.
+          </h1>
+          <p class="hero-lede" data-step="3">
+            Dagplanning, kindgegevens, oudercontacten en rapportages — alles van je
+            kinderdagverblijf op één overzichtelijke plek. Zodat jouw team minder tijd
+            kwijt is aan administratie en meer tijd heeft voor de kinderen.
+          </p>
+          <div class="hero-cta" data-step="4">
+            <a class="btn btn-primary btn-lg" href="#prijzen">Start 30 dagen gratis</a>
+            <a class="btn btn-ghost btn-lg" href="#functies">Bekijk de functies</a>
+          </div>
+          <div class="hero-note" data-step="5">
+            <span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Geen creditcard nodig
+            </span>
+            <span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Binnen één dag ingericht
+            </span>
+            <span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Maandelijks opzegbaar
+            </span>
+          </div>
+        </div>
+
+        <!-- product-mock: dagoverzicht -->
+        <div data-step="3">
+          <div class="mock" role="img" aria-label="Voorbeeld van het dagplanningsscherm in KDVManager">
+            <div class="mock-bar">
+              <div class="dots"><i></i><i></i><i></i></div>
+              <span class="mock-date">Donderdag 12 juni</span>
+              <span class="mock-chip">Vandaag</span>
+            </div>
+            <div class="mock-cols">
+              <div class="mock-group">
+                <h4>De Vlinders <small>0–2 jr · 9 kinderen</small></h4>
+                <div class="mock-kid"><span class="avatar" style="background:#F8D89A">SJ</span><span class="naam">Sam Jansen</span><span class="tijd">07:30–18:00</span></div>
+                <div class="mock-kid"><span class="avatar" style="background:#F6CDC2">NB</span><span class="naam">Noor de Boer</span><span class="tijd">08:00–13:00</span></div>
+                <div class="mock-kid absent"><span class="avatar" style="background:#BCD7E4">LV</span><span class="naam">Lina Visser</span><span class="tag-absent">Afwezig</span></div>
+              </div>
+              <div class="mock-group">
+                <h4>De Beren <small>2–4 jr · 12 kinderen</small></h4>
+                <div class="mock-kid"><span class="avatar" style="background:#DCE9DF">MK</span><span class="naam">Mees de Koning</span><span class="tijd">07:30–18:00</span></div>
+                <div class="mock-kid"><span class="avatar" style="background:#F8D89A">YA</span><span class="naam">Yara Ahmed</span><span class="tijd">08:30–17:30</span></div>
+                <div class="mock-kid"><span class="avatar" style="background:#F6CDC2">DB</span><span class="naam">Daan Bakker</span><span class="tijd">07:30–13:00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MARQUEE ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Dagplanning <i>✸</i> Kindbeheer <i>✸</i> Oudergegevens <i>✸</i> Aanwezigheidslijsten <i>✸</i> Groepsplanning <i>✸</i> Rapportages <i>✸</i> Sluitingsdagen <i>✸</i> Telefoonlijsten <i>✸</i></span>
+        <span>Dagplanning <i>✸</i> Kindbeheer <i>✸</i> Oudergegevens <i>✸</i> Aanwezigheidslijsten <i>✸</i> Groepsplanning <i>✸</i> Rapportages <i>✸</i> Sluitingsdagen <i>✸</i> Telefoonlijsten <i>✸</i></span>
+      </div>
+    </div>
+
+    <!-- ================= CIJFERS ================= -->
+    <section class="section">
+      <div class="wrap">
+        <div class="stats">
+          <div class="stat reveal"><strong>6+ uur</strong><span>minder administratie per week</span></div>
+          <div class="stat reveal" data-delay="1"><strong>1 dag</strong><span>van aanmelden tot volledig ingericht</span></div>
+          <div class="stat reveal" data-delay="2"><strong>100%</strong><span>AVG-proof, data in de EU</span></div>
+          <div class="stat reveal" data-delay="3"><strong>0</strong><span>papieren lijsten op de groep</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FUNCTIES ================= -->
+    <section class="section section-deep" id="functies">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">Alles wat je nodig hebt</span>
+          <h2>Eén systeem voor de hele opvang</h2>
+          <p>Geen losse Excel-lijsten, mappen en briefjes meer. KDVManager brengt planning, kinddossiers en communicatie samen.</p>
+        </div>
+
+        <div class="features">
+          <article class="feature reveal">
+            <div class="feature-icon fi-sun">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><circle cx="12" cy="15.5" r="2" fill="#F2A93B" stroke="none"/>
+              </svg>
+            </div>
+            <h3>Dagplanning in één oogopslag</h3>
+            <p>Zie per groep direct wie er vandaag komt, wie afwezig is en welke tijdsblokken gelden. Bladeren door dagen gaat met één klik.</p>
+          </article>
+
+          <article class="feature reveal" data-delay="1">
+            <div class="feature-icon fi-coral">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"/><path d="M4 21 C4 16.5 7.5 14 12 14 C16.5 14 20 16.5 20 21"/>
+              </svg>
+            </div>
+            <h3>Kinddossiers compleet</h3>
+            <p>Alle kindgegevens, contracten en planningsregels netjes bij elkaar. Zoeken, aanpassen en archiveren zonder gedoe.</p>
+          </article>
+
+          <article class="feature reveal" data-delay="2">
+            <div class="feature-icon fi-leaf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="8" cy="9" r="3.2"/><circle cx="16.5" cy="10" r="2.6"/><path d="M2.5 20 C2.5 16.5 5 14.5 8 14.5 C11 14.5 13.5 16.5 13.5 20"/><path d="M14.5 19 C15 16.5 17 15.2 19 15.5 C20.5 15.7 21.7 16.8 21.9 19"/>
+              </svg>
+            </div>
+            <h3>Ouders &amp; verzorgers gekoppeld</h3>
+            <p>Koppel kinderen aan ouders met de juiste relatie. Telefoonlijsten en e-maillijsten voor je nieuwsbrief rollen er vanzelf uit.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon fi-sky">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M6 3 L18 3 L18 21 L6 21 Z"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
+              </svg>
+            </div>
+            <h3>Rapportages &amp; printlijsten</h3>
+            <p>Aanwezigheidsschema's per groep, telefoonlijsten als PDF en maandoverzichten — klaar om te printen of te delen, in seconden.</p>
+          </article>
+
+          <article class="feature reveal" data-delay="1">
+            <div class="feature-icon fi-sun">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3.2"/><path d="M12 2.5 L12 5 M12 19 L12 21.5 M2.5 12 L5 12 M19 12 L21.5 12 M5.3 5.3 L7 7 M17 17 L18.7 18.7 M17 7 L18.7 5.3 M5.3 18.7 L7 17"/>
+              </svg>
+            </div>
+            <h3>Slimme automatisering</h3>
+            <p>Einddatums worden automatisch gezet op basis van leeftijd, sluitingsdagen verschijnen vanzelf in de planning. Minder handwerk, minder fouten.</p>
+          </article>
+
+          <article class="feature reveal" data-delay="2">
+            <div class="feature-icon fi-coral">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E2B23" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <rect x="4" y="9" width="16" height="11" rx="2.5"/><path d="M8 9 V6.5 A4 4 0 0 1 16 6.5 V9"/><circle cx="12" cy="14.5" r="1.6" fill="#1E2B23" stroke="none"/>
+              </svg>
+            </div>
+            <h3>Veilig &amp; AVG-proof</h3>
+            <p>Versleutelde opslag binnen de EU, veilige logins en strikte scheiding tussen organisaties. Kindgegevens verdienen niets minder.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WERKWIJZE ================= -->
+    <section class="section section-pine" id="werkwijze">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker" style="background:rgba(251,246,237,0.12); color:var(--marigold); border-color:var(--marigold);">Zo werkt het</span>
+          <h2>Vandaag aangemeld, morgen draait je planning</h2>
+          <p>Overstappen hoeft geen project van maanden te zijn. De meeste opvangen staan binnen één dag volledig in KDVManager.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <h3>Richt je groepen in</h3>
+            <p>Maak je groepen en tijdsblokken aan — verticaal, horizontaal, halve dagen: alles kan. Sluitingsdagen zet je er in één keer voor het hele jaar in.</p>
+          </div>
+          <div class="step reveal" data-delay="1">
+            <h3>Voeg kinderen &amp; ouders toe</h3>
+            <p>Importeer of voer je kinderen in en koppel ouders met de juiste relatie. Planningsregels per kind bepalen automatisch het dagrooster.</p>
+          </div>
+          <div class="step reveal" data-delay="2">
+            <h3>Open het dagoverzicht</h3>
+            <p>Vanaf dat moment ziet elke groep 's ochtends precies wie er komt. Wijzigingen zijn direct overal zichtbaar — op kantoor én op de groep.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUOTES ================= -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head centered reveal">
+          <span class="kicker">Uit de praktijk</span>
+          <h2>Leid(st)ers en houders die het rustiger kregen</h2>
+        </div>
+        <div class="quotes">
+          <blockquote class="quote reveal">
+            <p>Vroeger begon elke ochtend met zoeken in mappen en bellen met kantoor. Nu open ik het dagoverzicht en weet ik in tien seconden wie er komt.</p>
+            <footer>
+              <span class="avatar" style="background:#F8D89A">MV</span>
+              <div><strong>Marieke van Dijk</strong><span>Pedagogisch medewerker, De Kleine Wereld</span></div>
+            </footer>
+          </blockquote>
+          <blockquote class="quote reveal" data-delay="1">
+            <p>De telefoonlijsten en aanwezigheidsschema's scheelden ons meteen een halve werkdag per week. Dat is gewoon een halve dag extra voor de kinderen.</p>
+            <footer>
+              <span class="avatar" style="background:#F6CDC2">JB</span>
+              <div><strong>Jeroen Bos</strong><span>Houder, KDV Het Zonnetje (2 locaties)</span></div>
+            </footer>
+          </blockquote>
+          <blockquote class="quote reveal" data-delay="2">
+            <p>Wat mij over de streep trok: het is gewoon simpel. Geen training van drie dagen — ons team werkte er dezelfde week al volledig mee.</p>
+            <footer>
+              <span class="avatar" style="background:#DCE9DF">SE</span>
+              <div><strong>Samira El Idrissi</strong><span>Locatiemanager, BSO De Boomhut</span></div>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PRIJZEN ================= -->
+    <section class="section section-deep" id="prijzen">
+      <div class="wrap">
+        <div class="section-head centered reveal">
+          <span class="kicker">Eerlijke prijzen</span>
+          <h2>Een prijs die meegroeit met je opvang</h2>
+          <p>Altijd alle updates, altijd Nederlandse support. Eerste 30 dagen gratis, maandelijks opzegbaar — geen kleine lettertjes.</p>
+        </div>
+
+        <div style="text-align:center">
+          <div class="billing-toggle reveal" role="group" aria-label="Facturatieperiode">
+            <div class="thumb" id="toggleThumb"></div>
+            <button type="button" id="btnMaand" class="active" aria-pressed="true">Per maand</button>
+            <button type="button" id="btnJaar" aria-pressed="false">Per jaar</button>
+            <span class="korting">2 mnd gratis</span>
+          </div>
+        </div>
+
+        <div class="plans">
+          <!-- START -->
+          <article class="plan reveal">
+            <h3>Start</h3>
+            <p class="plan-sub">Voor kleinschalige opvang en gastouders die het overzicht terug willen.</p>
+            <div class="plan-price">
+              <strong>€<span class="price-swap" data-maand="29" data-jaar="24">29</span></strong>
+              <span>/ maand</span>
+            </div>
+            <p class="plan-jaarnoot" data-maandtekst="Maandelijks opzegbaar" data-jaartekst="€290 per jaar, achteraf gefactureerd">Maandelijks opzegbaar</p>
+            <ul>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Tot 25 kindplaatsen</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>1 locatie, onbeperkt aantal groepen</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Dagplanning &amp; kindbeheer</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Ouders &amp; verzorgers koppelen</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Support per e-mail</li>
+              <li class="muted"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5 L15 15 M15 5 L5 15" stroke="#44544A" stroke-width="2" stroke-linecap="round"/></svg>Rapportages &amp; PDF-export</li>
+            </ul>
+            <a class="btn btn-ghost" href="#" data-cta="start">Start gratis proefperiode</a>
+          </article>
+
+          <!-- GROEI -->
+          <article class="plan plan-popular reveal" data-delay="1">
+            <span class="plan-badge">Meest gekozen</span>
+            <h3>Groei</h3>
+            <p class="plan-sub">Voor het gemiddelde kinderdagverblijf dat administratie wil halveren.</p>
+            <div class="plan-price">
+              <strong>€<span class="price-swap" data-maand="69" data-jaar="57">69</span></strong>
+              <span>/ maand</span>
+            </div>
+            <p class="plan-jaarnoot" data-maandtekst="Maandelijks opzegbaar" data-jaartekst="€690 per jaar, achteraf gefactureerd">Maandelijks opzegbaar</p>
+            <ul>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Tot 100 kindplaatsen</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Alles uit Start</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Rapportages, printlijsten &amp; PDF-export</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Nieuwsbrief-ontvangerslijsten</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Automatische einddatums</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#F2A93B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Support per e-mail &amp; telefoon</li>
+            </ul>
+            <a class="btn btn-primary" href="#" data-cta="groei">Start gratis proefperiode</a>
+          </article>
+
+          <!-- COMPLEET -->
+          <article class="plan reveal" data-delay="2">
+            <h3>Compleet</h3>
+            <p class="plan-sub">Voor organisaties met meerdere locaties die alles centraal willen regelen.</p>
+            <div class="plan-price">
+              <strong>€<span class="price-swap" data-maand="129" data-jaar="107">129</span></strong>
+              <span>/ maand</span>
+            </div>
+            <p class="plan-jaarnoot" data-maandtekst="Maandelijks opzegbaar" data-jaartekst="€1.290 per jaar, achteraf gefactureerd">Maandelijks opzegbaar</p>
+            <ul>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Onbeperkt kindplaatsen</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Meerdere locaties, centraal beheerd</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Alles uit Groei</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Persoonlijke onboarding &amp; data-import</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Prioriteitssupport, reactie &lt; 4 uur</li>
+              <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5 L8.5 15 L16 5.5" stroke="#2E5E4E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Vast aanspreekpunt</li>
+            </ul>
+            <a class="btn btn-ghost" href="#" data-cta="compleet">Plan een demo</a>
+          </article>
+        </div>
+
+        <p class="pricing-note reveal">
+          Alle prijzen excl. btw. Groter dan 250 kindplaatsen of bijzondere wensen?
+          <a href="mailto:hallo@kdvmanager.nl">Mail ons</a> voor een passend voorstel.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="section" id="faq">
+      <div class="wrap">
+        <div class="section-head centered reveal">
+          <span class="kicker">Veelgestelde vragen</span>
+          <h2>Nog even checken</h2>
+        </div>
+        <div class="faq reveal">
+          <details open>
+            <summary>Hoe werkt de gratis proefperiode?</summary>
+            <p>Je gebruikt KDVManager 30 dagen volledig gratis, inclusief alle functies van het Groei-pakket. Geen creditcard nodig. Na afloop kies je een pakket — of je stopt, zonder verplichtingen. Je gegevens blijven nog 90 dagen bewaard.</p>
+          </details>
+          <details>
+            <summary>Hoe zit het met de AVG en kindgegevens?</summary>
+            <p>Alle data wordt versleuteld opgeslagen op servers binnen de EU. Elke organisatie heeft een strikt gescheiden omgeving en we sluiten standaard een verwerkersovereenkomst met je af. Je kunt gegevens altijd exporteren of laten verwijderen.</p>
+          </details>
+          <details>
+            <summary>Kunnen we onze bestaande gegevens meenemen?</summary>
+            <p>Ja. Kinderen, ouders en planningen importeer je zelf eenvoudig, en in het Compleet-pakket doen wij de volledige data-import voor je — ook vanuit Excel of andere kinderopvangsoftware.</p>
+          </details>
+          <details>
+            <summary>Moet ons team een training volgen?</summary>
+            <p>Nee. KDVManager is ontworpen om zonder handleiding te werken: als je een agenda kunt gebruiken, kun je KDVManager gebruiken. De meeste teams werken er binnen een week volledig zelfstandig mee.</p>
+          </details>
+          <details>
+            <summary>Wat als we willen stoppen?</summary>
+            <p>Maandpakketten zijn per maand opzegbaar, jaarpakketten per jaar. Je krijgt al je gegevens mee in een nette export — het zijn en blijven jouw gegevens.</p>
+          </details>
+          <details>
+            <summary>Werkt het ook voor BSO of gastouders?</summary>
+            <p>Zeker. Groepen, tijdsblokken en planningsregels zijn volledig vrij in te richten, dus naast kinderdagverblijven werken ook BSO's, peuterspeelzalen en gastouderbureaus prima met KDVManager.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLOT-CTA ================= -->
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="cta-final reveal">
+          <svg class="deco deco-1" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="34" fill="none" stroke="#1E2B23" stroke-width="3" stroke-dasharray="6 8"/>
+          </svg>
+          <svg class="deco deco-2" viewBox="0 0 110 70" aria-hidden="true">
+            <path d="M5 65 L5 40 A50 33 0 0 1 105 40 L105 65 L85 65 L85 42 A30 19 0 0 0 25 42 L25 65 Z" fill="#E2654B" stroke="#1E2B23" stroke-width="3"/>
+          </svg>
+          <h2>Morgenochtend gewoon weten wie er komt.</h2>
+          <p>Probeer KDVManager 30 dagen gratis. Geen creditcard, geen installatie, geen verplichtingen — wél rust in je planning.</p>
+          <a class="btn btn-primary btn-lg" href="#prijzen">Start je gratis proefperiode</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#top">
+            <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+              <rect x="6" y="6" width="22" height="22" rx="6" fill="#FBF6ED"/>
+              <circle cx="47" cy="17" r="11" fill="#F2A93B"/>
+              <path d="M6 58 L6 47 A11 11 0 0 1 28 47 L28 58 Z" fill="#E2654B"/>
+              <path d="M36 58 A22 22 0 0 1 58 36 L58 58 Z" fill="#6FA287"/>
+            </svg>
+            KDVManager
+          </a>
+          <p class="footer-tagline">Planningssoftware voor kinderdagverblijven, BSO's en gastouderbureaus. Gemaakt in Nederland, met liefde voor de opvang.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="https://app.kdvmanager.nl">Inloggen</a></li>
+            <li><a href="#functies">Functies</a></li>
+            <li><a href="#prijzen">Prijzen</a></li>
+            <li><a href="#faq">Veelgestelde vragen</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Bedrijf</h4>
+          <ul>
+            <li><a href="brand.html">Merkgids</a></li>
+            <li><a href="mailto:hallo@kdvmanager.nl">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Juridisch</h4>
+          <ul>
+            <li><a href="#">Privacyverklaring</a></li>
+            <li><a href="#">Verwerkersovereenkomst</a></li>
+            <li><a href="#">Algemene voorwaarden</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-base">
+        <span>© 2026 KDVManager · kdvmanager.nl</span>
+        <span>Gemaakt met ☀ in Nederland</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // scroll-reveal
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // prijstoggle maand/jaar
+    const btnMaand = document.getElementById('btnMaand');
+    const btnJaar = document.getElementById('btnJaar');
+    const thumb = document.getElementById('toggleThumb');
+
+    function positionThumb(btn) {
+      thumb.style.left = btn.offsetLeft + 'px';
+      thumb.style.width = btn.offsetWidth + 'px';
+    }
+
+    function setBilling(jaar) {
+      const active = jaar ? btnJaar : btnMaand;
+      const inactive = jaar ? btnMaand : btnJaar;
+      active.classList.add('active');
+      active.setAttribute('aria-pressed', 'true');
+      inactive.classList.remove('active');
+      inactive.setAttribute('aria-pressed', 'false');
+      positionThumb(active);
+
+      document.querySelectorAll('.price-swap').forEach(el => {
+        el.classList.remove('flip');
+        void el.offsetWidth; // herstart animatie
+        el.classList.add('flip');
+        setTimeout(() => { el.textContent = jaar ? el.dataset.jaar : el.dataset.maand; }, 200);
+      });
+      document.querySelectorAll('.plan-jaarnoot').forEach(el => {
+        el.textContent = jaar ? el.dataset.jaartekst : el.dataset.maandtekst;
+      });
+    }
+
+    btnMaand.addEventListener('click', () => setBilling(false));
+    btnJaar.addEventListener('click', () => setBilling(true));
+    window.addEventListener('resize', () => positionThumb(document.querySelector('.billing-toggle .active')));
+    positionThumb(btnMaand);
+  </script>
+</body>
+</html>

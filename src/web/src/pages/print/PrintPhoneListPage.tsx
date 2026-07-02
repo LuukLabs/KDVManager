@@ -529,8 +529,8 @@ export const Component = PrintPhoneListPage;
     background: #f5f5f5 !important;
   }
   .MuiChip-colorPrimary {
-    background: #e3f2fd !important;
-    border-color: #1976d2 !important;
+    background: #E7EFE9 !important;
+    border-color: #2E5E4E !important;
   }
   .MuiChip-colorError {
     background: #ffebee !important;

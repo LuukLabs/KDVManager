@@ -52,8 +52,16 @@ export const LinkedEntityList: React.FC<LinkedEntityListProps> = ({
         return (
           <Box
             key={item.id ?? `item-${idx}`}
-            component={clickable ? "button" : "div"}
+            // A native <button> here would nest the unlink IconButton inside it (invalid DOM)
+            role={clickable ? "button" : undefined}
+            tabIndex={clickable ? 0 : undefined}
             onClick={() => clickable && onNavigate(item.navigateTo!)}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (clickable && (e.key === "Enter" || e.key === " ") && e.target === e.currentTarget) {
+                e.preventDefault();
+                onNavigate(item.navigateTo!);
+              }
+            }}
             sx={{
               width: "100%",
               textAlign: "left",

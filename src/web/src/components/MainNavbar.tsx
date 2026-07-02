@@ -66,11 +66,11 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
           <Toolbar disableGutters>
             <Box
               component="img"
-              src="/favicon-32x32.png"
+              src="/favicon.svg"
               alt={t("KDVManager")}
               sx={{
                 display: { xs: "none", md: "flex" },
-                mr: 1,
+                mr: 1.5,
                 width: 32,
                 height: 32,
               }}
@@ -81,11 +81,10 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
               component="a"
               href="/"
               sx={{
-                mr: 2,
+                mr: 3,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: ".3rem",
+                letterSpacing: "-0.01em",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -150,7 +149,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
             </Box>
             <Box
               component="img"
-              src="/favicon-32x32.png"
+              src="/favicon.svg"
               alt={t("KDVManager")}
               sx={{
                 display: { xs: "flex", md: "none" },
@@ -160,17 +159,16 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
               }}
             />
             <Typography
-              variant="h5"
+              variant="h6"
               noWrap
               component="a"
-              href=""
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: ".3rem",
+                letterSpacing: "-0.01em",
                 color: "inherit",
                 textDecoration: "none",
               }}

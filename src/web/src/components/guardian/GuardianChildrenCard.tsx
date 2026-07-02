@@ -79,14 +79,14 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
             color: getRelationshipColor(c.relationshipType) as any,
           },
           ...(c.isPrimaryContact
-            ? [{ label: "Primary", color: "primary", variant: "filled" as const }]
+            ? [{ label: t("Primary"), color: "primary", variant: "filled" as const }]
             : []),
           ...(c.isEmergencyContact
-            ? [{ label: "Emergency", color: "error", variant: "filled" as const }]
+            ? [{ label: t("Emergency"), color: "error", variant: "filled" as const }]
             : []),
         ],
         secondaryLines: [
-          `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ""}`,
+          `${t("Born")}: ${formatDate(c.dateOfBirth)}${c.age ? ` (${t("{{count}} years", { count: c.age })})` : ""}`,
           c.cid ? `CID: ${c.cid}` : "",
         ].filter(Boolean),
         navigateTo: c.childId ? `/children/${c.childId}` : undefined,

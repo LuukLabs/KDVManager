@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  Typography,
   FormControlLabel,
   Switch,
   TextField,
@@ -89,10 +88,6 @@ export const EndMarkSettingsCard: React.FC = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-          {t("EndMark Automation Settings")}
-        </Typography>
-
         {updateMutation.isError && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {t("Failed to update settings. Please try again.")}

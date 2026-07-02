@@ -54,7 +54,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
 
   const getAvatarColor = () => {
     // Generate consistent color based on child ID
-    const colors = ["#1976d2", "#388e3c", "#f57c00", "#7b1fa2", "#c2185b", "#00796b"];
+    // Brand-derived categorical palette (dark enough for white avatar text)
+    const colors = ["#2E5E4E", "#E2654B", "#B77A1C", "#4E7A96", "#7A5A8C", "#4E8467"];
     let hash = 0;
     for (let i = 0; i < childId.length; i++) {
       hash = ((hash << 5) - hash + childId.charCodeAt(i)) & 0xffffffff;
@@ -194,7 +195,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       sx={{
                         fontWeight: 600,
                         fontSize: { xs: "0.65rem", sm: "0.7rem" },
-                        color: "success.main",
+                        color: "text.primary",
                         fontFamily: "monospace",
                       }}
                     >
@@ -214,7 +215,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       sx={{
                         fontWeight: 600,
                         fontSize: { xs: "0.65rem", sm: "0.7rem" },
-                        color: "error.main",
+                        color: "text.primary",
                         fontFamily: "monospace",
                       }}
                     >

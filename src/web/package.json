@@ -11,7 +11,7 @@
     "@ebay/nice-modal-react": "^1.2.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@fontsource/roboto": "^5.2.10",
+    "@fontsource-variable/instrument-sans": "^5.2.8",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@mui/system": "^9.0.1",

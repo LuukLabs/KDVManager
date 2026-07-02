@@ -93,7 +93,7 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
       case ChildSchedulingStatus.Active:
         return alpha("#4caf50", 0.3);
       case ChildSchedulingStatus.Upcoming:
-        return alpha("#2196f3", 0.3);
+        return alpha("#4E7A96", 0.3);
       case ChildSchedulingStatus.Past:
         return alpha("#9e9e9e", 0.3);
       case ChildSchedulingStatus.NoPlanning:
@@ -141,8 +141,8 @@ export const ChildHeader: React.FC<ChildHeaderProps> = ({
               sx={{
                 width: { xs: 56, md: 64 },
                 height: { xs: 56, md: 64 },
-                bgcolor: alpha("#fff", 0.22),
-                color: "primary.main",
+                bgcolor: alpha("#fff", 0.92),
+                color: "primary.dark",
                 fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
                 border: "2px solid rgba(255,255,255,0.3)",

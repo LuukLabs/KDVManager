@@ -1,4 +1,5 @@
-import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import GroupsTable from "../../features/groups/GroupsTable";
 import Button from "@mui/material/Button";
@@ -14,11 +15,27 @@ const ListGroupsPage = () => {
 
   return (
     <>
-      <Toolbar>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 2,
+          mb: 2,
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            {t("Groups")}
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>
+            {t("Manage groups.")}
+          </Typography>
+        </Box>
         <Button variant="contained" onClick={onAddGroupClickHandler} startIcon={<AddIcon />}>
           {t("Group")}
         </Button>
-      </Toolbar>
+      </Box>
       <Paper>
         <GroupsTable />
       </Paper>

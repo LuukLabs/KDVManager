@@ -40,8 +40,9 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
   return (
     <Box
       sx={{
-        background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
-        color: "white",
+        background: `linear-gradient(135deg, ${theme.palette.secondary.light} 0%, ${theme.palette.secondary.main} 100%)`,
+        // Brand rule: goudsbloem carries ink text, not white (contrast)
+        color: "#1E2B23",
         p: { xs: 2, sm: 2.5, md: 3 },
         borderRadius: { xs: 0, md: 3 },
         mb: { xs: 2, md: 3 },
@@ -70,11 +71,11 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
               sx={{
                 width: { xs: 56, md: 64 },
                 height: { xs: 56, md: 64 },
-                bgcolor: alpha("#fff", 0.25),
-                color: "secondary.main",
+                bgcolor: alpha("#fff", 0.55),
+                color: "#1E2B23",
                 fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
-                border: "2px solid rgba(255,255,255,0.3)",
+                border: "2px solid rgba(30, 43, 35, 0.25)",
               }}
             >
               {loading ? <PersonIcon /> : initials.toUpperCase()}
@@ -118,9 +119,10 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
                 sx={{
                   borderColor: alpha(theme.palette.error.main, 0.7),
                   color: theme.palette.error.main,
+                  backgroundColor: alpha("#fff", 0.85),
                   "&:hover": {
                     borderColor: theme.palette.error.main,
-                    backgroundColor: alpha(theme.palette.error.main, 0.1),
+                    backgroundColor: "#fff",
                   },
                 }}
               >

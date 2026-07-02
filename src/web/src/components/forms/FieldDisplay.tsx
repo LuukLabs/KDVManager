@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type FieldDisplayProps = {
   label: string;
@@ -12,8 +13,10 @@ export const FieldDisplay: React.FC<FieldDisplayProps> = ({
   label,
   value,
   loading = false,
-  placeholder = "Not specified",
+  placeholder,
 }) => {
+  const { t } = useTranslation();
+  placeholder ??= t("Not specified");
   if (loading) {
     return (
       <Box>

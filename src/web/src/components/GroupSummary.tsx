@@ -74,7 +74,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           boxShadow: 2,
           border: "1px solid",
           borderColor: "primary.100",
-          background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #fbfaf6 0%, #ffffff 100%)",
         }}
       >
         <CardContent
@@ -130,7 +130,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           boxShadow: 2,
           border: "1px solid",
           borderColor: "grey.200",
-          background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #fbfaf6 0%, #ffffff 100%)",
         }}
       >
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
@@ -172,7 +172,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
         boxShadow: 2,
         border: "1px solid",
         borderColor: "primary.100",
-        background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+        background: "linear-gradient(135deg, #fbfaf6 0%, #ffffff 100%)",
       }}
     >
       <CardContent sx={{ p: { xs: 1.5, sm: 2 }, "&:last-child": { pb: { xs: 1.5, sm: 2 } } }}>
@@ -199,7 +199,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2, flexWrap: "wrap" }}>
             <Chip
               icon={<ChildCare />}
-              label={`${summary.numberOfChildren} ${t("children")}`}
+              label={t("{{count}} children", { count: summary.numberOfChildren })}
               size="small"
               color="primary"
               variant="outlined"
@@ -217,7 +217,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             )}
             <Chip
               icon={<SupervisorAccount />}
-              label={`${summary.requiredProfessionals} ${t("supervisors")}`}
+              label={t("{{count}} supervisors", { count: summary.requiredProfessionals })}
               size="small"
               color="secondary"
               variant="outlined"
@@ -239,12 +239,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                 justifyContent: "space-between",
                 p: 1,
                 borderRadius: 1,
-                backgroundColor: "rgba(25, 118, 210, 0.04)",
+                backgroundColor: "rgba(46, 94, 78, 0.04)",
                 border: "1px solid",
-                borderColor: "rgba(25, 118, 210, 0.12)",
+                borderColor: "rgba(46, 94, 78, 0.12)",
                 transition: "all 0.2s ease-in-out",
                 "&:hover": {
-                  backgroundColor: "rgba(25, 118, 210, 0.08)",
+                  backgroundColor: "rgba(46, 94, 78, 0.08)",
                   borderColor: "primary.main",
                   transform: "translateX(2px)",
                 },
@@ -332,7 +332,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             sx={{
               textAlign: "center",
               pb: 1,
-              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+              background: "linear-gradient(135deg, #2E5E4E 0%, #234A3D 100%)",
               color: "white",
               display: "flex",
               alignItems: "center",
@@ -358,7 +358,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
               <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
                 <Chip
                   icon={<ChildCare />}
-                  label={`${selectedTimeBlock?.totalChildren} ${t("children")}`}
+                  label={t("{{count}} children", { count: selectedTimeBlock?.totalChildren ?? 0 })}
                   color="primary"
                   variant="outlined"
                 />

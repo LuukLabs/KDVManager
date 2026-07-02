@@ -62,7 +62,7 @@ public static class ConfigureServices
                 {
                     foreach (var parameter in operation.Parameters)
                     {
-                        if (parameter is OpenApiParameter p)
+                        if (parameter is OpenApiParameter p && !string.IsNullOrEmpty(p.Name))
                         {
                             p.Name = Char.ToLowerInvariant(p.Name[0]) + p.Name[1..];
                         }

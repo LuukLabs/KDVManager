@@ -13,7 +13,8 @@ public class ScheduleRule : IMustHaveTenant
     public Guid GroupId { get; set; }
     [Required]
     public Guid TimeSlotId { get; set; }
-    public TimeSlot TimeSlot { get; set; }
-    public Group Group { get; set; }
-    public Schedule Schedule { get; set; }
+    // EF Core navigation properties, populated by the framework when included in a query.
+    public TimeSlot TimeSlot { get; set; } = null!;
+    public Group Group { get; set; } = null!;
+    public Schedule Schedule { get; set; } = null!;
 }

@@ -5,7 +5,7 @@ namespace KDVManager.Services.Scheduling.Application.Features.Groups.Queries.Lis
 public class GroupListVM
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
 }
 

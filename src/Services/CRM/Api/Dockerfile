@@ -13,7 +13,7 @@ COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.
 
 RUN dotnet restore "Services/CRM/Api/Api.csproj"
 
-FROM restore as build
+FROM restore AS build
 
 COPY Services/CRM Services/CRM
 COPY Shared Shared
@@ -25,7 +25,7 @@ RUN dotnet build "Api/Api.csproj" -c Release \
     --no-restore \
     --no-incremental
 
-FROM build as publish
+FROM build AS publish
 
 RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --verbosity minimal \
@@ -33,7 +33,7 @@ RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --no-build \
     /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.9 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.9 AS runtime
 
 EXPOSE 80
 EXPOSE 443

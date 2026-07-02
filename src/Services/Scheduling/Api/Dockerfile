@@ -11,12 +11,12 @@ COPY ["Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj", "
 COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared/KDVManager.Shared.Domain/"]
 COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
 
-ARG NUGET_GITHUB_TOKEN
-RUN dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$NUGET_GITHUB_TOKEN" --store-password-in-clear-text
+RUN --mount=type=secret,id=nuget_github_token \
+    dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name "github" --username "LuukVH" --password "$(cat /run/secrets/nuget_github_token)" --store-password-in-clear-text
 
 RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 
-FROM restore as build
+FROM restore AS build
 
 COPY Services/Scheduling Services/Scheduling
 COPY Shared Shared
@@ -28,7 +28,7 @@ RUN dotnet build "Api/Api.csproj" -c Release \
     --no-restore \
     --no-incremental
 
-FROM build as publish
+FROM build AS publish
 
 RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --verbosity minimal \
@@ -36,7 +36,7 @@ RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --no-build \
     /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.9 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.9 AS runtime
 
 EXPOSE 80
 EXPOSE 443

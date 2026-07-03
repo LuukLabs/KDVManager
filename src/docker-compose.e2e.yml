@@ -8,6 +8,9 @@
 #  - Envoy uses envoy.e2e.yaml (JWT validation against mock-auth)
 #  - web is built against mock-auth and served with a CSP-free nginx config
 #  - postgres has no volume, so every run starts from a clean database
+#  - startup is ordered: migrators wait for postgres to be healthy, APIs wait
+#    for their migrator to finish (on a cold start the migrator otherwise races
+#    postgres and the API crashes on the missing database)
 services:
   mock-auth:
     image: node:24-alpine
@@ -31,6 +34,11 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_USER=sammy
       - POSTGRES_PASSWORD=shark
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sammy"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
   rabbitmq:
     environment:
@@ -53,6 +61,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__KDVManagerCRMConnectionString=Server=postgres; port=5432; database=KDVManagerCRMDB; User ID=sammy; password=shark; pooling=true
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   crm-api:
     environment:
@@ -63,14 +74,22 @@ services:
       - Auth0__Authority=http://mock-auth:5300
       - Auth0__Audience=https://api.kdvmanager.nl/
     depends_on:
-      - postgres
-      - rabbitmq
-      - mock-auth
+      postgres:
+        condition: service_healthy
+      crm-migrator:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+      mock-auth:
+        condition: service_started
 
   scheduling-migrator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__KDVManagerSchedulingConnectionString=Server=postgres; port=5432; database=KDVManagerSchedulingDB; User ID=sammy; password=shark; pooling=true
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   scheduling-api:
     environment:
@@ -81,6 +100,11 @@ services:
       - Auth0__Authority=http://mock-auth:5300
       - Auth0__Audience=https://api.kdvmanager.nl/
     depends_on:
-      - postgres
-      - rabbitmq
-      - mock-auth
+      postgres:
+        condition: service_healthy
+      scheduling-migrator:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+      mock-auth:
+        condition: service_started

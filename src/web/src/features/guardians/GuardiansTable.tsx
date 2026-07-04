@@ -1,7 +1,13 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { type GridColDef } from "@mui/x-data-grid/models";
-import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  type GridCellParams,
+  type GridRenderCellParams,
+  type GridRowParams,
+} from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useGuardiansListState } from "@hooks/useGuardiansListState";
 import { DeleteGuardianButton } from "./DeleteGuardianButton";
@@ -11,12 +17,34 @@ import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { type GuardianListVM } from "@api/crm/models/guardianListVM";
 import Stack from "@mui/material/Stack";
 
+const ACTIONS_FIELD = "id";
+
 export const GuardiansTable = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { apiParams, muiPagination } = useGuardiansListState();
   const { data, isLoading, isFetching } = useListGuardians(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
+
+  const handleRowClick = useCallback(
+    (params: GridRowParams<GuardianListVM>) => {
+      if (params.row.id) {
+        navigate(`/guardians/${params.row.id}`);
+      }
+    },
+    [navigate],
+  );
+
+  const handleCellKeyDown = useCallback(
+    (params: GridCellParams<GuardianListVM>, event: React.KeyboardEvent) => {
+      if (event.key === "Enter" && params.field !== ACTIONS_FIELD && params.row.id) {
+        navigate(`/guardians/${params.row.id}`);
+      }
+    },
+    [navigate],
+  );
+
   const columns: GridColDef<GuardianListVM>[] = useMemo(
     () => [
       {
@@ -53,7 +81,7 @@ export const GuardiansTable = () => {
         type: "number",
       },
       {
-        field: "id",
+        field: ACTIONS_FIELD,
         headerName: t("table.header.actions"),
         sortable: false,
         disableColumnMenu: true,
@@ -79,6 +107,9 @@ export const GuardiansTable = () => {
         columns={columns}
         rows={data ?? []}
         disableRowSelectionOnClick
+        onRowClick={handleRowClick}
+        onCellKeyDown={handleCellKeyDown}
+        sx={{ "& .MuiDataGrid-row": { cursor: "pointer" } }}
         {...muiPagination}
       />
     </Stack>

@@ -1,13 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { type GridColDef } from "@mui/x-data-grid/models";
-import {
-  DataGrid,
-  type GridCellParams,
-  type GridRenderCellParams,
-  type GridRowParams,
-} from "@mui/x-data-grid";
+import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/crm/models/childListVM";
 import {
   ChildSchedulingStatus,
@@ -19,6 +14,7 @@ import { getTotal } from "@api/mutator/executeFetchPaginated";
 import { useChildrenListState } from "@hooks/useChildrenListState";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
+import Link from "@mui/material/Link";
 import dayjs from "dayjs";
 import { DeleteChildButton } from "./DeleteChildButton";
 import { EditChildButton } from "./EditChildButton";
@@ -67,8 +63,6 @@ const getStatusConfig = (
   }
 };
 
-const ACTIONS_FIELD = "id";
-
 export const ChildrenTable = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -80,24 +74,6 @@ export const ChildrenTable = () => {
     {
       query: { placeholderData: keepPreviousData },
     },
-  );
-
-  const handleRowClick = useCallback(
-    (params: GridRowParams<ChildListVM>) => {
-      if (params.row.id) {
-        navigate(`/children/${params.row.id}`);
-      }
-    },
-    [navigate],
-  );
-
-  const handleCellKeyDown = useCallback(
-    (params: GridCellParams<ChildListVM>, event: React.KeyboardEvent) => {
-      if (event.key === "Enter" && params.field !== ACTIONS_FIELD && params.row.id) {
-        navigate(`/children/${params.row.id}`);
-      }
-    },
-    [navigate],
   );
 
   const columns: GridColDef<ChildListVM>[] = useMemo(
@@ -117,6 +93,14 @@ export const ChildrenTable = () => {
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
+        renderCell: (params: GridRenderCellParams<ChildListVM, string>) =>
+          params.row.id ? (
+            <Link component={RouterLink} to={`/children/${params.row.id}`} underline="hover">
+              {params.value}
+            </Link>
+          ) : (
+            params.value
+          ),
       },
       {
         field: "dateOfBirth",
@@ -144,7 +128,7 @@ export const ChildrenTable = () => {
         },
       },
       {
-        field: ACTIONS_FIELD,
+        field: "id",
         headerName: t("table.header.actions"),
         sortable: false,
         disableColumnMenu: true,
@@ -268,9 +252,6 @@ export const ChildrenTable = () => {
         columns={columns}
         rows={data ?? []}
         disableRowSelectionOnClick
-        onRowClick={handleRowClick}
-        onCellKeyDown={handleCellKeyDown}
-        sx={{ "& .MuiDataGrid-row": { cursor: "pointer" } }}
         {...muiPagination}
       />
     </Stack>

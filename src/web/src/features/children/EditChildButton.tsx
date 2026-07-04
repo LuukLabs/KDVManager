@@ -11,8 +11,7 @@ export const EditChildButton: React.FC<EditChildButtonProps> = ({ id }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleOnEditClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
+  const handleOnEditClick = () => {
     navigate(`/children/${id}`);
   };
 

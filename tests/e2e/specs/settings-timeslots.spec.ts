@@ -61,7 +61,7 @@ test("add a time slot via dialog", async ({ page }) => {
   createdNames.add(name);
 
   await gotoApp(page, "/settings/scheduling");
-  await page.getByRole("button", { name: "Tijdslot", exact: true }).click();
+  await page.getByRole("button", { name: "Tijdslot toevoegen", exact: true }).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("heading", { name: "Tijdslot toevoegen" })).toBeVisible();

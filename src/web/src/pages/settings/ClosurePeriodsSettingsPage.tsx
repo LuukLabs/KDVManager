@@ -12,7 +12,7 @@ const ClosurePeriodsSettingsPage = () => {
   return (
     <ListPageLayout
       title={t("Closure Periods")}
-      description={t("Manage the periods the daycare is closed.")}
+      description={t("Manage closure periods for scheduling.")}
       action={<ListPageAddButton label={t("Add Closure Period")} onClick={onAddClickHandler} />}
     >
       <ClosurePeriodsTable />

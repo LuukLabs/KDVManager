@@ -12,7 +12,7 @@ const ListGroupsPage = () => {
   return (
     <ListPageLayout
       title={t("Groups")}
-      description={t("Manage the groups children can be scheduled in.")}
+      description={t("Manage groups.")}
       action={<ListPageAddButton label={t("Add group")} onClick={onAddGroupClickHandler} />}
     >
       <GroupsTable />

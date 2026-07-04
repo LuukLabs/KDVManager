@@ -61,7 +61,9 @@ const TimeSlotsTable = () => {
             }}
           >
             <EditTimeSlotButton timeSlot={params.row} />
-            <DeleteTimeSlotButton id={params.row.id!} displayName={params.row.name ?? ""} />
+            {params.row.id && (
+              <DeleteTimeSlotButton id={params.row.id} displayName={params.row.name ?? ""} />
+            )}
           </Box>
         ),
       }),
@@ -75,6 +77,7 @@ const TimeSlotsTable = () => {
       loading={isLoading || isFetching}
       columns={columns}
       rows={data ?? []}
+      getRowId={(row) => row.id ?? `${row.name}-${row.startTime}-${row.endTime}`}
       {...muiPagination}
     />
   );

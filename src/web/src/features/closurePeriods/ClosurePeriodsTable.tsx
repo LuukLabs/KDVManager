@@ -36,9 +36,8 @@ export const ClosurePeriodsTable = () => {
         field: "actions",
         headerName: t("table.header.delete"),
         flex: 0.5,
-        renderCell: (params: GridRenderCellParams<ClosurePeriod>) => (
-          <DeleteClosurePeriodButton id={params.row.id!} />
-        ),
+        renderCell: (params: GridRenderCellParams<ClosurePeriod>) =>
+          params.row.id ? <DeleteClosurePeriodButton id={params.row.id} /> : null,
       }),
     ],
     [t],
@@ -48,7 +47,7 @@ export const ClosurePeriodsTable = () => {
     <AppDataGrid<ClosurePeriod>
       columns={columns}
       rows={Array.isArray(data) ? data : []}
-      getRowId={(row) => String(row.id)}
+      getRowId={(row) => row.id ?? `${row.startDate}-${row.endDate}-${row.reason}`}
       loading={isLoading}
     />
   );

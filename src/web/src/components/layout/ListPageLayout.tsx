@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
@@ -78,13 +78,28 @@ const ListPageSearchToolbar = ({ search }: ListPageSearchToolbarProps) => {
   const { t } = useTranslation();
   const { value, onSearch } = search;
   const [input, setInput] = useState(value);
+  const pushedValueRef = useRef<string | null>(null);
 
   useEffect(() => {
     const handle = setTimeout(() => {
-      if (input !== value) onSearch(input);
+      if (input !== value) {
+        pushedValueRef.current = input;
+        onSearch(input);
+      }
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(handle);
   }, [input, value, onSearch]);
+
+  // When the applied value changes from outside this component (back/forward
+  // navigation), adopt it — but not when it merely echoes our own onSearch,
+  // which would clobber what the user typed since.
+  useEffect(() => {
+    if (value === pushedValueRef.current) {
+      pushedValueRef.current = null;
+      return;
+    }
+    setInput(value);
+  }, [value]);
 
   const hasSearch = !!value.trim();
 

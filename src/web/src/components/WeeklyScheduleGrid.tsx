@@ -41,15 +41,16 @@ const DAY_INDEX_MAP_MON = [
 ]; // Monday to Sunday
 
 // Color palette for different groups
+// Brand-derived categorical palette (dark enough for white text)
 const GROUP_COLORS = [
-  "#1976d2", // Blue
-  "#388e3c", // Green
-  "#f57c00", // Orange
-  "#7b1fa2", // Purple
-  "#c2185b", // Pink
-  "#00796b", // Teal
-  "#5d4037", // Brown
-  "#455a64", // Blue Grey
+  "#2E5E4E", // Pine (brand primary)
+  "#E2654B", // Coral
+  "#B77A1C", // Marigold (darkened)
+  "#4E7A96", // Sky (darkened)
+  "#7A5A8C", // Plum
+  "#4E8467", // Leaf (darkened)
+  "#8C5B45", // Clay
+  "#5A6B60", // Sage grey
 ];
 
 const getGroupColor = (groupName: string | null | undefined): string => {

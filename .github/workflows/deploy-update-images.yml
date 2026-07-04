@@ -7,11 +7,13 @@ on:
       - main
     paths:
       - 'src/web/**'
+      - 'src/marketing/**'
       - 'src/Services/CRM/**'
       - 'src/Services/Scheduling/**'
       - 'src/Shared/**'
       - 'src/docker-compose.yml'
       - '.github/workflows/web.yml'
+      - '.github/workflows/marketing.yml'
       - '.github/workflows/crm-api.yml'
       - '.github/workflows/crm-migrator.yml'
       - '.github/workflows/scheduling-api.yml'

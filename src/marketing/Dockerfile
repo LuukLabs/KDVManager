@@ -1,0 +1,9 @@
+# Static marketing site for kdvmanager.nl
+FROM nginx:1.31.1-alpine
+
+COPY index.html brand.html styles.css favicon.svg /usr/share/nginx/html/
+
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

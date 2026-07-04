@@ -141,7 +141,7 @@ const ScheduleOverviewPage = () => {
                   color: "text.secondary",
                 }}
               >
-                {selectedDate.locale(i18n.language).format("MMMM D, YYYY")}
+                {selectedDate.locale(i18n.language).format("D MMMM YYYY")}
               </Typography>
               {dailyOverview?.isClosed && (
                 <Chip
@@ -163,15 +163,16 @@ const ScheduleOverviewPage = () => {
           </Box>
 
           <Stack direction="row" spacing={1} sx={{ justifyContent: "center" }}>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<TodayIcon />}
-              onClick={goToToday}
-              disabled={todayIsSelected}
-            >
-              {t("Today")}
-            </Button>
+            {!todayIsSelected && (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<TodayIcon />}
+                onClick={goToToday}
+              >
+                {t("Today")}
+              </Button>
+            )}
             <Button
               variant="outlined"
               size="small"
@@ -200,14 +201,11 @@ const ScheduleOverviewPage = () => {
                 <Typography variant="h4" sx={{ fontWeight: 600 }}>
                   {t("Schedule Overview")}
                 </Typography>
-                <Button
-                  variant="outlined"
-                  startIcon={<TodayIcon />}
-                  onClick={goToToday}
-                  disabled={todayIsSelected}
-                >
-                  {t("Today")}
-                </Button>
+                {!todayIsSelected && (
+                  <Button variant="outlined" startIcon={<TodayIcon />} onClick={goToToday}>
+                    {t("Today")}
+                  </Button>
+                )}
               </Box>
 
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
@@ -217,7 +215,7 @@ const ScheduleOverviewPage = () => {
 
                 <Box sx={{ textAlign: "center", minWidth: 300 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {selectedDate.locale(i18n.language).format("dddd, MMMM D, YYYY")}
+                    {selectedDate.locale(i18n.language).format("dddd D MMMM YYYY")}
                   </Typography>
                   {dailyOverview?.isClosed && (
                     <Chip

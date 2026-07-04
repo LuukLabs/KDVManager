@@ -4,7 +4,7 @@ import { RouterProvider } from "./RouterProvider";
 import AuthProvider from "./AuthProvider";
 import LoadingAnimation from "@components/LoadingAnimation";
 import NiceModal from "@ebay/nice-modal-react";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { theme } from "@lib/theme";

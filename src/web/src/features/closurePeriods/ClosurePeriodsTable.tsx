@@ -29,7 +29,7 @@ export const ClosurePeriodsTable = () => {
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
-        valueFormatter: (params: any) => params && dayjs(params).format("YYYY-MM-DD"),
+        valueFormatter: (params: any) => params && dayjs(params).format("DD-MM-YYYY"),
       },
       {
         field: "endDate",
@@ -38,7 +38,7 @@ export const ClosurePeriodsTable = () => {
         sortable: false,
         disableColumnMenu: true,
         disableReorder: true,
-        valueFormatter: (params: any) => params && dayjs(params).format("YYYY-MM-DD"),
+        valueFormatter: (params: any) => params && dayjs(params).format("DD-MM-YYYY"),
       },
       {
         field: "actions",

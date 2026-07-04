@@ -60,19 +60,17 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
     const start = dayjs(schedule.startDate);
     const end = schedule.endDate ? dayjs(schedule.endDate) : null;
 
-    console.warn("end", end);
-
     if (!end) {
-      return `${start.format("MMM D, YYYY")} • ${t("No end date")}`;
+      return `${start.format("D MMM YYYY")} • ${t("No end date")}`;
     }
 
     if (start.isSame(end, "year")) {
       if (start.isSame(end, "month")) {
-        return `${start.format("MMM D")} - ${end.format("D, YYYY")}`;
+        return `${start.format("D")} – ${end.format("D MMM YYYY")}`;
       }
-      return `${start.format("MMM D")} - ${end.format("MMM D, YYYY")}`;
+      return `${start.format("D MMM")} – ${end.format("D MMM YYYY")}`;
     }
-    return `${start.format("MMM D, YYYY")} - ${end.format("MMM D, YYYY")}`;
+    return `${start.format("D MMM YYYY")} – ${end.format("D MMM YYYY")}`;
   };
 
   return (
@@ -167,18 +165,24 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
             {schedule.scheduleRules.length > 0 ? (
               <>
                 <Chip
-                  label={`${schedule.scheduleRules.length} ${t("time slots")}`}
+                  label={t("{{count}} time slots", { count: schedule.scheduleRules.length })}
                   size="small"
                   variant="outlined"
                 />
                 <Chip
-                  label={`${new Set(schedule.scheduleRules.map((r) => r.day)).size} ${t("days")}`}
+                  label={t("{{count}} days", {
+                    count: new Set(schedule.scheduleRules.map((r) => r.day)).size,
+                  })}
                   size="small"
                   variant="outlined"
                 />
                 {schedule.scheduleRules.some((r) => r.groupName) && (
                   <Chip
-                    label={`${new Set(schedule.scheduleRules.filter((r) => r.groupName).map((r) => r.groupName)).size} ${t("groups")}`}
+                    label={t("{{count}} groups", {
+                      count: new Set(
+                        schedule.scheduleRules.filter((r) => r.groupName).map((r) => r.groupName),
+                      ).size,
+                    })}
                     size="small"
                     variant="outlined"
                   />

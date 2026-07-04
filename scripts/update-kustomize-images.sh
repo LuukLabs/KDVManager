@@ -23,6 +23,7 @@ BASE_SHA=${BASE_SHA:-}
 # Migrators share same tag as api builds.
 MAPPINGS=(
   "web|ghcr.io/luuklabs/kdvmanager/web|src/web/,.github/workflows/web.yml"
+  "marketing|ghcr.io/luuklabs/kdvmanager/marketing|src/marketing/,.github/workflows/marketing.yml"
   "crm|ghcr.io/luuklabs/kdvmanager/crm.api,ghcr.io/luuklabs/kdvmanager/crm.migrator|src/Services/CRM/,src/Shared/,.github/workflows/crm-api.yml,.github/workflows/crm-migrator.yml"
   "scheduling|ghcr.io/luuklabs/kdvmanager/scheduling.api,ghcr.io/luuklabs/kdvmanager/scheduling.migrator|src/Services/Scheduling/,src/Shared/,.github/workflows/scheduling-api.yml,.github/workflows/scheduling-migrator.yml"
 )

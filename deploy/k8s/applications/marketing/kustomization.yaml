@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yml
+- service.yml
+
+labels:
+- pairs:
+    app: marketing
+    component: frontend
+    service: marketing
+
+images:
+- name: ghcr.io/luuklabs/kdvmanager/marketing
+  newName: ghcr.io/luuklabs/kdvmanager/marketing
+  newTag: linux-main

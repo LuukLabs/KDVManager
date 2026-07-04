@@ -89,7 +89,7 @@ const GroupColumn = ({
             fontSize: { xs: "0.8rem", md: "0.875rem" },
           }}
         >
-          {selectedDate.format("dddd, MMMM D")}
+          {selectedDate.format("dddd D MMMM")}
         </Typography>
       </Box>
       {/* Group Summary (hidden on closed days) */}

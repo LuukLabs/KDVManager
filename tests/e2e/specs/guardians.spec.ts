@@ -147,11 +147,9 @@ test("create a guardian via the form", async ({ page }) => {
   await expect(page).toHaveURL(/\/guardians\/new$/);
   await expect(page.getByRole("heading", { name: "Nieuwe voogd toevoegen" })).toBeVisible();
 
-  // "Given name"/"Family name" have no Dutch translation entry, so the literal
-  // keys are rendered as labels (required fields). Date of birth and phone
-  // numbers are optional and left empty.
-  await page.getByLabel("Given name").fill(givenName);
-  await page.getByLabel("Family name").fill(familyName);
+  // Date of birth and phone numbers are optional and left empty.
+  await page.getByLabel("Voornaam").fill(givenName);
+  await page.getByLabel("Achternaam").fill(familyName);
   // Email is optional but pattern-validated; fill a valid one.
   await page.getByLabel("E-mail").fill(`${uniqueName("mail")}@example.com`);
 

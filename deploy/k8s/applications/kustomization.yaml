@@ -5,6 +5,7 @@ namespace: kdvmanager-prod
 
 resources:
 - crm/
+- marketing/
 - scheduling/
 - web/
 

@@ -143,7 +143,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       {/* Information Cards */}
       <Grid container spacing={3}>
         {/* Basic Information */}
-        <Grid size={{ xs: 12, lg: 6 }}>
+        <Grid size={{ xs: 12, lg: 5 }}>
           <BasicInformationCard
             firstName={child.givenName}
             lastName={child.familyName}
@@ -159,7 +159,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         </Grid>
 
         {/* Guardians Information */}
-        <Grid size={{ xs: 12 }}>{child.id && <ChildGuardiansCard childId={child.id} />}</Grid>
+        <Grid size={{ xs: 12, lg: 7 }}>{child.id && <ChildGuardiansCard childId={child.id} />}</Grid>
       </Grid>
     </>
   );

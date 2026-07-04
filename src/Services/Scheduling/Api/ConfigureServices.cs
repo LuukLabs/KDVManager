@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using System.Text.Json.Nodes;
 using OpenTelemetry.Resources;
@@ -6,6 +5,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using MassTransit.Logging;
 using KDVManager.Services.Scheduling.Api.Telemetry;
+using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -47,48 +47,7 @@ public static class ConfigureServices
             });
         });
 
-        // Auth0:Authority overrides the Auth0:Domain-derived authority (lets e2e tests point at a local mock issuer)
-        string authority = configuration["Auth0:Authority"] ?? $"https://{configuration["Auth0:Domain"]}/";
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = authority;
-                options.Audience = configuration["Auth0:Audience"];
-
-                // Production security settings
-                options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
-                options.SaveToken = false; // Don't store tokens in AuthenticationProperties for security
-                options.IncludeErrorDetails = false; // Don't include detailed error info in production
-
-                // Token validation parameters
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.FromMinutes(5), // Allow 5 minutes clock skew
-                    RequireExpirationTime = true,
-                    RequireSignedTokens = true
-                };
-
-                // Optional: Add custom event handlers for monitoring
-                options.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        // Log authentication failures (implement logging as needed)
-                        return Task.CompletedTask;
-                    },
-                    OnTokenValidated = context =>
-                    {
-                        // Optional: Add custom claims validation
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-
+        services.AddKdvManagerAuthentication(configuration);
 
         var otel = services.AddOpenTelemetry();
 

@@ -42,8 +42,7 @@ public class AddChildCommandHandler
             FamilyName = request.FamilyName!,
             DateOfBirth = (DateOnly)request.DateOfBirth!,
             CID = request.CID,
-            ChildNumber = childNumber,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            ChildNumber = childNumber
         };
 
         child = await _childRepository.AddAsync(child);

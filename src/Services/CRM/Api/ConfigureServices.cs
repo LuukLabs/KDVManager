@@ -1,10 +1,10 @@
 using MassTransit.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using KDVManager.Services.CRM.Api.Telemetry;
+using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -73,17 +73,7 @@ public static class ConfigureServices
             });
         });
 
-        // Auth0:Authority overrides the Auth0:Domain-derived authority (lets e2e tests point at a local mock issuer)
-        string authority = configuration["Auth0:Authority"] ?? $"https://{configuration["Auth0:Domain"]}/";
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.Authority = authority;
-                        options.Audience = configuration["Auth0:Audience"];
-                        options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
-                    });
-        services.AddAuthorization();
+        services.AddKdvManagerAuthentication(configuration);
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();

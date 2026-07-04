@@ -2,16 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
-using KDVManager.Services.Scheduling.Domain.Interfaces;
 using System.Reflection;
 using KDVManager.Shared.Contracts.Tenancy;
+using KDVManager.Shared.Infrastructure.Tenancy;
 using System;
 
 namespace KDVManager.Services.Scheduling.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ITenancyContextAccessor _tenancyContextAccessor;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options)
     {
         _tenancyContextAccessor = tenancyContextAccessor;
@@ -63,21 +63,19 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.EndDate);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.ApplyTenantIndexes();
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        foreach (var entry in ChangeTracker.Entries<IMustHaveTenant>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    entry.Entity.TenantId = _tenancyContextAccessor.Current!.TenantId;
-                    break;
-            }
-        }
+        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
 
-        var result = await base.SaveChangesAsync(cancellationToken);
-        return result;
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }

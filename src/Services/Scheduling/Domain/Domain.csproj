@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj" />
   </ItemGroup>
 </Project>

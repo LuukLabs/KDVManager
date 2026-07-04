@@ -2,10 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { type DataGridProps, type GridPaginationModel } from "@mui/x-data-grid";
 
-// Key for localStorage persistence
-const STORAGE_KEY = "childrenListState";
-
-export type ChildrenListState = {
+type ListState = {
   pageNumber: number; // 1-based
   pageSize: number;
   search: string;
@@ -16,11 +13,19 @@ const parsePositiveInt = (value: string | null, fallback: number) => {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 };
 
-export const useChildrenListState = () => {
+/**
+ * URL-driven list state (pagination + search) shared by all list pages.
+ *
+ * The URL is the single source of truth (`page`, `size`, `q`), so pagination
+ * survives navigation and links are shareable. The state is mirrored to
+ * localStorage under `storageKey` and restored when the page is opened
+ * without explicit URL params. Add a bound `useXxxListState` hook below for
+ * each list page so table and page share the same storage key.
+ */
+const useListState = (storageKey: string) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Derive state directly from URL params — no local state needed
-  const state = useMemo<ChildrenListState>(
+  const state = useMemo<ListState>(
     () => ({
       pageNumber: parsePositiveInt(searchParams.get("page"), 1),
       pageSize: parsePositiveInt(searchParams.get("size"), 10),
@@ -32,10 +37,10 @@ export const useChildrenListState = () => {
   // Initialize URL from localStorage on first mount if URL has no params
   useEffect(() => {
     if (!searchParams.has("page") && !searchParams.has("size")) {
-      const ls = localStorage.getItem(STORAGE_KEY);
+      const ls = localStorage.getItem(storageKey);
       if (ls) {
         try {
-          const fromStorage: Partial<ChildrenListState> = JSON.parse(ls);
+          const fromStorage: Partial<ListState> = JSON.parse(ls);
           const params = new URLSearchParams(searchParams);
           params.set("page", String(fromStorage.pageNumber ?? 1));
           params.set("size", String(fromStorage.pageSize ?? 10));
@@ -51,8 +56,8 @@ export const useChildrenListState = () => {
 
   // Persist to localStorage
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  }, [storageKey, state]);
 
   const onPaginationModelChange = useCallback(
     (model: GridPaginationModel) => {
@@ -86,7 +91,7 @@ export const useChildrenListState = () => {
   );
 
   const apiParams = useMemo(() => {
-    const p: Record<string, unknown> = {
+    const p: { pageNumber: number; pageSize: number; search?: string } = {
       pageNumber: state.pageNumber,
       pageSize: state.pageSize,
     };
@@ -107,3 +112,13 @@ export const useChildrenListState = () => {
 
   return { state, setSearch, apiParams, muiPagination };
 };
+
+const CHILDREN_STORAGE_KEY = "childrenListState";
+const GUARDIANS_STORAGE_KEY = "guardiansListState";
+const GROUPS_STORAGE_KEY = "groupsListState";
+const TIME_SLOTS_STORAGE_KEY = "timeSlotsListState";
+
+export const useChildrenListState = () => useListState(CHILDREN_STORAGE_KEY);
+export const useGuardiansListState = () => useListState(GUARDIANS_STORAGE_KEY);
+export const useGroupsListState = () => useListState(GROUPS_STORAGE_KEY);
+export const useTimeSlotsListState = () => useListState(TIME_SLOTS_STORAGE_KEY);

@@ -1,67 +1,56 @@
-import { type GridColDef } from "@mui/x-data-grid/models";
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { type GridColDef } from "@mui/x-data-grid/models";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
-import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { keepPreviousData } from "@tanstack/react-query";
-import { usePagination } from "@hooks/usePagination";
-import { type GroupListVM } from "@api/scheduling/models/groupListVM";
+import dayjs from "dayjs";
+import { type TimeSlotListVM } from "@api/scheduling/models/timeSlotListVM";
 import { useListTimeSlots } from "@api/scheduling/endpoints/time-slots/time-slots";
 import { getTotal } from "@api/mutator/executeFetchPaginated";
-import { Box } from "@mui/material";
-import dayjs from "dayjs";
+import { useTimeSlotsListState } from "@hooks/useListState";
+import { AppDataGrid } from "@components/datagrid/AppDataGrid";
+import { staticColumn } from "@components/datagrid/staticColumn";
+import Box from "@mui/material/Box";
 import DeleteTimeSlotButton from "./DeleteTimeSlotButton";
 import EditTimeSlotButton from "./EditTimeSlotButton";
 
-// base column definitions are created inside the component via useMemo so translations update on language change
+const formatTime = (value: string | undefined) => value && dayjs(value, "HH:mm:ss").format("HH:mm");
 
 const TimeSlotsTable = () => {
   const { t } = useTranslation();
-  const { apiPagination, muiPagination } = usePagination();
+  const { apiParams, muiPagination } = useTimeSlotsListState();
 
-  const { data, isLoading, isFetching } = useListTimeSlots(apiPagination, {
+  const { data, isLoading, isFetching } = useListTimeSlots(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
 
-  const columns: GridColDef[] = useMemo(
+  const columns: GridColDef<TimeSlotListVM>[] = useMemo(
     () => [
-      {
+      staticColumn({
         field: "name",
         headerName: t("table.header.name"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-      },
-      {
+      }),
+      staticColumn({
         field: "startTime",
         headerName: t("table.header.startTime"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        valueFormatter: (value: any) => value && dayjs(value, "HH:mm:ss").format("HH:mm"),
-      },
-      {
+        valueFormatter: formatTime,
+      }),
+      staticColumn({
         field: "endTime",
         headerName: t("table.header.endTime"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        valueFormatter: (value: any) => value && dayjs(value, "HH:mm:ss").format("HH:mm"),
-      },
-      {
+        valueFormatter: formatTime,
+      }),
+      staticColumn({
         field: "actions",
         headerName: t("table.header.actions"),
-        sortable: false,
         filterable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
         width: 120,
         align: "center",
         headerAlign: "center",
-        renderCell: (params: GridRenderCellParams<any, any>) => (
+        renderCell: (params: GridRenderCellParams<TimeSlotListVM>) => (
           <Box
             sx={{
               display: "flex",
@@ -71,27 +60,21 @@ const TimeSlotsTable = () => {
               height: "100%",
             }}
           >
-            <EditTimeSlotButton timeSlot={params.row as any} />
-            <DeleteTimeSlotButton
-              id={(params.row as any).id}
-              displayName={(params.row as any).name}
-            />
+            <EditTimeSlotButton timeSlot={params.row} />
+            <DeleteTimeSlotButton id={params.row.id!} displayName={params.row.name ?? ""} />
           </Box>
         ),
-      },
+      }),
     ],
     [t],
   );
 
   return (
-    <DataGrid<GroupListVM>
-      autoHeight
-      pageSizeOptions={[5, 10, 20]}
+    <AppDataGrid<TimeSlotListVM>
       rowCount={getTotal(data)}
       loading={isLoading || isFetching}
       columns={columns}
       rows={data ?? []}
-      disableRowSelectionOnClick
       {...muiPagination}
     />
   );

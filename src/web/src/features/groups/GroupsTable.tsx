@@ -1,56 +1,48 @@
-import { type GroupListVM } from "@api/scheduling/models/groupListVM";
-// GridColDef type intentionally not imported here because columns are declared inline in the component
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
-import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
-import { getTotal } from "@api/mutator/executeFetchPaginated";
+import { useTranslation } from "react-i18next";
+import { type GridColDef } from "@mui/x-data-grid/models";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { keepPreviousData } from "@tanstack/react-query";
+import { type GroupListVM } from "@api/scheduling/models/groupListVM";
+import { useListGroups } from "@api/scheduling/endpoints/groups/groups";
+import { getTotal } from "@api/mutator/executeFetchPaginated";
+import { useGroupsListState } from "@hooks/useListState";
+import { AppDataGrid } from "@components/datagrid/AppDataGrid";
+import { staticColumn } from "@components/datagrid/staticColumn";
 import { DeleteGroupButton } from "./DeleteGroupButton";
-import { usePagination } from "@hooks/usePagination";
-
-// columns are created inside the component so they can use the `t` hook
 
 const GroupsTable = () => {
   const { t } = useTranslation();
-  const { apiPagination, muiPagination } = usePagination();
+  const { apiParams, muiPagination } = useGroupsListState();
 
-  const { data, isLoading, isFetching } = useListGroups(apiPagination, {
+  const { data, isLoading, isFetching } = useListGroups(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
 
-  const columns = useMemo(
+  const columns: GridColDef<GroupListVM>[] = useMemo(
     () => [
-      {
+      staticColumn({
         field: "name",
         headerName: t("table.header.groupName"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-      },
-      {
+      }),
+      staticColumn({
         field: "id",
         headerName: t("table.header.actions"),
-        sortable: false,
-        disableColumnMenu: true,
-        renderCell: (params: GridRenderCellParams<any, string>) => (
-          <DeleteGroupButton id={params.value!} displayName={params.row.name} />
+        renderCell: (params: GridRenderCellParams<GroupListVM, string>) => (
+          <DeleteGroupButton id={params.value!} displayName={params.row.name ?? ""} />
         ),
-      },
+      }),
     ],
     [t],
   );
 
   return (
-    <DataGrid<GroupListVM>
-      autoHeight
-      pageSizeOptions={[5, 10, 20]}
+    <AppDataGrid<GroupListVM>
       rowCount={getTotal(data)}
       loading={isLoading || isFetching}
       columns={columns}
       rows={data ?? []}
-      disableRowSelectionOnClick
       {...muiPagination}
     />
   );

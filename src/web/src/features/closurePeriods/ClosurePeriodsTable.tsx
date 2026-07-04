@@ -1,66 +1,55 @@
-// GridColDef type intentionally not imported here because columns are declared inline in the component
 import { useMemo } from "react";
-import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import { type GridColDef } from "@mui/x-data-grid/models";
+import { type GridRenderCellParams } from "@mui/x-data-grid";
+import { type ClosurePeriod } from "@api/scheduling/models/closurePeriod";
 import { useListClosurePeriods } from "@api/scheduling/endpoints/closure-periods/closure-periods";
+import { formatDate } from "@utils/formatDate";
+import { AppDataGrid } from "@components/datagrid/AppDataGrid";
+import { staticColumn } from "@components/datagrid/staticColumn";
 import { DeleteClosurePeriodButton } from "./DeleteClosurePeriodButton";
-
-// columns inside component using useMemo so translations update on language change
 
 export const ClosurePeriodsTable = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useListClosurePeriods();
 
-  const columns = useMemo(
+  const columns: GridColDef<ClosurePeriod>[] = useMemo(
     () => [
-      {
+      staticColumn({
         field: "reason",
         headerName: t("table.header.reason"),
         flex: 2,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-      },
-      {
+      }),
+      staticColumn({
         field: "startDate",
         headerName: t("table.header.startDate"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        valueFormatter: (params: any) => params && dayjs(params).format("YYYY-MM-DD"),
-      },
-      {
+        valueFormatter: (value: string | undefined) => value && formatDate(value),
+      }),
+      staticColumn({
         field: "endDate",
         headerName: t("table.header.endDate"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        valueFormatter: (params: any) => params && dayjs(params).format("YYYY-MM-DD"),
-      },
-      {
+        valueFormatter: (value: string | undefined) => value && formatDate(value),
+      }),
+      staticColumn({
         field: "actions",
         headerName: t("table.header.delete"),
         flex: 0.5,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderCell: (params: any) => <DeleteClosurePeriodButton id={params.row.id} />,
-      },
+        renderCell: (params: GridRenderCellParams<ClosurePeriod>) => (
+          <DeleteClosurePeriodButton id={params.row.id!} />
+        ),
+      }),
     ],
     [t],
   );
 
   return (
-    <DataGrid
+    <AppDataGrid<ClosurePeriod>
       columns={columns}
       rows={Array.isArray(data) ? data : []}
       getRowId={(row) => String(row.id)}
       loading={isLoading}
-      disableRowSelectionOnClick
-      pageSizeOptions={[5, 10, 20]}
     />
   );
 };

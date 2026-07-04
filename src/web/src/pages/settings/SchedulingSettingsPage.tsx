@@ -12,7 +12,7 @@ const SchedulingSettingsPage = () => {
   return (
     <ListPageLayout
       title={t("Time Slots")}
-      description={t("Manage the time slots available for scheduling.")}
+      description={t("Manage time slots for scheduling.")}
       action={<ListPageAddButton label={t("Add time slot")} onClick={onAddTimeSlotClickHandler} />}
     >
       <TimeSlotsTable />

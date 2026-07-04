@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { type GridColDef } from "@mui/x-data-grid/models";
-import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
+import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/crm/models/childListVM";
 import {
   ChildSchedulingStatus,
@@ -11,23 +11,20 @@ import {
 import { keepPreviousData } from "@tanstack/react-query";
 import { useListChildren } from "@api/crm/endpoints/children/children";
 import { getTotal } from "@api/mutator/executeFetchPaginated";
-import { useChildrenListState } from "@hooks/useChildrenListState";
+import { useChildrenListState } from "@hooks/useListState";
+import { formatDate } from "@utils/formatDate";
+import { AppDataGrid } from "@components/datagrid/AppDataGrid";
+import { staticColumn } from "@components/datagrid/staticColumn";
+import { EntityLink } from "@components/navigation/EntityLink";
+import { EntityCard } from "@components/cards/EntityCard";
+import { MobileCardList } from "@components/cards/MobileCardList";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
-import Link from "@mui/material/Link";
-import dayjs from "dayjs";
-import { DeleteChildButton } from "./DeleteChildButton";
-import { EditChildButton } from "./EditChildButton";
+import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
-import Typography from "@mui/material/Typography";
-import Pagination from "@mui/material/Pagination";
-import Box from "@mui/material/Box";
-import Skeleton from "@mui/material/Skeleton";
+import { DeleteChildButton } from "./DeleteChildButton";
+import { EditChildButton } from "./EditChildButton";
 
 const getStatusConfig = (
   status: ChildSchedulingStatusType,
@@ -38,14 +35,14 @@ const getStatusConfig = (
     case ChildSchedulingStatus.Active:
       return {
         label: statusRelevantDate
-          ? t("status.activeUntil", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          ? t("status.activeUntil", { date: formatDate(statusRelevantDate) })
           : t("status.active"),
         color: "success" as const,
       };
     case ChildSchedulingStatus.Upcoming:
       return {
         label: statusRelevantDate
-          ? t("status.upcomingFrom", { date: dayjs(statusRelevantDate).format("DD/MM/YYYY") })
+          ? t("status.upcomingFrom", { date: formatDate(statusRelevantDate) })
           : t("status.upcoming"),
         color: "info" as const,
       };
@@ -63,6 +60,24 @@ const getStatusConfig = (
   }
 };
 
+const StatusChip = ({ child }: { child: ChildListVM }) => {
+  const { t } = useTranslation();
+  const config = getStatusConfig(
+    child.schedulingStatus ?? ChildSchedulingStatus.NoPlanning,
+    child.statusRelevantDate,
+    t,
+  );
+  return (
+    <Chip
+      label={config.label}
+      color={config.color}
+      size="small"
+      variant="outlined"
+      sx={{ flexShrink: 0 }}
+    />
+  );
+};
+
 export const ChildrenTable = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -78,180 +93,90 @@ export const ChildrenTable = () => {
 
   const columns: GridColDef<ChildListVM>[] = useMemo(
     () => [
-      {
+      staticColumn({
         field: "childNumber",
         headerName: t("table.header.childNumber"),
         width: 100,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-      },
-      {
+      }),
+      staticColumn({
         field: "fullName",
         headerName: t("table.header.fullName"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
         renderCell: (params: GridRenderCellParams<ChildListVM, string>) =>
           params.row.id ? (
-            <Link component={RouterLink} to={`/children/${params.row.id}`} underline="hover">
-              {params.value}
-            </Link>
+            <EntityLink to={`/children/${params.row.id}`}>{params.value}</EntityLink>
           ) : (
             params.value
           ),
-      },
-      {
+      }),
+      staticColumn({
         field: "dateOfBirth",
         headerName: t("table.header.dateOfBirth"),
         flex: 1,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        valueFormatter: (value) => value && dayjs(value).format("DD/MM/YYYY"),
-      },
-      {
+        valueFormatter: (value) => value && formatDate(value),
+      }),
+      staticColumn({
         field: "schedulingStatus",
         headerName: t("table.header.status"),
         width: 200,
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderCell: (params: GridRenderCellParams<ChildListVM, ChildSchedulingStatusType>) => {
-          const config = getStatusConfig(
-            params.value ?? ChildSchedulingStatus.NoPlanning,
-            params.row.statusRelevantDate,
-            t,
-          );
-          return <Chip label={config.label} color={config.color} size="small" variant="outlined" />;
-        },
-      },
-      {
+        renderCell: (params: GridRenderCellParams<ChildListVM, ChildSchedulingStatusType>) => (
+          <StatusChip child={params.row} />
+        ),
+      }),
+      staticColumn({
         field: "id",
         headerName: t("table.header.actions"),
-        sortable: false,
-        disableColumnMenu: true,
-        disableReorder: true,
-        renderCell: (params: GridRenderCellParams<any, string>) => (
+        renderCell: (params: GridRenderCellParams<ChildListVM, string>) => (
           <>
             <DeleteChildButton id={params.value!} displayName={params.row.fullName} />
             <EditChildButton id={params.value!} />
           </>
         ),
-      },
+      }),
     ],
     [t],
   );
 
   if (isMobile) {
-    if (isLoading && !data) {
-      return (
-        <Stack spacing={2}>
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} variant="rectangular" height={150} sx={{ borderRadius: 1 }} />
-          ))}
-        </Stack>
-      );
-    }
-
-    const paginationModel = muiPagination.paginationModel;
-    const pageSize = paginationModel?.pageSize ?? 10;
-    const totalPages = Math.ceil(getTotal(data) / pageSize);
-    const currentPage = (paginationModel?.page ?? 0) + 1;
-
     return (
-      <Stack spacing={2} sx={{ width: "100%" }}>
-        {data?.map((child) => {
-          const statusConfig = getStatusConfig(
-            child.schedulingStatus ?? ChildSchedulingStatus.NoPlanning,
-            child.statusRelevantDate,
-            t,
-          );
-          return (
-            <Card key={child.id} variant="outlined">
-              <CardActionArea
-                onClick={() => child.id && navigate(`/children/${child.id}`)}
-                aria-label={child.fullName}
-              >
-                <CardContent sx={{ pb: 1 }}>
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}
-                  >
-                    <Typography variant="h6" component="div" sx={{ wordBreak: "break-word" }}>
-                      {child.fullName}
-                    </Typography>
-                    <Chip
-                      label={statusConfig.label}
-                      color={statusConfig.color}
-                      size="small"
-                      variant="outlined"
-                      sx={{ flexShrink: 0 }}
-                    />
-                  </Stack>
-                  <Typography
-                    variant="body2"
-                    gutterBottom
-                    sx={{
-                      color: "text.secondary",
-                    }}
-                  >
-                    {t("table.header.childNumber")}: {child.childNumber}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "text.secondary",
-                    }}
-                  >
-                    {t("table.header.dateOfBirth")}:{" "}
-                    {/* eslint-disable-next-line i18next/no-literal-string */}
-                    {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-              <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
+      <MobileCardList<ChildListVM>
+        items={data}
+        isLoading={isLoading}
+        total={getTotal(data)}
+        getKey={(child) => child.id!}
+        pagination={muiPagination}
+        renderCard={(child) => (
+          <EntityCard
+            title={child.fullName ?? ""}
+            badge={<StatusChip child={child} />}
+            onClick={() => child.id && navigate(`/children/${child.id}`)}
+            actions={
+              <>
                 <EditChildButton id={child.id!} />
                 <DeleteChildButton id={child.id!} displayName={child.fullName} />
-              </CardActions>
-            </Card>
-          );
-        })}
-        {totalPages > 1 && (
-          <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={(_, page) =>
-                muiPagination.onPaginationModelChange?.(
-                  {
-                    page: page - 1,
-                    pageSize: pageSize,
-                  },
-                  { reason: undefined } as any,
-                )
-              }
-              color="primary"
-              size="small"
-            />
-          </Box>
+              </>
+            }
+          >
+            <Typography variant="body2" gutterBottom sx={{ color: "text.secondary" }}>
+              {t("table.header.childNumber")}: {child.childNumber}
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {t("table.header.dateOfBirth")}:{" "}
+              {child.dateOfBirth ? formatDate(child.dateOfBirth) : "-"}
+            </Typography>
+          </EntityCard>
         )}
-      </Stack>
+      />
     );
   }
 
   return (
     <Stack spacing={1} sx={{ width: "100%" }}>
-      <DataGrid<ChildListVM>
-        autoHeight
-        pageSizeOptions={[5, 10, 20]}
+      <AppDataGrid<ChildListVM>
         rowCount={getTotal(data)}
         loading={isLoading || isFetching}
         columns={columns}
         rows={data ?? []}
-        disableRowSelectionOnClick
         {...muiPagination}
       />
     </Stack>

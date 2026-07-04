@@ -1,7 +1,13 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { type GridColDef } from "@mui/x-data-grid/models";
-import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  type GridCellParams,
+  type GridRenderCellParams,
+  type GridRowParams,
+} from "@mui/x-data-grid";
 import { type ChildListVM } from "@api/crm/models/childListVM";
 import {
   ChildSchedulingStatus,
@@ -20,6 +26,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
@@ -60,9 +67,12 @@ const getStatusConfig = (
   }
 };
 
+const ACTIONS_FIELD = "id";
+
 export const ChildrenTable = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { apiParams, muiPagination } = useChildrenListState();
   const { data, isLoading, isFetching } = useListChildren(
@@ -70,6 +80,24 @@ export const ChildrenTable = () => {
     {
       query: { placeholderData: keepPreviousData },
     },
+  );
+
+  const handleRowClick = useCallback(
+    (params: GridRowParams<ChildListVM>) => {
+      if (params.row.id) {
+        navigate(`/children/${params.row.id}`);
+      }
+    },
+    [navigate],
+  );
+
+  const handleCellKeyDown = useCallback(
+    (params: GridCellParams<ChildListVM>, event: React.KeyboardEvent) => {
+      if (event.key === "Enter" && params.field !== ACTIONS_FIELD && params.row.id) {
+        navigate(`/children/${params.row.id}`);
+      }
+    },
+    [navigate],
   );
 
   const columns: GridColDef<ChildListVM>[] = useMemo(
@@ -116,7 +144,7 @@ export const ChildrenTable = () => {
         },
       },
       {
-        field: "id",
+        field: ACTIONS_FIELD,
         headerName: t("table.header.actions"),
         sortable: false,
         disableColumnMenu: true,
@@ -158,43 +186,48 @@ export const ChildrenTable = () => {
           );
           return (
             <Card key={child.id} variant="outlined">
-              <CardContent sx={{ pb: 1 }}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}
-                >
-                  <Typography variant="h6" component="div" sx={{ wordBreak: "break-word" }}>
-                    {child.fullName}
+              <CardActionArea
+                onClick={() => child.id && navigate(`/children/${child.id}`)}
+                aria-label={child.fullName}
+              >
+                <CardContent sx={{ pb: 1 }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}
+                  >
+                    <Typography variant="h6" component="div" sx={{ wordBreak: "break-word" }}>
+                      {child.fullName}
+                    </Typography>
+                    <Chip
+                      label={statusConfig.label}
+                      color={statusConfig.color}
+                      size="small"
+                      variant="outlined"
+                      sx={{ flexShrink: 0 }}
+                    />
+                  </Stack>
+                  <Typography
+                    variant="body2"
+                    gutterBottom
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
+                    {t("table.header.childNumber")}: {child.childNumber}
                   </Typography>
-                  <Chip
-                    label={statusConfig.label}
-                    color={statusConfig.color}
-                    size="small"
-                    variant="outlined"
-                    sx={{ flexShrink: 0 }}
-                  />
-                </Stack>
-                <Typography
-                  variant="body2"
-                  gutterBottom
-                  sx={{
-                    color: "text.secondary",
-                  }}
-                >
-                  {t("table.header.childNumber")}: {child.childNumber}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                  }}
-                >
-                  {t("table.header.dateOfBirth")}:{" "}
-                  {/* eslint-disable-next-line i18next/no-literal-string */}
-                  {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
-                </Typography>
-              </CardContent>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  >
+                    {t("table.header.dateOfBirth")}:{" "}
+                    {/* eslint-disable-next-line i18next/no-literal-string */}
+                    {child.dateOfBirth ? dayjs(child.dateOfBirth).format("DD/MM/YYYY") : "-"}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
               <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
                 <EditChildButton id={child.id!} />
                 <DeleteChildButton id={child.id!} displayName={child.fullName} />
@@ -235,6 +268,9 @@ export const ChildrenTable = () => {
         columns={columns}
         rows={data ?? []}
         disableRowSelectionOnClick
+        onRowClick={handleRowClick}
+        onCellKeyDown={handleCellKeyDown}
+        sx={{ "& .MuiDataGrid-row": { cursor: "pointer" } }}
         {...muiPagination}
       />
     </Stack>

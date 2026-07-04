@@ -60,18 +60,20 @@ beforeEach(() => {
   navigateMock.mockReset();
 });
 
-describe("ChildrenTable — row navigation (browser)", () => {
-  it("navigates to the child detail page when a row is clicked (desktop)", async () => {
+describe("ChildrenTable — record navigation (browser)", () => {
+  it("renders the child name as a link to the detail page (desktop)", async () => {
     await page.viewport(1280, 800);
     await renderTable();
 
-    await userEvent.click(page.getByRole("gridcell", { name: "Jane Doe" }));
-
-    expect(navigateMock).toHaveBeenCalledTimes(1);
-    expect(navigateMock).toHaveBeenCalledWith("/children/child-1");
+    await expect
+      .element(page.getByRole("link", { name: "Jane Doe" }))
+      .toHaveAttribute("href", "/children/child-1");
+    await expect
+      .element(page.getByRole("link", { name: "John Smith" }))
+      .toHaveAttribute("href", "/children/child-2");
   });
 
-  it("opens the delete confirmation without navigating when delete is clicked (desktop)", async () => {
+  it("opens the delete confirmation when delete is clicked (desktop)", async () => {
     await page.viewport(1280, 800);
     await renderTable();
 

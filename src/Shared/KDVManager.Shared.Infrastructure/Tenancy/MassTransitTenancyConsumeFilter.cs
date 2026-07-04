@@ -1,7 +1,5 @@
-// File: KDVManager.Shared.Infrastructure/Tenancy/TenancyMiddleware.cs
+using System.Diagnostics;
 using KDVManager.Shared.Contracts.Tenancy;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -17,19 +15,33 @@ public class MassTransitTenancyConsumeFilter<T> : IFilter<ConsumeContext<T>>
     {
         _tenancyContextAccessor = tenancyContextAccessor;
         _logger = logger;
-        _logger.LogInformation("MassTransitTenancyConsumeFilter initialized.");
     }
 
     public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
     {
-        _logger.LogInformation("MassTransitTenancyConsumeFilter Send method called.");
-
-        if (context.Headers.TryGetHeader("TenantId", out var tenantIdHeader) && tenantIdHeader is string tenantId)
+        if (context.Headers.TryGetHeader(TenancyHeaders.TenantId, out var tenantIdHeader) && tenantIdHeader is string headerValue)
         {
-            _logger.LogInformation("Setting TenantId in TenancyContext: {TenantId}", tenantId);
-            _tenancyContextAccessor.Current = new StaticTenancyContext(Guid.Parse(tenantId));
+            if (!Guid.TryParse(headerValue, out var tenantId))
+            {
+                // Fail closed: a malformed tenant header must never result in the
+                // message being processed without (or with the wrong) tenant scope.
+                throw new TenantRequiredException($"Message of type {typeof(T).Name} carries a malformed {TenancyHeaders.TenantId} header.");
+            }
+
+            _tenancyContextAccessor.Current = new StaticTenancyContext(tenantId);
+            Activity.Current?.SetTag("tenant.id", tenantId.ToString());
+
+            using (_logger.BeginScope(new Dictionary<string, object>
+                   {
+                       { "tenant.id", tenantId }
+                   }))
+            {
+                await next.Send(context);
+                return;
+            }
         }
 
+        _logger.LogDebug("Message of type {MessageType} has no {Header} header; consuming without tenant context.", typeof(T).Name, TenancyHeaders.TenantId);
         await next.Send(context);
     }
 

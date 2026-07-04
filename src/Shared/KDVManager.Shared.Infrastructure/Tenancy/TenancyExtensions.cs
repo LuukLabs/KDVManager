@@ -13,9 +13,9 @@ namespace KDVManager.Shared.Infrastructure.Tenancy
             return services;
         }
 
-        public static IApplicationBuilder UseTenancy(this IApplicationBuilder app, string tenantClaimType = "tenant")
+        public static IApplicationBuilder UseTenancy(this IApplicationBuilder app)
         {
-            return app.UseMiddleware<TenancyMiddleware>(tenantClaimType);
+            return app.UseMiddleware<TenancyMiddleware>();
         }
     }
 }

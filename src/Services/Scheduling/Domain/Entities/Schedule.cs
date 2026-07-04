@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using KDVManager.Services.Scheduling.Domain.Interfaces;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.Scheduling.Domain.Entities;
 

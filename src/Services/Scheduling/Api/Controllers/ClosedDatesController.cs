@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Queries.ListClosurePeriods;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.AddClosurePeriod;
 using KDVManager.Services.Scheduling.Application.Features.ClosurePeriods.Commands.DeleteClosurePeriod;
@@ -29,7 +28,7 @@ public class ClosurePeriodsController : ControllerBase
     }
 
     [HttpGet(Name = "ListClosurePeriods")]
-    public async Task<ActionResult<List<ClosurePeriod>>> ListClosurePeriods()
+    public async Task<ActionResult<List<ClosurePeriodListVM>>> ListClosurePeriods()
     {
         var query = new ListClosurePeriodsQuery();
         var result = await _listClosurePeriodsQueryHandler.Handle(query);

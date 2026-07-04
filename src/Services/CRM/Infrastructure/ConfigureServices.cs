@@ -32,8 +32,6 @@ public static class ConfigureServices
 
     public static IServiceCollection AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped(typeof(MassTransitTenancySendFilter<>));
-
         services.AddMassTransit(x =>
         {
             x.AddConsumer<ChildActivityIntervalsChangedEventConsumer>();

@@ -74,9 +74,9 @@ test("add a closure period via dialog", async ({ page }) => {
   await expect(page.getByText("Sluitingsperiode toegevoegd")).toBeVisible();
   const row = page.getByRole("row").filter({ hasText: reason });
   await expect(row.getByRole("gridcell", { name: reason, exact: true })).toBeVisible();
-  // The table formats dates as YYYY-MM-DD.
-  await expect(row.getByRole("gridcell", { name: "2030-12-27", exact: true })).toBeVisible();
-  await expect(row.getByRole("gridcell", { name: "2030-12-31", exact: true })).toBeVisible();
+  // The table formats dates as DD-MM-YYYY (the shared formatDate util).
+  await expect(row.getByRole("gridcell", { name: "27-12-2030", exact: true })).toBeVisible();
+  await expect(row.getByRole("gridcell", { name: "31-12-2030", exact: true })).toBeVisible();
 });
 
 test("delete a closure period", async ({ page }) => {

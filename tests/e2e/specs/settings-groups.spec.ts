@@ -52,7 +52,7 @@ test("add a group via dialog", async ({ page }) => {
   uiCreatedNames.add(name);
 
   await gotoApp(page, "/settings/groups");
-  await page.getByRole("button", { name: "Groep", exact: true }).click();
+  await page.getByRole("button", { name: "Groep toevoegen", exact: true }).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("heading", { name: "Groep toevoegen" })).toBeVisible();

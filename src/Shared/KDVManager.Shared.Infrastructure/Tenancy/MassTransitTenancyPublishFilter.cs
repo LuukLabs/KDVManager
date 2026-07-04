@@ -17,19 +17,16 @@ public class MassTransitTenancyPublishFilter<T> : IFilter<PublishContext<T>>
     {
         _tenancyContextAccessor = tenancyContextAccessor;
         _logger = logger;
-        _logger.LogInformation("MassTransitTenancyPublishFilter initialized.");
     }
 
     public void Probe(ProbeContext context) { }
 
     public async Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
     {
-        _logger.LogInformation("MassTransitTenancyPublishFilter Send method called.");
-
         var tenantId = _tenancyContextAccessor.Current?.TenantId;
         if (tenantId != null)
         {
-            _logger.LogInformation("Setting TenantId header: {TenantId}", tenantId);
+            _logger.LogDebug("Setting TenantId header: {TenantId}", tenantId);
             context.Headers.Set("TenantId", tenantId.ToString());
         }
 

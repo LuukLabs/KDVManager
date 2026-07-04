@@ -61,17 +61,41 @@ public class ApplicationDbContext : DbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
+        ApplyTenantToTrackedEntities();
+        var result = await base.SaveChangesAsync(cancellationToken);
+        return result;
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    /// <summary>
+    /// Stamps the current tenant onto every added or modified tenant-owned entity.
+    /// Re-stamping on Modified prevents a tenant identifier from being reassigned
+    /// via an update and guarantees isolation even if an entity was constructed
+    /// without an explicit TenantId.
+    /// </summary>
+    private void ApplyTenantToTrackedEntities()
+    {
+        var tenantId = _tenancyContextAccessor.Current!.TenantId;
         foreach (var entry in ChangeTracker.Entries<IMustHaveTenant>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _tenancyContextAccessor.Current!.TenantId;
+                    entry.Entity.TenantId = tenantId;
                     break;
             }
         }
-        var result = await base.SaveChangesAsync(cancellationToken);
-        return result;
     }
 }

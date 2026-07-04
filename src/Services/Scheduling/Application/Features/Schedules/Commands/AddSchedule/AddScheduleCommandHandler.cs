@@ -7,6 +7,7 @@ using KDVManager.Services.Scheduling.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using KDVManager.Services.Scheduling.Application.Services;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 
@@ -16,17 +17,20 @@ public class AddScheduleCommandHandler
     private readonly ITimeSlotRepository _timeSlotRepository;
     private readonly IScheduleTimelineService _timelineService;
     private readonly IScheduleStatusService _scheduleStatusService;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
     public AddScheduleCommandHandler(
         IScheduleRepository scheduleRepository,
         ITimeSlotRepository timeSlotRepository,
         IScheduleTimelineService timelineService,
-        IScheduleStatusService scheduleStatusService)
+        IScheduleStatusService scheduleStatusService,
+        ITenancyContextAccessor tenancyContextAccessor)
     {
         _scheduleRepository = scheduleRepository;
         _timeSlotRepository = timeSlotRepository;
         _timelineService = timelineService;
         _scheduleStatusService = scheduleStatusService;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public async Task<Guid> Handle(AddScheduleCommand request)
@@ -38,12 +42,14 @@ public class AddScheduleCommandHandler
             throw new Exceptions.ValidationException(validationResult);
 
 
+        var tenantId = _tenancyContextAccessor.Current!.TenantId;
+
         var schedule = new Schedule
         {
             Id = Guid.NewGuid(),
             ChildId = request.ChildId,
             StartDate = request.StartDate,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            TenantId = tenantId
         };
 
         // Create schedule rules
@@ -55,7 +61,8 @@ public class AddScheduleCommandHandler
                 ScheduleId = schedule.Id,
                 Day = rule.Day,
                 TimeSlotId = rule.TimeSlotId,
-                GroupId = rule.GroupId
+                GroupId = rule.GroupId,
+                TenantId = tenantId
             }).ToList();
         }
 

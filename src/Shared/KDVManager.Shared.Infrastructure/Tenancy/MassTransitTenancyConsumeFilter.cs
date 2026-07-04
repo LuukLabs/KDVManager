@@ -17,17 +17,23 @@ public class MassTransitTenancyConsumeFilter<T> : IFilter<ConsumeContext<T>>
     {
         _tenancyContextAccessor = tenancyContextAccessor;
         _logger = logger;
-        _logger.LogInformation("MassTransitTenancyConsumeFilter initialized.");
     }
 
     public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
     {
-        _logger.LogInformation("MassTransitTenancyConsumeFilter Send method called.");
-
         if (context.Headers.TryGetHeader("TenantId", out var tenantIdHeader) && tenantIdHeader is string tenantId)
         {
-            _logger.LogInformation("Setting TenantId in TenancyContext: {TenantId}", tenantId);
-            _tenancyContextAccessor.Current = new StaticTenancyContext(Guid.Parse(tenantId));
+            if (Guid.TryParse(tenantId, out var tenantGuid))
+            {
+                _logger.LogDebug("Setting TenantId in TenancyContext: {TenantId}", tenantGuid);
+                _tenancyContextAccessor.Current = new StaticTenancyContext(tenantGuid);
+            }
+            else
+            {
+                // Malformed tenant header: do not set a tenant. Downstream data access
+                // then fails closed via TenantRequiredException rather than throwing here.
+                _logger.LogWarning("Received message with malformed TenantId header: {TenantId}", tenantId);
+            }
         }
 
         await next.Send(context);

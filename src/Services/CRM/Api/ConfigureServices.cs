@@ -1,5 +1,6 @@
 using MassTransit.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -83,7 +84,15 @@ public static class ConfigureServices
                         options.Audience = configuration["Auth0:Audience"];
                         options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
                     });
-        services.AddAuthorization();
+        // Defense-in-depth: require an authenticated principal by default so that a
+        // request reaching the service directly (bypassing the gateway) is rejected
+        // unless an endpoint explicitly opts out via AllowAnonymous.
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();

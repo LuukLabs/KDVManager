@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
 using System.Text.Json.Nodes;
 using OpenTelemetry.Resources;
@@ -88,6 +89,16 @@ public static class ConfigureServices
                     }
                 };
             });
+
+        // Defense-in-depth: require an authenticated principal by default so that a
+        // request reaching the service directly (bypassing the gateway) is rejected
+        // unless an endpoint explicitly opts out via AllowAnonymous.
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
 
 
         var otel = services.AddOpenTelemetry();

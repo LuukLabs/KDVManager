@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
 
 public class AddGroupCommandHandler
 {
     private readonly IGroupRepository _groupRepository;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
-    public AddGroupCommandHandler(IGroupRepository groupRepository)
+    public AddGroupCommandHandler(IGroupRepository groupRepository, ITenancyContextAccessor tenancyContextAccessor)
     {
         _groupRepository = groupRepository;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public async Task<Guid> Handle(AddGroupCommand request)
@@ -26,7 +29,7 @@ public class AddGroupCommandHandler
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            TenantId = _tenancyContextAccessor.Current!.TenantId
         };
 
         group = await _groupRepository.AddAsync(group);

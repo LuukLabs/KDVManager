@@ -20,7 +20,7 @@ public class JwtTenancyResolver : ITenancyResolver
         if (claims == null)
             return null;
 
-        var tenantClaim = claims.FirstOrDefault(c => c.Type == "https://kdvmanager.nl/tenant");
+        var tenantClaim = claims.FirstOrDefault(c => c.Type == TenancyClaimTypes.TenantId);
         return tenantClaim != null && Guid.TryParse(tenantClaim.Value, out var guid)
             ? new StaticTenancyContext(guid)
             : null;

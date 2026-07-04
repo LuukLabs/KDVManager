@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.AddTimeSlot;
 
 public class AddTimeSlotCommandHandler
 {
     private readonly ITimeSlotRepository _timeSlotRepository;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
-    public AddTimeSlotCommandHandler(ITimeSlotRepository timeSlotRepository)
+    public AddTimeSlotCommandHandler(ITimeSlotRepository timeSlotRepository, ITenancyContextAccessor tenancyContextAccessor)
     {
         _timeSlotRepository = timeSlotRepository;
+        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public async Task<Guid> Handle(AddTimeSlotCommand request)
@@ -28,7 +31,7 @@ public class AddTimeSlotCommandHandler
             Name = request.Name,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            TenantId = _tenancyContextAccessor.Current!.TenantId
         };
 
         timeSlot = await _timeSlotRepository.AddAsync(timeSlot);

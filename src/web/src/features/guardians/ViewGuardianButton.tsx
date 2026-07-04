@@ -11,8 +11,7 @@ export const ViewGuardianButton = ({ id }: ViewGuardianButtonProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleView = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
+  const handleView = () => {
     navigate(`/guardians/${id}`);
   };
 

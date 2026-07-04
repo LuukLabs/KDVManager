@@ -27,8 +27,7 @@ public class AddTimeSlotCommandHandler
             Id = Guid.NewGuid(),
             Name = request.Name,
             StartTime = request.StartTime,
-            EndTime = request.EndTime,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            EndTime = request.EndTime
         };
 
         timeSlot = await _timeSlotRepository.AddAsync(timeSlot);

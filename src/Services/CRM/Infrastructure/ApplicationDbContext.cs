@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
-using KDVManager.Services.CRM.Domain.Interfaces;
 using KDVManager.Shared.Contracts.Tenancy;
+using KDVManager.Shared.Infrastructure.Tenancy;
 
 namespace KDVManager.Services.CRM.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ITenancyContextAccessor _tenancyContextAccessor;
+    private readonly ITenancyContextAccessor _tenancyContextAccessor;
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options)
     {
         _tenancyContextAccessor = tenancyContextAccessor;
@@ -57,21 +57,19 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.ApplyTenantIndexes();
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        foreach (var entry in ChangeTracker.Entries<IMustHaveTenant>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                case EntityState.Modified:
-                    entry.Entity.TenantId = _tenancyContextAccessor.Current!.TenantId;
-                    break;
-            }
-        }
-        var result = await base.SaveChangesAsync(cancellationToken);
-        return result;
+        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }

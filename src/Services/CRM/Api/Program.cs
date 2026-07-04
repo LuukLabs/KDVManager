@@ -19,7 +19,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi().AllowAnonymous();
 }
 
 app.UseRouting();
@@ -30,9 +30,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
-app.UseMiddleware<TenancyMiddleware>();
+app.UseTenancy();
 
-app.MapHealthChecks("/healthz");
+app.MapHealthChecks("/healthz").AllowAnonymous();
 
 // Map minimal API endpoints
 app.MapChildrenEndpoints();

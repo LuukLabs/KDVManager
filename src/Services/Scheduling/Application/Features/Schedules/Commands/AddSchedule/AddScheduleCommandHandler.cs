@@ -42,8 +42,7 @@ public class AddScheduleCommandHandler
         {
             Id = Guid.NewGuid(),
             ChildId = request.ChildId,
-            StartDate = request.StartDate,
-            TenantId = Guid.Parse("7e520828-45e6-415f-b0ba-19d56a312f7f") // Default tenant ID for now
+            StartDate = request.StartDate
         };
 
         // Create schedule rules

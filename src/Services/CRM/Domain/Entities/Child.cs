@@ -4,6 +4,7 @@ using System.Linq;
 using KDVManager.Services.CRM.Domain.Interfaces;
 using KDVManager.Shared.Contracts.Enums;
 using KDVManager.Shared.Domain.Interfaces;
+using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.CRM.Domain.Entities
 {

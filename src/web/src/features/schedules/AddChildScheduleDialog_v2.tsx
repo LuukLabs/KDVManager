@@ -1,5 +1,5 @@
 import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
-import { Form, FormDatePicker } from "@components/forms";
+import { Form, FormDatePicker, applyServerValidationErrors, saveFailedMessage } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,7 +9,6 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
 import { type AddScheduleCommand } from "@api/scheduling/models/addScheduleCommand";
 import { type DayOfWeek } from "@api/scheduling/models/dayOfWeek";
 import {
@@ -138,14 +137,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     }, [queryClient, childId, modal, enqueueSnackbar, t, reset]);
 
     const onMutateError = useCallback(
-      (error: UnprocessableEntityResponse) => {
-        error.errors.forEach((propertyError) => {
-          setError(propertyError.property as any, {
-            type: "server",
-            message: propertyError.title,
-          });
-        });
-        enqueueSnackbar(t("Please check the form for errors"), { variant: "error" });
+      (error: unknown) => {
+        if (applyServerValidationErrors(error, setError)) {
+          enqueueSnackbar(t("Please check the form for errors"), { variant: "error" });
+        } else {
+          enqueueSnackbar(saveFailedMessage(t), { variant: "error" });
+        }
       },
       [setError, enqueueSnackbar, t],
     );

@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { SnackbarProvider } from "notistack";
 import { render, type RenderOptions, type RenderResult } from "vitest-browser-react";
 
 type TestProvidersProps = {
@@ -27,7 +28,9 @@ const TestProviders = ({ children, locale = "en", queryClient }: TestProvidersPr
   return (
     <QueryClientProvider client={client}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
-        <MemoryRouter>{children}</MemoryRouter>
+        <SnackbarProvider>
+          <MemoryRouter>{children}</MemoryRouter>
+        </SnackbarProvider>
       </LocalizationProvider>
     </QueryClientProvider>
   );

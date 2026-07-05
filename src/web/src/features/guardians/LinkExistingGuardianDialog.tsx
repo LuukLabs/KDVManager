@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Search } from "@mui/icons-material";
+import { FormErrorAlert } from "@components/forms";
 import { useLinkGuardianToChild, useListGuardians } from "@api/crm/endpoints/guardians/guardians";
 
 // Type definitions (to be replaced with generated API types)
@@ -154,11 +155,7 @@ export const LinkExistingGuardianDialog = ({
       <DialogTitle>{t("Link Existing Guardian")}</DialogTitle>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <DialogContent>
-          {submitError && (
-            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setSubmitError(null)}>
-              {submitError}
-            </Alert>
-          )}
+          <FormErrorAlert message={submitError} onClose={() => setSubmitError(null)} sx={{ mb: 2 }} />
 
           <Grid container spacing={3}>
             {/* Search Section */}

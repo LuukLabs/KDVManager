@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, FormTextField, FormDatePicker } from "@components/forms";
+import { Form, FormTextField, FormDatePicker, useMutationErrorHandler } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -88,16 +88,7 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
     queryClient.invalidateQueries();
   };
 
-  const onMutateError = (error: any) => {
-    if (error?.errors) {
-      error.errors.forEach((propertyError: any) => {
-        setError(propertyError.property as any, {
-          type: "server",
-          message: propertyError.title,
-        });
-      });
-    }
-  };
+  const onMutateError = useMutationErrorHandler({ setError });
 
   return (
     <Dialog {...muiDialogV5(modal)} maxWidth="xs" fullWidth>

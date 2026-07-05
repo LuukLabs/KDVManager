@@ -9,7 +9,7 @@ const mutateMock = vi.fn();
 const navigateMock = vi.fn();
 
 vi.mock("@api/crm/endpoints/children/children", () => ({
-  useAddChild: () => ({ mutate: mutateMock }),
+  useAddChild: () => ({ mutateAsync: mutateMock, isPending: false }),
   getListChildrenQueryKey: () => ["children"],
 }));
 
@@ -26,6 +26,7 @@ const importPage = async () => (await import("./NewChildPage")).Component;
 
 beforeEach(() => {
   mutateMock.mockReset();
+  mutateMock.mockResolvedValue("11111111-2222-3333-4444-555555555555");
   navigateMock.mockReset();
 });
 

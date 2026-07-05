@@ -1,5 +1,5 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Form, FormTextField, FormTimeField } from "@components/forms";
+import { Form, FormTextField, FormTimeField, useMutationErrorHandler } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -10,8 +10,6 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
-import { type ProblemDetails } from "@api/scheduling/models/problemDetails";
 import {
   getListTimeSlotsQueryKey,
   useUpdateTimeSlot,
@@ -67,18 +65,10 @@ const EditTimeSlotDialog = NiceModal.create<EditTimeSlotDialogProps>(({ timeSlot
     reset();
   };
 
-  const onMutateError = (error: ProblemDetails | UnprocessableEntityResponse) => {
-    if ("errors" in error && Array.isArray(error.errors)) {
-      error.errors.forEach((propertyError: any) => {
-        setError(propertyError.property as any, {
-          type: "server",
-          message: propertyError.title,
-        });
-      });
-    } else {
-      enqueueSnackbar(t("Failed to update time slot"), { variant: "error" });
-    }
-  };
+  const onMutateError = useMutationErrorHandler({
+    setError,
+    fallbackMessage: t("Failed to update time slot"),
+  });
 
   return (
     <Dialog {...muiDialogV5(modal)}>

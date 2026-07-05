@@ -4,9 +4,9 @@
  * Covered use cases:
  * 1. Guardians list shows seeded guardians; searching by a unique family name
  *    filters the DataGrid (debounced search field + filter chip).
- * 2. Create a guardian via the "Nieuwe voogd toevoegen" form. NOTE: the form
- *    navigates back to the guardians LIST after saving (see GuardianForm
- *    handleFormSubmit), so the new guardian is verified through the list.
+ * 2. Create a guardian via the "Nieuwe voogd toevoegen" form. The form
+ *    navigates to the new guardian's DETAIL page after saving (consistent with
+ *    the children form), so the new guardian is verified through its heading.
  * 3. Edit guardian basic details on the detail page via the edit-in-place
  *    "Basisinformatie" card, then verify persistence after a reload.
  * 4. Link a child to a guardian. NOTE: link UI was removed from the guardian
@@ -157,10 +157,10 @@ test("create a guardian via the form", async ({ page }) => {
 
   await page.getByRole("button", { name: "Voogd aanmaken" }).click();
 
-  // The form navigates back to the guardians list after a successful save.
-  await expect(page).toHaveURL(/\/guardians(\?.*)?$/);
-  await searchField(page).fill(familyName);
-  await expect(gridRow(page, `${givenName} ${familyName}`)).toBeVisible();
+  // Successful creation navigates to the new guardian's detail page. Cleanup
+  // is handled by the family-name lookup in afterAll (registered pre-submit).
+  await page.waitForURL(/\/guardians\/[0-9a-f]{8}-[0-9a-f-]{27}$/i);
+  await expect(page.getByRole("heading", { name: `${givenName} ${familyName}` })).toBeVisible();
 });
 
 test("edit guardian details", async ({ page }) => {

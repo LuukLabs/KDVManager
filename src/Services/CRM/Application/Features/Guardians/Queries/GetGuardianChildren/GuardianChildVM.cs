@@ -7,7 +7,6 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
     {
         public Guid ChildId { get; set; }
         public required string FullName { get; set; }
-        public string? CID { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public int Age { get; set; }
         public GuardianRelationshipType RelationshipType { get; set; }

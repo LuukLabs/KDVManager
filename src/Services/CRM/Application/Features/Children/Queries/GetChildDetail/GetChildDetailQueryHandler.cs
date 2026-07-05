@@ -39,7 +39,6 @@ public class GetChildDetailQueryHandler
             GivenName = child.GivenName,
             FamilyName = child.FamilyName,
             DateOfBirth = child.DateOfBirth,
-            CID = child.CID,
             ChildNumber = child.ChildNumber,
             SchedulingStatus = status,
             StatusRelevantDate = relevantDate

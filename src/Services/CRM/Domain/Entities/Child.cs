@@ -18,8 +18,6 @@ namespace KDVManager.Services.CRM.Domain.Entities
 
         public required string FamilyName { get; set; }
 
-        public string? CID { get; set; }
-
         public DateOnly DateOfBirth { get; set; }
 
         /// <summary>

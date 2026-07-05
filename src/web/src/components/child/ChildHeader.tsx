@@ -24,7 +24,6 @@ type ChildHeaderProps = {
   lastName?: string;
   dateOfBirth?: string;
   group?: string;
-  cid?: string;
   schedulingStatus?: ChildSchedulingStatusType;
   statusRelevantDate?: string | null;
   onEdit?: () => void;

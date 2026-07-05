@@ -41,7 +41,6 @@ public class AddChildCommandHandler
             GivenName = request.GivenName!,
             FamilyName = request.FamilyName!,
             DateOfBirth = (DateOnly)request.DateOfBirth!,
-            CID = request.CID,
             ChildNumber = childNumber
         };
 

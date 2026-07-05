@@ -87,7 +87,6 @@ export const GuardianChildrenCard: React.FC<GuardianChildrenCardProps> = ({ guar
         ],
         secondaryLines: [
           `Born: ${formatDate(c.dateOfBirth)}${c.age ? ` (${c.age} years old)` : ""}`,
-          c.cid ? `CID: ${c.cid}` : "",
         ].filter(Boolean),
         navigateTo: c.childId ? `/children/${c.childId}` : undefined,
         unlinkDisabled: unlinkingChild === c.childId,

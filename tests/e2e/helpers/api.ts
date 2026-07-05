@@ -57,7 +57,6 @@ export class Api {
     givenName: string;
     familyName: string;
     dateOfBirth: string; // YYYY-MM-DD
-    cid?: string;
   }): Promise<string> {
     return this.post("/crm/v1/children", child);
   }

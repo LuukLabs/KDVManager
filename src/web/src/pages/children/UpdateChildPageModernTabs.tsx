@@ -88,7 +88,6 @@ const UpdateChildPageModernTabs = () => {
           firstName={child.givenName}
           lastName={child.familyName}
           dateOfBirth={child.dateOfBirth}
-          cid={child.cid ?? undefined}
           schedulingStatus={child.schedulingStatus}
           statusRelevantDate={child.statusRelevantDate}
         />

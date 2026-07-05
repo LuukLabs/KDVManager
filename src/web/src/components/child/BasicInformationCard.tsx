@@ -13,7 +13,6 @@ type BasicInformationCardProps = {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
-  cid?: string;
   childNumber?: number;
   loading?: boolean;
 
@@ -29,7 +28,6 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
   firstName,
   lastName,
   dateOfBirth,
-  cid,
   childNumber,
   loading,
   isEditing,
@@ -49,9 +47,6 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("Child Number")} value={childNumber?.toString()} />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <FieldDisplay label={t("CID")} value={cid} />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FieldDisplay label={t("First Name")} value={firstName} />
@@ -87,15 +82,6 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
               output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
             required
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <FormTextField
-            name="cid"
-            label={t("CID")}
-            fullWidth
-            size="small"
-            helperText={t("Child identification number")}
           />
         </Grid>
       </Grid>

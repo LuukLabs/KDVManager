@@ -9,8 +9,6 @@ import type { GuardianRelationshipType } from "./guardianRelationshipType";
 export type GuardianChildVM = {
   childId?: string;
   fullName: string;
-  /** @nullable */
-  cid?: string | null;
   dateOfBirth?: string;
   age?: number;
   relationshipType?: GuardianRelationshipType;

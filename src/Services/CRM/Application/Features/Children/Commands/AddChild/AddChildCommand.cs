@@ -13,6 +13,4 @@ public class AddChildCommand
 
     [property: Required]
     public DateOnly? DateOfBirth { get; set; }
-
-    public string? CID { get; set; }
 }

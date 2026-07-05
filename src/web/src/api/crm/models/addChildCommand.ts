@@ -12,6 +12,4 @@ export type AddChildCommand = {
   familyName: string | null;
   /** @nullable */
   dateOfBirth: string | null;
-  /** @nullable */
-  cid?: string | null;
 };

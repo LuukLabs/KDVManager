@@ -17,7 +17,5 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
 
         [property: Required]
         public DateOnly? DateOfBirth { get; set; }
-
-        public string? CID { get; set; }
     }
 }

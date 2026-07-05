@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Alert } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
@@ -11,8 +11,8 @@ import {
   getGetChildByIdQueryOptions,
 } from "@api/crm/endpoints/children/children";
 import { type UpdateChildCommand } from "@api/crm/models/updateChildCommand";
-import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
 import { type ChildDetailVM } from "@api/crm/models/childDetailVM";
+import { FormErrorAlert, applyServerValidationErrors } from "@components/forms";
 
 import { ChildGuardiansCard } from "../../../features/guardians/ChildGuardiansCard";
 import { BasicInformationCard } from "@components/child/BasicInformationCard";
@@ -103,15 +103,10 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       });
       handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
-      if (error && typeof error === "object" && "errors" in error) {
-        const validationError = error as UnprocessableEntityResponse;
-        validationError.errors.forEach((propertyError) => {
-          basicFormContext.setError(propertyError.property as any, {
-            type: "server",
-            message: propertyError.title,
-          });
-        });
-      } else {
+      const mapped = applyServerValidationErrors(error, basicFormContext.setError, {
+        fields: ["givenName", "familyName", "dateOfBirth", "cid"],
+      });
+      if (!mapped) {
         setSubmitError(
           t("child.errors.updateBasicFailed", {
             defaultValue: "Failed to update basic information. Please try again.",
@@ -133,12 +128,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
 
   return (
     <>
-      {/* Error Alert */}
-      {submitError && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setSubmitError(null)}>
-          {submitError}
-        </Alert>
-      )}
+      <FormErrorAlert message={submitError} onClose={() => setSubmitError(null)} sx={{ mb: 3 }} />
 
       {/* Information Cards */}
       <Grid container spacing={3}>

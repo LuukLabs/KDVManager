@@ -1,45 +1,40 @@
-import { Container } from "@mui/material";
-import { GuardianForm } from "../../features/guardians/GuardianForm";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useAddGuardian } from "@api/crm/endpoints/guardians/guardians";
-import { type PhoneNumberType } from "@api/crm/models/phoneNumberType";
-
-type GuardianFormData = {
-  givenName: string;
-  familyName: string;
-  dateOfBirth?: string;
-  email: string;
-  bsn: string;
-  phoneNumbers: { number: string; type: PhoneNumberType }[];
-};
+import { useSnackbar } from "notistack";
+import { getListGuardiansQueryKey, useAddGuardian } from "@api/crm/endpoints/guardians/guardians";
+import { FormPageLayout } from "@components/layout/FormPageLayout";
+import { GuardianForm, type GuardianFormData } from "../../features/guardians/GuardianForm";
 
 const NewGuardianPage = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const createGuardian = useAddGuardian();
+  const navigate = useNavigate();
 
   const handleSubmit = async (data: GuardianFormData) => {
-    await createGuardian.mutateAsync({
+    const guardianId = await createGuardian.mutateAsync({
       data: {
         givenName: data.givenName,
         familyName: data.familyName,
-        dateOfBirth: data.dateOfBirth,
+        dateOfBirth: data.dateOfBirth ?? undefined,
         email: data.email,
-        phoneNumbers: data.phoneNumbers.map((p) => ({
-          number: p.number,
-          type: p.type,
+        phoneNumbers: data.phoneNumbers.map((phoneNumber) => ({
+          number: phoneNumber.number,
+          type: phoneNumber.type,
         })),
       },
     });
+    void queryClient.invalidateQueries({ queryKey: getListGuardiansQueryKey() });
+    enqueueSnackbar(t("Guardian created"), { variant: "success" });
+    navigate(`/guardians/${guardianId}`);
   };
 
   return (
-    <Container maxWidth="md">
-      <GuardianForm
-        title={t("Add New Guardian")}
-        onSubmit={handleSubmit}
-        isLoading={createGuardian.isPending}
-      />
-    </Container>
+    <FormPageLayout title={t("Add New Guardian")}>
+      <GuardianForm onSubmit={handleSubmit} />
+    </FormPageLayout>
   );
 };
 

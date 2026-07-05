@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Alert } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
@@ -11,7 +11,7 @@ import {
   getGetGuardianByIdQueryOptions,
 } from "@api/crm/endpoints/guardians/guardians";
 import { type GuardianDetailVM } from "@api/crm/models/guardianDetailVM";
-import { type UnprocessableEntityResponse } from "@api/crm/models/unprocessableEntityResponse";
+import { FormErrorAlert, applyServerValidationErrors } from "@components/forms";
 
 import { GuardianBasicInformationCard } from "../../components/guardian/GuardianBasicInformationCard";
 import { GuardianContactInformationCard } from "../../components/guardian/GuardianContactInformationCard";
@@ -129,15 +129,10 @@ export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian }
       );
       handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
-      if (error && typeof error === "object" && "errors" in error) {
-        const validationError = error as UnprocessableEntityResponse;
-        validationError.errors.forEach((propertyError) => {
-          basicFormContext.setError(propertyError.property as any, {
-            type: "server",
-            message: propertyError.title,
-          });
-        });
-      } else {
+      const mapped = applyServerValidationErrors(error, basicFormContext.setError, {
+        fields: ["givenName", "familyName", "dateOfBirth"],
+      });
+      if (!mapped) {
         setSubmitError(
           t("guardian.errors.updateBasicFailed", {
             defaultValue: "Failed to update basic information. Please try again.",
@@ -188,15 +183,10 @@ export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian }
       );
       handleSectionEdit(SECTION_CONTACT, false);
     } catch (error) {
-      if (error && typeof error === "object" && "errors" in error) {
-        const validationError = error as UnprocessableEntityResponse;
-        validationError.errors.forEach((propertyError) => {
-          contactFormContext.setError(propertyError.property as any, {
-            type: "server",
-            message: propertyError.title,
-          });
-        });
-      } else {
+      const mapped = applyServerValidationErrors(error, contactFormContext.setError, {
+        fields: ["email", "phoneNumbers"],
+      });
+      if (!mapped) {
         setSubmitError(
           t("guardian.errors.updateContactFailed", {
             defaultValue: "Failed to update contact information. Please try again.",
@@ -218,12 +208,7 @@ export const GuardianDetailTab: React.FC<GuardianDetailTabProps> = ({ guardian }
 
   return (
     <>
-      {/* Error Alert */}
-      {submitError && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setSubmitError(null)}>
-          {submitError}
-        </Alert>
-      )}
+      <FormErrorAlert message={submitError} onClose={() => setSubmitError(null)} sx={{ mb: 3 }} />
 
       {/* Information Cards */}
       <Grid container spacing={3}>

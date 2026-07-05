@@ -12,9 +12,8 @@ import {
   getListClosurePeriodsQueryKey,
 } from "@api/scheduling/endpoints/closure-periods/closure-periods";
 import { useQueryClient } from "@tanstack/react-query";
-import type { UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
 import type { AddClosurePeriodCommand } from "@api/scheduling/models/addClosurePeriodCommand";
-import { Form, FormTextField, FormDatePicker } from "@components/forms";
+import { Form, FormTextField, FormDatePicker, useMutationErrorHandler } from "@components/forms";
 
 export const AddClosurePeriodDialog = NiceModal.create(() => {
   const modal = useModal();
@@ -36,27 +35,13 @@ export const AddClosurePeriodDialog = NiceModal.create(() => {
     reset();
   };
 
+  const onMutateError = useMutationErrorHandler({
+    setError,
+    fallbackMessage: t("Failed to add closure period"),
+  });
+
   const onSubmit = async (data: AddClosurePeriodCommand) => {
-    await mutate.mutateAsync(
-      { data },
-      {
-        onSuccess: onMutateSuccess,
-        onError: (error: unknown) => {
-          // Try to cast error to UnprocessableEntityResponse
-          const entityError = error as UnprocessableEntityResponse;
-          if (entityError?.errors) {
-            entityError.errors.forEach((propertyError) => {
-              setError(propertyError.property as any, {
-                type: "server",
-                message: propertyError.title,
-              });
-            });
-          } else {
-            enqueueSnackbar(t("Failed to add closure period"), { variant: "error" });
-          }
-        },
-      },
-    );
+    await mutate.mutateAsync({ data }, { onSuccess: onMutateSuccess, onError: onMutateError });
   };
 
   const onMutateSuccess = () => {

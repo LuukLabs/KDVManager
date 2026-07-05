@@ -1,6 +1,6 @@
 import { type AddGroupCommand } from "@api/scheduling/models/addGroupCommand";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Form, FormTextField } from "@components/forms";
+import { Form, FormTextField, useMutationErrorHandler } from "@components/forms";
 import Button from "@mui/material/Button";
 import { getListGroupsQueryKey, useAddGroup } from "@api/scheduling/endpoints/groups/groups";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,7 +12,6 @@ import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
-import { type UnprocessableEntityResponse } from "@api/scheduling/models/unprocessableEntityResponse";
 
 export const AddGroupDialog = NiceModal.create(() => {
   const { t } = useTranslation();
@@ -48,14 +47,7 @@ export const AddGroupDialog = NiceModal.create(() => {
     reset();
   };
 
-  const onMutateError = (error: UnprocessableEntityResponse) => {
-    error.errors.forEach((propertyError) => {
-      setError(propertyError.property as any, {
-        type: "server",
-        message: propertyError.title,
-      });
-    });
-  };
+  const onMutateError = useMutationErrorHandler({ setError });
 
   return (
     <Dialog {...muiDialogV5(modal)}>

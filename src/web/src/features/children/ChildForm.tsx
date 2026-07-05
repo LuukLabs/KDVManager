@@ -51,9 +51,6 @@ export const ChildForm = ({ onSubmit }: ChildFormProps) => {
               slotProps={{ textField: { fullWidth: true } }}
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <FormTextField name="cid" label={t("CID")} fullWidth />
-          </Grid>
         </FormSection>
         <FormActions submitLabel={t("Save", { ns: "common" })} cancelTo="/children" />
       </Stack>

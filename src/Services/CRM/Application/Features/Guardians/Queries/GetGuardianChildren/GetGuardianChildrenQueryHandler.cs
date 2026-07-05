@@ -35,7 +35,6 @@ namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuar
                 {
                     ChildId = child.Id,
                     FullName = $"{child.GivenName} {child.FamilyName}",
-                    CID = child.CID,
                     DateOfBirth = child.DateOfBirth,
                     Age = age,
                     RelationshipType = cg.RelationshipType,

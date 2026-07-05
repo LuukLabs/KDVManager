@@ -13,6 +13,4 @@ export type UpdateChildCommand = {
   familyName: string | null;
   /** @nullable */
   dateOfBirth: string | null;
-  /** @nullable */
-  cid?: string | null;
 };

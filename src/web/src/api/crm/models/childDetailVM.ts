@@ -11,8 +11,6 @@ export type ChildDetailVM = {
   givenName: string;
   familyName: string;
   dateOfBirth?: string;
-  /** @nullable */
-  cid?: string | null;
   childNumber?: number;
   schedulingStatus?: ChildSchedulingStatus;
   /** @nullable */

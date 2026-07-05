@@ -46,7 +46,6 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       givenName: child.givenName ?? "",
       familyName: child.familyName ?? "",
       dateOfBirth: child.dateOfBirth ?? "",
-      cid: child.cid ?? "",
     },
   });
 
@@ -88,7 +87,6 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           givenName: data.givenName,
           familyName: data.familyName,
           dateOfBirth: data.dateOfBirth,
-          cid: data.cid,
         },
       });
 
@@ -104,7 +102,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       handleSectionEdit(SECTION_BASIC, false);
     } catch (error) {
       const mapped = applyServerValidationErrors(error, basicFormContext.setError, {
-        fields: ["givenName", "familyName", "dateOfBirth", "cid"],
+        fields: ["givenName", "familyName", "dateOfBirth"],
       });
       if (!mapped) {
         setSubmitError(
@@ -138,7 +136,6 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
             firstName={child.givenName}
             lastName={child.familyName}
             dateOfBirth={child.dateOfBirth}
-            cid={child.cid ?? undefined}
             childNumber={child.childNumber}
             isEditing={editingSections.basic}
             formContext={basicFormContext}

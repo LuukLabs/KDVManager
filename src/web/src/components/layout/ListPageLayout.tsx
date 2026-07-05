@@ -15,7 +15,6 @@ import ClearIcon from "@mui/icons-material/CloseRounded";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Fade from "@mui/material/Fade";
-import Divider from "@mui/material/Divider";
 
 const StyledToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   padding: 0,
@@ -222,7 +221,6 @@ export const ListPageLayout = ({
           )}
         </Box>
         {search && <ListPageSearchToolbar search={search} />}
-        <Divider flexItem sx={{ mt: 1 }} />
       </HeaderPaper>
       <Paper elevation={0} sx={{ p: { xs: 1, sm: 2 }, borderRadius: 3 }}>
         {children}

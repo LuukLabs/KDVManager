@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using KDVManager.Shared.Infrastructure.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -44,15 +45,7 @@ public static class LoggingExtensions
                 otel.IncludeScopes = true;
                 otel.IncludeFormattedMessage = true;
                 otel.ParseStateValues = true;
-                var instanceId = Environment.GetEnvironmentVariable("SERVICE_INSTANCE_ID") ?? Guid.NewGuid().ToString();
-                otel.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                    .AddService(serviceName: serviceName, serviceVersion: GetVersion(), serviceInstanceId: instanceId)
-                    .AddAttributes(new KeyValuePair<string, object>[]
-                    {
-                        new("deployment.environment", configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production"),
-                        new("service.namespace", "KDVManager"),
-                        new("host.name", Environment.MachineName)
-                    }));
+                otel.SetResourceBuilder(KdvResource.Configure(ResourceBuilder.CreateDefault(), configuration, serviceName));
 
                 otel.AddOtlpExporter(exp =>
                 {
@@ -65,17 +58,5 @@ public static class LoggingExtensions
         }
 
         return logging;
-    }
-
-    private static string GetVersion()
-    {
-        try
-        {
-            return typeof(LoggingExtensions).Assembly.GetName().Version?.ToString() ?? "unknown";
-        }
-        catch
-        {
-            return "unknown";
-        }
     }
 }

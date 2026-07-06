@@ -60,6 +60,7 @@ data:
         traces:
           span:
             - 'attributes["http.route"] == "/healthz"'
+            - 'attributes["http.route"] == "/readyz"'
 
     exporters:
       otlp/signoz:

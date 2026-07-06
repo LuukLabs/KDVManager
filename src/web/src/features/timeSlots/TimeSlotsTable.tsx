@@ -20,7 +20,7 @@ const TimeSlotsTable = () => {
   const { t } = useTranslation();
   const { apiParams, muiPagination } = useTimeSlotsListState();
 
-  const { data, isLoading, isFetching } = useListTimeSlots(apiParams, {
+  const { data, isLoading, isFetching, error, refetch } = useListTimeSlots(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
 
@@ -75,6 +75,8 @@ const TimeSlotsTable = () => {
     <AppDataGrid<TimeSlotListVM>
       rowCount={getTotal(data)}
       loading={isLoading || isFetching}
+      error={error}
+      onRetry={refetch}
       columns={columns}
       rows={data ?? []}
       getRowId={(row) => row.id ?? `${row.name}-${row.startTime}-${row.endTime}`}

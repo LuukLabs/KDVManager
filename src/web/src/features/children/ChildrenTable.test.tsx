@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import NiceModal from "@ebay/nice-modal-react";
 import { SnackbarProvider } from "notistack";
+import { ApiError } from "@api/errors/types";
 
 import { renderWithProviders } from "../../test/renderWithProviders";
 
@@ -28,6 +29,8 @@ const CHILDREN = vi.hoisted(() => [
   },
 ]);
 
+const useListChildrenMock = vi.hoisted(() => vi.fn());
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
   return {
@@ -37,7 +40,7 @@ vi.mock("react-router-dom", async () => {
 });
 
 vi.mock("@api/crm/endpoints/children/children", () => ({
-  useListChildren: () => ({ data: CHILDREN, isLoading: false, isFetching: false }),
+  useListChildren: useListChildrenMock,
   useDeleteChild: () => ({ mutateAsync: vi.fn(), isPending: false }),
   getListChildrenQueryKey: () => ["children"],
 }));
@@ -58,6 +61,14 @@ const renderTable = async () => {
 
 beforeEach(() => {
   navigateMock.mockReset();
+  useListChildrenMock.mockReset();
+  useListChildrenMock.mockReturnValue({
+    data: CHILDREN,
+    isLoading: false,
+    isFetching: false,
+    error: null,
+    refetch: vi.fn(),
+  });
 });
 
 describe("ChildrenTable — record navigation (browser)", () => {
@@ -91,5 +102,45 @@ describe("ChildrenTable — record navigation (browser)", () => {
 
     expect(navigateMock).toHaveBeenCalledTimes(1);
     expect(navigateMock).toHaveBeenCalledWith("/children/child-2");
+  });
+});
+
+describe("ChildrenTable — server error state (browser)", () => {
+  it("shows an error alert instead of an empty table when the query fails (desktop)", async () => {
+    const refetchMock = vi.fn();
+    useListChildrenMock.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isFetching: false,
+      error: new ApiError({ message: "Server error", status: 500, type: "server" }),
+      refetch: refetchMock,
+    });
+
+    await page.viewport(1280, 800);
+    await renderTable();
+
+    await expect.element(page.getByText("Server error")).toBeVisible();
+
+    await userEvent.click(page.getByRole("button", { name: "Retry" }));
+    expect(refetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows an error alert instead of an empty list when the query fails (mobile)", async () => {
+    const refetchMock = vi.fn();
+    useListChildrenMock.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isFetching: false,
+      error: new ApiError({ message: "Server error", status: 500, type: "server" }),
+      refetch: refetchMock,
+    });
+
+    await page.viewport(375, 667);
+    await renderTable();
+
+    await expect.element(page.getByText("Server error")).toBeVisible();
+
+    await userEvent.click(page.getByRole("button", { name: "Retry" }));
+    expect(refetchMock).toHaveBeenCalledTimes(1);
   });
 });

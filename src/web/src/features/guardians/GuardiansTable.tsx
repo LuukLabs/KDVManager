@@ -26,7 +26,7 @@ export const GuardiansTable = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { apiParams, muiPagination } = useGuardiansListState();
-  const { data, isLoading, isFetching } = useListGuardians(apiParams, {
+  const { data, isLoading, isFetching, error, refetch } = useListGuardians(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
 
@@ -78,6 +78,8 @@ export const GuardiansTable = () => {
       <MobileCardList<GuardianListVM>
         items={data}
         isLoading={isLoading}
+        error={error}
+        onRetry={refetch}
         total={getTotal(data)}
         getKey={(guardian) => guardian.id!}
         pagination={muiPagination}
@@ -112,6 +114,8 @@ export const GuardiansTable = () => {
       <AppDataGrid<GuardianListVM>
         rowCount={getTotal(data)}
         loading={isLoading || isFetching}
+        error={error}
+        onRetry={refetch}
         columns={columns}
         rows={data ?? []}
         {...muiPagination}

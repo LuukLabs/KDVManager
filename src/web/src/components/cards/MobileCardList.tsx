@@ -4,10 +4,15 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Skeleton from "@mui/material/Skeleton";
+import { QueryErrorAlert } from "@components/errors/QueryErrorAlert";
 
 type MobileCardListProps<T> = {
   items: T[] | undefined;
   isLoading: boolean;
+  /** Query error, if any. When set, an error alert replaces the list instead of an empty state. */
+  error?: unknown;
+  /** Called when the user clicks "Retry" in the error alert, e.g. the query's refetch. */
+  onRetry?: () => void;
   /** Total number of records across all pages. */
   total: number;
   getKey: (item: T) => string;
@@ -24,11 +29,17 @@ type MobileCardListProps<T> = {
 export const MobileCardList = <T,>({
   items,
   isLoading,
+  error,
+  onRetry,
   total,
   getKey,
   renderCard,
   pagination,
 }: MobileCardListProps<T>) => {
+  if (error) {
+    return <QueryErrorAlert error={error} onRetry={onRetry} />;
+  }
+
   if (isLoading && !items) {
     return (
       <Stack spacing={2}>

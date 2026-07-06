@@ -84,7 +84,7 @@ export const ChildrenTable = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { apiParams, muiPagination } = useChildrenListState();
-  const { data, isLoading, isFetching } = useListChildren(
+  const { data, isLoading, isFetching, error, refetch } = useListChildren(
     { ...apiParams },
     {
       query: { placeholderData: keepPreviousData },
@@ -142,6 +142,8 @@ export const ChildrenTable = () => {
       <MobileCardList<ChildListVM>
         items={data}
         isLoading={isLoading}
+        error={error}
+        onRetry={refetch}
         total={getTotal(data)}
         getKey={(child) => child.id!}
         pagination={muiPagination}
@@ -175,6 +177,8 @@ export const ChildrenTable = () => {
       <AppDataGrid<ChildListVM>
         rowCount={getTotal(data)}
         loading={isLoading || isFetching}
+        error={error}
+        onRetry={refetch}
         columns={columns}
         rows={data ?? []}
         {...muiPagination}

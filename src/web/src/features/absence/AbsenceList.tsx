@@ -16,13 +16,14 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
 import { useTranslation } from "react-i18next";
 import { useGetAbsencesByChildId } from "@api/scheduling/endpoints/absences/absences";
+import { QueryErrorAlert } from "@components/errors/QueryErrorAlert";
 import { DeleteAbsenceButton } from "./DeleteAbsenceButton";
 
 type AbsenceListProps = { childId: string };
 
 export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
   const { t } = useTranslation();
-  const { data: absencesRaw, isLoading } = useGetAbsencesByChildId(childId);
+  const { data: absencesRaw, isLoading, error, refetch } = useGetAbsencesByChildId(childId);
   const [view, setView] = useState<"future" | "past">("future");
 
   const loadingSkeleton = (
@@ -66,6 +67,10 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
           futureAbsences[0],
         )
       : null;
+
+  if (error) {
+    return <QueryErrorAlert error={error} onRetry={refetch} />;
+  }
 
   return (
     <Box>

@@ -11,7 +11,7 @@ import { DeleteClosurePeriodButton } from "./DeleteClosurePeriodButton";
 
 export const ClosurePeriodsTable = () => {
   const { t } = useTranslation();
-  const { data, isLoading } = useListClosurePeriods();
+  const { data, isLoading, error, refetch } = useListClosurePeriods();
 
   const columns: GridColDef<ClosurePeriod>[] = useMemo(
     () => [
@@ -49,6 +49,8 @@ export const ClosurePeriodsTable = () => {
       rows={Array.isArray(data) ? data : []}
       getRowId={(row) => row.id ?? `${row.startDate}-${row.endDate}-${row.reason}`}
       loading={isLoading}
+      error={error}
+      onRetry={refetch}
     />
   );
 };

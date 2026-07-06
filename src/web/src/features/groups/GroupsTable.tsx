@@ -15,7 +15,7 @@ const GroupsTable = () => {
   const { t } = useTranslation();
   const { apiParams, muiPagination } = useGroupsListState();
 
-  const { data, isLoading, isFetching } = useListGroups(apiParams, {
+  const { data, isLoading, isFetching, error, refetch } = useListGroups(apiParams, {
     query: { placeholderData: keepPreviousData },
   });
 
@@ -41,6 +41,8 @@ const GroupsTable = () => {
     <AppDataGrid<GroupListVM>
       rowCount={getTotal(data)}
       loading={isLoading || isFetching}
+      error={error}
+      onRetry={refetch}
       columns={columns}
       rows={data ?? []}
       {...muiPagination}

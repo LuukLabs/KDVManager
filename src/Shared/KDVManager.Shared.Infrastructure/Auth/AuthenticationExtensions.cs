@@ -51,7 +51,8 @@ public static class AuthenticationExtensions
                         var logger = context.HttpContext.RequestServices
                             .GetRequiredService<ILoggerFactory>()
                             .CreateLogger("JwtAuthentication");
-                        logger.LogWarning(context.Exception, "JWT authentication failed for {RequestPath}", context.HttpContext.Request.Path);
+                        logger.LogWarning(context.Exception, "JWT authentication failed for {RequestPath}",
+                            SanitizeForLog(context.HttpContext.Request.Path.Value));
                         return Task.CompletedTask;
                     }
                 };
@@ -66,5 +67,16 @@ public static class AuthenticationExtensions
         });
 
         return services;
+    }
+
+    /// <summary>
+    /// The request path is user input: strip CR/LF so a crafted path cannot forge log
+    /// entries, and cap the length to keep abuse out of the log volume.
+    /// </summary>
+    private static string SanitizeForLog(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return string.Empty;
+        var sanitized = value.Replace("\r", "").Replace("\n", "");
+        return sanitized.Length <= 200 ? sanitized : sanitized[..200];
     }
 }

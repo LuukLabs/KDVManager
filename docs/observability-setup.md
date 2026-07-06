@@ -32,10 +32,14 @@ One shared bootstrap wires everything, so the services cannot drift:
 - `KDVManager.Shared.Infrastructure/Telemetry/TelemetryExtensions.cs` —
   `services.AddKdvManagerTelemetry(configuration, "<service-name>", <meter names…>)` sets up:
   - **Tracing**: ASP.NET Core (with exception recording and request/response enrichment), HttpClient,
-    **Npgsql** (database spans), MassTransit. Parent-based ratio sampling, configured via
+    **Npgsql** (database spans), MassTransit. Every span started within a tenant flow (HTTP request or
+    MassTransit consume) is stamped with `tenant.id` by `TenantEnrichmentProcessor`, backed by the
+    AsyncLocal `TenancyContextAccessor`. Parent-based ratio sampling, configured via
     `Otel:TraceSamplingRatio` or `OTEL_TRACE_SAMPLING_RATIO` (default 1.0).
-  - **Metrics**: ASP.NET Core, HttpClient, .NET runtime, MassTransit bus metrics, plus each service's
-    custom meter (`crm-api` / `scheduling-api`, used for the error counter in the exception middleware).
+  - **Metrics**: ASP.NET Core, HttpClient, .NET runtime, Npgsql connection metrics, MassTransit bus
+    metrics, plus each service's custom meter (`crm-api` / `scheduling-api`, used for the error counter
+    in the exception middleware).
+  - JWT authentication failures are logged as warnings (`JwtAuthentication` category, reason only).
   - OTLP export is enabled only when `Otel:Endpoint` (or `OTEL_EXPORTER_OTLP_ENDPOINT`) is set.
 - `Telemetry/KdvResource.cs` — one resource definition (service.name/namespace/version/instance,
   deployment.environment, host.name) shared by traces, metrics, **and** logs.
@@ -60,7 +64,8 @@ One shared bootstrap wires everything, so the services cannot drift:
 - **Web vitals**: CLS/INP/LCP/FCP/TTFB emitted as `web.vital` spans.
 
 Browser telemetry is POSTed to `https://api.kdvmanager.nl/telemetry/v1/traces` — an Envoy route
-(JWT-exempt, CORS-guarded) that forwards to the collector's OTLP/HTTP port 4318. Production builds get
+(JWT-exempt, CORS-guarded, rate-limited to 30 rps with a 60-token burst per Envoy pod via
+`local_ratelimit`) that forwards to the collector's OTLP/HTTP port 4318. Production builds get
 the endpoint and `VITE_APP_VERSION` (image tag) via build args in `src/docker-compose.yml`.
 
 ## Envoy gateway
@@ -93,8 +98,9 @@ points the web build at `http://localhost:5200/telemetry`. Services pick up the 
 
 1. **Alerting**: SigNoz alert rules + a notification channel are not yet configured (do this in the
    SigNoz UI), and there is no external uptime check for kdvmanager.nl itself.
-2. **Rate limiting**: `/telemetry/` is unauthenticated by design; an Envoy `local_ratelimit` on that
-   route is recommended.
-3. **Retention**: set explicitly in SigNoz (Settings → General); ClickHouse disk is small (5Gi).
-4. **Business metrics**: the per-service meters currently only count errors — domain metrics
+2. **Retention**: set explicitly in SigNoz (Settings → General); ClickHouse disk is small (5Gi).
+3. **Business metrics**: the per-service meters currently only count errors — domain metrics
    (schedules created, registrations, absences) belong there.
+4. **Pod log collection**: only OTLP app logs and Envoy stdout access logs are shipped; nginx/
+   RabbitMQ/ClickHouse pod logs are not. SigNoz's `k8s-infra` chart (DaemonSet) would add this and
+   replace the hand-rolled `kubeletstats`/`k8s_cluster` receivers.

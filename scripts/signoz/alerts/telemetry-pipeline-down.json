@@ -1,0 +1,53 @@
+{
+  "alert": "Telemetry pipeline down (no APM data)",
+  "alertType": "METRIC_BASED_ALERT",
+  "ruleType": "threshold_rule",
+  "evalWindow": "10m0s",
+  "frequency": "5m0s",
+  "condition": {
+    "compositeQuery": {
+      "queryType": "builder",
+      "panelType": "graph",
+      "unit": "",
+      "builderQueries": {
+        "A": {
+          "queryName": "A",
+          "dataSource": "metrics",
+          "aggregateAttribute": {
+            "key": "signoz_calls_total",
+            "dataType": "float64",
+            "type": "Sum",
+            "isColumn": true
+          },
+          "timeAggregation": "rate",
+          "spaceAggregation": "sum",
+          "aggregateOperator": "sum_rate",
+          "expression": "A",
+          "disabled": false,
+          "stepInterval": 60,
+          "filters": {
+            "op": "AND",
+            "items": []
+          },
+          "groupBy": [],
+          "legend": "all services",
+          "reduceTo": "sum"
+        }
+      }
+    },
+    "op": "1",
+    "target": 1000000,
+    "matchType": "1",
+    "selectedQueryName": "A",
+    "alertOnAbsent": true,
+    "absentFor": 10
+  },
+  "labels": {
+    "severity": "critical"
+  },
+  "annotations": {
+    "summary": "No APM telemetry received for 10 minutes",
+    "description": "SigNoz stopped receiving span metrics from every service. Either all workloads are down or the telemetry pipeline broke: check the otel-collector in the observability namespace (health :13133) and the SigNoz collector in the signoz namespace. Note: the threshold itself is intentionally unreachable; this rule only fires via alertOnAbsent."
+  },
+  "preferredChannels": []
+}

@@ -1,0 +1,58 @@
+{
+  "alert": "Container memory near limit",
+  "alertType": "METRIC_BASED_ALERT",
+  "ruleType": "threshold_rule",
+  "evalWindow": "10m0s",
+  "frequency": "5m0s",
+  "condition": {
+    "compositeQuery": {
+      "queryType": "builder",
+      "panelType": "graph",
+      "unit": "",
+      "builderQueries": {
+        "A": {
+          "queryName": "A",
+          "dataSource": "metrics",
+          "aggregateAttribute": {
+            "key": "k8s_container_memory_limit_utilization",
+            "dataType": "float64",
+            "type": "Gauge",
+            "isColumn": true
+          },
+          "timeAggregation": "avg",
+          "spaceAggregation": "max",
+          "aggregateOperator": "avg",
+          "expression": "A",
+          "disabled": false,
+          "stepInterval": 60,
+          "filters": {
+            "op": "AND",
+            "items": []
+          },
+          "groupBy": [
+            {
+              "key": "k8s_pod_name",
+              "dataType": "string",
+              "type": "resource",
+              "isColumn": false
+            }
+          ],
+          "legend": "{{k8s_pod_name}}",
+          "reduceTo": "max"
+        }
+      }
+    },
+    "op": "1",
+    "target": 0.9,
+    "matchType": "2",
+    "selectedQueryName": "A"
+  },
+  "labels": {
+    "severity": "warning"
+  },
+  "annotations": {
+    "summary": "{{$labels.k8s_pod_name}} memory above 90% of its limit",
+    "description": "Container memory utilization stayed above 90% of the configured limit for 10 minutes (kubeletstats). The workload resource limits are tuned tightly for this cluster — check for a leak or raise the limit in the deployment manifest."
+  },
+  "preferredChannels": []
+}

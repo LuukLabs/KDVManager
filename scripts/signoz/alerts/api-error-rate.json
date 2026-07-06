@@ -1,0 +1,69 @@
+{
+  "alert": "High API error count",
+  "alertType": "METRIC_BASED_ALERT",
+  "ruleType": "threshold_rule",
+  "evalWindow": "5m0s",
+  "frequency": "1m0s",
+  "condition": {
+    "compositeQuery": {
+      "queryType": "builder",
+      "panelType": "graph",
+      "unit": "",
+      "builderQueries": {
+        "A": {
+          "queryName": "A",
+          "dataSource": "metrics",
+          "aggregateAttribute": {
+            "key": "signoz_calls_total",
+            "dataType": "float64",
+            "type": "Sum",
+            "isColumn": true
+          },
+          "timeAggregation": "rate",
+          "spaceAggregation": "sum",
+          "aggregateOperator": "sum_rate",
+          "expression": "A",
+          "disabled": false,
+          "stepInterval": 60,
+          "filters": {
+            "op": "AND",
+            "items": [
+              {
+                "key": {
+                  "key": "status_code",
+                  "dataType": "string",
+                  "type": "tag",
+                  "isColumn": false
+                },
+                "op": "=",
+                "value": "STATUS_CODE_ERROR"
+              }
+            ]
+          },
+          "groupBy": [
+            {
+              "key": "service_name",
+              "dataType": "string",
+              "type": "resource",
+              "isColumn": false
+            }
+          ],
+          "legend": "{{service_name}}",
+          "reduceTo": "sum"
+        }
+      }
+    },
+    "op": "1",
+    "target": 0.05,
+    "matchType": "1",
+    "selectedQueryName": "A"
+  },
+  "labels": {
+    "severity": "critical"
+  },
+  "annotations": {
+    "summary": "Error span rate above threshold for {{$labels.service_name}}",
+    "description": "The rate of error spans (status_code=STATUS_CODE_ERROR) for {{$labels.service_name}} exceeded the threshold over the last 5 minutes. Check SigNoz Exceptions and recent traces for this service."
+  },
+  "preferredChannels": []
+}

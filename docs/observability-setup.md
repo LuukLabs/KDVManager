@@ -91,10 +91,13 @@ points the web build at `http://localhost:5200/telemetry`. Services pick up the 
 
 ## Known gaps / follow-ups
 
-1. **Alerting**: SigNoz alert rules + a notification channel are not yet configured (do this in the
-   SigNoz UI), and there is no external uptime check for kdvmanager.nl itself.
+1. **Alerting**: starter alert rules live in [`scripts/signoz/`](../scripts/signoz/README.md) and are
+   applied with `SIGNOZ_API_KEY=… ./apply_alerts.py`. A notification channel must still be added once
+   in the SigNoz UI (Settings → Alert Channels), and there is no external uptime check for
+   kdvmanager.nl itself.
 2. **Rate limiting**: `/telemetry/` is unauthenticated by design; an Envoy `local_ratelimit` on that
    route is recommended.
-3. **Retention**: set explicitly in SigNoz (Settings → General); ClickHouse disk is small (5Gi).
+3. **Retention**: `./apply_alerts.py --retention traces=360h logs=360h metrics=720h` (or SigNoz
+   Settings → General); ClickHouse disk is small (5Gi).
 4. **Business metrics**: the per-service meters currently only count errors — domain metrics
    (schedules created, registrations, absences) belong there.

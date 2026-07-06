@@ -1,0 +1,58 @@
+{
+  "alert": "High API p99 latency",
+  "alertType": "METRIC_BASED_ALERT",
+  "ruleType": "threshold_rule",
+  "evalWindow": "5m0s",
+  "frequency": "1m0s",
+  "condition": {
+    "compositeQuery": {
+      "queryType": "builder",
+      "panelType": "graph",
+      "unit": "ns",
+      "builderQueries": {
+        "A": {
+          "queryName": "A",
+          "dataSource": "metrics",
+          "aggregateAttribute": {
+            "key": "signoz_latency",
+            "dataType": "float64",
+            "type": "Histogram",
+            "isColumn": true
+          },
+          "timeAggregation": "",
+          "spaceAggregation": "p99",
+          "aggregateOperator": "hist_quantile_99",
+          "expression": "A",
+          "disabled": false,
+          "stepInterval": 60,
+          "filters": {
+            "op": "AND",
+            "items": []
+          },
+          "groupBy": [
+            {
+              "key": "service_name",
+              "dataType": "string",
+              "type": "resource",
+              "isColumn": false
+            }
+          ],
+          "legend": "{{service_name}}",
+          "reduceTo": "max"
+        }
+      }
+    },
+    "op": "1",
+    "target": 2000000000,
+    "matchType": "2",
+    "selectedQueryName": "A"
+  },
+  "labels": {
+    "severity": "warning"
+  },
+  "annotations": {
+    "summary": "p99 latency above 2s for {{$labels.service_name}}",
+    "description": "The 99th percentile request latency for {{$labels.service_name}} stayed above 2 seconds for the whole 5 minute window. Check database spans (Npgsql) and downstream calls in the slowest traces."
+  },
+  "preferredChannels": []
+}

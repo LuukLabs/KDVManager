@@ -13,5 +13,11 @@ spec:
     port: 443
     targetPort: 8443
     protocol: TCP
+  # Admin interface, scraped for /stats/prometheus by the otel-collector.
+  # Cluster-internal only; without NetworkPolicies the pod port was already reachable.
+  - name: admin
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
   selector:
     app: envoy

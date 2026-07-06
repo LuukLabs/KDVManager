@@ -13,7 +13,8 @@ public class GroupSummaryVM
     [Required]
     public required List<TimeBlockSummary> TimeBlocks { get; set; } = new List<TimeBlockSummary>();
 
-    public int RequiredProfessionals { get; set; } = 0;
+    // Null when no valid staffing ratio could be determined for any time block on this date
+    public int? RequiredProfessionals { get; set; } = 0;
     public int NumberOfChildren { get; set; } = 0;
 }
 
@@ -23,7 +24,8 @@ public class TimeBlockSummary
     public required TimeOnly EndTime { get; set; }
     public required string TimeSlotName { get; set; } = string.Empty;
     public required int TotalChildren { get; set; }
-    public required int RequiredProfessionals { get; set; } = 0;
+    // Null when the BKR calculator found no valid staffing ratio for this time block
+    public int? RequiredProfessionals { get; set; }
     public required List<AgeGroupSummary> AgeGroups { get; set; } = new List<AgeGroupSummary>();
 }
 

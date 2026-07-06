@@ -217,9 +217,13 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
             )}
             <Chip
               icon={<SupervisorAccount />}
-              label={`${summary.requiredProfessionals} ${t("supervisors")}`}
+              label={
+                summary.requiredProfessionals != null
+                  ? `${summary.requiredProfessionals} ${t("supervisors")}`
+                  : t("Ratio requirement cannot be met")
+              }
               size="small"
-              color="secondary"
+              color={summary.requiredProfessionals != null ? "secondary" : "error"}
               variant="outlined"
               sx={{ fontWeight: 600 }}
             />
@@ -283,12 +287,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                         display: "flex",
                         alignItems: "center",
                         gap: 0.5,
-                        color: "warning.main",
+                        color: block.requiredProfessionals != null ? "warning.main" : "error.main",
                         fontWeight: 500,
                       }}
                     >
                       <SupervisorAccount sx={{ fontSize: 12 }} />
-                      {block.requiredProfessionals}
+                      {block.requiredProfessionals ?? t("Ratio requirement cannot be met")}
                     </Typography>
                   </Box>
                 </Box>
@@ -364,8 +368,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                 />
                 <Chip
                   icon={<SupervisorAccount />}
-                  label={`${selectedTimeBlock?.requiredProfessionals} ${t("supervisors needed")}`}
-                  color="secondary"
+                  label={
+                    selectedTimeBlock?.requiredProfessionals != null
+                      ? `${selectedTimeBlock.requiredProfessionals} ${t("supervisors needed")}`
+                      : t("Ratio requirement cannot be met")
+                  }
+                  color={selectedTimeBlock?.requiredProfessionals != null ? "secondary" : "error"}
                   variant="outlined"
                 />
               </Box>

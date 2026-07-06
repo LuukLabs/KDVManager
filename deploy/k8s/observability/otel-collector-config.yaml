@@ -53,8 +53,23 @@ data:
             value: kdvmanager-prod
             action: upsert
       memory_limiter:
-        limit_mib: 512
+        # Keep headroom below the container memory limit (512Mi) so the limiter engages before the kernel OOM-kills
+        limit_mib: 400
+        spike_limit_mib: 100
         check_interval: 1s
+      # Enrich OTLP telemetry with pod/namespace attribution from the Kubernetes API
+      k8sattributes:
+        auth_type: serviceAccount
+        passthrough: false
+        extract:
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.deployment.name
+            - k8s.node.name
+        pod_association:
+          - sources:
+              - from: connection
       filter/ottl:
         error_mode: ignore
         traces:
@@ -82,13 +97,13 @@ data:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resource, filter/ottl, batch]
+          processors: [memory_limiter, k8sattributes, resource, filter/ottl, batch]
           exporters: [otlp/signoz]
         metrics:
           receivers: [otlp, prometheus, k8s_cluster, kubeletstats]
-          processors: [memory_limiter, resource, batch]
+          processors: [memory_limiter, k8sattributes, resource, batch]
           exporters: [otlp/signoz]
         logs:
           receivers: [otlp]
-          processors: [memory_limiter, resource, batch]
+          processors: [memory_limiter, k8sattributes, resource, batch]
           exporters: [otlp/signoz]

@@ -2,6 +2,7 @@ using MassTransit.Logging;
 using MassTransit.Monitoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -24,6 +25,10 @@ public static class TelemetryExtensions
     {
         var otelEndpoint = configuration[OtelEndpointConfigKey]
                            ?? Environment.GetEnvironmentVariable(OtelEndpointEnvKey);
+
+        // Enriches every span with tenant.id; resolved from DI so it shares the
+        // AsyncLocal-backed ITenancyContextAccessor with the tenancy middleware/filters.
+        services.TryAddSingleton<TenantEnrichmentProcessor>();
 
         var otel = services.AddOpenTelemetry();
 
@@ -61,7 +66,8 @@ public static class TelemetryExtensions
                     };
                 })
                 .AddSource(DiagnosticHeaders.DefaultListenerName)
-                .AddNpgsql();
+                .AddNpgsql()
+                .AddProcessor<TenantEnrichmentProcessor>();
 
             if (!string.IsNullOrWhiteSpace(otelEndpoint))
             {
@@ -78,6 +84,7 @@ public static class TelemetryExtensions
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddRuntimeInstrumentation()
+                .AddNpgsqlInstrumentation()
                 .AddMeter(InstrumentationOptions.MeterName);
 
             foreach (var meterName in additionalMeterNames)
@@ -103,7 +110,7 @@ public static class TelemetryExtensions
         if (ratio is null)
         {
             var envRatio = Environment.GetEnvironmentVariable(SamplingRatioEnvKey);
-            if (double.TryParse(envRatio, out var parsed)) ratio = parsed;
+            if (double.TryParse(envRatio, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var parsed)) ratio = parsed;
         }
         ratio ??= 1.0d;
         return Math.Clamp(ratio.Value, 0d, 1d);

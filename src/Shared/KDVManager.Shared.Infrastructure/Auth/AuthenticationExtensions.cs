@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace KDVManager.Shared.Infrastructure.Auth;
@@ -39,6 +40,20 @@ public static class AuthenticationExtensions
                     ClockSkew = TimeSpan.FromMinutes(5),
                     RequireExpirationTime = true,
                     RequireSignedTokens = true
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    // Surface why a token was rejected (expired, bad issuer, ...) without
+                    // logging the token itself.
+                    OnAuthenticationFailed = context =>
+                    {
+                        var logger = context.HttpContext.RequestServices
+                            .GetRequiredService<ILoggerFactory>()
+                            .CreateLogger("JwtAuthentication");
+                        logger.LogWarning(context.Exception, "JWT authentication failed for {RequestPath}", context.HttpContext.Request.Path);
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

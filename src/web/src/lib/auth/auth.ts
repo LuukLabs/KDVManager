@@ -2,6 +2,9 @@ import i18next from "i18next";
 import { type Auth0ContextInterface } from "@auth0/auth0-react";
 import { redirect, type LoaderFunction } from "react-router-dom";
 
+/** Route users land on after login when no explicit destination is known. */
+export const DEFAULT_AUTHENTICATED_ROUTE = "/schedule";
+
 // Auth0 configuration
 export const authConfig = {
   domain: import.meta.env.VITE_APP_AUTH0_DOMAIN!,
@@ -16,65 +19,132 @@ export const validateAuthConfig = () => {
       i18next.t("auth.errors.missingConfig", "Auth0 configuration is missing domain or clientId"),
     );
   }
-  if (!authConfig.audience) {
-    console.warn(
-      i18next.t("auth.warnings.audienceMissing", "Auth0 audience is not set, using default: ") +
-        authConfig.audience,
-    );
+};
+
+const LOGIN_ROUTE = "/auth/login";
+
+/** Build the login route, optionally carrying the original destination. */
+export const loginPath = (returnTo?: string): string => {
+  if (!returnTo) return LOGIN_ROUTE;
+  return `${LOGIN_ROUTE}?returnTo=${encodeURIComponent(returnTo)}`;
+};
+
+/**
+ * Restrict a post-login destination to an in-app path so the returnTo value
+ * (query parameter / Auth0 appState) cannot be abused as an open redirect.
+ */
+export const sanitizeReturnTo = (value: string | null | undefined): string => {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.startsWith("/\\")) {
+    return DEFAULT_AUTHENTICATED_ROUTE;
+  }
+  return value;
+};
+
+/*
+ * Bridge between the Auth0 React context and non-React code (router loaders,
+ * the API fetch mutators). AuthProvider mirrors every context update into the
+ * bridge; the `ready` promise resolves once the SDK has finished initialising
+ * (isLoading flipped to false), so route loaders can wait for the session to
+ * be restored instead of racing the provider's first render.
+ */
+let auth0Client: Auth0ContextInterface | null = null;
+let resolveReady: (() => void) | null = null;
+const ready = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
+
+// Safety valve: if the Auth0 SDK never finishes initialising, treat the user
+// as unauthenticated instead of blocking navigation forever.
+const AUTH_READY_TIMEOUT_MS = 15_000;
+
+export const setAuth0Client = (client: Auth0ContextInterface) => {
+  auth0Client = client;
+  if (!client.isLoading && resolveReady) {
+    resolveReady();
+    resolveReady = null;
   }
 };
 
-// Global Auth0 client instance (from @auth0/auth0-react)
-let auth0Client: Auth0ContextInterface | null = null;
+const waitForAuth0Client = async (): Promise<Auth0ContextInterface | null> => {
+  if (resolveReady === null) return auth0Client;
 
-export const getAuth0Client = () => auth0Client;
-export const setAuth0Client = (client: Auth0ContextInterface) => {
-  auth0Client = client;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  await Promise.race([
+    ready,
+    new Promise<void>((resolve) => {
+      timer = setTimeout(resolve, AUTH_READY_TIMEOUT_MS);
+    }),
+  ]);
+  clearTimeout(timer);
+  return auth0Client;
 };
 
-// Token getter for API calls
+/**
+ * Token getter for API calls. Reads the current bridge snapshot without
+ * waiting for SDK initialisation: protected pages only render after
+ * {@link requireAuth} has passed, so the session is already restored by the
+ * time their data fetches run.
+ */
 export const getAuthToken = async (): Promise<string | null> => {
-  if (!auth0Client) return null;
+  if (!auth0Client?.isAuthenticated) return null;
 
   try {
-    const isAuthenticated = await auth0Client.isAuthenticated;
-    if (!isAuthenticated) return null;
-
     return await auth0Client.getAccessTokenSilently({
       authorizationParams: { audience: authConfig.audience },
     });
   } catch (error) {
-    console.error("Failed to get token:", error);
+    console.error("Failed to acquire access token", error);
     return null;
   }
 };
 
-// Auth loader for protected routes
+/** Auth loader for protected routes. */
 export const requireAuth: LoaderFunction = async ({ request }) => {
-  if (!auth0Client) {
-    console.error("Auth0 client is not initialized");
-    const url = new URL(request.url);
-    console.log(
-      "requireauth url",
-      `/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`,
-    );
-    throw redirect(`/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`);
-  }
+  const client = await waitForAuth0Client();
 
-  const isAuthenticated = await auth0Client.isAuthenticated;
-
-  if (!isAuthenticated) {
+  if (!client?.isAuthenticated) {
     const url = new URL(request.url);
-    throw redirect(`/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`);
+    throw redirect(loginPath(url.pathname + url.search));
   }
 
   return null;
 };
 
-// Wrapper to add auth to existing loaders
+/** Wrapper to add auth to existing loaders. */
 export const withAuth = (loader: LoaderFunction): LoaderFunction => {
   return async (args) => {
     await requireAuth(args);
     return loader(args);
   };
+};
+
+/*
+ * Post-login destination handoff. Auth0Provider's onRedirectCallback receives
+ * the appState sent along with loginWithRedirect; the callback page consumes
+ * it in the same page load, so a module-level variable is all that's needed
+ * (no localStorage round-trip).
+ */
+let postLoginReturnTo: string | null = null;
+
+export const setPostLoginReturnTo = (returnTo: string | null) => {
+  postLoginReturnTo = returnTo;
+};
+
+export const consumePostLoginReturnTo = (): string | null => {
+  const value = postLoginReturnTo;
+  postLoginReturnTo = null;
+  return value;
+};
+
+let redirectingToLogin = false;
+
+/**
+ * Hard-redirect to the login page when the API reports an expired session
+ * (401). A full navigation is intentional: the Auth0 SDK state is stale at
+ * this point and a fresh document load restarts the login flow cleanly.
+ */
+export const redirectToLogin = () => {
+  if (redirectingToLogin || window.location.pathname.startsWith("/auth/")) return;
+  redirectingToLogin = true;
+  window.location.assign(loginPath(window.location.pathname + window.location.search));
 };

@@ -1,79 +1,58 @@
-// File: src/components/CallbackPage.tsx
 import { useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, CircularProgress, Container } from "@mui/material";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
+import { consumePostLoginReturnTo, loginPath, sanitizeReturnTo } from "@lib/auth/auth";
+import AuthPageLayout from "./AuthPageLayout";
 
+/**
+ * Landing page for the Auth0 redirect (redirect_uri). The Auth0Provider
+ * exchanges the authorization code during SDK initialisation; once that
+ * settles, this page forwards the user to the destination captured in the
+ * login appState (handed off via consumePostLoginReturnTo).
+ */
 const CallbackPage = () => {
   const { isLoading, error, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // Retrieve appState from localStorage (set by AuthProviderWithNavigate)
-  const getAppState = () => {
-    const raw = localStorage.getItem("auth_app_state");
-    if (!raw) return undefined;
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return undefined;
-    }
-  };
-  const appState = getAppState();
-
-  console.log("Callback AppState", appState);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Auth callback error:", error);
-    }
-  }, [error]);
-
   const hasNavigated = useRef(false);
   useEffect(() => {
-    if (hasNavigated.current) return;
-    console.log("isLoading:", isLoading, "isAuthenticated:", isAuthenticated);
-    if (!isLoading && isAuthenticated && appState) {
-      const returnTo = appState.returnTo ?? "/schedule";
-      console.log("Callback navigating", returnTo);
-      hasNavigated.current = true;
-      localStorage.removeItem("auth_app_state");
-      navigate(returnTo);
-    } else if (!isLoading && !error && !isAuthenticated) {
-      hasNavigated.current = true;
-      navigate("/auth/login");
+    if (isLoading || error || hasNavigated.current) return;
+    hasNavigated.current = true;
+
+    if (isAuthenticated) {
+      navigate(sanitizeReturnTo(consumePostLoginReturnTo()), { replace: true });
+    } else {
+      navigate(loginPath(), { replace: true });
     }
-  }, [isAuthenticated, isLoading, error, appState, navigate]);
+  }, [isLoading, error, isAuthenticated, navigate]);
 
   if (error) {
-    return null;
-  }
-
-  if (isLoading) {
     return (
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h4" component="h1" gutterBottom>
-            {t("Completing authentication...")}
-          </Typography>
-          <CircularProgress size={40} sx={{ mt: 2 }} />
-        </Box>
-      </Container>
+      <AuthPageLayout>
+        <Typography variant="h4" component="h1">
+          {t("Login failed")}
+        </Typography>
+        <Typography color="text.secondary">{error.message}</Typography>
+        <Button variant="contained" onClick={() => navigate(loginPath(), { replace: true })}>
+          {t("Try again")}
+        </Button>
+      </AuthPageLayout>
     );
   }
 
-  // Prevent rendering anything after navigation
-  return null;
+  return (
+    <AuthPageLayout>
+      <Typography variant="h4" component="h1">
+        {t("Completing authentication...")}
+      </Typography>
+      <CircularProgress size={40} />
+    </AuthPageLayout>
+  );
 };
 
 export const Component = CallbackPage;

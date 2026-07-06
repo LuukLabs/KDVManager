@@ -1,92 +1,65 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { Box, Typography, CircularProgress, Container } from "@mui/material";
+import { Navigate, useSearchParams } from "react-router-dom";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
+import { sanitizeReturnTo } from "@lib/auth/auth";
+import AuthPageLayout from "./AuthPageLayout";
+
+// If the browser hasn't navigated to Auth0 after this long, stop spinning and
+// offer a manual retry instead.
+const REDIRECT_FALLBACK_DELAY_MS = 8_000;
 
 const LoginPage = () => {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [timeoutError, setTimeoutError] = useState(false);
   const { t } = useTranslation();
+  const [showFallback, setShowFallback] = useState(false);
 
-  console.log("isLoading", isLoading);
-  console.log("isAuthenticated", isAuthenticated);
+  const returnTo = sanitizeReturnTo(searchParams.get("returnTo"));
+
+  const startLogin = useCallback(() => {
+    void loginWithRedirect({ appState: { returnTo } });
+  }, [loginWithRedirect, returnTo]);
+
+  const hasStartedLogin = useRef(false);
+  useEffect(() => {
+    if (isLoading || isAuthenticated || hasStartedLogin.current) return;
+    hasStartedLogin.current = true;
+    startLogin();
+  }, [isLoading, isAuthenticated, startLogin]);
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      const returnTo = searchParams.get("returnTo") ?? "/schedule";
-      console.log("Navigating", returnTo);
-      navigate(returnTo);
-    }
-  }, [isAuthenticated, isLoading, navigate, searchParams]);
+    const timer = setTimeout(() => setShowFallback(true), REDIRECT_FALLBACK_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!isAuthenticated && !isLoading) {
-        setTimeoutError(true);
-      }
-    }, 10000); // 10 seconds
-    return () => clearTimeout(timeout);
-  }, [isAuthenticated, isLoading]);
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to={returnTo} replace />;
+  }
 
-  const hasRedirected = useRef(false);
-  useEffect(() => {
-    console.log("LoginPage state:", {
-      isLoading,
-      isAuthenticated,
-      hasRedirected: hasRedirected.current,
-    });
-    if (!isLoading && !isAuthenticated && !hasRedirected.current) {
-      const returnTo = searchParams.get("returnTo") ?? "/schedule";
-      console.log("Login returnTo", returnTo);
-      hasRedirected.current = true;
-      loginWithRedirect({
-        appState: { returnTo },
-      });
-    }
-  }, [loginWithRedirect, isLoading, isAuthenticated, searchParams]);
-
-  if (timeoutError) {
+  if (showFallback && !isLoading) {
     return (
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h4" component="h1" gutterBottom>
-            {t("Login failed to start. Please try again.")}
-          </Typography>
-        </Box>
-      </Container>
+      <AuthPageLayout>
+        <Typography variant="h4" component="h1">
+          {t("Login failed to start. Please try again.")}
+        </Typography>
+        <Button variant="contained" onClick={startLogin}>
+          {t("Login")}
+        </Button>
+      </AuthPageLayout>
     );
   }
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          {t("Redirecting to login...")}
-        </Typography>
-        <CircularProgress size={40} sx={{ mt: 2 }} />
-      </Box>
-    </Container>
+    <AuthPageLayout>
+      <Typography variant="h4" component="h1">
+        {t("Redirecting to login...")}
+      </Typography>
+      <CircularProgress size={40} />
+    </AuthPageLayout>
   );
 };
 

@@ -55,9 +55,15 @@ export default defineConfig({
     exclude: ["node_modules", "dist", ".idea", ".git", ".cache", "src/api/**"],
     setupFiles: ["./src/test/setup.matchers.ts", "./src/test/setup.i18n.ts"],
 
-    // Browser mode isolates at the iframe/page level; skipping per-test
-    // module isolation keeps the dev-server module graph hot between tests.
-    isolate: false,
+    // Per-file isolation is required for correctness: with `isolate: false`
+    // the module graph is shared across test files, so vi.mock factories leak
+    // between files (a later file importing the real module gets another
+    // file's partial mock) and module-scope lifecycle hooks only bind to the
+    // first importing file (vitest-browser-react's auto-cleanup stopped
+    // running, leaking mounted trees and dialog backdrops into later tests).
+    // Reproduce the breakage with: rm -rf node_modules/.cache/vitest &&
+    // taskset -c 0,1 pnpm vitest run (2-core pinning matches CI runners).
+    isolate: true,
 
     // Hygiene --------------------------------------------------------------
     restoreMocks: true,

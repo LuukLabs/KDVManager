@@ -10,6 +10,7 @@ import { guardianDetailPageLoader } from "@pages/guardians/guardianDetailPage.lo
 import ErrorPage from "@components/ErrorPage";
 import { queryClient } from "@lib/query-client/queryClient";
 import MainLayout from "@components/MainLayout";
+import LoadingAnimation from "@components/LoadingAnimation";
 import { requireAuth, withAuth } from "@lib/auth/auth";
 import { Component as CallbackPage } from "@pages/auth/CallbackPage";
 import { Component as LoginPage } from "@pages/auth/LoginPage";
@@ -19,6 +20,7 @@ const router = (t: TFunction<"translation">) =>
     {
       path: "/",
       errorElement: <ErrorPage />,
+      hydrateFallbackElement: <LoadingAnimation />,
       children: [
         {
           path: "auth",

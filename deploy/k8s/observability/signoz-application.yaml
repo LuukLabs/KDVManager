@@ -18,19 +18,38 @@ spec:
       values: |
         global:
           storageClass: do-block-storage
-        
+
+        # In chart 0.88.2 clickhouse and otelCollector are top-level keys, and
+        # queryService/frontend/alertmanager are merged into the unified
+        # `signoz` component.
+        clickhouse:
+          resources:
+            requests:
+              cpu: 300m
+              memory: 640Mi
+            limits:
+              cpu: 800m
+              memory: 1280Mi
+          persistence:
+            size: 5Gi
+          # Per-query memory caps (ClickHouse user profile settings)
+          profiles:
+            default/max_memory_usage: "300000000"
+            default/max_bytes_before_external_group_by: "200000000"
+            default/max_bytes_before_external_sort: "200000000"
+          # Server-wide memory caps; max_server_memory_usage replaces the
+          # long-removed max_memory_usage_for_all_queries setting
+          settings:
+            max_server_memory_usage: "600000000"
+            uncompressed_cache_size: "0"
+            mark_cache_size: "268435456"
+
         signoz:
-          # Disable alertmanager if not actively used; comment out to re-enable
-          alertmanager:
-            enabled: false
-
-          # Disable logs pipeline by default (set enabled: true if/when needed)
-          logs:
-            enabled: true
-
           ingress:
             enabled: true
             className: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-production
             hosts:
               - host: signoz.kdvmanager.nl
                 paths:
@@ -41,65 +60,29 @@ spec:
               - secretName: signoz-tls-cert
                 hosts:
                   - signoz.kdvmanager.nl
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt-production
-          env:
-            storage: clickhouse
-          
-          clickhouse:
-            resources:
-              requests:
-                cpu: 300m
-                memory: 640Mi
-              limits:
-                cpu: 800m
-                memory: 1280Mi
-            persistence:
-              size: 5Gi
-            config:
-              config.d:
-                10_tuning.xml: |
-                  <yandex>
-                    <max_memory_usage>300000000</max_memory_usage>
-                    <max_memory_usage_for_all_queries>600000000</max_memory_usage_for_all_queries>
-                    <max_bytes_before_external_group_by>200000000</max_bytes_before_external_group_by>
-                    <max_bytes_before_external_sort>200000000</max_bytes_before_external_sort>
-                    <uncompressed_cache_size>0</uncompressed_cache_size>
-                    <mark_cache_size>268435456</mark_cache_size>
-                  </yandex>
+          # Combined budget of the former queryService + frontend components
+          resources:
+            requests:
+              cpu: 80m
+              memory: 224Mi
+            limits:
+              cpu: 400m
+              memory: 512Mi
 
-          queryService:
-            resources:
-              requests:
-                cpu: 60m
-                memory: 160Mi
-              limits:
-                cpu: 250m
-                memory: 320Mi
-
-          frontend:
-            resources:
-              requests:
-                cpu: 20m
-                memory: 64Mi
-              limits:
-                cpu: 120m
-                memory: 128Mi
-
-          otelCollector:
-            resources:
-              requests:
-                cpu: 80m
-                memory: 192Mi
-              limits:
-                cpu: 400m
-                memory: 512Mi
-            config:
-              processors:
-                batch:
-                  send_batch_size: 256
-                  timeout: 5s
-                  send_batch_max_size: 512
+        otelCollector:
+          resources:
+            requests:
+              cpu: 80m
+              memory: 192Mi
+            limits:
+              cpu: 400m
+              memory: 512Mi
+          config:
+            processors:
+              batch:
+                send_batch_size: 256
+                timeout: 5s
+                send_batch_max_size: 512
   destination:
     server: https://kubernetes.default.svc
     namespace: signoz

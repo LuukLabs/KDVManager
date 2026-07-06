@@ -4,13 +4,16 @@ namespace KDVManager.Shared.Infrastructure.Tenancy;
 
 public class TenancyContextAccessor : ITenancyContextAccessor
 {
-    private ITenancyContext? _current;
+    // AsyncLocal flows the tenant context with the ambient execution context, so a single
+    // singleton instance serves HTTP requests and MassTransit consumers concurrently and
+    // can be read by singleton OTel processors without capturing a request scope.
+    private static readonly AsyncLocal<ITenancyContext?> _current = new();
 
     public ITenancyContext? Current
     {
-        get => _current ?? throw new TenantRequiredException();
-        set => _current = value;
+        get => _current.Value ?? throw new TenantRequiredException();
+        set => _current.Value = value;
     }
 
-    public bool HasTenant => _current != null;
+    public bool HasTenant => _current.Value != null;
 }

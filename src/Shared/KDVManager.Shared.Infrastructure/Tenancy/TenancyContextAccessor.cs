@@ -7,7 +7,7 @@ public class TenancyContextAccessor : ITenancyContextAccessor
     // AsyncLocal flows the tenant context with the ambient execution context, so a single
     // singleton instance serves HTTP requests and MassTransit consumers concurrently and
     // can be read by singleton OTel processors without capturing a request scope.
-    private static readonly AsyncLocal<ITenancyContext?> _current = new();
+    private readonly AsyncLocal<ITenancyContext?> _current = new();
 
     public ITenancyContext? Current
     {

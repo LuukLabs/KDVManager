@@ -98,10 +98,37 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: otel-collector-http
+                # Bounds the unauthenticated telemetry ingest per Envoy pod (60 burst / 30 rps).
+                typed_per_filter_config:
+                  envoy.filters.http.local_ratelimit:
+                    "@type": type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+                    stat_prefix: telemetry_rate_limiter
+                    token_bucket:
+                      max_tokens: 60
+                      tokens_per_fill: 30
+                      fill_interval: 1s
+                    filter_enabled:
+                      runtime_key: telemetry_rate_limit_enabled
+                      default_value:
+                        numerator: 100
+                        denominator: HUNDRED
+                    filter_enforced:
+                      runtime_key: telemetry_rate_limit_enforced
+                      default_value:
+                        numerator: 100
+                        denominator: HUNDRED
+                    status:
+                      code: TooManyRequests
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+          # No-op at the listener level (no token_bucket): rate limiting only
+          # applies where a route sets typed_per_filter_config (telemetry).
+          - name: envoy.filters.http.local_ratelimit
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+              stat_prefix: http_local_rate_limiter
           - name: envoy.filters.http.jwt_authn
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication

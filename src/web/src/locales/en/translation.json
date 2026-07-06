@@ -514,5 +514,14 @@
   "{{count}} day(s)_one": "{{count}} day",
   "{{count}} day(s)_other": "{{count}} days",
   "{{count}} years_one": "{{count}} year",
-  "{{count}} years_other": "{{count}} years"
+  "{{count}} years_other": "{{count}} years",
+  "Add tenant": "Add tenant",
+  "Edit tenant": "Edit tenant",
+  "Manage tenants.": "Manage tenants.",
+  "Tenant added": "Tenant added",
+  "Tenant updated": "Tenant updated",
+  "Tenants": "Tenants",
+  "To add a tenant, please enter the tenant name here.": "To add a tenant, please enter the tenant name here.",
+  "activate.tenant.ariaLabel": "Activate {{name}}",
+  "deactivate.tenant.ariaLabel": "Deactivate {{name}}"
 }

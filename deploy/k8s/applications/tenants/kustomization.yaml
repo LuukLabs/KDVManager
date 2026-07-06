@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yml
+- service.yml
+
+labels:
+- pairs:
+    app: tenants-api
+    component: api
+    service: tenants
+
+images:
+- name: ghcr.io/luuklabs/kdvmanager/tenants.api
+  newName: ghcr.io/luuklabs/kdvmanager/tenants.api
+  newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/tenants.migrator
+  newName: ghcr.io/luuklabs/kdvmanager/tenants.migrator
+  newTag: linux-main

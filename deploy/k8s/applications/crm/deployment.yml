@@ -123,6 +123,20 @@ spec:
                 key: RABBITMQ_DEFAULT_PASS
           - name: ConnectionStrings__RabbitMQ
             value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq.kdvmanager-prod.svc.cluster.local:5672/"
+          # Auth0 Machine-to-Machine app authorized for the Management API (create:users, delete:users).
+          # Requires a Kubernetes secret "auth0-management-secret" with keys "client-id" and "client-secret".
+          - name: Auth0Management__Domain
+            value: "kdvmanager.eu.auth0.com"
+          - name: Auth0Management__ClientId
+            valueFrom:
+              secretKeyRef:
+                name: auth0-management-secret
+                key: client-id
+          - name: Auth0Management__ClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: auth0-management-secret
+                key: client-secret
         volumeMounts:
         - name: dotnet-bundle-cache
           mountPath: /tmp/dotnet_bundle_extract

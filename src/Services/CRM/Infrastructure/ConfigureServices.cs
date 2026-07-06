@@ -24,6 +24,9 @@ public static class ConfigureServices
         services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
         services.AddScoped<IChildActivityIntervalRepository, ChildActivityIntervalRepository>();
         services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
+        services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+        services.AddScoped<IAuth0ManagementService, Auth0ManagementService>();
+        services.Configure<Auth0ManagementOptions>(configuration.GetSection("Auth0Management"));
 
         services.AddTenancy();
 

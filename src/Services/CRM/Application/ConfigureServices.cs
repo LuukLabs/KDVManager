@@ -17,6 +17,9 @@ using Microsoft.Extensions.Configuration;
 using KDVManager.Services.CRM.Application.Features.Guardians.Commands.AddGuardian;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetChildGuardians;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren;
+using KDVManager.Services.CRM.Application.Features.Administrators.Commands.CreateAdministrator;
+using KDVManager.Services.CRM.Application.Features.Administrators.Commands.DeleteAdministrator;
+using KDVManager.Services.CRM.Application.Features.Administrators.Queries.GetAdministratorList;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -42,7 +45,9 @@ public static class ConfigureServices
         services.AddScoped<GetGuardianDetailQueryHandler>();
         services.AddScoped<LinkGuardianToChildCommandHandler>();
         services.AddScoped<UnlinkGuardianFromChildCommandHandler>();
-
+        services.AddScoped<CreateAdministratorCommandHandler>();
+        services.AddScoped<DeleteAdministratorCommandHandler>();
+        services.AddScoped<GetAdministratorListQueryHandler>();
 
         return services;
     }

@@ -89,7 +89,12 @@ describe("ChildrenTable — record navigation (browser)", () => {
 
     await userEvent.click(page.getByRole("button", { name: "John Smith" }));
 
+    // The click handler can land a tick after the CDP click resolves on slow
+    // runners (failure screenshots show the tap ripple on the right card with
+    // navigate not yet called), so poll instead of asserting synchronously.
+    await vi.waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith("/children/child-2");
+    });
     expect(navigateMock).toHaveBeenCalledTimes(1);
-    expect(navigateMock).toHaveBeenCalledWith("/children/child-2");
   });
 });

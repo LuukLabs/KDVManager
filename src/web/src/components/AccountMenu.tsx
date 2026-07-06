@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
+import Login from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useTranslation } from "react-i18next";
@@ -109,13 +110,13 @@ export default function AccountMenu() {
           </MenuItem>
         ) : (
           <MenuItem
-            key="Logout"
+            key="Login"
             onClick={() => {
               void loginWithRedirect();
             }}
           >
             <ListItemIcon>
-              <Logout fontSize="small" />
+              <Login fontSize="small" />
             </ListItemIcon>
             <Typography sx={{ textAlign: "center" }}>{t("Login")}</Typography>
           </MenuItem>

@@ -1,6 +1,7 @@
 using Microsoft.OpenApi;
 using System.Text.Json.Nodes;
 using KDVManager.Services.Scheduling.Api.Telemetry;
+using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
 using KDVManager.Shared.Infrastructure.Telemetry;
@@ -15,7 +16,8 @@ public static class ConfigureServices
 
         services.AddHttpContextAccessor();
 
-        services.AddHealthChecks();
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>("postgres", tags: ["ready"]);
 
         services.AddControllers();
         // Query handlers (could consider MediatR later)

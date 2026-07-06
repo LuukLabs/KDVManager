@@ -12,7 +12,8 @@ export type TimeBlockSummary = {
   /** @nullable */
   timeSlotName: string | null;
   totalChildren: number;
-  requiredProfessionals: number;
+  /** @nullable */
+  requiredProfessionals: number | null;
   /** @nullable */
   ageGroups: AgeGroupSummary[] | null;
 };

@@ -67,7 +67,12 @@ public class GetGroupSummaryQueryHandler
 
         timeBlocks = timeBlocks.OrderBy(tb => tb.StartTime).ToList();
 
-        var maxProfessionals = timeBlocks.Any() ? timeBlocks.Max(tb => tb.RequiredProfessionals) : 0;
+        // If any time block has no valid staffing ratio, the day as a whole is not satisfiable either
+        int? maxProfessionals = !timeBlocks.Any()
+            ? 0
+            : timeBlocks.Any(tb => tb.RequiredProfessionals is null)
+                ? null
+                : timeBlocks.Max(tb => tb.RequiredProfessionals);
 
         return new GroupSummaryVM
         {
@@ -146,7 +151,7 @@ public class GetGroupSummaryQueryHandler
             EndTime = end,
             TimeSlotName = timeSlotName,
             TotalChildren = totalChildren,
-            RequiredProfessionals = result.HasSolution ? result.Professionals : -1,
+            RequiredProfessionals = result.HasSolution ? result.Professionals : null,
             AgeGroups = ageGroups
         };
     }

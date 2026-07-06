@@ -1,5 +1,6 @@
 using Microsoft.OpenApi;
 using KDVManager.Services.CRM.Api.Telemetry;
+using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
 using KDVManager.Shared.Infrastructure.Telemetry;
@@ -14,7 +15,8 @@ public static class ConfigureServices
 
         services.AddHttpContextAccessor();
 
-        services.AddHealthChecks();
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>("postgres", tags: ["ready"]);
 
         services.AddOpenApi(options =>
         {

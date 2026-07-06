@@ -18,10 +18,6 @@ spec:
       labels:
         app: crm-api
         release: production
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: kdvmanager-sa
       securityContext:
@@ -45,7 +41,7 @@ spec:
             - ALL
         startupProbe:
           httpGet:
-            path: /healthz
+            path: /readyz
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -61,7 +57,7 @@ spec:
         readinessProbe:
           httpGet:
             port: 8080
-            path: /healthz
+            path: /readyz
           initialDelaySeconds: 20
           periodSeconds: 5
           timeoutSeconds: 3

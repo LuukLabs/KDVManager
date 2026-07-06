@@ -96,6 +96,7 @@ const config = tseslint.config([
               "console.error",
               "console.warn",
               "console.info",
+              "reportError",
             ],
           },
           "object-properties": {
@@ -225,6 +226,14 @@ const config = tseslint.config([
           },
         },
       ],
+    },
+  },
+  {
+    // Telemetry code is full of protocol constants (span names, attribute
+    // keys) that must never be translated.
+    files: ["src/telemetry/**/*.ts"],
+    rules: {
+      "i18next/no-literal-string": "off",
     },
   },
   {

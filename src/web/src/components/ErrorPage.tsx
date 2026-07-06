@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteError } from "react-router-dom";
 import { Box, Typography, Button, Stack } from "@mui/material";
@@ -6,12 +7,19 @@ import { ApiError } from "@api/errors/types";
 import DevErrorPanel from "./DevErrorPanel";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import HomeIcon from "@mui/icons-material/Home";
+import { reportError } from "../telemetry/errorReporting";
 
 export default function ErrorPage() {
   const { t } = useTranslation();
   const error = useRouteError();
   const navigate = useNavigate();
   console.error(error);
+
+  // React Router swallows loader/render errors (they never hit window
+  // handlers), so this error boundary reports them to telemetry itself.
+  useEffect(() => {
+    reportError(error, "react-router.errorElement");
+  }, [error]);
 
   let status: number | undefined;
 

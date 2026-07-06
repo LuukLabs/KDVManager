@@ -1,243 +1,100 @@
-# Observability Stack - SigNoz & Error Collection
+# Observability Stack
 
-## Overview
+_Last updated: 2026-07-06. For the review that shaped this setup, see [observability-review.md](observability-review.md)._
 
-Your KDVManager application now has a comprehensive observability stack with **SigNoz** deployed using the official Helm chart via ArgoCD, following SigNoz best practices, and **enhanced error collection** from .NET Core backends.
+## Architecture
 
-## Components
-
-### 1. SigNoz APM Platform (Official Helm Chart)
-- **Deployment**: Using official SigNoz Helm chart (v0.79.0) via ArgoCD
-- **URL**: https://signoz.kdvmanager.nl (secured with basic auth)
-- **Components**: 
-  - SigNoz application server
-  - ClickHouse database (included in Helm chart)
-  - Zookeeper (included in Helm chart)
-- **Features**: 
-  - Distributed tracing
-  - Application metrics
-  - Error tracking and alerting
-  - Service dependency mapping
-  - Performance monitoring
-
-### 2. OpenTelemetry Collector
-- **Configuration**: `/deploy/k8s/observability/otel-collector-config.yaml`
-- **Integration**: Connected to Helm-deployed SigNoz service
-- **Exporters**: 
-  - Jaeger (traces)
-  - SigNoz (traces, metrics, logs) - `signoz-signoz.observability.svc.cluster.local:4317`
-  - Prometheus (metrics)
-
-### 3. Enhanced .NET Error Collection
-
-#### Custom Metrics
-Both CRM and Scheduling APIs now expose:
-- `{service}_errors_total` - Counter of all errors by type
-- `{service}_requests_total` - Counter of all requests
-- `{service}_request_duration_seconds` - Request duration histogram
-
-#### Structured Logging
-- **Log Level**: Errors logged with appropriate levels (Warning for client errors, Error for server errors)
-- **Context**: Each log includes TraceId, service name, request path, timestamp, and user context
-- **Correlation**: Logs are correlated with OpenTelemetry traces
-
-#### Error Enrichment
-- **OpenTelemetry Spans**: Enhanced with error tags, status codes, and exception details
-- **Stack Traces**: Full exception stack traces included in telemetry
-- **Request Context**: Client IP, User Agent, request/response sizes included
-
-## Deployment Architecture
-
-### ArgoCD Application Approach
-Following [SigNoz official ArgoCD documentation](https://signoz.io/docs/install/argocd/), the deployment uses:
-
-```yaml
-# signoz-application.yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: signoz
-  namespace: argocd
-spec:
-  source:
-    repoURL: https://charts.signoz.io
-    targetRevision: 0.79.0
-    chart: signoz
+```
+frontend (React)     ──errors/vitals/fetch traces──→ https://api.kdvmanager.nl/telemetry/…
+envoy gateway        ──traces (OTLP gRPC) ─┐              │ (Envoy route, no JWT)
+crm-api              ──traces+metrics+logs─┤              ▼
+scheduling-api       ──traces+metrics+logs─┼→ otel-collector (observability ns, :4317/:4318)
+envoy /stats/prometheus ←──scraped─────────┤
+k8s_cluster + kubeletstats ────────────────┘              │
+                                                          ▼
+                                       signoz-otel-collector (signoz ns) → ClickHouse
+                                                          │
+                                              SigNoz UI: https://signoz.kdvmanager.nl
 ```
 
-### Benefits of Official Helm Chart
-- **Automatic Updates**: Easy version management through Helm chart versions
-- **Official Support**: Direct support from SigNoz team
-- **Best Practices**: Follows SigNoz recommended configurations
-- **Component Management**: Handles ClickHouse, Zookeeper, and SigNoz coordination
-- **Resource Optimization**: Proper resource requests and limits
-- **High Availability**: Support for scaling and resilience patterns
+- **SigNoz** (traces, metrics, logs, dashboards, alerts) — official Helm chart, pinned in
+  `deploy/k8s/observability/signoz-application.yaml`, deployed by ArgoCD into the `signoz` namespace.
+- **OpenTelemetry Collector** (gateway) — pinned `opentelemetry-collector-contrib` image, deployed from
+  `deploy/k8s/observability/` into the `observability` namespace. Receives OTLP from all services,
+  Envoy, and the browser; scrapes Envoy's Prometheus stats; collects cluster/kubelet metrics; exports
+  everything to SigNoz. Health check on `:13133`, zpages on `:55679`, pprof on `:1777`.
+- There is deliberately **no separate Prometheus/Grafana/Loki/Jaeger** — SigNoz is the single UI and store.
 
-## Configuration Details
+## Backend (.NET) instrumentation
 
-### SigNoz Helm Values
-```yaml
-signoz:
-  additionalArgs:
-    - --use-logs-new-schema=true
-    - --use-trace-new-schema=true
-  resources:
-    requests:
-      memory: "512Mi"
-      cpu: "250m"
-    limits:
-      memory: "1Gi"
-      cpu: "500m"
+One shared bootstrap wires everything, so the services cannot drift:
 
-clickhouse:
-  resources:
-    requests:
-      memory: "1Gi"
-      cpu: "500m"
-    limits:
-      memory: "2Gi"
-      cpu: "1"
-```
+- `KDVManager.Shared.Infrastructure/Telemetry/TelemetryExtensions.cs` —
+  `services.AddKdvManagerTelemetry(configuration, "<service-name>", <meter names…>)` sets up:
+  - **Tracing**: ASP.NET Core (with exception recording and request/response enrichment), HttpClient,
+    **Npgsql** (database spans), MassTransit. Parent-based ratio sampling, configured via
+    `Otel:TraceSamplingRatio` or `OTEL_TRACE_SAMPLING_RATIO` (default 1.0).
+  - **Metrics**: ASP.NET Core, HttpClient, .NET runtime, MassTransit bus metrics, plus each service's
+    custom meter (`crm-api` / `scheduling-api`, used for the error counter in the exception middleware).
+  - OTLP export is enabled only when `Otel:Endpoint` (or `OTEL_EXPORTER_OTLP_ENDPOINT`) is set.
+- `Telemetry/KdvResource.cs` — one resource definition (service.name/namespace/version/instance,
+  deployment.environment, host.name) shared by traces, metrics, **and** logs.
+- `Logging/LoggingExtensions.cs` — structured JSON to stdout always; OTLP log export when the endpoint
+  is configured. Log records carry trace/span IDs for correlation.
+- API error responses include the `traceId`, so a user-reported error can be looked up directly in SigNoz.
 
-### Exception Handling Middleware
-Location: `src/Services/{Service}/Api/Middleware/ExceptionHandlerMiddleware.cs`
+### Health endpoints
 
-Enhanced features:
-- Custom metrics increment on errors
-- Structured logging with correlation IDs
-- OpenTelemetry span enrichment
-- Detailed error context capture
+- `/healthz` — **liveness**: process-up only, no dependency checks (used by the liveness probe).
+- `/readyz` — **readiness**: runs all registered checks — PostgreSQL (`AddDbContextCheck`) and the
+  MassTransit bus (auto-registered) — used by readiness and startup probes.
 
-### Telemetry Configuration
-Location: `src/Services/{Service}/Api/ConfigureServices.cs`
+## Frontend instrumentation
 
-Enhancements:
-- Exception recording enabled
-- Request/response enrichment
-- Custom instrumentation
-- OTLP exporter configuration
+`src/web/src/telemetry/` — initialized in `src/index.tsx` before React renders; a **no-op unless**
+`VITE_OTEL_EXPORTER_OTLP_ENDPOINT` is set at build time (see `src/web/.env.example`):
 
-### Custom Metrics Classes
-- `src/Services/CRM/Api/Telemetry/CrmApiMetrics.cs`
-- `src/Services/Scheduling/Api/Telemetry/SchedulingApiMetrics.cs`
+- **Errors**: `window.onerror`, `unhandledrejection`, and the router error boundary report rate-limited
+  (20/min) `app.error` spans with `session.id`.
+- **Fetch tracing**: `traceparent` propagated only to the app's own API origin (never Auth0).
+- **Web vitals**: CLS/INP/LCP/FCP/TTFB emitted as `web.vital` spans.
 
-## Access URLs
+Browser telemetry is POSTed to `https://api.kdvmanager.nl/telemetry/v1/traces` — an Envoy route
+(JWT-exempt, CORS-guarded) that forwards to the collector's OTLP/HTTP port 4318. Production builds get
+the endpoint and `VITE_APP_VERSION` (image tag) via build args in `src/docker-compose.yml`.
 
-1. **SigNoz Dashboard**: https://signoz.kdvmanager.nl
-   - Username/Password: As configured in `auth-secret`
-   
-2. **Jaeger UI**: https://jaeger.kdvmanager.nl
-   - Username/Password: As configured in `auth-secret`
-   
-3. **Prometheus**: https://prometheus.kdvmanager.nl
-   - Username/Password: As configured in `auth-secret`
+## Envoy gateway
 
-## Service Discovery
+- OTLP tracing to the collector (service name `kdvmanager-envoy`), request-ID-based sampling.
+- `/stats/prometheus` on admin port 8001, exposed on the `envoy` Service and scraped by the collector
+  (gateway 5xx, upstream timeouts, JWT rejections).
+- Structured JSON access logs to stdout (timestamp, method, path, status, duration, upstream cluster,
+  request id, user agent) — the fallback when tracing is down.
 
-### SigNoz Services (Helm Chart)
-- **Main Service**: `signoz-signoz.observability.svc.cluster.local:3301`
-- **OTLP Endpoint**: `signoz-signoz.observability.svc.cluster.local:4317`
-- **ClickHouse**: `signoz-clickhouse.observability.svc.cluster.local:9000`
-- **Zookeeper**: `signoz-zookeeper.observability.svc.cluster.local:2181`
+## Local development
 
-## Key Features for Error Tracking
+`src/docker-compose.yml` runs a collector with `src/otel-collector-config.yaml` — a minimal config that
+prints telemetry via the `debug` exporter (`docker compose logs -f otel-collector`). The override file
+points the web build at `http://localhost:5200/telemetry`. Services pick up the endpoint via
+`OTEL_EXPORTER_OTLP_ENDPOINT`; without it, telemetry is disabled and logs still go to stdout as JSON.
 
-### In SigNoz you can:
-1. **Monitor Error Rates**: View error rates across services
-2. **Trace Errors**: See full distributed traces for failed requests
-3. **Error Alerting**: Set up alerts for error rate thresholds
-4. **Service Maps**: Visualize service dependencies and error propagation
-5. **Performance Impact**: Correlate errors with performance metrics
+## Runbook
 
-### Enhanced Error Context
-Each error now includes:
-- **Trace ID**: For correlation across distributed services
-- **Service Name**: Origin service identification
-- **Request Context**: Path, method, client info
-- **Exception Details**: Type, message, stack trace
-- **Custom Tags**: Service-specific error categorization
+| Symptom | Where to look |
+|---|---|
+| User reports an error | Ask for the `traceId` from the error message/response → SigNoz → Traces → filter by trace ID |
+| 5xx spike | SigNoz service view (crm-api / scheduling-api) → error-rate panel → example traces; Envoy access logs (`kubectl logs deploy/envoy -n kdvmanager-prod`) if no traces arrive |
+| Pod not Ready | `kubectl describe pod` → readiness probe on `/readyz` — failing check names Postgres or the bus |
+| No telemetry arriving | `kubectl logs deploy/otel-collector -n observability`; health `:13133`, pipeline introspection via zpages `:55679`; then SigNoz collector in `signoz` ns |
+| SigNoz down/slow | `kubectl get pods -n signoz`; ClickHouse memory caps are set in the Application values |
+| ArgoCD drift | `kubectl get application signoz -n argocd` (chart) and the kustomize app for `deploy/k8s/observability` |
 
-## Metrics Collection
+## Known gaps / follow-ups
 
-### Automatic Metrics
-- HTTP request/response metrics
-- .NET runtime metrics (GC, memory, threading)
-- Kubernetes cluster and pod metrics
-- Database connection metrics
-
-### Custom Metrics
-- Error counters by type and service
-- Request counters with status codes
-- Request duration histograms
-- Business-specific metrics (can be added per service)
-
-## Log Collection
-
-### Sources
-- Application logs (via OpenTelemetry)
-- Kubernetes pod logs
-- Infrastructure logs
-- Error logs with full context
-
-### Format
-All logs use structured JSON format with consistent fields:
-- `timestamp`, `level`, `message`
-- `service`, `traceId`, `spanId`
-- `requestPath`, `requestMethod`
-- Additional context fields
-
-## Deployment Status
-
-All components are deployed via ArgoCD with proper sync waves:
-- SigNoz ArgoCD Application (wave 0)
-- OTEL Collector and configurations (wave -1)
-- Core services (wave 0)
-- Ingress controllers (wave 1)
-
-## Migration Steps (From Manual to Helm)
-
-1. **Remove Old Resources**: The old manual SigNoz deployment files are no longer used
-2. **Apply ArgoCD Application**: `kubectl apply -f signoz-application.yaml`
-3. **Update OTEL Configuration**: Service endpoints updated to use Helm chart service names
-4. **Verify Connectivity**: Check OTEL collector logs for successful connection to SigNoz
-
-## Next Steps
-
-1. **Configure Alerts**: Set up SigNoz alerts for error rates, response times
-2. **Dashboards**: Create custom dashboards for business metrics
-3. **Retention**: Configure data retention policies in ClickHouse
-4. **Scaling**: Monitor resource usage and scale components as needed
-5. **Version Updates**: Regularly update the Helm chart version in ArgoCD Application
-
-## Troubleshooting
-
-### Check SigNoz ArgoCD Application
-```bash
-kubectl get application signoz -n argocd
-kubectl describe application signoz -n argocd
-```
-
-### Check SigNoz Status (Helm Deployment)
-```bash
-kubectl get pods -n observability | grep signoz
-kubectl logs -n observability deployment/signoz-signoz
-```
-
-### Check OTEL Collector Connection
-```bash
-kubectl logs -n observability deployment/otel-collector | grep signoz
-```
-
-### Verify Service Discovery
-```bash
-kubectl get svc -n observability | grep signoz
-nslookup signoz-signoz.observability.svc.cluster.local
-```
-
-## References
-
-- [SigNoz ArgoCD Documentation](https://signoz.io/docs/install/argocd/)
-- [SigNoz Helm Chart](https://github.com/SigNoz/charts)
-- [ArgoCD Helm Support](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/)
-
-The observability stack is now fully operational using SigNoz official best practices with comprehensive error tracking and monitoring capabilities!
+1. **Alerting**: SigNoz alert rules + a notification channel are not yet configured (do this in the
+   SigNoz UI), and there is no external uptime check for kdvmanager.nl itself.
+2. **Rate limiting**: `/telemetry/` is unauthenticated by design; an Envoy `local_ratelimit` on that
+   route is recommended.
+3. **Retention**: set explicitly in SigNoz (Settings → General); ClickHouse disk is small (5Gi).
+4. **Business metrics**: the per-service meters currently only count errors — domain metrics
+   (schedules created, registrations, absences) belong there.

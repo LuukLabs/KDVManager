@@ -136,12 +136,6 @@ spec:
             drop:
             - ALL
         env:
-          - name: OTEL__ENDPOINT
-            value: "http://otel-collector.observability.svc.cluster.local:4317"
-          - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: "http://otel-collector.observability.svc.cluster.local:4317"
-          - name: OTEL_SERVICE_NAME
-            value: "crm-migrator"
           - name: POSTGRES_SERVER
             value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
           - name: POSTGRES_USER

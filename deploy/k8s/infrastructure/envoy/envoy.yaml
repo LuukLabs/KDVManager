@@ -58,7 +58,7 @@ static_resources:
                   allow_origin_string_match:
                   - safe_regex:
                       regex: ".*"
-                  allow_headers: content-type,authorization
+                  allow_headers: content-type,authorization,traceparent,tracestate
                   allow_methods: GET, POST, PUT, HEAD, OPTIONS, DELETE
                   expose_headers: x-Total
               routes:
@@ -74,6 +74,14 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: scheduling-api
+              # Browser telemetry ingest: the web app posts OTLP/HTTP payloads
+              # to /telemetry/v1/traces, forwarded to the OTel collector.
+              - name: "telemetry"
+                match:
+                  prefix: /telemetry/
+                route:
+                  prefix_rewrite: /
+                  cluster: otel-collector-http
           http_filters:
           - name: envoy.filters.http.cors
             typed_config:
@@ -100,6 +108,10 @@ static_resources:
                   payload_in_metadata: jwt_payload
                   require_expiration: true
               rules:
+              # Telemetry ingest is unauthenticated: browser sessions have no
+              # token before login and errors must be reportable regardless.
+              - match:
+                  prefix: /telemetry/
               - match:
                   prefix: /crm/
                 requires:
@@ -149,6 +161,20 @@ static_resources:
               socket_address:
                 address: otel-collector.observability.svc.cluster.local
                 port_value: 4317
+  # OTLP/HTTP receiver of the same collector, for browser telemetry ingest.
+  - name: otel-collector-http
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: otel-collector-http
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: otel-collector.observability.svc.cluster.local
+                port_value: 4318
   - name: crm-api
     connect_timeout: 0.25s
     type: strict_dns

@@ -1,4 +1,4 @@
-import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -52,7 +52,7 @@ export const AddClosurePeriodDialog = NiceModal.create(() => {
   };
 
   return (
-    <Dialog open={modal.visible} onClose={modal.hide}>
+    <Dialog {...muiDialogV5(modal)}>
       <DialogTitle>{t("Add Closure Period")}</DialogTitle>
 
       <DialogContent>

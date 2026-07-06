@@ -162,7 +162,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
 
     const onMutateError = useMutationErrorHandler({ setError });
 
-    // Define the weekdays as in AddChildScheduleDialogV2
+    // Define the weekdays as in AddChildScheduleDialog
     const weekdays = [
       { key: "monday", value: 1, label: t("Monday"), short: t("Mon"), emoji: "📅" },
       { key: "tuesday", value: 2, label: t("Tuesday"), short: t("Tue"), emoji: "📅" },

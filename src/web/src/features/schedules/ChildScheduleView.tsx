@@ -4,7 +4,7 @@ import { Add as AddIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
 import { ChildScheduleTimeline } from "./ChildScheduleTimeline";
-import { AddChildScheduleDialogV2 } from "./AddChildScheduleDialog_v2";
+import { AddChildScheduleDialog } from "./AddChildScheduleDialog";
 import { AddEndMarkForm } from "../endmarks/AddEndMarkForm";
 import FlagIcon from "@mui/icons-material/Flag";
 
@@ -19,7 +19,7 @@ export const ChildScheduleView: React.FC<ChildScheduleViewProps> = ({ childId })
   const [showAddEndMark, setShowAddEndMark] = React.useState(false);
 
   const onAddChildScheduleClickHandler = () =>
-    void NiceModal.show(AddChildScheduleDialogV2, { childId: childId });
+    void NiceModal.show(AddChildScheduleDialog, { childId: childId });
 
   return (
     <Box>

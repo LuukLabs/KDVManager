@@ -4,7 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { SnackbarProvider } from "notistack";
-import { render, type RenderOptions, type RenderResult } from "vitest-browser-react";
+import { onTestFinished } from "vitest";
+import { cleanup, render, type RenderOptions, type RenderResult } from "vitest-browser-react";
 
 type TestProvidersProps = {
   children: ReactNode;
@@ -47,6 +48,12 @@ export const renderWithProviders = (
   options?: Omit<RenderOptions, "wrapper"> & Omit<TestProvidersProps, "children">,
 ): Promise<RenderResult> => {
   const { locale, queryClient, ...rest } = options ?? {};
+  // vitest-browser-react registers its own cleanup via a module-scope
+  // beforeEach, but with `isolate: false` that side effect only binds to the
+  // first test file that imports the module — later files accumulate mounted
+  // trees (leaked dialogs/backdrops swallow clicks; duplicate elements trip
+  // strict mode). Register cleanup per test instead, which always binds.
+  onTestFinished(() => cleanup());
   return render(ui, {
     wrapper: ({ children }) => (
       <TestProviders locale={locale} queryClient={queryClient}>

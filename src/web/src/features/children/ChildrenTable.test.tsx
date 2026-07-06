@@ -81,6 +81,13 @@ describe("ChildrenTable — record navigation (browser)", () => {
 
     await expect.element(page.getByText("Remove child 'Jane Doe'")).toBeVisible();
     expect(navigateMock).not.toHaveBeenCalled();
+
+    // Close the dialog before the test ends: it renders into a portal with a
+    // full-screen backdrop, and on slow machines the leaked backdrop blocks
+    // the tap in the next test (failure screenshots show the dialog still
+    // open on top of the mobile card list).
+    await userEvent.click(page.getByRole("button", { name: "Cancel" }));
+    await expect.element(page.getByText("Remove child 'Jane Doe'")).not.toBeVisible();
   });
 
   it("navigates to the child detail page when a card is tapped (mobile)", async () => {

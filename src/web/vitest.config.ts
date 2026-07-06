@@ -28,6 +28,15 @@ export default defineConfig({
       jsxImportSource: "@emotion/react",
     }),
   ],
+  optimizeDeps: {
+    // Crawl every test file and the app entry up front so all dependencies are
+    // pre-bundled before tests start. Otherwise, on a cold cache (CI) vite
+    // discovers deps reached through dynamic imports mid-run, and the re-bundle
+    // reloads the test page — which can swallow an in-flight interaction (seen
+    // as a tapped card that never navigates). Debug with `DEBUG=vite:deps`:
+    // "new dependencies found" during the run means this list has a gap.
+    entries: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/*.{ts,tsx}", "src/index.tsx"],
+  },
   resolve: {
     alias: {
       "@api": r("./src/api"),

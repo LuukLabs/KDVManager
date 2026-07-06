@@ -59,21 +59,12 @@ data:
             - 'attributes["http.route"] == "/healthz"'
 
     exporters:
-      debug:
-        verbosity: detailed
-      otlp/jaeger:
-        endpoint: "jaeger.observability.svc.cluster.local:4317"
-        tls:
-          insecure: true
       otlp/signoz:
         endpoint: "signoz-otel-collector.signoz.svc.cluster.local:4317"
         tls:
           insecure: true
-      prometheus:
-        endpoint: "0.0.0.0:8889"
-        metric_expiration: 180m
-        enable_open_metrics: true
-        
+
+
     extensions:
       health_check:
         endpoint: 0.0.0.0:13133
@@ -88,12 +79,12 @@ data:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, resource, filter/ottl, batch]
-          exporters: [otlp/signoz, debug]
+          exporters: [otlp/signoz]
         metrics:
           receivers: [otlp, k8s_cluster, kubeletstats]
           processors: [memory_limiter, resource, batch]
-          exporters: [otlp/signoz, debug]
+          exporters: [otlp/signoz]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, resource, batch]
-          exporters: [otlp/signoz, debug]
+          exporters: [otlp/signoz]

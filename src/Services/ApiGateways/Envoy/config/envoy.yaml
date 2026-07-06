@@ -33,6 +33,22 @@ static_resources:
                   timeout: 0.25s
                 service_name: kdvmanager-envoy
           stat_prefix: ingress_http
+          # Minimal structured access log: gateway visibility that survives
+          # otel-collector outages (tracing has a 0.25s export timeout).
+          access_log:
+          - name: envoy.access_loggers.stdout
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+              log_format:
+                json_format:
+                  timestamp: "%START_TIME%"
+                  method: "%REQ(:METHOD)%"
+                  path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                  response_code: "%RESPONSE_CODE%"
+                  duration: "%DURATION%"
+                  upstream_cluster: "%UPSTREAM_CLUSTER%"
+                  request_id: "%REQ(X-REQUEST-ID)%"
+                  user_agent: "%REQ(USER-AGENT)%"
           upgrade_configs:
           - upgrade_type: websocket
           route_config:

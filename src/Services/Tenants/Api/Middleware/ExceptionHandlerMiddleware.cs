@@ -52,10 +52,10 @@ public class ExceptionHandlerMiddleware
             TraceId = traceId,
             Service = "tenants-api",
             Timestamp = DateTimeOffset.UtcNow,
-            RequestPath = context.Request.Path.Value,
-            RequestMethod = context.Request.Method,
-            UserAgent = context.Request.Headers.UserAgent.ToString(),
-            RemoteIp = context.Connection.RemoteIpAddress?.ToString()
+            RequestPath = SanitizeForLog(context.Request.Path.Value),
+            RequestMethod = SanitizeForLog(context.Request.Method),
+            UserAgent = SanitizeForLog(context.Request.Headers.UserAgent.ToString()),
+            RemoteIp = SanitizeForLog(context.Connection.RemoteIpAddress?.ToString())
         };
 
         switch (exception)
@@ -202,5 +202,23 @@ public class ExceptionHandlerMiddleware
         }
 
         return context.Response.WriteAsync(result);
+    }
+
+    /// <summary>
+    /// Strips newlines/control characters from request-derived values before they reach
+    /// the logger, so a crafted header or path can't forge additional log lines.
+    /// </summary>
+    private static string? SanitizeForLog(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return value;
+
+        Span<char> buffer = value.Length <= 256 ? stackalloc char[value.Length] : new char[value.Length];
+        for (int i = 0; i < value.Length; i++)
+        {
+            buffer[i] = char.IsControl(value[i]) ? '_' : value[i];
+        }
+
+        return new string(buffer);
     }
 }

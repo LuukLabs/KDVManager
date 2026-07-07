@@ -5,6 +5,13 @@ name: merge-gate
 # don't report a check run, so they don't block. Mark only the "all-checks"
 # job as a required status check in branch protection.
 #
+# Safety net: if a PR ends up with zero other check runs (its diff didn't
+# match any workflow's paths filter), that usually means a change landed in a
+# spot no workflow covers rather than that the PR was genuinely CI-exempt.
+# Fail in that case unless every changed file matches noCiNeededPatterns
+# below, so gaps in path-filter coverage get noticed instead of silently
+# merging untested.
+#
 # Note: if you re-run a failed workflow and it passes, re-run this gate too so
 # it picks up the new conclusion.
 
@@ -15,6 +22,7 @@ on:
 
 permissions:
   checks: read
+  pull-requests: read
 
 jobs:
   all-checks:
@@ -33,6 +41,16 @@ jobs:
           const pollIntervalMs = 30_000;
           const timeoutMs = 55 * 60_000;
           const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+          // Files that never need a CI check of their own. Keep this list
+          // narrow and explicit rather than guessing what's "safe".
+          const noCiNeededPatterns = [
+            /\.md$/i,
+            /^LICENSE$/,
+            /^\.gitignore$/,
+            /^\.editorconfig$/,
+            /^docs\//,
+          ];
 
           // Give sibling workflows triggered by the same event time to
           // register their check runs before the first poll.
@@ -56,6 +74,24 @@ jobs:
 
             const pending = others.filter((run) => run.status !== 'completed');
             if (pending.length === 0) {
+              if (others.length === 0) {
+                const files = await github.paginate(github.rest.pulls.listFiles, {
+                  ...context.repo,
+                  pull_number: context.payload.pull_request.number,
+                  per_page: 100,
+                });
+                const uncovered = files.filter(
+                  (f) => !noCiNeededPatterns.some((pattern) => pattern.test(f.filename))
+                );
+                if (uncovered.length > 0) {
+                  core.setFailed(
+                    'No other check ran for this PR, and these changed files are not covered by ' +
+                    `any workflow's paths filter or the no-CI-needed allowlist: ${uncovered.map((f) => f.filename).join(', ')}. ` +
+                    "Extend the relevant workflow's paths (or this file's noCiNeededPatterns if the files are truly inert)."
+                  );
+                  return;
+                }
+              }
               core.info(`All ${others.length} other checks completed successfully or were skipped.`);
               return;
             }

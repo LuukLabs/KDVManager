@@ -14,7 +14,7 @@ public class GroupSummaryVM
     public required List<TimeBlockSummary> TimeBlocks { get; set; } = new List<TimeBlockSummary>();
 
     // Null when no valid staffing ratio could be determined for any time block on this date
-    public int? RequiredProfessionals { get; set; } = 0;
+    public int? RequiredProfessionals { get; set; }
     public int NumberOfChildren { get; set; } = 0;
 }
 

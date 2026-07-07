@@ -1,4 +1,5 @@
 import { Box, Paper, Typography, CircularProgress, useTheme, useMediaQuery } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { type Dayjs } from "dayjs";
 import { useGetSchedulesByDate } from "@api/scheduling/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
@@ -104,7 +105,7 @@ const GroupColumn = ({
             p: 1,
             border: "1px solid",
             borderColor: "warning.light",
-            background: "linear-gradient(135deg, #fff3e0 0%, #fffaf2 100%)",
+            background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.12)} 0%, ${theme.palette.background.paper} 100%)`,
             borderRadius: 1.5,
             display: "flex",
             alignItems: "center",

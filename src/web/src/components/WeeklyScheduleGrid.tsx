@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Chip, Typography, Paper } from "@mui/material";
+import { Box, Chip, Typography, Paper, useTheme } from "@mui/material";
+import { type Theme } from "@mui/material/styles";
 import { type ChildScheduleListVMScheduleRule } from "@api/scheduling/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
@@ -40,27 +41,17 @@ const DAY_INDEX_MAP_MON = [
   DayOfWeek.Sunday,
 ]; // Monday to Sunday
 
-// Color palette for different groups
-const GROUP_COLORS = [
-  "#1976d2", // Blue
-  "#388e3c", // Green
-  "#f57c00", // Orange
-  "#7b1fa2", // Purple
-  "#c2185b", // Pink
-  "#00796b", // Teal
-  "#5d4037", // Brown
-  "#455a64", // Blue Grey
-];
+// Simple hash function so the same group name always maps to the same
+// entry in the theme's categorical color palette.
+const getGroupColor = (groupName: string | null | undefined, theme: Theme): string => {
+  if (!groupName) return theme.customColors.unassigned;
 
-const getGroupColor = (groupName: string | null | undefined): string => {
-  if (!groupName) return "#757575"; // Grey for no group
-
-  // Simple hash function to get consistent colors for group names
   let hash = 0;
   for (let i = 0; i < groupName.length; i++) {
     hash = ((hash << 5) - hash + groupName.charCodeAt(i)) & 0xffffffff;
   }
-  return GROUP_COLORS[Math.abs(hash) % GROUP_COLORS.length];
+  const { categorical } = theme.customColors;
+  return categorical[Math.abs(hash) % categorical.length];
 };
 
 export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
@@ -69,6 +60,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   weekStartsOnMonday = true,
 }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   // Translated day names
   const translatedDayNames = [
@@ -166,7 +158,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                         gap: 1,
                         p: 1,
                         borderRadius: 1,
-                        backgroundColor: getGroupColor(rule.groupName),
+                        backgroundColor: getGroupColor(rule.groupName, theme),
                         color: "white",
                       }}
                     >
@@ -236,7 +228,7 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                               fontSize: "0.6rem",
                               height: 16,
                               width: "100%",
-                              backgroundColor: getGroupColor(rule.groupName),
+                              backgroundColor: getGroupColor(rule.groupName, theme),
                               color: "white",
                               "& .MuiChip-label": {
                                 px: 0.5,

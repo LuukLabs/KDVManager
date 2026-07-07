@@ -9,7 +9,9 @@ import {
   Divider,
   CircularProgress,
   Alert,
+  useTheme,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import {
   AccessTime,
   People,
@@ -34,6 +36,7 @@ type GroupSummaryProps = {
 
 const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryProps) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [selectedTimeBlock, setSelectedTimeBlock] = useState<TimeBlockSummary | null>(null);
 
   // Format date for API call (DateOnly format: YYYY-MM-DD)
@@ -64,8 +67,8 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           borderRadius: 2,
           boxShadow: 2,
           border: "1px solid",
-          borderColor: "primary.100",
-          background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+          borderColor: alpha(theme.palette.primary.main, 0.16),
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
         }}
       >
         <CardContent
@@ -100,7 +103,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           borderRadius: 2,
           boxShadow: 2,
           border: "1px solid",
-          borderColor: "error.200",
+          borderColor: alpha(theme.palette.error.main, 0.24),
         }}
       >
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
@@ -121,7 +124,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
           boxShadow: 2,
           border: "1px solid",
           borderColor: "grey.200",
-          background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
         }}
       >
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
@@ -162,8 +165,8 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
         borderRadius: 2,
         boxShadow: 2,
         border: "1px solid",
-        borderColor: "primary.100",
-        background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
+        borderColor: alpha(theme.palette.primary.main, 0.16),
+        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
       }}
     >
       <CardContent sx={{ p: { xs: 1.5, sm: 2 }, "&:last-child": { pb: { xs: 1.5, sm: 2 } } }}>
@@ -293,11 +296,11 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                 size="small"
                 onClick={() => handleOpenDetails(block)}
                 sx={{
-                  backgroundColor: "primary.50",
+                  backgroundColor: alpha(theme.palette.primary.main, 0.08),
                   border: "1px solid",
-                  borderColor: "primary.200",
+                  borderColor: alpha(theme.palette.primary.main, 0.24),
                   "&:hover": {
-                    backgroundColor: "primary.100",
+                    backgroundColor: alpha(theme.palette.primary.main, 0.16),
                     borderColor: "primary.main",
                   },
                 }}

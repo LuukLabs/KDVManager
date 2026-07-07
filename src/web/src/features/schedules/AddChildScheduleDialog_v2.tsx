@@ -235,11 +235,13 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     borderRadius: 2,
                     border: "2px solid",
                     borderColor: isSelected ? "primary.main" : "grey.300",
-                    backgroundColor: isSelected ? "primary.50" : "transparent",
+                    backgroundColor: isSelected
+                      ? alpha(theme.palette.primary.main, 0.08)
+                      : "transparent",
                     transition: "all 0.2s ease",
                     "&:hover": {
                       borderColor: "primary.main",
-                      backgroundColor: "primary.50",
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
                       transform: "translateY(-2px)",
                     },
                     "&:active": {
@@ -294,7 +296,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     borderRadius: 2,
                     border: "2px solid",
                     borderColor: isSelected ? "primary.main" : "grey.300",
-                    backgroundColor: isSelected ? "primary.50" : alpha(slot.color, 0.3),
+                    backgroundColor: isSelected
+                      ? alpha(theme.palette.primary.main, 0.08)
+                      : alpha(slot.color, 0.3),
                     textAlign: "left",
                     transition: "all 0.2s ease",
                     "&:hover": {
@@ -367,7 +371,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     borderRadius: 2,
                     border: "2px solid",
                     borderColor: isSelected ? "primary.main" : "grey.300",
-                    backgroundColor: isSelected ? "primary.50" : alpha(group.color, 0.1),
+                    backgroundColor: isSelected
+                      ? alpha(theme.palette.primary.main, 0.08)
+                      : alpha(group.color, 0.1),
                     textAlign: "left",
                     transition: "all 0.2s ease",
                     "&:hover": {
@@ -423,11 +429,19 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
           elevation={0}
           sx={{
             border: "2px solid",
-            borderColor: isEditing ? "primary.main" : isComplete ? "success.200" : "warning.200",
+            borderColor: isEditing
+              ? "primary.main"
+              : isComplete
+                ? alpha(theme.palette.success.main, 0.24)
+                : alpha(theme.palette.warning.main, 0.24),
             borderRadius: 3,
             mb: 2,
             overflow: "hidden",
-            backgroundColor: isEditing ? "primary.25" : isComplete ? "success.25" : "warning.25",
+            backgroundColor: isEditing
+              ? alpha(theme.palette.primary.main, 0.04)
+              : isComplete
+                ? alpha(theme.palette.success.main, 0.04)
+                : alpha(theme.palette.warning.main, 0.04),
             transition: "all 0.2s ease",
           }}
         >
@@ -435,16 +449,20 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
           <Box
             sx={{
               p: 2,
-              backgroundColor: isEditing ? "primary.50" : isComplete ? "success.50" : "warning.50",
+              backgroundColor: isEditing
+                ? alpha(theme.palette.primary.main, 0.08)
+                : isComplete
+                  ? alpha(theme.palette.success.main, 0.08)
+                  : alpha(theme.palette.warning.main, 0.08),
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               borderBottom: "1px solid",
               borderBottomColor: isEditing
-                ? "primary.200"
+                ? alpha(theme.palette.primary.main, 0.24)
                 : isComplete
-                  ? "success.200"
-                  : "warning.200",
+                  ? alpha(theme.palette.success.main, 0.24)
+                  : alpha(theme.palette.warning.main, 0.24),
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -578,10 +596,10 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       elevation={0}
                       sx={{
                         p: 2,
-                        backgroundColor: "warning.50",
+                        backgroundColor: alpha(theme.palette.warning.main, 0.08),
                         borderRadius: 2,
                         border: "1px solid",
-                        borderColor: "warning.200",
+                        borderColor: alpha(theme.palette.warning.main, 0.24),
                       }}
                     >
                       <Typography
@@ -740,7 +758,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
                 <Avatar
                   sx={{
-                    backgroundColor: "primary.50",
+                    backgroundColor: alpha(theme.palette.primary.main, 0.08),
                     color: "primary.main",
                     width: 40,
                     height: 40,
@@ -802,7 +820,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Avatar
                     sx={{
-                      backgroundColor: "primary.50",
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
                       color: "primary.main",
                       width: 40,
                       height: 40,
@@ -871,7 +889,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       sx={{
                         width: 80,
                         height: 80,
-                        backgroundColor: "primary.50",
+                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
                         color: "primary.main",
                         mx: "auto",
                         mb: 3,

@@ -37,7 +37,7 @@ export const ChildForm = ({ onSubmit }: ChildFormProps) => {
       <Stack spacing={3}>
         <FormErrorAlert message={submitError} onClose={clearSubmitError} />
         <FormSection
-          title={t("Personal Information")}
+          title={t("Basic Information")}
           description={t("Name, date of birth and identification.")}
           icon={<ChildCareRoundedIcon />}
         >

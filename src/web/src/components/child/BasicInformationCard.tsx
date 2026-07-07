@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import { calculateAge } from "@utils/calculateAge";
 import { formatDate } from "@utils/formatDate";
-import { Person as PersonIcon } from "@mui/icons-material";
+import ChildCareRoundedIcon from "@mui/icons-material/ChildCareRounded";
 import { EditableCard } from "../cards/EditableCard";
 import { FieldDisplay, Form, FormTextField, FormDatePicker } from "../forms";
 import { type UseFormReturn } from "react-hook-form";
@@ -91,7 +91,8 @@ export const BasicInformationCard: React.FC<BasicInformationCardProps> = ({
   return (
     <EditableCard
       title={t("Basic Information")}
-      icon={<PersonIcon color="primary" />}
+      description={t("Name, date of birth and identification.")}
+      icon={<ChildCareRoundedIcon />}
       isEditing={isEditing}
       onSave={onSave}
       onCancel={onCancel}

@@ -26,19 +26,6 @@ type TimeBlockDetailsDialogProps = {
   onClose: () => void;
 };
 
-// Backend age ranges are "0-1 years", ..., "4+ years"; the leading number is the age
-// the BKR ratio applies to.
-const ageFromRange = (ageRange: string | null | undefined): number | null => {
-  const match = /^\d+/.exec(ageRange ?? "");
-  return match ? Number(match[0]) : null;
-};
-
-const findRatio = (rule: BkrAppliedRule | undefined, ageRange: string | null | undefined) => {
-  const age = ageFromRange(ageRange);
-  if (age == null) return null;
-  return rule?.ratios.find((ratio) => ratio.age === age) ?? null;
-};
-
 const BasisExplanation = ({ timeBlock }: { timeBlock: TimeBlockSummary }) => {
   const { t } = useTranslation();
   const { bkr } = timeBlock;
@@ -182,9 +169,6 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
 
           <DialogContent sx={{ p: 3 }}>
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: "text.secondary", mb: 1 }}>
-                {t("Overview")}
-              </Typography>
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
                   icon={<ChildCare />}
@@ -218,66 +202,38 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
                   <TableCell align="right" sx={{ fontWeight: 600 }}>
                     {t("Count")}
                   </TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 600 }}>
-                    {t("Ratio")}
-                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {timeBlock.ageGroups?.map((ageGroup, index) => {
-                  const ratio = findRatio(timeBlock.bkr.appliedRule, ageGroup.ageRange);
-                  return (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "&:hover": { backgroundColor: "grey.50" },
-                        "&:last-child td": { border: 0 },
-                      }}
-                    >
-                      <TableCell>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                          <ChildCare sx={{ fontSize: 16, color: "primary.main" }} />
-                          {ageGroup.ageRange}
-                        </Box>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          label={ageGroup.childCount}
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          sx={{ fontWeight: 600, minWidth: 40 }}
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography
-                          variant="body2"
-                          sx={{ fontFamily: "monospace", color: "text.secondary" }}
-                          title={
-                            ratio
-                              ? t("One supervisor per {{count}} children of this age", {
-                                  count: ratio.maxChildrenPerProfessional,
-                                })
-                              : undefined
-                          }
-                        >
-                          {ratio ? `1:${ratio.maxChildrenPerProfessional}` : "—"}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                {timeBlock.ageGroups?.map((ageGroup, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:hover": { backgroundColor: "grey.50" },
+                      "&:last-child td": { border: 0 },
+                    }}
+                  >
+                    <TableCell>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <ChildCare sx={{ fontSize: 16, color: "primary.main" }} />
+                        {t(ageGroup.ageRange ?? "")}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        label={ageGroup.childCount}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        sx={{ fontWeight: 600, minWidth: 40 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
 
             {timeBlock.bkr.appliedRule && <AppliedRuleDetails rule={timeBlock.bkr.appliedRule} />}
-
-            <Typography
-              variant="caption"
-              sx={{ display: "block", mt: 1.5, color: "text.secondary" }}
-            >
-              {t("Calculated according to the professional-to-child ratio (BKR) of 1ratio.nl.")}
-            </Typography>
           </DialogContent>
 
           <DialogActions sx={{ p: 2, pt: 0 }}>

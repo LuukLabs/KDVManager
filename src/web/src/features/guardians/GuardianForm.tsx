@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Grid, Button, Typography, IconButton, Stack, Divider, Paper } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
+import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
+import ContactPhoneOutlinedIcon from "@mui/icons-material/ContactPhoneOutlined";
 import { useForm, useFieldArray } from "react-hook-form";
 import { type PhoneNumberType } from "@api/crm/models/phoneNumberType";
 import {
@@ -75,7 +77,11 @@ export const GuardianForm = ({ onSubmit }: GuardianFormProps) => {
     <Form formContext={formContext} onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <FormErrorAlert message={submitError} onClose={clearSubmitError} />
-        <FormSection title={t("Personal Information")}>
+        <FormSection
+          title={t("Personal Information")}
+          description={t("Name and date of birth.")}
+          icon={<PersonOutlineRoundedIcon />}
+        >
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormTextField name="givenName" label={t("Given name")} required fullWidth />
           </Grid>
@@ -91,7 +97,11 @@ export const GuardianForm = ({ onSubmit }: GuardianFormProps) => {
             />
           </Grid>
         </FormSection>
-        <FormSection title={t("Contact Information")}>
+        <FormSection
+          title={t("Contact Information")}
+          description={t("How this guardian can be reached.")}
+          icon={<ContactPhoneOutlinedIcon />}
+        >
           <Grid size={{ xs: 12 }}>
             <FormTextField
               name="email"

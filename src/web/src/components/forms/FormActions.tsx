@@ -18,13 +18,19 @@ export const FormActions = ({ submitLabel, cancelTo }: FormActionsProps) => {
   } = useFormContext();
 
   return (
-    <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+    <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
       {cancelTo && (
-        <Button variant="outlined" component={RouterLink} to={cancelTo} disabled={isSubmitting}>
+        <Button
+          variant="outlined"
+          color="inherit"
+          component={RouterLink}
+          to={cancelTo}
+          disabled={isSubmitting}
+        >
           {t("Cancel", { ns: "common" })}
         </Button>
       )}
-      <Button type="submit" variant="contained" loading={isSubmitting}>
+      <Button type="submit" variant="contained" loading={isSubmitting} sx={{ minWidth: 120 }}>
         {submitLabel}
       </Button>
     </Box>

@@ -78,7 +78,7 @@ export const GuardianForm = ({ onSubmit }: GuardianFormProps) => {
       <Stack spacing={3}>
         <FormErrorAlert message={submitError} onClose={clearSubmitError} />
         <FormSection
-          title={t("Personal Information")}
+          title={t("Basic Information")}
           description={t("Name and date of birth.")}
           icon={<PersonOutlineRoundedIcon />}
         >

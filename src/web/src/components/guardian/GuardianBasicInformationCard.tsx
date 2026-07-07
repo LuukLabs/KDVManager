@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import { calculateAge } from "../../utils/calculateAge";
 import { formatDate } from "../../utils/formatDate";
-import { Person as PersonIcon } from "@mui/icons-material";
+import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import { EditableCard } from "../cards/EditableCard";
 import { FieldDisplay, Form, FormTextField, FormDatePicker } from "../forms";
 import { type UseFormReturn } from "react-hook-form";
@@ -85,7 +85,8 @@ export const GuardianBasicInformationCard: React.FC<GuardianBasicInformationCard
   return (
     <EditableCard
       title={t("Basic Information")}
-      icon={<PersonIcon color="primary" />}
+      description={t("Name and date of birth.")}
+      icon={<PersonOutlineRoundedIcon />}
       isEditing={isEditing}
       onSave={onSave}
       onCancel={onCancel}

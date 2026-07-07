@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  Typography,
   Card,
   CardContent,
   IconButton,
@@ -17,9 +16,11 @@ import {
   Cancel as CancelIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import { SectionHeader } from "@components/layout/SectionHeader";
 
 type EditableCardProps = {
   title: string;
+  description?: string;
   icon?: React.ReactNode;
   children: React.ReactNode;
   editChildren?: React.ReactNode;
@@ -36,6 +37,7 @@ type EditableCardProps = {
 
 export const EditableCard: React.FC<EditableCardProps> = ({
   title,
+  description,
   icon,
   children,
   editChildren,
@@ -91,105 +93,95 @@ export const EditableCard: React.FC<EditableCardProps> = ({
       }}
     >
       {/* Card Header */}
-      <Box
-        sx={{
-          p: { xs: 1.75, sm: 2, md: 2.5 },
-          borderBottom: "1px solid",
-          borderBottomColor: "divider",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          cursor: collapsible ? "pointer" : "default",
-        }}
-        onClick={collapsible ? handleExpandToggle : undefined}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          {icon}
-          <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
-            {title}
-          </Typography>
-        </Box>
+      <Box sx={{ borderBottom: "1px solid", borderBottomColor: "divider" }}>
+        <SectionHeader
+          title={title}
+          description={description}
+          icon={icon}
+          onClick={collapsible ? handleExpandToggle : undefined}
+          actions={
+            <>
+              {actions}
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {actions}
+              {/* Edit Controls */}
+              {isEditing ? (
+                <Stack direction="row" spacing={1}>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSave();
+                    }}
+                    color="primary"
+                    disabled={loading}
+                    size={isMobile ? "medium" : "small"}
+                    sx={{
+                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                      minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                      minHeight: { xs: 44, md: "auto" },
+                      "&:hover": {
+                        backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                      },
+                    }}
+                  >
+                    <SaveIcon fontSize={isMobile ? "medium" : "small"} />
+                  </IconButton>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCancel();
+                    }}
+                    color="error"
+                    disabled={loading}
+                    size={isMobile ? "medium" : "small"}
+                    sx={{
+                      backgroundColor: alpha(theme.palette.error.main, 0.1),
+                      minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                      minHeight: { xs: 44, md: "auto" },
+                      "&:hover": {
+                        backgroundColor: alpha(theme.palette.error.main, 0.2),
+                      },
+                    }}
+                  >
+                    <CancelIcon fontSize={isMobile ? "medium" : "small"} />
+                  </IconButton>
+                </Stack>
+              ) : (
+                onEditToggle && (
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditToggle();
+                    }}
+                    disabled={disabled || loading}
+                    size={isMobile ? "medium" : "small"}
+                    sx={{
+                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                      minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
+                      minHeight: { xs: 44, md: "auto" },
+                      "&:hover": {
+                        backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                      },
+                    }}
+                  >
+                    <EditIcon fontSize={isMobile ? "medium" : "small"} />
+                  </IconButton>
+                )
+              )}
 
-          {/* Edit Controls */}
-          {isEditing ? (
-            <Stack direction="row" spacing={1}>
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSave();
-                }}
-                color="primary"
-                disabled={loading}
-                size={isMobile ? "medium" : "small"}
-                sx={{
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
-                  minHeight: { xs: 44, md: "auto" },
-                  "&:hover": {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.2),
-                  },
-                }}
-              >
-                <SaveIcon fontSize={isMobile ? "medium" : "small"} />
-              </IconButton>
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCancel();
-                }}
-                color="error"
-                disabled={loading}
-                size={isMobile ? "medium" : "small"}
-                sx={{
-                  backgroundColor: alpha(theme.palette.error.main, 0.1),
-                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
-                  minHeight: { xs: 44, md: "auto" },
-                  "&:hover": {
-                    backgroundColor: alpha(theme.palette.error.main, 0.2),
-                  },
-                }}
-              >
-                <CancelIcon fontSize={isMobile ? "medium" : "small"} />
-              </IconButton>
-            </Stack>
-          ) : (
-            onEditToggle && (
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditToggle();
-                }}
-                disabled={disabled || loading}
-                size={isMobile ? "medium" : "small"}
-                sx={{
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  minWidth: { xs: 44, md: "auto" }, // Minimum touch target on mobile
-                  minHeight: { xs: 44, md: "auto" },
-                  "&:hover": {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.2),
-                  },
-                }}
-              >
-                <EditIcon fontSize={isMobile ? "medium" : "small"} />
-              </IconButton>
-            )
-          )}
-
-          {/* Expand/Collapse Icon */}
-          {collapsible && (
-            <IconButton
-              sx={{
-                transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.2s ease",
-              }}
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          )}
-        </Box>
+              {/* Expand/Collapse Icon */}
+              {collapsible && (
+                <IconButton
+                  sx={{
+                    transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.2s ease",
+                  }}
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              )}
+            </>
+          }
+        />
       </Box>
 
       {/* Card Content */}

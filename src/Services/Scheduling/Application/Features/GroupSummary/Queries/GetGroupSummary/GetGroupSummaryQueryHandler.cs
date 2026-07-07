@@ -152,7 +152,45 @@ public class GetGroupSummaryQueryHandler
             TimeSlotName = timeSlotName,
             TotalChildren = totalChildren,
             RequiredProfessionals = result.HasSolution ? result.Professionals : null,
-            AgeGroups = ageGroups
+            AgeGroups = ageGroups,
+            Bkr = MapBkrSummary(result)
+        };
+    }
+
+    private static BkrCalculationSummary MapBkrSummary(GroupAnalysisResult result)
+    {
+        return new BkrCalculationSummary
+        {
+            HasSolution = result.HasSolution,
+            Basis = result.Basis switch
+            {
+                ProfessionalsBasis.GroupSizeMinimum => BkrProfessionalsBasis.GroupSizeMinimum,
+                ProfessionalsBasis.RatioCalculation => BkrProfessionalsBasis.RatioCalculation,
+                ProfessionalsBasis.OneChildLessSafeguard => BkrProfessionalsBasis.OneChildLessSafeguard,
+                _ => BkrProfessionalsBasis.None
+            },
+            AppliedRule = result.AppliedRule is null ? null : new BkrAppliedRule
+            {
+                MinAge = result.AppliedRule.MinAge,
+                MaxAge = result.AppliedRule.MaxAge,
+                MaxChildren = result.AppliedRule.MaxChildren,
+                MinProfessionals = result.AppliedRule.MinProfessionals,
+                Constraints = result.AppliedRule.Constraints
+                    .Select(c => new BkrRuleConstraint
+                    {
+                        MinAge = c.MinAge,
+                        MaxAge = c.MaxAge,
+                        MaxChildren = c.MaxChildren
+                    })
+                    .ToList(),
+                Ratios = result.AppliedRule.Ratios
+                    .Select(r => new BkrAgeRatio
+                    {
+                        Age = r.Age,
+                        MaxChildrenPerProfessional = r.MaxChildrenPerProfessional
+                    })
+                    .ToList()
+            }
         };
     }
 

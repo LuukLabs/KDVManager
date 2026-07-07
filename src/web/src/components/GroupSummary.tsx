@@ -2,21 +2,11 @@ import { useState } from "react";
 import {
   Box,
   Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
   Chip,
   Card,
   CardContent,
   IconButton,
   Divider,
-  TableHead,
   CircularProgress,
   Alert,
 } from "@mui/material";
@@ -34,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import type dayjs from "dayjs";
 import { useGetGroupSummary } from "@api/scheduling/endpoints/schedules/schedules";
 import { type TimeBlockSummary } from "@api/scheduling/models/timeBlockSummary";
+import TimeBlockDetailsDialog from "./TimeBlockDetailsDialog";
 
 type GroupSummaryProps = {
   groupId: string;
@@ -318,122 +309,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
         </Box>
 
         {/* Details Dialog */}
-        <Dialog
-          open={!!selectedTimeBlock}
-          onClose={handleCloseDetails}
-          maxWidth="sm"
-          fullWidth
-          slotProps={{
-            paper: {
-              sx: {
-                borderRadius: 3,
-                boxShadow: 3,
-              },
-            },
-          }}
-        >
-          <DialogTitle
-            sx={{
-              textAlign: "center",
-              pb: 1,
-              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-          >
-            <AccessTime />
-            {selectedTimeBlock?.timeSlotName}
-          </DialogTitle>
-
-          <DialogContent sx={{ p: 3 }}>
-            <Box sx={{ mb: 2 }}>
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  color: "text.secondary",
-                  mb: 1,
-                }}
-              >
-                {t("Overview")}
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
-                <Chip
-                  icon={<ChildCare />}
-                  label={`${selectedTimeBlock?.totalChildren} ${t("children")}`}
-                  color="primary"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<SupervisorAccount />}
-                  label={
-                    selectedTimeBlock?.requiredProfessionals != null
-                      ? `${selectedTimeBlock.requiredProfessionals} ${t("supervisors needed")}`
-                      : t("Ratio requirement cannot be met")
-                  }
-                  color={selectedTimeBlock?.requiredProfessionals != null ? "secondary" : "error"}
-                  variant="outlined"
-                />
-              </Box>
-            </Box>
-
-            <Typography
-              variant="subtitle2"
-              sx={{
-                color: "text.secondary",
-                mb: 1,
-              }}
-            >
-              {t("Age Group Distribution")}
-            </Typography>
-
-            <Table size="small" sx={{ border: "1px solid", borderColor: "divider" }}>
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "grey.50" }}>
-                  <TableCell sx={{ fontWeight: 600 }}>{t("Age Group")}</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 600 }}>
-                    {t("Count")}
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {selectedTimeBlock?.ageGroups?.map((ageGroup, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "&:hover": { backgroundColor: "grey.50" },
-                      "&:last-child td": { border: 0 },
-                    }}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <ChildCare sx={{ fontSize: 16, color: "primary.main" }} />
-                        {ageGroup.ageRange}
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Chip
-                        label={ageGroup.childCount}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        sx={{ fontWeight: 600, minWidth: 40 }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </DialogContent>
-
-          <DialogActions sx={{ p: 2, pt: 0 }}>
-            <Button onClick={handleCloseDetails} variant="outlined" sx={{ borderRadius: 2 }}>
-              {t("Close")}
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <TimeBlockDetailsDialog timeBlock={selectedTimeBlock} onClose={handleCloseDetails} />
       </CardContent>
     </Card>
   );

@@ -155,7 +155,11 @@ export const LinkExistingGuardianDialog = ({
       <DialogTitle>{t("Link Existing Guardian")}</DialogTitle>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <DialogContent>
-          <FormErrorAlert message={submitError} onClose={() => setSubmitError(null)} sx={{ mb: 2 }} />
+          <FormErrorAlert
+            message={submitError}
+            onClose={() => setSubmitError(null)}
+            sx={{ mb: 2 }}
+          />
 
           <Grid container spacing={3}>
             {/* Search Section */}

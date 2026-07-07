@@ -10,6 +10,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { Schedule, AccessTime, Person } from "@mui/icons-material";
 import { useGetChildById } from "@api/crm/endpoints/children/children";
 import type { ScheduleByDateVM } from "@api/scheduling/models/scheduleByDateVM";
@@ -54,12 +55,12 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
 
   const getAvatarColor = () => {
     // Generate consistent color based on child ID
-    const colors = ["#1976d2", "#388e3c", "#f57c00", "#7b1fa2", "#c2185b", "#00796b"];
+    const { categorical } = theme.customColors;
     let hash = 0;
     for (let i = 0; i < childId.length; i++) {
       hash = ((hash << 5) - hash + childId.charCodeAt(i)) & 0xffffffff;
     }
-    return colors[Math.abs(hash) % colors.length];
+    return categorical[Math.abs(hash) % categorical.length];
   };
 
   return (
@@ -162,9 +163,9 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                   label={schedule.timeSlotName ?? t("No time slot")}
                   size="small"
                   sx={{
-                    backgroundColor: "primary.50",
+                    backgroundColor: alpha(theme.palette.primary.main, 0.08),
                     color: "primary.dark",
-                    borderColor: "primary.200",
+                    borderColor: alpha(theme.palette.primary.main, 0.24),
                     border: "1px solid",
                     fontWeight: 600,
                     fontSize: { xs: "0.65rem", sm: "0.7rem" },

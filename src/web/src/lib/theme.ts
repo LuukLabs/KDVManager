@@ -17,7 +17,46 @@ const terracotta = {
   contrastText: "#FFFFFF",
 };
 
+// Fixed set of distinct hues for hashing an entity (group, child, ...) to a
+// stable color, e.g. group chips in the weekly schedule grid. Kept in the
+// theme so every place that needs a categorical palette shares one list
+// instead of hand-rolling its own array of hex strings.
+const categoricalColors = [
+  "#1976D2", // Blue
+  "#388E3C", // Green
+  "#F57C00", // Orange
+  "#7B1FA2", // Purple
+  "#C2185B", // Pink
+  "#00796B", // Teal
+  "#5D4037", // Brown
+  "#455A64", // Blue Grey
+];
+
+// MUI's theme augmentation pattern requires `interface` — declaration
+// merging (unlike `type`) is how these fields get added to Theme/ThemeOptions.
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+declare module "@mui/material/styles" {
+  interface Theme {
+    customColors: {
+      categorical: string[];
+      /** Fallback for an entity with no assigned category (e.g. no group). */
+      unassigned: string;
+    };
+  }
+  interface ThemeOptions {
+    customColors?: {
+      categorical?: string[];
+      unassigned?: string;
+    };
+  }
+}
+/* eslint-enable @typescript-eslint/consistent-type-definitions */
+
 export const theme = createTheme({
+  customColors: {
+    categorical: categoricalColors,
+    unassigned: "#757575",
+  },
   palette: {
     contrastThreshold: 4.5,
     primary: teal,

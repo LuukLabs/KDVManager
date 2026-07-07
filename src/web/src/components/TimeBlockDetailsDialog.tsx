@@ -149,12 +149,12 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
       {timeBlock && (
         <>
           <DialogTitle
-            sx={{
+            sx={(theme) => ({
               textAlign: "center",
               pb: 1.5,
-              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-              color: "white",
-            }}
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              color: theme.palette.primary.contrastText,
+            })}
           >
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}>
               <AccessTime />

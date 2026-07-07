@@ -11,6 +11,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { Edit as EditIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { WeeklyScheduleGrid } from "./WeeklyScheduleGrid";
@@ -125,7 +126,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
                     onClick={() => onEdit(schedule)}
                     sx={{
                       "&:hover": {
-                        backgroundColor: "primary.50",
+                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
                         transform: "scale(1.1)",
                       },
                       transition: "all 0.2s ease-in-out",

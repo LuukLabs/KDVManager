@@ -5,7 +5,7 @@ export { isoDateTransform } from "./transforms";
 export { FormSelect, type FormSelectProps, type FormSelectOption } from "./FormSelect";
 export { FormTimeField, type FormTimeFieldProps } from "./FormTimeField";
 export { FieldDisplay } from "./FieldDisplay";
-export { FormSection } from "./FormSection";
+export { FormSection, type FormSectionProps } from "./FormSection";
 export { FormActions } from "./FormActions";
 export { FormErrorAlert } from "./FormErrorAlert";
 export { useFormSubmit, useMutationErrorHandler, saveFailedMessage } from "./useFormSubmit";

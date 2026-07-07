@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
+import ChildCareRoundedIcon from "@mui/icons-material/ChildCareRounded";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { type AddChildCommand } from "@api/crm/models/addChildCommand";
@@ -35,7 +36,11 @@ export const ChildForm = ({ onSubmit }: ChildFormProps) => {
     <Form formContext={formContext} onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <FormErrorAlert message={submitError} onClose={clearSubmitError} />
-        <FormSection title={t("Personal Information")}>
+        <FormSection
+          title={t("Personal Information")}
+          description={t("Name, date of birth and identification.")}
+          icon={<ChildCareRoundedIcon />}
+        >
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormTextField name="givenName" label={t("Voornaam")} required fullWidth />
           </Grid>

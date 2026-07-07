@@ -266,6 +266,7 @@
   "guardians:linkGuardianToChildDialog.titleLinkChildToGuardian": "Link Child to Guardian",
   "guardians:linkGuardianToChildDialog.titleLinkGuardianToChild": "Link Guardian to Child",
   "Home": "Home",
+  "How this guardian can be reached.": "How this guardian can be reached.",
   "Inactive": "Inactive",
   "Incomplete": "Incomplete",
   "Invalid email address": "Invalid email address",

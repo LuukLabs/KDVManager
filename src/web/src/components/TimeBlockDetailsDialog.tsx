@@ -167,7 +167,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
             </Typography>
           </DialogTitle>
 
-          <DialogContent sx={{ p: 3 }}>
+          <DialogContent sx={{ px: 3, pt: 2, pb: 3 }}>
             <Box sx={{ mb: 2 }}>
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
@@ -236,7 +236,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
             {timeBlock.bkr.appliedRule && <AppliedRuleDetails rule={timeBlock.bkr.appliedRule} />}
           </DialogContent>
 
-          <DialogActions sx={{ p: 2, pt: 0 }}>
+          <DialogActions sx={{ px: 3, pb: 2.5, pt: 0 }}>
             <Button onClick={onClose} variant="outlined" sx={{ borderRadius: 2 }}>
               {t("Close")}
             </Button>

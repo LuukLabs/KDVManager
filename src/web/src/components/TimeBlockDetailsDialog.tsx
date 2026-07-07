@@ -156,9 +156,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
               color: "white",
             }}
           >
-            <Box
-              sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}
-            >
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}>
               <AccessTime />
               {timeBlock.timeSlotName}
             </Box>

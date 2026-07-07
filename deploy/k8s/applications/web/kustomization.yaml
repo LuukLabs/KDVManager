@@ -14,4 +14,4 @@ labels:
 images:
 - name: ghcr.io/luuklabs/kdvmanager/web
   newName: ghcr.io/luuklabs/kdvmanager/web
-  newTag: linux-29e593d
+  newTag: linux-cf22244

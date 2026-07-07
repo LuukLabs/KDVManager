@@ -1,4 +1,5 @@
 import { IconButton, Tooltip } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { Edit as EditIcon } from "@mui/icons-material";
 import NiceModal from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
@@ -21,14 +22,14 @@ const EditTimeSlotButton = ({ timeSlot }: EditTimeSlotButtonProps) => {
       <IconButton
         size="small"
         onClick={handleEdit}
-        sx={{
+        sx={(theme) => ({
           color: "primary.main",
           "&:hover": {
-            backgroundColor: "primary.50",
+            backgroundColor: alpha(theme.palette.primary.main, 0.08),
             transform: "scale(1.1)",
           },
           transition: "all 0.2s ease-in-out",
-        }}
+        })}
       >
         <EditIcon sx={{ fontSize: 18 }} />
       </IconButton>

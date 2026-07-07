@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { type GridColDef } from "@mui/x-data-grid/models";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
-import { type ClosurePeriod } from "@api/scheduling/models/closurePeriod";
+import { type ClosurePeriodListVM as ClosurePeriod } from "@api/scheduling/models/closurePeriodListVM";
 import { useListClosurePeriods } from "@api/scheduling/endpoints/closure-periods/closure-periods";
 import { formatDate } from "@utils/formatDate";
 import { AppDataGrid } from "@components/datagrid/AppDataGrid";

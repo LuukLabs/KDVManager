@@ -2,12 +2,8 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Grid, Stack, Button, Paper, IconButton, Typography, Chip, Box } from "@mui/material";
-import {
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Add as AddIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
+import { Phone as PhoneIcon, Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import ContactPhoneOutlinedIcon from "@mui/icons-material/ContactPhoneOutlined";
 import { FieldDisplay, Form, FormTextField, FormSelect } from "../forms";
 import { EditableCard } from "../cards/EditableCard";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
@@ -265,7 +261,8 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
   return (
     <EditableCard
       title={t("Contact Information")}
-      icon={<EmailIcon color="primary" />}
+      description={t("How this guardian can be reached.")}
+      icon={<ContactPhoneOutlinedIcon />}
       isEditing={isEditing}
       onSave={onSave}
       onCancel={onCancel}

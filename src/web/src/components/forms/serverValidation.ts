@@ -91,7 +91,8 @@ export const applyServerValidationErrors = <TFieldValues extends FieldValues>(
     .filter(({ property }) => property)
     .map(({ property, title }) => ({ path: toFieldPath(property), title }))
     .filter(
-      ({ path }) => !fields || fields.some((field) => path === field || path.startsWith(`${field}.`)),
+      ({ path }) =>
+        !fields || fields.some((field) => path === field || path.startsWith(`${field}.`)),
     );
   fieldErrors.forEach(({ path, title }) => {
     setError(path as Path<TFieldValues>, { type: "server", message: title });

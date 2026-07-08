@@ -295,6 +295,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
               <IconButton
                 size="small"
                 onClick={() => handleOpenDetails(block)}
+                aria-label={t("View details")}
                 sx={{
                   backgroundColor: alpha(theme.palette.primary.main, 0.08),
                   border: "1px solid",

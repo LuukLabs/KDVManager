@@ -511,6 +511,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               <IconButton
                 color="error"
                 size="small"
+                aria-label={t("Remove rule")}
                 onClick={() => {
                   remove(index);
                   if (editingRule === index) setEditingRule(null);
@@ -951,6 +952,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
           <Fade in={!editingRule}>
             <Fab
               color="primary"
+              aria-label={t("Add Rule")}
               sx={{
                 position: "fixed",
                 bottom: 80,

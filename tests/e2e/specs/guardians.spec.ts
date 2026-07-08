@@ -187,8 +187,9 @@ test("create a guardian with a phone number", async ({ page }) => {
 
   await page.waitForURL(/\/guardians\/[0-9a-f]{8}-[0-9a-f-]{27}$/i);
   await expect(page.getByRole("heading", { name: `${givenName} ${familyName}` })).toBeVisible();
-  // The contact-information card shows the saved phone number.
-  await expect(page.getByText(phone)).toBeVisible();
+  // The saved phone number is shown on the detail page (it appears both in the
+  // header and the contact-information card, so assert the first occurrence).
+  await expect(page.getByText(phone).first()).toBeVisible();
 });
 
 test("edit guardian details", async ({ page }) => {

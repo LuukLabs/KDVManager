@@ -87,7 +87,7 @@ describe("ChildrenTable — record navigation (browser)", () => {
     // the tap in the next test (failure screenshots show the dialog still
     // open on top of the mobile card list).
     await userEvent.click(page.getByRole("button", { name: "Cancel" }));
-    await expect.element(page.getByText("Remove child 'Jane Doe'")).not.toBeVisible();
+    await expect.element(page.getByText("Remove child 'Jane Doe'")).not.toBeInTheDocument();
   });
 
   it("navigates to the child detail page when a card is tapped (mobile)", async () => {

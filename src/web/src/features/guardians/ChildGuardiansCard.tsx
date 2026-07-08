@@ -93,13 +93,14 @@ export const ChildGuardiansCard = ({
 
   const loading = isLoading || externalLoading;
 
-  const cardActions = (
+  const renderLinkButton = (fullWidth: boolean) => (
     <Button
       variant="outlined"
       startIcon={<Add fontSize="small" />}
       onClick={() => setLinkDialogOpen(true)}
       size={isMobile ? "medium" : "small"}
       disabled={loading}
+      fullWidth={fullWidth}
       sx={{
         minHeight: { xs: 44, md: "auto" },
         fontWeight: 600,
@@ -116,9 +117,12 @@ export const ChildGuardiansCard = ({
         title={t("Guardians")}
         description={t("People authorized to pick up or be contacted about this child.")}
         icon={<PeopleIcon color="primary" />}
-        actions={cardActions}
+        // On mobile the header row has no room for the text button next to the
+        // title/description, so show it full-width at the top of the card body.
+        actions={isMobile ? undefined : renderLinkButton(false)}
         collapsible={false}
       >
+        {isMobile && <Box sx={{ mb: 2 }}>{renderLinkButton(true)}</Box>}
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
             <CircularProgress size={24} />

@@ -201,13 +201,15 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
           />
         </Grid>
 
-        {/* Guardians Information */}
-        <Grid size={{ xs: 12, lg: 6 }}>
+        {/* Guardians Information. On mobile the cards stack in one column, so
+            order guardians last (after medical); on lg it keeps its spot in the
+            right column beside basic information. */}
+        <Grid size={{ xs: 12, lg: 6 }} sx={{ order: { xs: 3, lg: 2 } }}>
           {child.id && <ChildGuardiansCard childId={child.id} />}
         </Grid>
 
         {/* Medical / Extra Information */}
-        <Grid size={{ xs: 12, lg: 6 }}>
+        <Grid size={{ xs: 12, lg: 6 }} sx={{ order: { xs: 2, lg: 3 } }}>
           <MedicalInformationCard
             allergies={child.allergies}
             medication={child.medication}

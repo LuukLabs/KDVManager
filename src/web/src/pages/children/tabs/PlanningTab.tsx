@@ -27,14 +27,18 @@ type SectionHeaderProps = {
 // primary action(s) on the right. Keeping this in one place is what makes
 // "Add Schedule / Add End Mark" and "Add Absence" read as the same pattern.
 const SectionHeader: React.FC<SectionHeaderProps> = ({ icon, title, actions }) => (
+  // Stack the title and the (full-width) action buttons in a column until md.
+  // The buttons are fullWidth/large while isMobile (down "md"), so switching to
+  // a row any earlier (e.g. at sm) forces a full-width button onto the title
+  // row and it overflows the panel.
   <Box
     sx={{
       display: "flex",
-      alignItems: { xs: "flex-start", sm: "center" },
+      alignItems: { xs: "flex-start", md: "center" },
       justifyContent: "space-between",
       mb: { xs: 2, md: 3 },
-      flexDirection: { xs: "column", sm: "row" },
-      gap: { xs: 2, sm: 2 },
+      flexDirection: { xs: "column", md: "row" },
+      gap: 2,
     }}
   >
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -44,9 +48,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ icon, title, actions }) =
       </Typography>
     </Box>
     <Stack
-      direction={{ xs: "column", sm: "row" }}
+      direction={{ xs: "column", md: "row" }}
       spacing={1}
-      sx={{ width: { xs: "100%", sm: "auto" } }}
+      sx={{ width: { xs: "100%", md: "auto" } }}
     >
       {actions}
     </Stack>

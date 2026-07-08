@@ -135,7 +135,7 @@ export const GuardianForm = ({ onSubmit }: GuardianFormProps) => {
                 <Paper
                   key={field.id}
                   variant="outlined"
-                  sx={{ p: 2, position: "relative", borderRadius: 2 }}
+                  sx={{ p: 2, pt: { xs: 5, sm: 2 }, position: "relative", borderRadius: 2 }}
                 >
                   <Grid container spacing={2}>
                     <Grid size={{ xs: 12, sm: 4 }}>

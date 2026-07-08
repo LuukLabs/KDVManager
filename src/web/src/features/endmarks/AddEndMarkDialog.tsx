@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Form, FormTextField, FormDatePicker, useMutationErrorHandler } from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
@@ -6,75 +5,56 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
-import { FormControlLabel, Switch, Typography } from "@mui/material";
 import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import dayjs from "dayjs";
-import { useForm, useWatch } from "react-hook-form";
-import { useAddAbsence } from "@api/scheduling/endpoints/absences/absences";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useAddEndMark, getListEndMarksQueryKey } from "@api/scheduling/endpoints/end-marks/end-marks";
+import { getGetChildSchedulesQueryKey } from "@api/scheduling/endpoints/schedules/schedules";
 import { useQueryClient } from "@tanstack/react-query";
 
-type AddAbsenceDialogProps = {
+type AddEndMarkDialogProps = {
   childId: string;
 };
 
 type FormValues = {
-  startDate: string;
   endDate: string;
   reason: string;
 };
 
-export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ childId }) => {
+export const AddEndMarkDialog = NiceModal.create<AddEndMarkDialogProps>(({ childId }) => {
   const { t } = useTranslation();
   const modal = useModal();
   const { enqueueSnackbar } = useSnackbar();
-  const [multiDay, setMultiDay] = useState(false);
+  const queryClient = useQueryClient();
   const formContext = useForm<FormValues>({
     defaultValues: {
-      startDate: dayjs().format("YYYY-MM-DD"),
       endDate: dayjs().format("YYYY-MM-DD"),
       reason: "",
     },
     mode: "onChange",
   });
-  const queryClient = useQueryClient();
   const {
     handleSubmit,
     reset,
-    setValue,
     setError,
     formState: { isValid, isDirty, isSubmitting },
-    control,
   } = formContext;
-  const addAbsenceMutation = useAddAbsence();
-
-  // Watch startDate and multiDay to auto-set endDate
-  const startDate = useWatch({ control, name: "startDate" });
-  const endDate = useWatch({ control, name: "endDate" });
-  useEffect(() => {
-    if (!multiDay) {
-      setValue("endDate", startDate);
-    }
-  }, [startDate, multiDay, setValue]);
-
-  const dayCount =
-    multiDay && startDate && endDate ? dayjs(endDate).diff(dayjs(startDate), "day") + 1 : null;
+  const addEndMarkMutation = useAddEndMark();
 
   const handleOnCancelClick = () => {
     modal.remove();
     reset();
-    setMultiDay(false);
   };
 
-  const onSubmit = async (data: FormValues) => {
-    await addAbsenceMutation.mutateAsync(
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await addEndMarkMutation.mutateAsync(
       {
-        childId: childId,
         data: {
-          startDate: data.startDate,
+          childId,
           endDate: data.endDate,
-          reason: data.reason,
+          reason: data.reason || undefined,
         },
       },
       {
@@ -85,63 +65,40 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
   };
 
   const onMutateSuccess = () => {
-    enqueueSnackbar(t("Absence added"), { variant: "success" });
+    enqueueSnackbar(t("End mark added"), { variant: "success" });
+    void queryClient.invalidateQueries({ queryKey: getListEndMarksQueryKey({ childId }) });
+    void queryClient.invalidateQueries({ queryKey: getGetChildSchedulesQueryKey({ childId }) });
     modal.remove();
     reset();
-    setMultiDay(false);
-    queryClient.invalidateQueries();
   };
 
   const onMutateError = useMutationErrorHandler({ setError });
 
   return (
     <Dialog {...muiDialogV5(modal)} maxWidth="xs" fullWidth>
-      <DialogTitle>{t("Add Absence")}</DialogTitle>
+      <DialogTitle>{t("Add End Mark")}</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ mb: 2, color: "text.secondary", fontSize: "0.875rem" }}>
-          {t("Mark the day(s) this child will be away. Their schedule isn't affected.")}
+          {t(
+            "Set the last day this child's schedule is active. Anything scheduled after this date is removed.",
+          )}
         </DialogContentText>
         <Form formContext={formContext} onSubmit={onSubmit}>
           <FormDatePicker
-            label={t("Start Date")}
-            name="startDate"
+            label={t("End Date")}
+            name="endDate"
             slotProps={{ textField: { size: "small", fullWidth: true } }}
             transform={{
               output: (value) => (value ? value.format("YYYY-MM-DD") : null),
             }}
           />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={multiDay}
-                onChange={(_, checked) => setMultiDay(checked)}
-                color="primary"
-                slotProps={{ input: { "aria-label": "multi-day absence" } }}
-              />
-            }
-            label={t("Multi-day absence")}
-            sx={{ mt: 1, mb: 1 }}
-          />
-          {multiDay && (
-            <FormDatePicker
-              label={t("End Date")}
-              name="endDate"
-              slotProps={{ textField: { size: "small", fullWidth: true } }}
-              transform={{
-                output: (value) => (value ? value.format("YYYY-MM-DD") : null),
-              }}
-            />
-          )}
-          {dayCount !== null && dayCount > 0 && (
-            <Typography variant="caption" color="primary" sx={{ display: "block", mt: -1, mb: 1 }}>
-              {t("{{count}} day(s)", { count: dayCount })}
-            </Typography>
-          )}
           <FormTextField
             name="reason"
             label={t("Reason (optional)")}
             fullWidth
             margin="normal"
+            multiline
+            minRows={2}
           />
         </Form>
       </DialogContent>
@@ -151,6 +108,7 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
         </Button>
         <Button
           variant="contained"
+          color="warning"
           disabled={!isDirty || !isValid}
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}

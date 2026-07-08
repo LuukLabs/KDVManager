@@ -6,15 +6,13 @@
  *   (schedule card with period/time-slot/group, end-mark card with date/reason).
  * - Adding a schedule through the "Planning toevoegen" dialog (start date,
  *   rule with day + time slot + group) and seeing it appear in the tab.
- * - Adding an end mark through the inline "Eindmarkering toevoegen" form.
+ * - Adding an end mark through the "Eindmarkering toevoegen" dialog.
  * - Deleting a schedule via the schedule card action + confirmation dialog.
  *
  * The schedule overview page itself is covered by schedule-overview.spec.ts,
  * so this file stays focused on the child planning tab UI.
  *
  * All Dutch strings are taken from src/web/src/locales/nl/{translation,common}.json.
- * Note: the weekday buttons in the add-schedule dialog show untranslated short
- * names ("Mon", "Tue", ...) on desktop — see AddChildScheduleDialog_v2.tsx.
  *
  * Every child also gets a system-generated end mark ("Eindmarkering" + "Auto"
  * chips) as soon as the Scheduling service learns about it (see
@@ -144,9 +142,9 @@ test.describe("child planning tab", () => {
     await fillMuiDateField(dialog.getByRole("group", { name: /Startdatum/ }), SCHEDULE_START_NL);
 
     // Add a rule; the new rule opens in edit mode with day / time slot / group
-    // selectors (desktop weekday buttons show short English names).
+    // selectors (desktop weekday buttons show translated short names, e.g. "Ma").
     await dialog.getByRole("button", { name: "Regel toevoegen" }).click();
-    await dialog.getByRole("button").filter({ hasText: /Mon/ }).click();
+    await dialog.getByRole("button").filter({ hasText: /Ma/ }).click();
     await dialog.getByRole("button").filter({ hasText: timeSlotName }).click();
     await dialog.getByRole("button").filter({ hasText: groupName }).click();
     await dialog.getByRole("button", { name: "Gereed" }).click();
@@ -163,17 +161,22 @@ test.describe("child planning tab", () => {
     await expect(page.getByText(groupName)).toBeVisible();
   });
 
-  test("add an end mark via the inline form", async ({ page }) => {
+  test("add an end mark via the dialog", async ({ page }) => {
     await gotoApp(page, `/children/${childBId}/planning`);
 
-    // Toggle the inline form open (the toggle then reads "Annuleren", so the
-    // submit button below is the only "Eindmarkering toevoegen" left).
+    // Same dialog pattern as "Afwezigheid toevoegen": a modal with a date
+    // field and an optional reason field.
     await page.getByRole("button", { name: "Eindmarkering toevoegen" }).click();
 
-    // Native <input type="date"> — fill takes the ISO value.
-    await page.getByLabel("Einddatum").fill("2031-01-15");
-    await page.getByLabel("Reden").fill(`${endMarkReason}-ui`);
-    await page.getByRole("button", { name: "Eindmarkering toevoegen" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+
+    await fillMuiDateField(dialog.getByRole("group", { name: /Einddatum/ }), "15-01-2031");
+    await dialog.getByLabel(/Reden/).fill(`${endMarkReason}-ui`);
+    await dialog.getByRole("button", { name: "Toevoegen" }).click();
+
+    await expect(page.getByText("Eindmarkering toegevoegd")).toBeVisible();
+    await expect(dialog).not.toBeVisible();
 
     // Scope to the new card — the auto-generated end mark shows the same chip.
     const newEndMarkCard = page

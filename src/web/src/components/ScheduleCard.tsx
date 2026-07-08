@@ -29,6 +29,20 @@ type ScheduleCardProps = {
   onEdit?: (schedule: ScheduleCardProps["schedule"]) => void;
 };
 
+// A labeled block within the card. Reused by the weekly pattern and summary
+// below so a future section (e.g. one-off extra days) can slot in the same way.
+const CardSection: React.FC<{ title: string; children: React.ReactNode }> = ({
+  title,
+  children,
+}) => (
+  <Box sx={{ mb: 2, "&:last-child": { mb: 0 } }}>
+    <Typography variant="subtitle2" gutterBottom>
+      {title}
+    </Typography>
+    {children}
+  </Box>
+);
+
 export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -60,8 +74,6 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
   const getDateRangeDisplay = () => {
     const start = dayjs(schedule.startDate);
     const end = schedule.endDate ? dayjs(schedule.endDate) : null;
-
-    console.warn("end", end);
 
     if (!end) {
       return `${start.format("MMM D, YYYY")} • ${t("No end date")}`;
@@ -141,19 +153,11 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
           </Box>
         </Box>
 
-        {/* Weekly Schedule Grid */}
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" gutterBottom>
-            {t("Weekly Schedule")}
-          </Typography>
+        <CardSection title={t("Weekly Pattern")}>
           <WeeklyScheduleGrid scheduleRules={schedule.scheduleRules} isMobile={isMobile} />
-        </Box>
+        </CardSection>
 
-        {/* Schedule Summary */}
-        <Box>
-          <Typography variant="subtitle2" gutterBottom>
-            {t("Schedule Summary")}
-          </Typography>
+        <CardSection title={t("Schedule Summary")}>
           <Stack
             direction="row"
             spacing={1}
@@ -196,7 +200,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
               </Typography>
             )}
           </Stack>
-        </Box>
+        </CardSection>
       </CardContent>
     </Card>
   );

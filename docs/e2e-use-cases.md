@@ -40,6 +40,9 @@ e2e suite (`tests/e2e/`) covers them.
 | 4.3 | Add an end mark for a child | `child-planning.spec.ts` |
 | 4.4 | Delete a schedule from the planning tab | `child-planning.spec.ts` |
 | 4.5 | Automatic system end marks are created when a child is registered (EndMark automation) | implicitly exercised by `child-planning.spec.ts` (asserts around the auto-generated end mark) |
+| 4.6 | Edit a schedule via the card action (change start date; delete+recreate path) | `child-planning-extras.spec.ts` |
+| 4.7 | Add an absence via the dialog | `child-planning-extras.spec.ts` |
+| 4.8 | Delete an absence via the row action (with confirmation) | `child-planning-extras.spec.ts` |
 
 ## 5. Guardian management (`/guardians`)
 
@@ -47,6 +50,7 @@ e2e suite (`tests/e2e/`) covers them.
 |---|----------|-----------|
 | 5.1 | List guardians (server-paginated DataGrid) + search by name | `guardians.spec.ts` |
 | 5.2 | Create a guardian (name, email, …) | `guardians.spec.ts` |
+| 5.2b | Create a guardian with a phone number (repeatable phone list) | `guardians.spec.ts` |
 | 5.3 | Edit guardian details (edit-in-place) | `guardians.spec.ts` |
 | 5.4 | Link a child to a guardian with a relationship type (via child detail page) | `guardians.spec.ts` |
 | 5.5 | Unlink a child from a guardian (with confirmation) | `guardians.spec.ts` |
@@ -70,6 +74,12 @@ e2e suite (`tests/e2e/`) covers them.
 | 7.4 | Closure periods: add via dialog (start/end date, reason), list, delete | `settings-closure-periods.spec.ts` |
 | 7.5 | End-mark automation settings: view and update (years after birth) | `settings.spec.ts` |
 
+## 8. Error handling
+
+| # | Use case | Covered by |
+|---|----------|-----------|
+| 8.1 | A route loader failure (e.g. a non-existent child) renders the app error page (ErrorPage) with a recovery action | `children.spec.ts` |
+
 ## Cross-cutting behaviors exercised throughout
 
 - **Auth0 JWT chain**: every test runs through the real Envoy JWT filter and
@@ -90,7 +100,10 @@ e2e suite (`tests/e2e/`) covers them.
 - PDF binary content of print/phone-list exports (generation is triggered and
   the in-page data is asserted, but the PDFs are not parsed).
 - Mobile/responsive variants of pages (tests run desktop Chromium only).
-- Child absences management UI (absence is seeded via API and asserted on the
-  schedule overview; if/where the UI offers absence creation it is untested).
 - DataGrid pagination interaction beyond control presence (would require
   seeding >10 rows per list).
+- Form validation / negative input paths (invalid email, non-E.164 phone,
+  required-field errors) — only the happy path of each form is asserted.
+- Guardian contact-info card editing and the "create new guardian inline" path
+  of the child↔guardian link dialog.
+- WCAG / accessibility assertions (no axe or keyboard-navigation checks yet).

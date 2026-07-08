@@ -161,6 +161,34 @@ test("create a guardian via the form", async ({ page }) => {
   await expect(page.getByRole("heading", { name: `${givenName} ${familyName}` })).toBeVisible();
 });
 
+test("create a guardian with a phone number", async ({ page }) => {
+  const givenName = uniqueName("Aaa");
+  const familyName = uniqueName("Telefoonvoogd");
+  uiCreatedGuardianFamilyNames.push(familyName);
+  // E.164 number; the detail contact card renders it verbatim.
+  const phone = "+31612345678";
+
+  await gotoApp(page, "/guardians");
+  await page.getByRole("link", { name: "Voogd toevoegen" }).click();
+  await expect(page.getByRole("heading", { name: "Nieuwe voogd toevoegen" })).toBeVisible();
+
+  await page.getByLabel("Voornaam").fill(givenName);
+  await page.getByLabel("Achternaam").fill(familyName);
+  await page.getByLabel("E-mail").fill(`${uniqueName("mail")}@example.com`);
+
+  // The phone list starts empty; "Telefoon toevoegen" adds a row (type defaults
+  // to Mobile), then the E.164 number goes in the "Telefoonnummer" field.
+  await page.getByRole("button", { name: "Telefoon toevoegen" }).click();
+  await page.getByLabel("Telefoonnummer").fill(phone);
+
+  await page.getByRole("button", { name: "Voogd aanmaken" }).click();
+
+  await page.waitForURL(/\/guardians\/[0-9a-f]{8}-[0-9a-f-]{27}$/i);
+  await expect(page.getByRole("heading", { name: `${givenName} ${familyName}` })).toBeVisible();
+  // The contact-information card shows the saved phone number.
+  await expect(page.getByText(phone)).toBeVisible();
+});
+
 test("edit guardian details", async ({ page }) => {
   const guardian = await seedGuardian();
   const newGivenName = uniqueName("Aab");

@@ -16,6 +16,7 @@ import {
   Cancel as CancelIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 import { SectionHeader } from "@components/layout/SectionHeader";
 
 type EditableCardProps = {
@@ -52,6 +53,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
   disabled = false,
 }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -112,6 +114,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                       handleSave();
                     }}
                     color="primary"
+                    aria-label={`${t("Save")} – ${title}`}
                     disabled={loading}
                     size={isMobile ? "medium" : "small"}
                     sx={{
@@ -131,6 +134,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                       handleCancel();
                     }}
                     color="error"
+                    aria-label={`${t("Cancel")} – ${title}`}
                     disabled={loading}
                     size={isMobile ? "medium" : "small"}
                     sx={{
@@ -152,6 +156,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
                       e.stopPropagation();
                       handleEditToggle();
                     }}
+                    aria-label={`${t("Edit")} – ${title}`}
                     disabled={disabled || loading}
                     size={isMobile ? "medium" : "small"}
                     sx={{
@@ -171,6 +176,8 @@ export const EditableCard: React.FC<EditableCardProps> = ({
               {/* Expand/Collapse Icon */}
               {collapsible && (
                 <IconButton
+                  aria-label={expanded ? t("Collapse") : t("Expand")}
+                  aria-expanded={expanded}
                   sx={{
                     transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
                     transition: "transform 0.2s ease",

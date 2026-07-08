@@ -127,7 +127,7 @@ const ScheduleOverviewPage = () => {
           <Box
             sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}
           >
-            <IconButton onClick={goToPreviousDay} size="small">
+            <IconButton onClick={goToPreviousDay} size="small" aria-label={t("Previous day")}>
               <ChevronLeftIcon />
             </IconButton>
 
@@ -157,7 +157,7 @@ const ScheduleOverviewPage = () => {
               )}
             </Box>
 
-            <IconButton onClick={goToNextDay} size="small">
+            <IconButton onClick={goToNextDay} size="small" aria-label={t("Next day")}>
               <ChevronRightIcon />
             </IconButton>
           </Box>
@@ -211,7 +211,7 @@ const ScheduleOverviewPage = () => {
               </Box>
 
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
-                <IconButton onClick={goToPreviousDay}>
+                <IconButton onClick={goToPreviousDay} aria-label={t("Previous day")}>
                   <ChevronLeftIcon />
                 </IconButton>
 
@@ -233,7 +233,7 @@ const ScheduleOverviewPage = () => {
                   )}
                 </Box>
 
-                <IconButton onClick={goToNextDay}>
+                <IconButton onClick={goToNextDay} aria-label={t("Next day")}>
                   <ChevronRightIcon />
                 </IconButton>
               </Box>
@@ -347,7 +347,7 @@ const ScheduleOverviewPage = () => {
             <Typography variant="h6" sx={{ flex: 1 }}>
               {t("Select Date")}
             </Typography>
-            <IconButton onClick={handleCloseCalendar}>
+            <IconButton onClick={handleCloseCalendar} aria-label={t("Close")}>
               <CloseIcon />
             </IconButton>
           </Toolbar>

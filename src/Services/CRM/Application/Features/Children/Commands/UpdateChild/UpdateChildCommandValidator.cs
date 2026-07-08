@@ -19,5 +19,17 @@ public class UpdateChildCommandValidator : AbstractValidator<UpdateChildCommand>
         RuleFor(p => p.DateOfBirth)
             .NotEmpty()
             .NotNull();
+
+        RuleFor(p => p.Allergies)
+            .MaximumLength(1000);
+
+        RuleFor(p => p.Medication)
+            .MaximumLength(1000);
+
+        RuleFor(p => p.DietaryRequirements)
+            .MaximumLength(1000);
+
+        RuleFor(p => p.MedicalNotes)
+            .MaximumLength(2000);
     }
 }

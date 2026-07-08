@@ -28,6 +28,26 @@ namespace KDVManager.Services.CRM.Domain.Entities
         public int ChildNumber { get; set; }
 
         /// <summary>
+        /// Known allergies for this child (free text).
+        /// </summary>
+        public string? Allergies { get; set; }
+
+        /// <summary>
+        /// Regular medication for this child (free text).
+        /// </summary>
+        public string? Medication { get; set; }
+
+        /// <summary>
+        /// Dietary requirements or preferences for this child (free text).
+        /// </summary>
+        public string? DietaryRequirements { get; set; }
+
+        /// <summary>
+        /// Additional medical notes or other extra information for this child (free text).
+        /// </summary>
+        public string? MedicalNotes { get; set; }
+
+        /// <summary>
         /// Activity intervals representing periods when this child has scheduled attendance.
         /// These are synchronized from the Scheduling service.
         /// </summary>

@@ -80,6 +80,18 @@ e2e suite (`tests/e2e/`) covers them.
 |---|----------|-----------|
 | 8.1 | A route loader failure (e.g. a non-existent child) renders the app error page (ErrorPage) with a recovery action | `children.spec.ts` |
 
+## 9. Accessibility (WCAG 2.1 A/AA)
+
+| # | Use case | Covered by |
+|---|----------|-----------|
+| 9.1 | Every top-level route passes an axe WCAG 2.1 A/AA scan with no serious/critical violations | `a11y.spec.ts` |
+| 9.2 | Rich forms (new child, new guardian) pass the scan (labels, structure) | `a11y.spec.ts` |
+| 9.3 | An open modal dialog passes the scan (dialog role, labelling) | `a11y.spec.ts` |
+
+Automated scans cover only part of WCAG. Still requires manual review: logical
+focus order, keyboard operability, meaningful sequence, contrast in both light
+and dark themes, zoom/reflow, and screen-reader announcements (`aria-live`).
+
 ## Cross-cutting behaviors exercised throughout
 
 - **Auth0 JWT chain**: every test runs through the real Envoy JWT filter and
@@ -106,4 +118,7 @@ e2e suite (`tests/e2e/`) covers them.
   required-field errors) — only the happy path of each form is asserted.
 - Guardian contact-info card editing and the "create new guardian inline" path
   of the child↔guardian link dialog.
-- WCAG / accessibility assertions (no axe or keyboard-navigation checks yet).
+- Manual accessibility review beyond automated axe scans: keyboard operability,
+  focus order/trap, contrast in dark theme, zoom/reflow, screen-reader
+  announcements. (Automated WCAG 2.1 A/AA scans are covered by `a11y.spec.ts`;
+  the gate currently blocks only serious/critical violations.)

@@ -42,9 +42,26 @@ pnpm test
 # Useful variants
 pnpm test:headed          # watch the browser
 pnpm test:ui              # Playwright UI mode
+pnpm test:a11y            # only the WCAG accessibility scans
 pnpm exec playwright test specs/children.spec.ts -g "search"   # one test
 pnpm report               # open the HTML report
 ```
+
+## Accessibility (WCAG)
+
+`specs/a11y.spec.ts` runs [axe-core](https://github.com/dequelabs/axe-core)
+WCAG 2.1 A/AA scans against each route (and one open dialog) via
+`helpers/a11y.ts`. Automated scans cover roughly half of WCAG — contrast,
+accessible names, ARIA, landmarks/headings, form labels — so they complement,
+not replace, manual keyboard/screen-reader review.
+
+The gate fails on **serious/critical** violations and attaches the full
+findings (all impact levels) to the HTML report for triage. This is a phased
+rollout: tighten `BLOCKING_IMPACTS` in `helpers/a11y.ts` to also block
+`moderate`/`minor` as the backlog is burned down. Because the dockerized web
+app is a production build, MUI strips icon `data-testid`s — accessible names
+must come from real `aria-label`s/tooltips/text, which is exactly what these
+scans verify.
 
 Note: the e2e compose file gives postgres **no volume** — `docker compose
 ... down` discards all data, which keeps runs reproducible. Don't combine

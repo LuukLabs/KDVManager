@@ -107,6 +107,15 @@ jobs:
         if-no-files-found: ignore
         retention-days: 14
 
+    - name: Upload accessibility report
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: a11y-report
+        path: tests/e2e/a11y-report
+        if-no-files-found: ignore
+        retention-days: 14
+
     - name: Collect stack logs
       if: failure()
       working-directory: ./src

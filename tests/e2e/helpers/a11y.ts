@@ -1,6 +1,13 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, type Page, type TestInfo } from "@playwright/test";
-import type { Result } from "axe-core";
+import type { AxeResults, Result } from "axe-core";
+import { createHtmlReport } from "axe-html-reporter";
+
+/** Per-view axe results collected during a run, keyed by label (retries overwrite). */
+const collectedResults = new Map<string, AxeResults>();
+
+/** Where the consolidated HTML report is written (relative to tests/e2e). */
+export const A11Y_REPORT_DIR = "a11y-report";
 
 /**
  * WCAG conformance the scans target. axe maps roughly half of WCAG's success
@@ -52,6 +59,9 @@ export async function expectNoWcagViolations(
   const results = await builder.analyze();
   const violations = results.violations;
 
+  // Collect for the consolidated HTML report (written in writeA11yReport()).
+  collectedResults.set(label, results);
+
   // Always attach the full report so moderate/minor findings are reviewable.
   if (violations.length > 0) {
     await testInfo.attach(`axe-${label}.json`, {
@@ -72,4 +82,46 @@ export async function expectNoWcagViolations(
           blocking.map(formatViolation).join("\n\n")
       : undefined,
   ).toEqual([]);
+}
+
+/** Tag each finding's help text with the view it came from, for the merged report. */
+function tagByView(label: string, findings: Result[] = []): Result[] {
+  return findings.map((f) => ({ ...f, help: `[${label}] ${f.help}` }));
+}
+
+/**
+ * Write one consolidated axe HTML report (via axe-html-reporter) covering every
+ * view scanned this run, into A11Y_REPORT_DIR. Call it from an afterAll hook so
+ * it runs even when some scans fail. Merges violations and "incomplete" (needs
+ * manual review — e.g. contrast axe could not decide) across views, and lists a
+ * per-view count in the summary. Returns the report path, or undefined if no
+ * scan ran.
+ */
+export function writeA11yReport(): string | undefined {
+  if (collectedResults.size === 0) return undefined;
+
+  const views = [...collectedResults.entries()];
+  const violations = views.flatMap(([label, r]) => tagByView(label, r.violations));
+  const incomplete = views.flatMap(([label, r]) => tagByView(label, r.incomplete));
+
+  const perView = views
+    .map(
+      ([label, r]) =>
+        `${label}: ${r.violations.length} violations, ${(r.incomplete ?? []).length} needs review`,
+    )
+    .join("<br/>");
+
+  createHtmlReport({
+    results: { violations, incomplete },
+    options: {
+      projectKey: "KDVManager",
+      reportFileName: "index.html",
+      outputDir: A11Y_REPORT_DIR,
+      customSummary:
+        `WCAG 2.1 A/AA scan · ${views.length} views · gate blocks serious/critical.<br/>` +
+        `"needs review" items (incl. some contrast checks) are not gated — review manually.<br/><br/>` +
+        perView,
+    },
+  });
+  return `${A11Y_REPORT_DIR}/index.html`;
 }

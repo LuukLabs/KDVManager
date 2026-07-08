@@ -18,7 +18,7 @@
  */
 import { test } from "@playwright/test";
 import { gotoApp } from "../helpers/app";
-import { expectNoWcagViolations } from "../helpers/a11y";
+import { expectNoWcagViolations, writeA11yReport } from "../helpers/a11y";
 
 /** Top-level routes that render under MainLayout (all require auth). */
 const ROUTES: { path: string; label: string }[] = [
@@ -38,6 +38,12 @@ const ROUTES: { path: string; label: string }[] = [
 ];
 
 test.describe("accessibility (WCAG 2.1 A/AA)", () => {
+  // Emit one consolidated axe HTML report after all scans (runs even on failure).
+  test.afterAll(() => {
+    const reportPath = writeA11yReport();
+    if (reportPath) console.log(`Accessibility report written: tests/e2e/${reportPath}`);
+  });
+
   for (const { path, label } of ROUTES) {
     test(`no serious/critical violations on ${path}`, async ({ page }, testInfo) => {
       await gotoApp(page, path);

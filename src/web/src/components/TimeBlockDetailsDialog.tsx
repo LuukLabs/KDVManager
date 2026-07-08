@@ -165,7 +165,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
             </Typography>
           </DialogTitle>
 
-          <DialogContent sx={{ px: 3, pt: 2, pb: 3 }}>
+          <DialogContent sx={{ px: 3, pt: 3, pb: 3 }}>
             <Box sx={{ mb: 2 }}>
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
@@ -181,7 +181,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
                       ? `${timeBlock.requiredProfessionals} ${t("supervisors needed")}`
                       : t("Ratio requirement cannot be met")
                   }
-                  color={timeBlock.requiredProfessionals != null ? "secondary" : "error"}
+                  color={timeBlock.requiredProfessionals != null ? "info" : "error"}
                   variant="outlined"
                 />
               </Box>

@@ -177,8 +177,9 @@ test.describe("child planning tab — extras", () => {
     await gotoApp(page, `/children/${childId}/planning`);
 
     // Scope to the absence card carrying our unique reason (other absences may
-    // be present from the add test).
-    const absenceRow = page.locator(".MuiPaper-root").filter({ hasText: reason });
+    // be present from the add test). Several nested Papers contain the reason
+    // (the section wrapper and the row); .last() is the innermost — the row.
+    const absenceRow = page.locator(".MuiPaper-root").filter({ hasText: reason }).last();
     await expect(absenceRow).toBeVisible();
     await absenceRow.getByRole("button", { name: "Verwijder afwezigheid" }).click();
 

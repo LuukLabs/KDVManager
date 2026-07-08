@@ -179,7 +179,9 @@ test("create a guardian with a phone number", async ({ page }) => {
   // The phone list starts empty; "Telefoon toevoegen" adds a row (type defaults
   // to Mobile), then the E.164 number goes in the "Telefoonnummer" field.
   await page.getByRole("button", { name: "Telefoon toevoegen" }).click();
-  await page.getByLabel("Telefoonnummer").fill(phone);
+  // exact match: the remove-phone button's aria-label ("Telefoonnummer
+  // verwijderen") also contains "Telefoonnummer" and would otherwise match.
+  await page.getByLabel("Telefoonnummer", { exact: true }).fill(phone);
 
   await page.getByRole("button", { name: "Voogd aanmaken" }).click();
 

@@ -12,6 +12,14 @@ export type ChildDetailVM = {
   familyName: string;
   dateOfBirth?: string;
   childNumber?: number;
+  /** @nullable */
+  allergies?: string | null;
+  /** @nullable */
+  medication?: string | null;
+  /** @nullable */
+  dietaryRequirements?: string | null;
+  /** @nullable */
+  medicalNotes?: string | null;
   schedulingStatus?: ChildSchedulingStatus;
   /** @nullable */
   statusRelevantDate?: string | null;

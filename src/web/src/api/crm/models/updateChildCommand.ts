@@ -13,4 +13,12 @@ export type UpdateChildCommand = {
   familyName: string | null;
   /** @nullable */
   dateOfBirth: string | null;
+  /** @nullable */
+  allergies?: string | null;
+  /** @nullable */
+  medication?: string | null;
+  /** @nullable */
+  dietaryRequirements?: string | null;
+  /** @nullable */
+  medicalNotes?: string | null;
 };

@@ -39,6 +39,10 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             child.GivenName = request.GivenName!;
             child.FamilyName = request.FamilyName!;
             child.DateOfBirth = (DateOnly)request.DateOfBirth!;
+            child.Allergies = request.Allergies;
+            child.Medication = request.Medication;
+            child.DietaryRequirements = request.DietaryRequirements;
+            child.MedicalNotes = request.MedicalNotes;
 
             await _childRepository.UpdateAsync(child);
 

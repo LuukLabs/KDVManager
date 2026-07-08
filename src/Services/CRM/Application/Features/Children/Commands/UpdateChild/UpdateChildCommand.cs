@@ -17,5 +17,13 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
 
         [property: Required]
         public DateOnly? DateOfBirth { get; set; }
+
+        public string? Allergies { get; set; }
+
+        public string? Medication { get; set; }
+
+        public string? DietaryRequirements { get; set; }
+
+        public string? MedicalNotes { get; set; }
     }
 }

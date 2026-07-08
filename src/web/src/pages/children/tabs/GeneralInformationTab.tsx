@@ -16,6 +16,7 @@ import { FormErrorAlert, applyServerValidationErrors } from "@components/forms";
 
 import { ChildGuardiansCard } from "../../../features/guardians/ChildGuardiansCard";
 import { BasicInformationCard } from "@components/child/BasicInformationCard";
+import { MedicalInformationCard } from "@components/child/MedicalInformationCard";
 
 type GeneralInformationTabProps = {
   child: ChildDetailVM;
@@ -49,19 +50,36 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
     },
   });
 
-  // Forms for extended information (placeholder for now)
+  // Form for medical / extra information (connected to API)
   const medicalFormContext = useForm({
     defaultValues: {
-      allergies: "",
-      medication: "",
-      medicalNotes: "",
-      dietaryRequirements: "",
-      emergencyContact: "",
-      emergencyPhone: "",
-      doctorName: "",
-      doctorPhone: "",
+      allergies: child.allergies ?? "",
+      medication: child.medication ?? "",
+      dietaryRequirements: child.dietaryRequirements ?? "",
+      medicalNotes: child.medicalNotes ?? "",
     },
   });
+
+  // The update endpoint is a full replace, so every save must carry the
+  // fields owned by the other cards to avoid clearing them.
+  const buildBaseCommand = (): UpdateChildCommand => ({
+    id: child.id!,
+    givenName: child.givenName ?? "",
+    familyName: child.familyName ?? "",
+    dateOfBirth: child.dateOfBirth ?? "",
+    allergies: child.allergies,
+    medication: child.medication,
+    dietaryRequirements: child.dietaryRequirements,
+    medicalNotes: child.medicalNotes,
+  });
+
+  const invalidateChildQueries = async () => {
+    if (!child.id) return;
+    await queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
+    await queryClient.invalidateQueries({
+      queryKey: getGetChildByIdQueryOptions(child.id).queryKey,
+    });
+  };
 
   const handleSectionEdit = (section: string, isEditing: boolean) => {
     setEditingSections((prev) => ({
@@ -83,7 +101,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       await updateChild({
         id: child.id,
         data: {
-          id: child.id,
+          ...buildBaseCommand(),
           givenName: data.givenName,
           familyName: data.familyName,
           dateOfBirth: data.dateOfBirth,
@@ -91,10 +109,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
       });
 
       // Update cache and show success
-      await queryClient.invalidateQueries({ queryKey: getListChildrenQueryKey({}) });
-      await queryClient.invalidateQueries({
-        queryKey: getGetChildByIdQueryOptions(child.id).queryKey,
-      });
+      await invalidateChildQueries();
 
       enqueueSnackbar(t("child.success.basicUpdated", "Basic information updated successfully"), {
         variant: "success",
@@ -108,6 +123,47 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         setSubmitError(
           t("child.errors.updateBasicFailed", {
             defaultValue: "Failed to update basic information. Please try again.",
+          }),
+        );
+      }
+    }
+  };
+
+  const handleMedicalSave = async () => {
+    try {
+      setSubmitError(null);
+      const data = medicalFormContext.getValues();
+
+      if (!child.id) {
+        throw new Error(t("child.errors.idRequired", { defaultValue: "Child ID is required" }));
+      }
+
+      await updateChild({
+        id: child.id,
+        data: {
+          ...buildBaseCommand(),
+          allergies: data.allergies,
+          medication: data.medication,
+          dietaryRequirements: data.dietaryRequirements,
+          medicalNotes: data.medicalNotes,
+        },
+      });
+
+      await invalidateChildQueries();
+
+      enqueueSnackbar(
+        t("child.success.medicalUpdated", "Medical information updated successfully"),
+        { variant: "success" },
+      );
+      handleSectionEdit(SECTION_MEDICAL, false);
+    } catch (error) {
+      const mapped = applyServerValidationErrors(error, medicalFormContext.setError, {
+        fields: ["allergies", "medication", "dietaryRequirements", "medicalNotes"],
+      });
+      if (!mapped) {
+        setSubmitError(
+          t("child.errors.updateMedicalFailed", {
+            defaultValue: "Failed to update medical information. Please try again.",
           }),
         );
       }
@@ -148,6 +204,21 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         {/* Guardians Information */}
         <Grid size={{ xs: 12, lg: 6 }}>
           {child.id && <ChildGuardiansCard childId={child.id} />}
+        </Grid>
+
+        {/* Medical / Extra Information */}
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <MedicalInformationCard
+            allergies={child.allergies}
+            medication={child.medication}
+            dietaryRequirements={child.dietaryRequirements}
+            medicalNotes={child.medicalNotes}
+            isEditing={editingSections.medical}
+            formContext={medicalFormContext}
+            onSave={handleMedicalSave}
+            onCancel={() => handleCancel(SECTION_MEDICAL)}
+            onEditToggle={(editing) => handleSectionEdit(SECTION_MEDICAL, editing)}
+          />
         </Grid>
       </Grid>
     </>

@@ -62,7 +62,7 @@ export const theme = createTheme({
     primary: teal,
     secondary: terracotta,
     success: { main: "#2E7D32" },
-    warning: { main: "#B26A00" },
+    warning: { main: "#9C5D00" },
     error: { main: "#C62828" },
     info: { main: "#0E7490" },
     background: {

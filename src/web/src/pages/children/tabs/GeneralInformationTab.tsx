@@ -146,7 +146,9 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ ch
         </Grid>
 
         {/* Guardians Information */}
-        <Grid size={{ xs: 12 }}>{child.id && <ChildGuardiansCard childId={child.id} />}</Grid>
+        <Grid size={{ xs: 12, lg: 6 }}>
+          {child.id && <ChildGuardiansCard childId={child.id} />}
+        </Grid>
       </Grid>
     </>
   );

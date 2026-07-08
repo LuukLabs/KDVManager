@@ -214,6 +214,7 @@ export const GuardianContactInformationCard: React.FC<GuardianContactInformation
                           onClick={() => removePhoneNumber(index)}
                           color="error"
                           size="small"
+                          aria-label={t("Remove phone number")}
                           sx={{
                             minWidth: { xs: 40, md: "auto" },
                             minHeight: { xs: 40, md: "auto" },

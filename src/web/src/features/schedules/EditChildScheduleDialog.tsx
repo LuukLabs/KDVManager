@@ -470,6 +470,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
               <IconButton
                 color="error"
                 size="small"
+                aria-label={t("Remove rule")}
                 onClick={() => {
                   remove(index);
                   if (editingRule === index) setEditingRule(null);

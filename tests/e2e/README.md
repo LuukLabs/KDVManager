@@ -63,6 +63,16 @@ app is a production build, MUI strips icon `data-testid`s — accessible names
 must come from real `aria-label`s/tooltips/text, which is exactly what these
 scans verify.
 
+### Consolidated report
+
+After the scans run, an `afterAll` hook writes a single
+[`axe-html-reporter`](https://www.npmjs.com/package/axe-html-reporter) HTML
+report to `tests/e2e/a11y-report/index.html` (git-ignored) covering every
+scanned view. It merges **violations** and **"needs review"** (`incomplete`)
+findings — the latter includes contrast checks axe could not decide
+automatically, so review those manually. The report is produced even when the
+run passes, and CI uploads it as the `a11y-report` artifact.
+
 Note: the e2e compose file gives postgres **no volume** — `docker compose
 ... down` discards all data, which keeps runs reproducible. Don't combine
 `docker-compose.e2e.yml` with `docker-compose.override.yml` (the dev

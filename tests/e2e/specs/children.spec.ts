@@ -156,4 +156,20 @@ test.describe("children", () => {
     // expensive; assert the DataGrid pagination control renders instead.
     await expect(page.locator(".MuiTablePagination-root")).toBeVisible();
   });
+
+  test("shows the error page for a non-existent child", async ({ page }) => {
+    // The child loader fetches the child by id; a valid-but-unknown GUID returns
+    // 404, which React Router surfaces via the root route's errorElement
+    // (ErrorPage). That element sits above MainLayout, so there is no navbar —
+    // navigate manually (riding the auth bounce) instead of using gotoApp, which
+    // waits for the app banner.
+    const missingId = "00000000-0000-0000-0000-000000000000";
+    await page.goto(`/children/${missingId}`);
+    await page.waitForURL((url) => !url.pathname.startsWith("/auth/"), { timeout: 30_000 });
+
+    // ErrorPage renders its heading and a "home" action regardless of the exact
+    // error message.
+    await expect(page.getByRole("heading", { name: /Oeps/ })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("button", { name: "Ga naar start" })).toBeVisible();
+  });
 });

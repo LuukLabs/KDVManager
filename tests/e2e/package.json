@@ -7,11 +7,14 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
+    "test:a11y": "playwright test specs/a11y.spec.ts",
     "report": "playwright show-report"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.10.1",
+    "axe-core": "^4.12.1",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@11.0.8"

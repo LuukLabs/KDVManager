@@ -8,5 +8,6 @@
   "delete_aria-label": "delete",
   "deleting": "Deleting...",
   "edit_aria-label": "edit",
-  "Save": "Save"
+  "Save": "Save",
+  "This field is required": "This field is required"
 }

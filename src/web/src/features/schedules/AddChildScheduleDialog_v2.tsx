@@ -153,11 +153,13 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     );
 
     const weekdays = [
-      { key: "monday", value: 1, label: t("Monday"), short: "Mon", emoji: "📅" },
-      { key: "tuesday", value: 2, label: t("Tuesday"), short: "Tue", emoji: "📆" },
-      { key: "wednesday", value: 3, label: t("Wednesday"), short: "Wed", emoji: "📋" },
-      { key: "thursday", value: 4, label: t("Thursday"), short: "Thu", emoji: "📊" },
-      { key: "friday", value: 5, label: t("Friday"), short: "Fri", emoji: "🎯" },
+      { key: "monday", value: 1, label: t("Monday"), short: t("Mon"), emoji: "📅" },
+      { key: "tuesday", value: 2, label: t("Tuesday"), short: t("Tue"), emoji: "📅" },
+      { key: "wednesday", value: 3, label: t("Wednesday"), short: t("Wed"), emoji: "📅" },
+      { key: "thursday", value: 4, label: t("Thursday"), short: t("Thu"), emoji: "📅" },
+      { key: "friday", value: 5, label: t("Friday"), short: t("Fri"), emoji: "📅" },
+      { key: "saturday", value: 6, label: t("Saturday"), short: t("Sat"), emoji: "📅" },
+      { key: "sunday", value: 0, label: t("Sunday"), short: t("Sun"), emoji: "📅" },
     ];
 
     const addNewRule = useCallback(() => {
@@ -220,7 +222,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(5, 1fr)",
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(7, 1fr)",
               gap: 1,
             }}
           >

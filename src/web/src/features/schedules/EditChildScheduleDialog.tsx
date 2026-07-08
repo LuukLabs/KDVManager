@@ -207,7 +207,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(5, 1fr)",
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(7, 1fr)",
               gap: 1,
             }}
           >

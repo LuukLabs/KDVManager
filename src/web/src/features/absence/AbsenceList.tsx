@@ -140,6 +140,8 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
                     .sort((a, b) => dayjs(a.startDate).valueOf() - dayjs(b.startDate).valueOf())
                     .map((absence) => {
                       const upcoming = isUpcoming(absence);
+                      const spanDays =
+                        dayjs(absence.endDate).diff(dayjs(absence.startDate), "day") + 1;
                       return (
                         <Paper
                           key={absence.id}
@@ -159,19 +161,29 @@ export const AbsenceList: React.FC<AbsenceListProps> = ({ childId }) => {
                           }}
                         >
                           <Stack spacing={0.25} sx={{ flex: 1, minWidth: 0 }}>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                fontWeight: upcoming ? 600 : 500,
-                                color: upcoming ? "primary.main" : "text.primary",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {dayjs(absence.startDate).format("DD MMM")} –{" "}
-                              {dayjs(absence.endDate).format("DD MMM YYYY")}
-                            </Typography>
+                            <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontWeight: upcoming ? 600 : 500,
+                                  color: upcoming ? "primary.main" : "text.primary",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {dayjs(absence.startDate).format("DD MMM")} –{" "}
+                                {dayjs(absence.endDate).format("DD MMM YYYY")}
+                              </Typography>
+                              {spanDays > 1 && (
+                                <Chip
+                                  size="small"
+                                  variant="outlined"
+                                  label={t("{{count}} day(s)", { count: spanDays })}
+                                  sx={{ flexShrink: 0 }}
+                                />
+                              )}
+                            </Stack>
                             {absence.reason && (
                               <Typography
                                 variant="caption"

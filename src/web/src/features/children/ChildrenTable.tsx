@@ -95,8 +95,8 @@ export const ChildrenTable = () => {
     () => [
       staticColumn({
         field: "childNumber",
-        headerName: t("table.header.childNumber"),
-        width: 100,
+        headerName: t("#"),
+        width: 60,
       }),
       staticColumn({
         field: "fullName",

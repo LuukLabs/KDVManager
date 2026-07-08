@@ -89,11 +89,12 @@ export const GuardianHeader: React.FC<GuardianHeaderProps> = ({
               sx={{
                 width: { xs: 56, md: 64 },
                 height: { xs: 56, md: 64 },
-                bgcolor: alpha("#fff", 0.25),
+                bgcolor: "common.white",
                 color: "secondary.main",
                 fontSize: { xs: "1.35rem", md: "1.5rem" },
                 fontWeight: "bold",
-                border: "2px solid rgba(255,255,255,0.3)",
+                border: "2px solid rgba(255,255,255,0.6)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
               }}
             >
               {loading ? <PersonIcon /> : initials.toUpperCase()}

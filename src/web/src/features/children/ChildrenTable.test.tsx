@@ -87,6 +87,9 @@ describe("ChildrenTable — record navigation (browser)", () => {
     // the tap in the next test (failure screenshots show the dialog still
     // open on top of the mobile card list).
     await userEvent.click(page.getByRole("button", { name: "Cancel" }));
+    // The dialog closes with a transition and then unmounts, so the element is
+    // removed from the DOM. Assert absence rather than invisibility: a missing
+    // element has no visibility to evaluate, which is what made this flaky.
     await expect.element(page.getByText("Remove child 'Jane Doe'")).not.toBeInTheDocument();
   });
 

@@ -40,6 +40,10 @@ public class GetChildDetailQueryHandler
             FamilyName = child.FamilyName,
             DateOfBirth = child.DateOfBirth,
             ChildNumber = child.ChildNumber,
+            Allergies = child.Allergies,
+            Medication = child.Medication,
+            DietaryRequirements = child.DietaryRequirements,
+            MedicalNotes = child.MedicalNotes,
             SchedulingStatus = status,
             StatusRelevantDate = relevantDate
         };

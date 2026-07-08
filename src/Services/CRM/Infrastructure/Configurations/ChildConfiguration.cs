@@ -21,6 +21,18 @@ namespace KDVManager.Services.CRM.Infrastructure.Configurations
             builder.Property(e => e.ChildNumber)
                 .IsRequired();
 
+            builder.Property(e => e.Allergies)
+                .HasMaxLength(1000);
+
+            builder.Property(e => e.Medication)
+                .HasMaxLength(1000);
+
+            builder.Property(e => e.DietaryRequirements)
+                .HasMaxLength(1000);
+
+            builder.Property(e => e.MedicalNotes)
+                .HasMaxLength(2000);
+
             // Ensure unique child number per tenant
             builder.HasIndex(e => new { e.TenantId, e.ChildNumber })
                 .IsUnique();

@@ -16,7 +16,12 @@ COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.
 
 RUN dotnet restore "Services/CRM/Api/Api.csproj"
 
-FROM restore AS build
+FROM restore AS ef-tool
+
+RUN dotnet tool install -g dotnet-ef --version 10.0.9
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+FROM ef-tool AS build
 
 COPY Services/CRM Services/CRM
 COPY Shared Shared
@@ -25,8 +30,6 @@ WORKDIR "/src/Services/CRM"
 
 FROM build AS build-migrator
 
-RUN dotnet tool install -g dotnet-ef --version 10.0.9
-ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "./Api"
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.9 AS migrator-runtime

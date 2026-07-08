@@ -14,10 +14,10 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, People as PeopleIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { LinkExistingGuardianDialog } from "./LinkExistingGuardianDialog";
-import { AccentSection } from "../../components/layout/AccentSection";
+import { EditableCard } from "../../components/cards/EditableCard";
 import {
   useGetChildGuardians,
   useUnlinkGuardianFromChild,
@@ -93,98 +93,82 @@ export const ChildGuardiansCard = ({
 
   const loading = isLoading || externalLoading;
 
+  const cardActions = (
+    <Button
+      variant="outlined"
+      startIcon={<Add fontSize="small" />}
+      onClick={() => setLinkDialogOpen(true)}
+      size={isMobile ? "medium" : "small"}
+      disabled={loading}
+      sx={{
+        minHeight: { xs: 44, md: "auto" },
+        fontWeight: 600,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {t("Link Guardian")}
+    </Button>
+  );
+
   return (
     <>
-      <AccentSection variant="outlined" borderColor="primary.main" padding="normal">
-        <Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: { xs: "flex-start", md: "center" },
-              mb: 2,
-              flexDirection: { xs: "column", sm: "row" },
-              gap: { xs: 2, sm: 1 },
-            }}
-          >
-            <Typography variant="h6">{t("Guardians")}</Typography>
-            <Box
-              sx={{
-                display: "flex",
-                gap: 1,
-                flexDirection: { xs: "column", sm: "row" },
-                width: { xs: "100%", sm: "auto" },
-              }}
-            >
-              <Button
-                variant="outlined"
-                startIcon={<Add />}
-                onClick={() => setLinkDialogOpen(true)}
-                size={isMobile ? "large" : "small"}
-                fullWidth={isMobile}
-                disabled={loading}
-                sx={{
-                  minHeight: { xs: 48, md: "auto" },
-                  fontSize: { xs: "1rem", md: "0.875rem" },
-                  fontWeight: 600,
-                }}
-              >
-                {t("Link Guardian")}
-              </Button>
-            </Box>
+      <EditableCard
+        title={t("Guardians")}
+        description={t("People authorized to pick up or be contacted about this child.")}
+        icon={<PeopleIcon color="primary" />}
+        actions={cardActions}
+        collapsible={false}
+      >
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
+            <CircularProgress size={24} />
           </Box>
-
-          {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
-              <CircularProgress size={24} />
-            </Box>
-          ) : guardians.length === 0 ? (
-            <Alert severity="info">
-              {t(
-                "No guardians linked to this child. You can link existing guardians or create new ones.",
-              )}
-            </Alert>
-          ) : (
-            <LinkedEntityList
-              items={guardians.map((g) => ({
-                id: g.guardianId ?? g.fullName,
-                primaryText: g.fullName,
-                avatarText: getInitials(g.fullName),
-                chips: [
-                  {
-                    label: t(getRelationshipLabel(g.relationshipType)),
-                    variant: "outlined" as const,
-                    color: getRelationshipColor(g.relationshipType) as any,
-                  },
-                  ...(g.isPrimaryContact
-                    ? [{ label: t("Primary"), color: "primary", variant: "filled" as const }]
-                    : []),
-                  ...(g.isEmergencyContact
-                    ? [{ label: t("Emergency"), color: "error", variant: "filled" as const }]
-                    : []),
-                ],
-                secondaryLines: [[g.phoneNumber, g.email].filter(Boolean).join(" • ")].filter(
-                  Boolean,
-                ),
-                navigateTo: g.guardianId ? `/guardians/${g.guardianId}` : undefined,
-                unlinkDisabled: unlinkMutation.isPending,
-              }))}
-              onNavigate={(path) => {
-                const idPart = path.split("/").pop();
-                handleNavigateGuardian(idPart ?? "");
-              }}
-              onUnlink={(id) => {
-                const match = guardians.find((g) => g.guardianId === id);
-                if (match) handleUnlinkClick(match);
-              }}
-              unlinkLoadingId={
-                unlinkMutation.isPending ? (selectedGuardian?.guardianId ?? null) : null
-              }
-              emptyContent={null}
-            />
-          )}
-        </Box>
-      </AccentSection>
+        ) : guardians.length === 0 ? (
+          <Alert severity="info">
+            {t(
+              "No guardians linked to this child. You can link existing guardians or create new ones.",
+            )}
+          </Alert>
+        ) : (
+          <LinkedEntityList
+            items={guardians.map((g) => ({
+              id: g.guardianId ?? g.fullName,
+              primaryText: g.fullName,
+              avatarText: getInitials(g.fullName),
+              chips: [
+                {
+                  label: t(getRelationshipLabel(g.relationshipType)),
+                  variant: "outlined" as const,
+                  color: getRelationshipColor(g.relationshipType) as any,
+                },
+                ...(g.isPrimaryContact
+                  ? [{ label: t("Primary"), color: "primary", variant: "filled" as const }]
+                  : []),
+                ...(g.isEmergencyContact
+                  ? [{ label: t("Emergency"), color: "error", variant: "filled" as const }]
+                  : []),
+              ],
+              secondaryLines: [[g.phoneNumber, g.email].filter(Boolean).join(" • ")].filter(
+                Boolean,
+              ),
+              navigateTo: g.guardianId ? `/guardians/${g.guardianId}` : undefined,
+              unlinkDisabled: unlinkMutation.isPending,
+            }))}
+            onNavigate={(path) => {
+              const idPart = path.split("/").pop();
+              handleNavigateGuardian(idPart ?? "");
+            }}
+            onUnlink={(id) => {
+              const match = guardians.find((g) => g.guardianId === id);
+              if (match) handleUnlinkClick(match);
+            }}
+            unlinkLoadingId={
+              unlinkMutation.isPending ? (selectedGuardian?.guardianId ?? null) : null
+            }
+            emptyContent={null}
+          />
+        )}
+      </EditableCard>
 
       {/* Link Existing Guardian Dialog */}
       <LinkExistingGuardianDialog

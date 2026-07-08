@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
-import { FormControlLabel, Switch, Typography } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
 import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
@@ -51,15 +51,11 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
 
   // Watch startDate and multiDay to auto-set endDate
   const startDate = useWatch({ control, name: "startDate" });
-  const endDate = useWatch({ control, name: "endDate" });
   useEffect(() => {
     if (!multiDay) {
       setValue("endDate", startDate);
     }
   }, [startDate, multiDay, setValue]);
-
-  const dayCount =
-    multiDay && startDate && endDate ? dayjs(endDate).diff(dayjs(startDate), "day") + 1 : null;
 
   const handleOnCancelClick = () => {
     modal.remove();
@@ -131,11 +127,6 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
                 output: (value) => (value ? value.format("YYYY-MM-DD") : null),
               }}
             />
-          )}
-          {dayCount !== null && dayCount > 0 && (
-            <Typography variant="caption" color="primary" sx={{ display: "block", mt: -1, mb: 1 }}>
-              {t("{{count}} day(s)", { count: dayCount })}
-            </Typography>
           )}
           <FormTextField
             name="reason"

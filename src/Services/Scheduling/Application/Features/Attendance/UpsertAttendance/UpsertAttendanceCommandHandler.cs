@@ -27,11 +27,16 @@ public sealed class UpsertAttendanceCommandHandler(
         var subject = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? httpContextAccessor.HttpContext?.User.FindFirstValue("sub")
             ?? throw new UnauthorizedAccessException("Authenticated user subject is required.");
+        var previous = await attendanceRepository.GetAsync(childId, command.Date);
         var record = await attendanceRepository.UpsertAsync(new AttendanceRecord
         {
             Id = Guid.NewGuid(), ChildId = childId, Date = command.Date,
             CheckedInAt = command.CheckedInAt, CheckedOutAt = command.CheckedOutAt,
             CreatedBySubject = subject, CreatedAt = now, UpdatedAt = now
+        }, new AttendanceAuditEntry
+        {
+            Id = Guid.NewGuid(), PreviousCheckedInAt = previous?.CheckedInAt, PreviousCheckedOutAt = previous?.CheckedOutAt,
+            CheckedInAt = command.CheckedInAt, CheckedOutAt = command.CheckedOutAt, ActorSubject = subject, OccurredAt = now
         });
         return new AttendanceRecordVM { ChildId = record.ChildId, Date = record.Date, CheckedInAt = record.CheckedInAt, CheckedOutAt = record.CheckedOutAt };
     }

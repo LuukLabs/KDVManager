@@ -10,6 +10,12 @@ public sealed class UpsertAttendanceCommandHandler(
     IChildRepository childRepository,
     IHttpContextAccessor httpContextAccessor)
 {
+    public async Task<AttendanceRecordVM?> Get(Guid childId, DateOnly date)
+    {
+        var record = await attendanceRepository.GetAsync(childId, date);
+        return record is null ? null : new AttendanceRecordVM { ChildId = record.ChildId, Date = record.Date, CheckedInAt = record.CheckedInAt, CheckedOutAt = record.CheckedOutAt };
+    }
+
     public async Task<AttendanceRecordVM> Handle(Guid childId, UpsertAttendanceCommand command)
     {
         if (command.Date == default) throw new ArgumentException("A date is required.");

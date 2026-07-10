@@ -22,27 +22,52 @@ public static class ConfigureServices
         services.AddControllers();
         // Query handlers (could consider MediatR later)
         services.AddScoped<KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules.GetPrintSchedulesQueryHandler>();
-        services.AddSwaggerGen(options =>
+        services.AddOpenApi(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
+
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                Version = "v1",
-                Title = "KDVManager Scheduling API",
-                Contact = new OpenApiContact
+                document.Info = new()
                 {
-                    Name = "Luuk van Hulten",
-                    Email = "admin@kdvmanager.nl",
-                },
+                    Version = "v1",
+                    Title = "KDVManager Scheduling API",
+                    Contact = new()
+                    {
+                        Name = "Luuk van Hulten",
+                        Email = "admin@kdvmanager.nl",
+                    },
+                };
+
+                return Task.CompletedTask;
             });
 
-            options.DescribeAllParametersInCamelCase();
-
-            // Add a custom schema filter to handle TimeSpan as string with time format
-            options.MapType<TimeSpan>(() => new OpenApiSchema
+            options.AddSchemaTransformer((schema, context, cancellationToken) =>
             {
-                Type = JsonSchemaType.String,
-                Format = "time",
-                Example = JsonValue.Create("14:30:00")
+                if (context.JsonTypeInfo.Type == typeof(TimeSpan))
+                {
+                    schema.Type = JsonSchemaType.String;
+                    schema.Format = "time";
+                    schema.Example = JsonValue.Create("14:30:00");
+                }
+
+                return Task.CompletedTask;
+            });
+
+            options.AddOperationTransformer((operation, context, cancellationToken) =>
+            {
+                if (operation.Parameters != null)
+                {
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        if (parameter is OpenApiParameter openApiParameter && !string.IsNullOrEmpty(openApiParameter.Name))
+                        {
+                            openApiParameter.Name = Char.ToLowerInvariant(openApiParameter.Name[0]) + openApiParameter.Name[1..];
+                        }
+                    }
+                }
+
+                return Task.CompletedTask;
             });
         });
 

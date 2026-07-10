@@ -19,7 +19,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.MapOpenApi().AllowAnonymous();
 }
 
 app.UseRouting();

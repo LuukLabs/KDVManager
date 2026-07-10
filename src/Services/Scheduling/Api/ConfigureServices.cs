@@ -1,3 +1,5 @@
+using KDVManager.Services.Scheduling.Api.Auth;
+using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using KDVManager.Services.Scheduling.Api.Telemetry;
 using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
@@ -14,6 +16,7 @@ public static class ConfigureServices
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
         services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>("postgres", tags: ["ready"]);

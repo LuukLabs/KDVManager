@@ -1,14 +1,13 @@
-using System.Security.Claims;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
+using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Attendance.UpsertAttendance;
 
 public sealed class UpsertAttendanceCommandHandler(
     IAttendanceRepository attendanceRepository,
     IChildRepository childRepository,
-    IHttpContextAccessor httpContextAccessor)
+    ICurrentUser currentUser)
 {
     public async Task<AttendanceRecordVM?> Get(Guid childId, DateOnly date)
     {
@@ -24,9 +23,7 @@ public sealed class UpsertAttendanceCommandHandler(
         if (!await childRepository.ExistsAsync(childId)) throw new KeyNotFoundException("Child was not found.");
 
         var now = DateTimeOffset.UtcNow;
-        var subject = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? httpContextAccessor.HttpContext?.User.FindFirstValue("sub")
-            ?? throw new UnauthorizedAccessException("Authenticated user subject is required.");
+        var subject = currentUser.Subject;
         var previous = await attendanceRepository.GetAsync(childId, command.Date);
         var record = await attendanceRepository.UpsertAsync(new AttendanceRecord
         {

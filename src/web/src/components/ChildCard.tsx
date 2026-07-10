@@ -63,6 +63,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
     return categorical[Math.abs(hash) % categorical.length];
   };
 
+  const avatarColor = getAvatarColor();
+
   return (
     <Card
       sx={{
@@ -102,7 +104,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                   sx={{
                     width: { xs: 32, sm: 36 },
                     height: { xs: 32, sm: 36 },
-                    bgcolor: getAvatarColor(),
+                    bgcolor: avatarColor,
+                    color: theme.palette.getContrastText(avatarColor),
                     fontSize: { xs: "0.75rem", sm: "0.85rem" },
                     fontWeight: "bold",
                     flexShrink: 0,

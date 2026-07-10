@@ -142,7 +142,7 @@ static_resources:
               - match:
                   prefix: /crm/openapi/
               - match:
-                  prefix: /scheduling/swagger/
+                  prefix: /scheduling/openapi/
               # Telemetry ingest is unauthenticated: browser sessions have no
               # token before login and errors must be reportable regardless.
               - match:

@@ -157,7 +157,7 @@ export const getUpdateEndMarkSettingsUrl = () => {
 };
 
 export const updateEndMarkSettings = async (
-  updateEndMarkSettingsCommand?: UpdateEndMarkSettingsCommand,
+  updateEndMarkSettingsCommand: UpdateEndMarkSettingsCommand,
   options?: RequestInit,
 ): Promise<void> => {
   return executeFetch<void>(getUpdateEndMarkSettingsUrl(), {
@@ -175,14 +175,14 @@ export const getUpdateEndMarkSettingsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof updateEndMarkSettings>>,
     TError,
-    { data?: UpdateEndMarkSettingsCommand },
+    { data: UpdateEndMarkSettingsCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof updateEndMarkSettings>>,
   TError,
-  { data?: UpdateEndMarkSettingsCommand },
+  { data: UpdateEndMarkSettingsCommand },
   TContext
 > => {
   const mutationKey = ["updateEndMarkSettings"];
@@ -194,7 +194,7 @@ export const getUpdateEndMarkSettingsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateEndMarkSettings>>,
-    { data?: UpdateEndMarkSettingsCommand }
+    { data: UpdateEndMarkSettingsCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -207,7 +207,7 @@ export const getUpdateEndMarkSettingsMutationOptions = <
 export type UpdateEndMarkSettingsMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateEndMarkSettings>>
 >;
-export type UpdateEndMarkSettingsMutationBody = UpdateEndMarkSettingsCommand | undefined;
+export type UpdateEndMarkSettingsMutationBody = UpdateEndMarkSettingsCommand;
 export type UpdateEndMarkSettingsMutationError = unknown;
 
 export const useUpdateEndMarkSettings = <TError = unknown, TContext = unknown>(
@@ -215,7 +215,7 @@ export const useUpdateEndMarkSettings = <TError = unknown, TContext = unknown>(
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof updateEndMarkSettings>>,
       TError,
-      { data?: UpdateEndMarkSettingsCommand },
+      { data: UpdateEndMarkSettingsCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -224,7 +224,7 @@ export const useUpdateEndMarkSettings = <TError = unknown, TContext = unknown>(
 ): UseMutationResult<
   Awaited<ReturnType<typeof updateEndMarkSettings>>,
   TError,
-  { data?: UpdateEndMarkSettingsCommand },
+  { data: UpdateEndMarkSettingsCommand },
   TContext
 > => {
   return useMutation(getUpdateEndMarkSettingsMutationOptions(options), queryClient);

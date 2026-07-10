@@ -9,11 +9,9 @@ import type { DayOfWeek } from "./dayOfWeek";
 export type ChildScheduleListVMScheduleRule = {
   day?: DayOfWeek;
   timeSlotId?: string;
-  /** @nullable */
-  timeSlotName?: string | null;
+  timeSlotName?: string;
   startTime?: string;
   endTime?: string;
   groupId?: string;
-  /** @nullable */
-  groupName?: string | null;
+  groupName?: string;
 };

@@ -8,8 +8,6 @@ import type { ChildScheduleDailyVM } from "./childScheduleDailyVM";
 
 export type GroupDailyOverviewVM = {
   groupId?: string;
-  /** @nullable */
-  groupName?: string | null;
-  /** @nullable */
-  schedules?: ChildScheduleDailyVM[] | null;
+  groupName?: string;
+  schedules?: ChildScheduleDailyVM[];
 };

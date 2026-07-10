@@ -67,7 +67,7 @@ const config: ReturnType<typeof defineConfig> = {
       },
     },
     input: {
-      target: "http://localhost:5200/scheduling/swagger/v1/swagger.json",
+      target: "http://localhost:5200/scheduling/openapi/v1.json",
     },
   },
 };

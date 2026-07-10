@@ -11,6 +11,5 @@ export type DailyOverviewVM = {
   isClosed?: boolean;
   /** @nullable */
   closureReason?: string | null;
-  /** @nullable */
-  groups?: GroupDailyOverviewVM[] | null;
+  groups?: GroupDailyOverviewVM[];
 };

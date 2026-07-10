@@ -10,13 +10,11 @@ export type ScheduleByDateVM = {
   childId?: string;
   /** @nullable */
   childFullName?: string | null;
-  /** @nullable */
-  timeSlotName?: string | null;
+  timeSlotName?: string;
   startTime?: string;
   endTime?: string;
   groupId?: string;
   /** @nullable */
   dateOfBirth?: string | null;
-  /** @nullable */
-  age?: number | null;
+  age?: number;
 };

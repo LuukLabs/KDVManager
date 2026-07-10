@@ -157,7 +157,7 @@ export const getAddClosurePeriodUrl = () => {
 };
 
 export const addClosurePeriod = async (
-  addClosurePeriodCommand?: AddClosurePeriodCommand,
+  addClosurePeriodCommand: AddClosurePeriodCommand,
   options?: RequestInit,
 ): Promise<string> => {
   return executeFetch<string>(getAddClosurePeriodUrl(), {
@@ -172,14 +172,14 @@ export const getAddClosurePeriodMutationOptions = <TError = unknown, TContext = 
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addClosurePeriod>>,
     TError,
-    { data?: AddClosurePeriodCommand },
+    { data: AddClosurePeriodCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addClosurePeriod>>,
   TError,
-  { data?: AddClosurePeriodCommand },
+  { data: AddClosurePeriodCommand },
   TContext
 > => {
   const mutationKey = ["addClosurePeriod"];
@@ -191,7 +191,7 @@ export const getAddClosurePeriodMutationOptions = <TError = unknown, TContext = 
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addClosurePeriod>>,
-    { data?: AddClosurePeriodCommand }
+    { data: AddClosurePeriodCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -204,7 +204,7 @@ export const getAddClosurePeriodMutationOptions = <TError = unknown, TContext = 
 export type AddClosurePeriodMutationResult = NonNullable<
   Awaited<ReturnType<typeof addClosurePeriod>>
 >;
-export type AddClosurePeriodMutationBody = AddClosurePeriodCommand | undefined;
+export type AddClosurePeriodMutationBody = AddClosurePeriodCommand;
 export type AddClosurePeriodMutationError = unknown;
 
 export const useAddClosurePeriod = <TError = unknown, TContext = unknown>(
@@ -212,7 +212,7 @@ export const useAddClosurePeriod = <TError = unknown, TContext = unknown>(
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addClosurePeriod>>,
       TError,
-      { data?: AddClosurePeriodCommand },
+      { data: AddClosurePeriodCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -221,7 +221,7 @@ export const useAddClosurePeriod = <TError = unknown, TContext = unknown>(
 ): UseMutationResult<
   Awaited<ReturnType<typeof addClosurePeriod>>,
   TError,
-  { data?: AddClosurePeriodCommand },
+  { data: AddClosurePeriodCommand },
   TContext
 > => {
   return useMutation(getAddClosurePeriodMutationOptions(options), queryClient);

@@ -6,8 +6,7 @@
  */
 
 export type AddTimeSlotCommand = {
-  /** @nullable */
-  name?: string | null;
+  name?: string;
   startTime?: string;
   endTime?: string;
 };

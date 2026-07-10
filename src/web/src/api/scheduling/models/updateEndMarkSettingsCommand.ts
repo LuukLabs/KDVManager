@@ -8,6 +8,5 @@
 export type UpdateEndMarkSettingsCommand = {
   isEnabled?: boolean;
   yearsAfterBirth?: number;
-  /** @nullable */
-  description?: string | null;
+  description?: string;
 };

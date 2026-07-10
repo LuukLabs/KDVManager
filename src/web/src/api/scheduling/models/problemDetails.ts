@@ -10,11 +10,9 @@ export type ProblemDetails = {
   type?: string | null;
   /** @nullable */
   title?: string | null;
-  /** @nullable */
-  status?: number | null;
+  status?: number;
   /** @nullable */
   detail?: string | null;
   /** @nullable */
   instance?: string | null;
-  [key: string]: unknown;
 };

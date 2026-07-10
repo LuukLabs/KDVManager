@@ -7,8 +7,7 @@
 
 export type TimeSlotListVM = {
   id?: string;
-  /** @nullable */
-  name?: string | null;
+  name?: string;
   startTime?: string;
   endTime?: string;
 };

@@ -12,6 +12,5 @@ export type ChildScheduleListVM = {
   startDate?: string;
   /** @nullable */
   endDate?: string | null;
-  /** @nullable */
-  scheduleRules?: ChildScheduleListVMScheduleRule[] | null;
+  scheduleRules?: ChildScheduleListVMScheduleRule[];
 };

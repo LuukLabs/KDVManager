@@ -184,7 +184,7 @@ export const getAddTimeSlotUrl = () => {
 };
 
 export const addTimeSlot = async (
-  addTimeSlotCommand?: AddTimeSlotCommand,
+  addTimeSlotCommand: AddTimeSlotCommand,
   options?: RequestInit,
 ): Promise<string> => {
   return executeFetch<string>(getAddTimeSlotUrl(), {
@@ -202,14 +202,14 @@ export const getAddTimeSlotMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addTimeSlot>>,
     TError,
-    { data?: AddTimeSlotCommand },
+    { data: AddTimeSlotCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addTimeSlot>>,
   TError,
-  { data?: AddTimeSlotCommand },
+  { data: AddTimeSlotCommand },
   TContext
 > => {
   const mutationKey = ["addTimeSlot"];
@@ -221,7 +221,7 @@ export const getAddTimeSlotMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addTimeSlot>>,
-    { data?: AddTimeSlotCommand }
+    { data: AddTimeSlotCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -232,7 +232,7 @@ export const getAddTimeSlotMutationOptions = <
 };
 
 export type AddTimeSlotMutationResult = NonNullable<Awaited<ReturnType<typeof addTimeSlot>>>;
-export type AddTimeSlotMutationBody = AddTimeSlotCommand | undefined;
+export type AddTimeSlotMutationBody = AddTimeSlotCommand;
 export type AddTimeSlotMutationError = UnprocessableEntityResponse;
 
 export const useAddTimeSlot = <TError = UnprocessableEntityResponse, TContext = unknown>(
@@ -240,7 +240,7 @@ export const useAddTimeSlot = <TError = UnprocessableEntityResponse, TContext = 
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addTimeSlot>>,
       TError,
-      { data?: AddTimeSlotCommand },
+      { data: AddTimeSlotCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -249,7 +249,7 @@ export const useAddTimeSlot = <TError = UnprocessableEntityResponse, TContext = 
 ): UseMutationResult<
   Awaited<ReturnType<typeof addTimeSlot>>,
   TError,
-  { data?: AddTimeSlotCommand },
+  { data: AddTimeSlotCommand },
   TContext
 > => {
   return useMutation(getAddTimeSlotMutationOptions(options), queryClient);
@@ -260,7 +260,7 @@ export const getUpdateTimeSlotUrl = (id: string) => {
 
 export const updateTimeSlot = async (
   id: string,
-  updateTimeSlotCommand?: UpdateTimeSlotCommand,
+  updateTimeSlotCommand: UpdateTimeSlotCommand,
   options?: RequestInit,
 ): Promise<void> => {
   return executeFetch<void>(getUpdateTimeSlotUrl(id), {
@@ -278,14 +278,14 @@ export const getUpdateTimeSlotMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof updateTimeSlot>>,
     TError,
-    { id: string; data?: UpdateTimeSlotCommand },
+    { id: string; data: UpdateTimeSlotCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof updateTimeSlot>>,
   TError,
-  { id: string; data?: UpdateTimeSlotCommand },
+  { id: string; data: UpdateTimeSlotCommand },
   TContext
 > => {
   const mutationKey = ["updateTimeSlot"];
@@ -297,7 +297,7 @@ export const getUpdateTimeSlotMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateTimeSlot>>,
-    { id: string; data?: UpdateTimeSlotCommand }
+    { id: string; data: UpdateTimeSlotCommand }
   > = (props) => {
     const { id, data } = props ?? {};
 
@@ -308,7 +308,7 @@ export const getUpdateTimeSlotMutationOptions = <
 };
 
 export type UpdateTimeSlotMutationResult = NonNullable<Awaited<ReturnType<typeof updateTimeSlot>>>;
-export type UpdateTimeSlotMutationBody = UpdateTimeSlotCommand | undefined;
+export type UpdateTimeSlotMutationBody = UpdateTimeSlotCommand;
 export type UpdateTimeSlotMutationError = ProblemDetails | UnprocessableEntityResponse;
 
 export const useUpdateTimeSlot = <
@@ -319,7 +319,7 @@ export const useUpdateTimeSlot = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof updateTimeSlot>>,
       TError,
-      { id: string; data?: UpdateTimeSlotCommand },
+      { id: string; data: UpdateTimeSlotCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -328,7 +328,7 @@ export const useUpdateTimeSlot = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof updateTimeSlot>>,
   TError,
-  { id: string; data?: UpdateTimeSlotCommand },
+  { id: string; data: UpdateTimeSlotCommand },
   TContext
 > => {
   return useMutation(getUpdateTimeSlotMutationOptions(options), queryClient);

@@ -165,7 +165,7 @@ export const getAddEndMarkUrl = () => {
 };
 
 export const addEndMark = async (
-  addEndMarkCommand?: AddEndMarkCommand,
+  addEndMarkCommand: AddEndMarkCommand,
   options?: RequestInit,
 ): Promise<void> => {
   return executeFetch<void>(getAddEndMarkUrl(), {
@@ -180,14 +180,14 @@ export const getAddEndMarkMutationOptions = <TError = unknown, TContext = unknow
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addEndMark>>,
     TError,
-    { data?: AddEndMarkCommand },
+    { data: AddEndMarkCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addEndMark>>,
   TError,
-  { data?: AddEndMarkCommand },
+  { data: AddEndMarkCommand },
   TContext
 > => {
   const mutationKey = ["addEndMark"];
@@ -199,7 +199,7 @@ export const getAddEndMarkMutationOptions = <TError = unknown, TContext = unknow
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addEndMark>>,
-    { data?: AddEndMarkCommand }
+    { data: AddEndMarkCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -210,7 +210,7 @@ export const getAddEndMarkMutationOptions = <TError = unknown, TContext = unknow
 };
 
 export type AddEndMarkMutationResult = NonNullable<Awaited<ReturnType<typeof addEndMark>>>;
-export type AddEndMarkMutationBody = AddEndMarkCommand | undefined;
+export type AddEndMarkMutationBody = AddEndMarkCommand;
 export type AddEndMarkMutationError = unknown;
 
 export const useAddEndMark = <TError = unknown, TContext = unknown>(
@@ -218,7 +218,7 @@ export const useAddEndMark = <TError = unknown, TContext = unknown>(
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addEndMark>>,
       TError,
-      { data?: AddEndMarkCommand },
+      { data: AddEndMarkCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -227,7 +227,7 @@ export const useAddEndMark = <TError = unknown, TContext = unknown>(
 ): UseMutationResult<
   Awaited<ReturnType<typeof addEndMark>>,
   TError,
-  { data?: AddEndMarkCommand },
+  { data: AddEndMarkCommand },
   TContext
 > => {
   return useMutation(getAddEndMarkMutationOptions(options), queryClient);

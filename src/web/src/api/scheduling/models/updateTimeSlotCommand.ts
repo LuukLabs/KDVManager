@@ -7,8 +7,7 @@
 
 export type UpdateTimeSlotCommand = {
   id?: string;
-  /** @nullable */
-  name?: string | null;
+  name?: string;
   startTime?: string;
   endTime?: string;
 };

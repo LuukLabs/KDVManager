@@ -51,6 +51,14 @@ public static class ConfigureServices
                     schema.Example = JsonValue.Create("14:30:00");
                 }
 
+                // ASP.NET Core OpenAPI emits a pattern for integer fields without a type,
+                // which causes Orval to generate `unknown` instead of `number`.
+                if (schema.Format == "int32" || schema.Format == "int64")
+                {
+                    schema.Pattern = null;
+                    schema.Type = JsonSchemaType.Integer;
+                }
+
                 return Task.CompletedTask;
             });
 
@@ -65,6 +73,13 @@ public static class ConfigureServices
                             openApiParameter.Name = Char.ToLowerInvariant(openApiParameter.Name[0]) + openApiParameter.Name[1..];
                         }
                     }
+                }
+
+                // A 204 response has no body. Remove the empty JSON media type emitted by
+                // ASP.NET Core OpenAPI so Orval continues to generate Promise<void>.
+                if (operation.Responses?.TryGetValue("204", out var noContentResponse) == true)
+                {
+                    noContentResponse.Content?.Clear();
                 }
 
                 return Task.CompletedTask;

@@ -10,5 +10,6 @@ import type { BkrProfessionalsBasis } from "./bkrProfessionalsBasis";
 export type BkrCalculationSummary = {
   hasSolution: boolean;
   basis: BkrProfessionalsBasis;
-  appliedRule?: BkrAppliedRule;
+  /** @nullable */
+  appliedRule?: BkrAppliedRule | null;
 };

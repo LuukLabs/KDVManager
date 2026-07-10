@@ -14,6 +14,7 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
 import { gotoApp } from "../helpers/app";
 import { Api, uniqueName } from "../helpers/api";
+import { expectNoWcagViolations } from "../helpers/a11y";
 
 /** Format a Date as local YYYY-MM-DD (no UTC conversion surprises). */
 function isoDate(date: Date): string {
@@ -133,7 +134,7 @@ test.afterAll(async () => {
 });
 
 test.describe("schedule overview", () => {
-  test("shows the scheduled child inside its group column", async ({ page }) => {
+  test("shows an accessible scheduled child inside its group column", async ({ page }, testInfo) => {
     await gotoApp(page, `/schedule?date=${scheduledDate}`);
 
     const column = groupColumn(page, groupName);
@@ -141,6 +142,7 @@ test.describe("schedule overview", () => {
       timeout: 15_000,
     });
     await expect(column.getByText(childFullName)).toBeVisible({ timeout: 15_000 });
+    await expectNoWcagViolations(page, testInfo, "schedule-overview-populated");
   });
 
   test("date navigation updates the date URL param", async ({ page }) => {

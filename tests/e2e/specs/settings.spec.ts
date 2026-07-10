@@ -3,7 +3,7 @@
  *
  * Covered use cases:
  * - The settings hub (/settings) shows the four settings cards with their
- *   Dutch titles (Tijdslots, Groepen, Sluitingsperiodes, Eindmarkering
+ *   Dutch titles (Tijdsloten, Groepen, Sluitingsperiodes, Eindmarkering
  *   automatisering) and navigates to the groups and time-slots pages.
  * - The EndMark automation settings form (/settings/endmark-automation) can be
  *   viewed, a value changed and saved, and the saved value persists across a
@@ -37,7 +37,7 @@ test.describe("settings hub", () => {
     await expect(endMarkCard).toBeVisible();
 
     // Exact Dutch card titles.
-    await expect(page.getByText("Tijdslots", { exact: true })).toBeVisible();
+    await expect(page.getByText("Tijdsloten", { exact: true })).toBeVisible();
     await expect(page.getByText("Groepen", { exact: true })).toBeVisible();
     await expect(page.getByText("Sluitingsperiodes", { exact: true })).toBeVisible();
     await expect(page.getByText("Eindmarkering automatisering", { exact: true })).toBeVisible();

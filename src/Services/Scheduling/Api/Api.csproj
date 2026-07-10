@@ -26,7 +26,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <!-- Direct reference to lift the transitive Microsoft.OpenApi above GHSA-v5pm-xwqc-g5wc.
          Stay on the 2.x line: Microsoft.AspNetCore.OpenApi 10.0.9's XmlCommentGenerator
          targets the 2.x object model and breaks (CS0200) against Microsoft.OpenApi 3.x. -->

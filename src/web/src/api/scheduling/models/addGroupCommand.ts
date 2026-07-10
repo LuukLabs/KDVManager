@@ -6,6 +6,5 @@
  */
 
 export type AddGroupCommand = {
-  /** @nullable */
-  name?: string | null;
+  name?: string;
 };

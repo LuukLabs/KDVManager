@@ -6,7 +6,6 @@
  */
 
 export type AgeGroupSummary = {
-  /** @nullable */
-  ageRange?: string | null;
+  ageRange?: string;
   childCount?: number;
 };

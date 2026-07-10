@@ -195,7 +195,7 @@ export const getAddScheduleUrl = () => {
 };
 
 export const addSchedule = async (
-  addScheduleCommand?: AddScheduleCommand,
+  addScheduleCommand: AddScheduleCommand,
   options?: RequestInit,
 ): Promise<string> => {
   return executeFetch<string>(getAddScheduleUrl(), {
@@ -213,14 +213,14 @@ export const getAddScheduleMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addSchedule>>,
     TError,
-    { data?: AddScheduleCommand },
+    { data: AddScheduleCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addSchedule>>,
   TError,
-  { data?: AddScheduleCommand },
+  { data: AddScheduleCommand },
   TContext
 > => {
   const mutationKey = ["addSchedule"];
@@ -232,7 +232,7 @@ export const getAddScheduleMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addSchedule>>,
-    { data?: AddScheduleCommand }
+    { data: AddScheduleCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -243,7 +243,7 @@ export const getAddScheduleMutationOptions = <
 };
 
 export type AddScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof addSchedule>>>;
-export type AddScheduleMutationBody = AddScheduleCommand | undefined;
+export type AddScheduleMutationBody = AddScheduleCommand;
 export type AddScheduleMutationError = UnprocessableEntityResponse;
 
 export const useAddSchedule = <TError = UnprocessableEntityResponse, TContext = unknown>(
@@ -251,7 +251,7 @@ export const useAddSchedule = <TError = UnprocessableEntityResponse, TContext = 
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addSchedule>>,
       TError,
-      { data?: AddScheduleCommand },
+      { data: AddScheduleCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -260,7 +260,7 @@ export const useAddSchedule = <TError = UnprocessableEntityResponse, TContext = 
 ): UseMutationResult<
   Awaited<ReturnType<typeof addSchedule>>,
   TError,
-  { data?: AddScheduleCommand },
+  { data: AddScheduleCommand },
   TContext
 > => {
   return useMutation(getAddScheduleMutationOptions(options), queryClient);

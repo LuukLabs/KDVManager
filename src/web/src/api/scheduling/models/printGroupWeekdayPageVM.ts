@@ -9,8 +9,6 @@ import type { PrintChildVM } from "./printChildVM";
 
 export type PrintGroupWeekdayPageVM = {
   weekday?: DayOfWeek;
-  /** @nullable */
-  dates?: string[] | null;
-  /** @nullable */
-  children?: PrintChildVM[] | null;
+  dates?: string[];
+  children?: PrintChildVM[];
 };

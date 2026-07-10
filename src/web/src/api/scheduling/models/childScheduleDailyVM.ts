@@ -8,14 +8,12 @@
 export type ChildScheduleDailyVM = {
   scheduleId?: string;
   childId?: string;
-  /** @nullable */
-  timeSlotName?: string | null;
+  timeSlotName?: string;
   startTime?: string;
   endTime?: string;
   /** @nullable */
   dateOfBirth?: string | null;
-  /** @nullable */
-  age?: number | null;
+  age?: number;
   isAbsent?: boolean;
   /** @nullable */
   absenceReason?: string | null;

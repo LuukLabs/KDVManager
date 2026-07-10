@@ -8,6 +8,5 @@
 export type AddClosurePeriodCommand = {
   startDate?: string;
   endDate?: string;
-  /** @nullable */
-  reason?: string | null;
+  reason?: string;
 };

@@ -7,9 +7,7 @@
 import type { PrintGroupVM } from "./printGroupVM";
 
 export type PrintSchedulesVM = {
-  /** @nullable */
-  month?: string | null;
+  month?: string;
   year?: number;
-  /** @nullable */
-  groups?: PrintGroupVM[] | null;
+  groups?: PrintGroupVM[];
 };

@@ -6,7 +6,4 @@
  */
 import type { PrintCellVM } from "./printCellVM";
 
-/**
- * @nullable
- */
-export type PrintChildVMSchedule = Record<string, PrintCellVM> | null;
+export type PrintChildVMSchedule = Record<string, PrintCellVM>;

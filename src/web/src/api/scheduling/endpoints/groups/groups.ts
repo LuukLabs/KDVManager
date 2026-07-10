@@ -170,7 +170,7 @@ export const getAddGroupUrl = () => {
 };
 
 export const addGroup = async (
-  addGroupCommand?: AddGroupCommand,
+  addGroupCommand: AddGroupCommand,
   options?: RequestInit,
 ): Promise<string> => {
   return executeFetch<string>(getAddGroupUrl(), {
@@ -188,14 +188,14 @@ export const getAddGroupMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addGroup>>,
     TError,
-    { data?: AddGroupCommand },
+    { data: AddGroupCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addGroup>>,
   TError,
-  { data?: AddGroupCommand },
+  { data: AddGroupCommand },
   TContext
 > => {
   const mutationKey = ["addGroup"];
@@ -207,7 +207,7 @@ export const getAddGroupMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addGroup>>,
-    { data?: AddGroupCommand }
+    { data: AddGroupCommand }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -218,7 +218,7 @@ export const getAddGroupMutationOptions = <
 };
 
 export type AddGroupMutationResult = NonNullable<Awaited<ReturnType<typeof addGroup>>>;
-export type AddGroupMutationBody = AddGroupCommand | undefined;
+export type AddGroupMutationBody = AddGroupCommand;
 export type AddGroupMutationError = UnprocessableEntityResponse;
 
 export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unknown>(
@@ -226,7 +226,7 @@ export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unk
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addGroup>>,
       TError,
-      { data?: AddGroupCommand },
+      { data: AddGroupCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -235,7 +235,7 @@ export const useAddGroup = <TError = UnprocessableEntityResponse, TContext = unk
 ): UseMutationResult<
   Awaited<ReturnType<typeof addGroup>>,
   TError,
-  { data?: AddGroupCommand },
+  { data: AddGroupCommand },
   TContext
 > => {
   return useMutation(getAddGroupMutationOptions(options), queryClient);

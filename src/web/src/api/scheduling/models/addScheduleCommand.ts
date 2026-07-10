@@ -9,6 +9,5 @@ import type { AddScheduleCommandScheduleRule } from "./addScheduleCommandSchedul
 export type AddScheduleCommand = {
   childId?: string;
   startDate?: string;
-  /** @nullable */
-  scheduleRules?: AddScheduleCommandScheduleRule[] | null;
+  scheduleRules?: AddScheduleCommandScheduleRule[];
 };

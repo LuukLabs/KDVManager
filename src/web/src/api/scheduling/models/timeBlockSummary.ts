@@ -10,12 +10,9 @@ import type { BkrCalculationSummary } from "./bkrCalculationSummary";
 export type TimeBlockSummary = {
   startTime: string;
   endTime: string;
-  /** @nullable */
-  timeSlotName: string | null;
+  timeSlotName: string;
   totalChildren: number;
-  /** @nullable */
-  requiredProfessionals?: number | null;
-  /** @nullable */
-  ageGroups: AgeGroupSummary[] | null;
+  requiredProfessionals?: number;
+  ageGroups: AgeGroupSummary[];
   bkr: BkrCalculationSummary;
 };

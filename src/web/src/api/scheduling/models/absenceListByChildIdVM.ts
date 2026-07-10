@@ -9,6 +9,5 @@ export type AbsenceListByChildIdVM = {
   id: string;
   startDate: string;
   endDate: string;
-  /** @nullable */
-  reason: string | null;
+  reason: string;
 };

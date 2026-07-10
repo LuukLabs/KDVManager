@@ -7,6 +7,5 @@
 
 export type GroupListVM = {
   id?: string;
-  /** @nullable */
-  name?: string | null;
+  name?: string;
 };

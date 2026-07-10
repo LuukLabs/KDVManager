@@ -183,7 +183,7 @@ export const getAddAbsenceUrl = (childId: string) => {
 
 export const addAbsence = async (
   childId: string,
-  addAbsenceCommand?: AddAbsenceCommand,
+  addAbsenceCommand: AddAbsenceCommand,
   options?: RequestInit,
 ): Promise<string> => {
   return executeFetch<string>(getAddAbsenceUrl(childId), {
@@ -201,14 +201,14 @@ export const getAddAbsenceMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof addAbsence>>,
     TError,
-    { childId: string; data?: AddAbsenceCommand },
+    { childId: string; data: AddAbsenceCommand },
     TContext
   >;
   request?: SecondParameter<typeof executeFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof addAbsence>>,
   TError,
-  { childId: string; data?: AddAbsenceCommand },
+  { childId: string; data: AddAbsenceCommand },
   TContext
 > => {
   const mutationKey = ["addAbsence"];
@@ -220,7 +220,7 @@ export const getAddAbsenceMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof addAbsence>>,
-    { childId: string; data?: AddAbsenceCommand }
+    { childId: string; data: AddAbsenceCommand }
   > = (props) => {
     const { childId, data } = props ?? {};
 
@@ -231,7 +231,7 @@ export const getAddAbsenceMutationOptions = <
 };
 
 export type AddAbsenceMutationResult = NonNullable<Awaited<ReturnType<typeof addAbsence>>>;
-export type AddAbsenceMutationBody = AddAbsenceCommand | undefined;
+export type AddAbsenceMutationBody = AddAbsenceCommand;
 export type AddAbsenceMutationError = UnprocessableEntityResponse;
 
 export const useAddAbsence = <TError = UnprocessableEntityResponse, TContext = unknown>(
@@ -239,7 +239,7 @@ export const useAddAbsence = <TError = UnprocessableEntityResponse, TContext = u
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof addAbsence>>,
       TError,
-      { childId: string; data?: AddAbsenceCommand },
+      { childId: string; data: AddAbsenceCommand },
       TContext
     >;
     request?: SecondParameter<typeof executeFetch>;
@@ -248,7 +248,7 @@ export const useAddAbsence = <TError = UnprocessableEntityResponse, TContext = u
 ): UseMutationResult<
   Awaited<ReturnType<typeof addAbsence>>,
   TError,
-  { childId: string; data?: AddAbsenceCommand },
+  { childId: string; data: AddAbsenceCommand },
   TContext
 > => {
   return useMutation(getAddAbsenceMutationOptions(options), queryClient);

@@ -8,17 +8,13 @@ import type { PrintChildVMSchedule } from "./printChildVMSchedule";
 
 export type PrintChildVM = {
   id?: string;
-  /** @nullable */
-  givenName?: string | null;
-  /** @nullable */
-  familyName?: string | null;
+  givenName?: string;
+  familyName?: string;
   /** @nullable */
   dateOfBirth?: string | null;
-  /** @nullable */
   schedule?: PrintChildVMSchedule;
   index?: number;
+  ageDisplay?: string;
   /** @nullable */
-  ageDisplay?: string | null;
-  /** @nullable */
-  readonly name?: string | null;
+  name?: string | null;
 };

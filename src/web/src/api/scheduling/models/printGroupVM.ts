@@ -8,8 +8,6 @@ import type { PrintGroupWeekdayPageVM } from "./printGroupWeekdayPageVM";
 
 export type PrintGroupVM = {
   id?: string;
-  /** @nullable */
-  name?: string | null;
-  /** @nullable */
-  pages?: PrintGroupWeekdayPageVM[] | null;
+  name?: string;
+  pages?: PrintGroupWeekdayPageVM[];
 };

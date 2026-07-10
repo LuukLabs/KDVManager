@@ -6,8 +6,7 @@
  */
 
 export type PrintCellVM = {
-  /** @nullable */
-  status?: string | null;
+  status?: string;
   /** @nullable */
   absenceType?: string | null;
   /** @nullable */

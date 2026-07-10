@@ -62,6 +62,17 @@ public class ApplicationDbContext : DbContext
             .HasOne<Child>()
             .WithMany()
             .HasForeignKey(a => a.ChildId);
+
+        modelBuilder.Entity<AttendanceRecord>()
+            .HasOne<Child>()
+            .WithMany()
+            .HasForeignKey(a => a.ChildId);
+
+        modelBuilder.Entity<AttendanceAuditEntry>()
+            .HasOne<AttendanceRecord>()
+            .WithMany()
+            .HasForeignKey(a => a.AttendanceRecordId);
+
         modelBuilder.Entity<AttendanceRecord>().HasIndex(a => new { a.TenantId, a.ChildId, a.Date }).IsUnique();
         modelBuilder.Entity<AttendanceAuditEntry>().HasIndex(a => new { a.TenantId, a.AttendanceRecordId, a.OccurredAt });
 

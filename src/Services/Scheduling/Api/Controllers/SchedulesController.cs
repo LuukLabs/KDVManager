@@ -6,6 +6,7 @@ using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.UpdateSchedule;
 using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
 using KDVManager.Services.Scheduling.Application.Features.PrintSchedules.Queries.GetPrintSchedules;
 
@@ -20,6 +21,7 @@ public class SchedulesController : ControllerBase
     private readonly GetGroupSummaryQueryHandler _getGroupSummaryQueryHandler;
     private readonly AddScheduleCommandHandler _addScheduleCommandHandler;
     private readonly DeleteScheduleCommandHandler _deleteScheduleCommandHandler;
+    private readonly UpdateScheduleCommandHandler _updateScheduleCommandHandler;
     private readonly GetPrintSchedulesQueryHandler _getPrintSchedulesQueryHandler;
     private readonly ILogger<SchedulesController> _logger;
 
@@ -28,8 +30,9 @@ public class SchedulesController : ControllerBase
         GetSchedulesByDateQueryHandler getSchedulesByDateQueryHandler,
         GetGroupSummaryQueryHandler getGroupSummaryQueryHandler,
         AddScheduleCommandHandler addScheduleCommandHandler,
-    DeleteScheduleCommandHandler deleteScheduleCommandHandler,
-    GetPrintSchedulesQueryHandler getPrintSchedulesQueryHandler,
+        DeleteScheduleCommandHandler deleteScheduleCommandHandler,
+        UpdateScheduleCommandHandler updateScheduleCommandHandler,
+        GetPrintSchedulesQueryHandler getPrintSchedulesQueryHandler,
         ILogger<SchedulesController> logger)
     {
         _getChildSchedulesQueryHandler = getChildSchedulesQueryHandler;
@@ -37,6 +40,7 @@ public class SchedulesController : ControllerBase
         _getGroupSummaryQueryHandler = getGroupSummaryQueryHandler;
         _addScheduleCommandHandler = addScheduleCommandHandler;
         _deleteScheduleCommandHandler = deleteScheduleCommandHandler;
+        _updateScheduleCommandHandler = updateScheduleCommandHandler;
         _getPrintSchedulesQueryHandler = getPrintSchedulesQueryHandler;
         _logger = logger;
     }
@@ -79,6 +83,22 @@ public class SchedulesController : ControllerBase
     {
         var id = await _addScheduleCommandHandler.Handle(addScheduleCommand);
         return Ok(id);
+    }
+
+    /// <summary>
+    /// Atomically replaces the rules of an existing schedule. The schedule's child
+    /// and tenant cannot be changed through this endpoint.
+    /// </summary>
+    [HttpPut("{id:guid}", Name = "UpdateSchedule")]
+    [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UnprocessableEntityResponse), (int)HttpStatusCode.UnprocessableEntity)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<Guid>> UpdateScheduleItem(
+        [FromRoute] Guid id,
+        [FromBody] UpdateScheduleCommand updateScheduleCommand)
+    {
+        var scheduleId = await _updateScheduleCommandHandler.Handle(id, updateScheduleCommand);
+        return Ok(scheduleId);
     }
 
     /// <summary>

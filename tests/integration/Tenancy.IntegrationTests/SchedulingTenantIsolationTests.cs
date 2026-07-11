@@ -1,6 +1,7 @@
 using KDVManager.IntegrationTests.Tenancy.Support;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Infrastructure;
+using KDVManager.Services.Scheduling.Infrastructure.Repositories;
 using KDVManager.Shared.Contracts.Tenancy;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using Microsoft.Data.Sqlite;
@@ -135,5 +136,99 @@ public class SchedulingTenantIsolationTests : IDisposable
         using var context = CreateContext(null);
         context.Groups.Add(NewGroup());
         await Assert.ThrowsAsync<TenantRequiredException>(() => context.SaveChangesAsync());
+    }
+
+    [Fact]
+    public async Task ReplacingScheduleRulesRecalculatesTheTimelineInTheSameUnitOfWork()
+    {
+        var childId = Guid.NewGuid();
+        var groupId = Guid.NewGuid();
+        var timeSlotId = Guid.NewGuid();
+        var firstScheduleId = Guid.NewGuid();
+
+        using (var context = CreateContext(Tenants.A))
+        {
+            context.Children.Add(new Child
+            {
+                Id = childId,
+                GivenName = "Test",
+                FamilyName = "Child",
+                DateOfBirth = new DateOnly(2020, 1, 1)
+            });
+            context.Groups.Add(new Group { Id = groupId, Name = "Test group" });
+            context.TimeSlots.Add(new TimeSlot
+            {
+                Id = timeSlotId,
+                Name = "Morning",
+                StartTime = new TimeOnly(8, 0),
+                EndTime = new TimeOnly(12, 0)
+            });
+            context.Schedules.AddRange(
+                new Schedule
+                {
+                    Id = firstScheduleId,
+                    ChildId = childId,
+                    StartDate = new DateOnly(2026, 1, 1),
+                    ScheduleRules = new List<ScheduleRule>
+                    {
+                        new()
+                        {
+                            Id = Guid.NewGuid(),
+                            Day = DayOfWeek.Monday,
+                            TimeSlotId = timeSlotId,
+                            GroupId = groupId
+                        }
+                    }
+                },
+                new Schedule
+                {
+                    Id = Guid.NewGuid(),
+                    ChildId = childId,
+                    StartDate = new DateOnly(2026, 2, 1),
+                    ScheduleRules = new List<ScheduleRule>
+                    {
+                        new()
+                        {
+                            Id = Guid.NewGuid(),
+                            Day = DayOfWeek.Tuesday,
+                            TimeSlotId = timeSlotId,
+                            GroupId = groupId
+                        }
+                    }
+                });
+            await context.SaveChangesAsync();
+        }
+
+        using (var context = CreateContext(Tenants.A))
+        {
+            var repository = new ScheduleRepository(context);
+            var schedule = await repository.GetWithRulesByIdAsync(firstScheduleId);
+            Assert.NotNull(schedule);
+
+            schedule!.StartDate = new DateOnly(2026, 1, 15);
+            await repository.ReplaceRulesAndRecalculateAsync(schedule, new List<ScheduleRule>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    ScheduleId = schedule.Id,
+                    Day = DayOfWeek.Sunday,
+                    TimeSlotId = timeSlotId,
+                    GroupId = groupId
+                }
+            });
+        }
+
+        using (var context = CreateContext(Tenants.A))
+        {
+            var schedule = await context.Schedules
+                .Include(item => item.ScheduleRules)
+                .SingleAsync(item => item.Id == firstScheduleId);
+
+            Assert.Equal(new DateOnly(2026, 1, 15), schedule.StartDate);
+            Assert.Equal(new DateOnly(2026, 1, 31), schedule.EndDate);
+            var rule = Assert.Single(schedule.ScheduleRules);
+            Assert.Equal(DayOfWeek.Sunday, rule.Day);
+        }
     }
 }

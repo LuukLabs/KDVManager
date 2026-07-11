@@ -14,24 +14,27 @@ public class AddScheduleCommandHandler
 {
     private readonly IScheduleRepository _scheduleRepository;
     private readonly ITimeSlotRepository _timeSlotRepository;
+    private readonly IGroupRepository _groupRepository;
     private readonly IScheduleTimelineService _timelineService;
     private readonly IScheduleStatusService _scheduleStatusService;
 
     public AddScheduleCommandHandler(
         IScheduleRepository scheduleRepository,
         ITimeSlotRepository timeSlotRepository,
+        IGroupRepository groupRepository,
         IScheduleTimelineService timelineService,
         IScheduleStatusService scheduleStatusService)
     {
         _scheduleRepository = scheduleRepository;
         _timeSlotRepository = timeSlotRepository;
+        _groupRepository = groupRepository;
         _timelineService = timelineService;
         _scheduleStatusService = scheduleStatusService;
     }
 
     public async Task<Guid> Handle(AddScheduleCommand request)
     {
-        var validator = new AddScheduleCommandValidator(_timeSlotRepository, _scheduleRepository);
+        var validator = new AddScheduleCommandValidator(_timeSlotRepository, _groupRepository, _scheduleRepository);
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)

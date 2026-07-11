@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
 using KDVManager.Services.Scheduling.Domain.Interfaces;
+using KDVManager.Services.Scheduling.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
@@ -26,6 +27,13 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             .Include(s => s.ScheduleRules)
                 .ThenInclude(sr => sr.Group)
             .ToListAsync();
+    }
+
+    public async Task<Schedule?> GetWithRulesByIdAsync(Guid id)
+    {
+        return await _dbContext.Schedules
+            .Include(s => s.ScheduleRules)
+            .SingleOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<IReadOnlyList<Schedule>> GetSchedulesByDateAsync(DateOnly date, Guid groupId)
@@ -66,5 +74,37 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
     public async Task<bool> ExistsWithStartDateAsync(Guid childId, DateOnly startDate)
     {
         return await _dbContext.Schedules.AnyAsync(s => s.ChildId == childId && s.StartDate == startDate);
+    }
+
+    public async Task<bool> ExistsWithStartDateExceptAsync(Guid childId, DateOnly startDate, Guid excludedScheduleId)
+    {
+        return await _dbContext.Schedules.AnyAsync(s =>
+            s.ChildId == childId &&
+            s.StartDate == startDate &&
+            s.Id != excludedScheduleId);
+    }
+
+    public async Task ReplaceRulesAndRecalculateAsync(Schedule schedule, ICollection<ScheduleRule> replacementRules)
+    {
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        // The schedule is loaded with its rules by GetWithRulesByIdAsync. Save the
+        // replacement first so the following timeline query sees the new state.
+        _dbContext.ScheduleRules.RemoveRange(schedule.ScheduleRules);
+        schedule.ScheduleRules = replacementRules;
+        await _dbContext.SaveChangesAsync();
+
+        var schedules = await _dbContext.Schedules
+            .Where(s => s.ChildId == schedule.ChildId)
+            .OrderBy(s => s.StartDate)
+            .ToListAsync();
+        var endMarks = await _dbContext.EndMarks
+            .Where(endMark => endMark.ChildId == schedule.ChildId)
+            .ToListAsync();
+
+        ScheduleEndDateCalculator.Recalculate(schedules, endMarks);
+        await _dbContext.SaveChangesAsync();
+
+        await transaction.CommitAsync();
     }
 }

@@ -8,6 +8,7 @@ import { type updateChildPageLoader } from "./updateChildPage.loader";
 import { ChildHeader } from "../../components/child/ChildHeader";
 import { GeneralInformationTab } from "./tabs/GeneralInformationTab";
 import { PlanningTab } from "./tabs/PlanningTab";
+import { ScrollToTop } from "@components/ScrollToTop";
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -81,6 +82,8 @@ const UpdateChildPageModernTabs = () => {
         pb: { xs: 8, md: 6 }, // More bottom padding on mobile for better scrolling
       }}
     >
+      <ScrollToTop resetKey={childId} />
+
       {/* Header */}
       <Box sx={{ mb: { xs: 1, md: 2 }, mx: { xs: -2, md: 0 } }}>
         {/* Stretch header edge-to-edge on mobile by negative margin compensating for Container padding in layout */}

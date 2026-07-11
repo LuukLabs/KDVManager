@@ -8,6 +8,7 @@ using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.Del
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.DeleteSchedule;
+using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.UpdateSchedule;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetSchedulesByDate;
 using KDVManager.Services.Scheduling.Application.Features.GroupSummary.Queries.GetGroupSummary;
@@ -46,6 +47,7 @@ public static class ConfigureServices
         services.AddScoped<ListTimeSlotsQueryHandler>();
         services.AddScoped<AddScheduleCommandHandler>();
         services.AddScoped<DeleteScheduleCommandHandler>();
+        services.AddScoped<UpdateScheduleCommandHandler>();
         services.AddScoped<GetChildSchedulesQueryHandler>();
         services.AddScoped<GetSchedulesByDateQueryHandler>();
         services.AddScoped<GetGroupSummaryQueryHandler>();

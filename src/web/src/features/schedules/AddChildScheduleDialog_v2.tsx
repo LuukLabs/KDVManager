@@ -46,8 +46,12 @@ import {
 import {
   getGetChildSchedulesQueryKey,
   useAddSchedule,
+  useGetChildSchedules,
 } from "@api/scheduling/endpoints/schedules/schedules";
 import { useState, useCallback } from "react";
+import { useGetChildById } from "@api/crm/endpoints/children/children";
+import { formatScheduleTimeRange, isScheduleRuleComplete } from "./scheduleFormUtils";
+import dayjs from "dayjs";
 
 type AddChildScheduleDialogProps = {
   childId: string;
@@ -69,6 +73,8 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     // Fetch groups and timeslots from API
     const { data: groupsData } = useListGroups(undefined, {});
     const { data: timeSlotsData } = useListTimeSlots(undefined, {});
+    const { data: child } = useGetChildById(childId);
+    const { data: schedules } = useGetChildSchedules({ childId });
 
     // Map API data to UI format
     const groups = (groupsData ?? []).map((g) => ({
@@ -80,7 +86,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     const timeSlots = (timeSlotsData ?? []).map((t) => ({
       id: t.id,
       name: t.name,
-      time: `${t.startTime} - ${t.endTime}`,
+      time: formatScheduleTimeRange(t.startTime, t.endTime),
       color: "#FFE5B4", // fallback color, could be improved if API provides
     }));
 
@@ -102,8 +108,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     } = formContext;
     const { enqueueSnackbar } = useSnackbar();
 
-    const { fields, append, remove } = useFieldArray({ control, name: "scheduleRules" });
+    const { fields, append, remove, replace } = useFieldArray({ control, name: "scheduleRules" });
     const watchedRules = watch("scheduleRules");
+    const startDate = watch("startDate");
 
     const handleOnCancelClick = useCallback(() => {
       modal.remove();
@@ -111,19 +118,26 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     }, [modal, reset]);
 
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
-      const filteredScheduleRules =
-        data.scheduleRules?.filter(
-          (rule) => rule?.timeSlotId && rule.groupId && rule.day !== undefined,
-        ) ?? [];
+      const scheduleRules = data.scheduleRules ?? [];
 
-      if (filteredScheduleRules.length === 0) {
+      if (!data.startDate) {
+        enqueueSnackbar(t("A start date is required"), { variant: "warning" });
+        return;
+      }
+
+      if (scheduleRules.length === 0) {
         enqueueSnackbar(t("Please add at least one schedule rule"), { variant: "warning" });
+        return;
+      }
+
+      if (scheduleRules.some((rule) => !isScheduleRuleComplete(rule))) {
+        enqueueSnackbar(t("Complete all schedule rules before saving"), { variant: "warning" });
         return;
       }
 
       const submitData = {
         ...data,
-        scheduleRules: filteredScheduleRules,
+        scheduleRules,
       };
 
       await mutate.mutateAsync(
@@ -168,19 +182,45 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
       setEditingRule(newIndex);
     }, [fields.length, append, setEditingRule]);
 
+    const currentSchedule = schedules?.find((candidate) => {
+      if (!candidate.startDate) return false;
+      const today = dayjs().format("YYYY-MM-DD");
+      return candidate.startDate <= today && (!candidate.endDate || candidate.endDate >= today);
+    });
+
+    const copyCurrentPlanning = useCallback(() => {
+      if (isDirty && fields.length > 0) {
+        enqueueSnackbar(t("Finish or cancel your draft before copying"), { variant: "warning" });
+        return;
+      }
+
+      const rules = currentSchedule?.scheduleRules ?? [];
+      if (rules.length === 0) return;
+
+      replace(
+        rules.map((rule) => ({
+          day: rule.day,
+          timeSlotId: rule.timeSlotId ?? "",
+          groupId: rule.groupId ?? "",
+        })),
+      );
+      setEditingRule(null);
+      enqueueSnackbar(t("Current planning copied"), { variant: "success" });
+    }, [currentSchedule, replace, enqueueSnackbar, fields.length, isDirty, setEditingRule, t]);
+
     const getTotalRules = useCallback(() => fields.length, [fields.length]);
 
     const getCompletedRules = useCallback(() => {
       return fields.filter((_, index) => {
         const rule = watchedRules?.[index];
-        return rule?.timeSlotId && rule.groupId && rule.day !== undefined;
+        return isScheduleRuleComplete(rule);
       }).length;
     }, [fields, watchedRules]);
 
     const isRuleComplete = useCallback(
       (index: number) => {
         const rule = watchedRules?.[index];
-        return rule?.timeSlotId && rule.groupId && rule.day !== undefined;
+        return isScheduleRuleComplete(rule);
       },
       [watchedRules],
     );
@@ -220,6 +260,8 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             {t("Select Day")}
           </Typography>
           <Box
+            role="radiogroup"
+            aria-label={t("Select Day")}
             sx={{
               display: "grid",
               gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(7, 1fr)",
@@ -231,7 +273,14 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               return (
                 <ButtonBase
                   key={day.key}
-                  onClick={() => setValue(`scheduleRules.${ruleIndex}.day`, day.value as DayOfWeek)}
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() =>
+                    setValue(`scheduleRules.${ruleIndex}.day`, day.value as DayOfWeek, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
                   sx={{
                     p: isMobile ? 2 : 1.5,
                     borderRadius: 2,
@@ -281,6 +330,8 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             {t("Select Time Slot")}
           </Typography>
           <Box
+            role="radiogroup"
+            aria-label={t("Select Time Slot")}
             sx={{
               display: "grid",
               gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
@@ -292,7 +343,14 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               return (
                 <ButtonBase
                   key={slot.id}
-                  onClick={() => setValue(`scheduleRules.${ruleIndex}.timeSlotId`, slot.id)}
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() =>
+                    setValue(`scheduleRules.${ruleIndex}.timeSlotId`, slot.id, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
                   sx={{
                     p: 2,
                     borderRadius: 2,
@@ -356,6 +414,8 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             {t("Select Group")}
           </Typography>
           <Box
+            role="radiogroup"
+            aria-label={t("Select Group")}
             sx={{
               display: "grid",
               gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
@@ -367,7 +427,14 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
               return (
                 <ButtonBase
                   key={group.id}
-                  onClick={() => setValue(`scheduleRules.${ruleIndex}.groupId`, group.id)}
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() =>
+                    setValue(`scheduleRules.${ruleIndex}.groupId`, group.id, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
                   sx={{
                     p: 2,
                     borderRadius: 2,
@@ -540,7 +607,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       onClick={() => setEditingRule(null)}
                       fullWidth
                       sx={{ borderRadius: 2 }}
-                      disabled={!(rule?.day && rule?.timeSlotId && rule?.groupId)}
+                      disabled={!isScheduleRuleComplete(rule)}
                     >
                       {t("Done")}
                     </Button>
@@ -612,10 +679,12 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                           fontWeight: 500,
                         }}
                       >
-                        {!rule?.day && t("Please select a day")}
-                        {!rule?.timeSlotId && rule?.day && t("Please select a time slot")}
+                        {rule?.day === undefined && t("Please select a day")}
+                        {!rule?.timeSlotId &&
+                          rule?.day !== undefined &&
+                          t("Please select a time slot")}
                         {!rule?.groupId &&
-                          rule?.day &&
+                          rule?.day !== undefined &&
                           rule?.timeSlotId &&
                           t("Please select a group")}
                       </Typography>
@@ -686,7 +755,9 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                   {t("Add Schedule")}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9, fontSize: "1rem" }}>
-                  {t("Create weekly schedule rules for activities")}
+                  {child
+                    ? t("Schedule for {{name}}", { name: `${child.givenName} ${child.familyName}` })
+                    : t("Create weekly schedule rules for activities")}
                 </Typography>
               </Box>
             </Box>
@@ -779,7 +850,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                       color: "text.secondary",
                     }}
                   >
-                    {t("Select the start and end dates for this schedule")}
+                    {t("Select the start date for this schedule")}
                   </Typography>
                 </Box>
               </Box>
@@ -788,6 +859,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                 <FormDatePicker
                   label={t("Start Date")}
                   name="startDate"
+                  required
                   slotProps={{
                     textField: {
                       size: "medium",
@@ -843,24 +915,31 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     >
                       {getTotalRules() === 0
                         ? t("Add rules to define weekly activities")
-                        : t(`${getTotalRules()} rule(s) created`)}
+                        : t("{{count}} schedule rules created", { count: getTotalRules() })}
                     </Typography>
                   </Box>
                 </Box>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={addNewRule}
-                  size={isMobile ? "medium" : "large"}
-                  sx={{
-                    borderRadius: 3,
-                    boxShadow: 2,
-                    "&:hover": { boxShadow: 4, transform: "translateY(-2px)" },
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  {t("Add Rule")}
-                </Button>
+                <Stack direction="row" spacing={1}>
+                  {currentSchedule?.scheduleRules?.length ? (
+                    <Button variant="outlined" onClick={copyCurrentPlanning}>
+                      {t("Copy current planning")}
+                    </Button>
+                  ) : null}
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={addNewRule}
+                    size={isMobile ? "medium" : "large"}
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: 2,
+                      "&:hover": { boxShadow: 4, transform: "translateY(-2px)" },
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {t("Add Rule")}
+                  </Button>
+                </Stack>
               </Box>
 
               {sortedRules.length === 0 ? (
@@ -949,7 +1028,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
         </DialogContent>
         {/* Mobile Floating Action Button */}
         {isMobile && getTotalRules() > 0 && (
-          <Fade in={!editingRule}>
+          <Fade in={editingRule === null}>
             <Fab
               color="primary"
               aria-label={t("Add Rule")}
@@ -998,7 +1077,13 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
           </Button>
           <Button
             variant="contained"
-            disabled={!isDirty || !isValid || getCompletedRules() === 0}
+            disabled={
+              !isDirty ||
+              !isValid ||
+              !startDate ||
+              getTotalRules() === 0 ||
+              getCompletedRules() !== getTotalRules()
+            }
             loading={isSubmitting}
             onClick={handleSubmit(onSubmit)}
             size="large"

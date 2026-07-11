@@ -172,18 +172,26 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
             {schedule.scheduleRules.length > 0 ? (
               <>
                 <Chip
-                  label={`${schedule.scheduleRules.length} ${t("time slots")}`}
+                  label={t("{{count}} schedule time slots", {
+                    count: schedule.scheduleRules.length,
+                  })}
                   size="small"
                   variant="outlined"
                 />
                 <Chip
-                  label={`${new Set(schedule.scheduleRules.map((r) => r.day)).size} ${t("days")}`}
+                  label={t("{{count}} schedule days", {
+                    count: new Set(schedule.scheduleRules.map((r) => r.day)).size,
+                  })}
                   size="small"
                   variant="outlined"
                 />
                 {schedule.scheduleRules.some((r) => r.groupName) && (
                   <Chip
-                    label={`${new Set(schedule.scheduleRules.filter((r) => r.groupName).map((r) => r.groupName)).size} ${t("groups")}`}
+                    label={t("{{count}} schedule groups", {
+                      count: new Set(
+                        schedule.scheduleRules.filter((r) => r.groupName).map((r) => r.groupName),
+                      ).size,
+                    })}
                     size="small"
                     variant="outlined"
                   />

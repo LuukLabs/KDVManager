@@ -4,8 +4,8 @@
  * Use cases covered:
  * - Editing an existing schedule via the schedule card's edit action (change
  *   the start date, save) → "Planning succesvol bijgewerkt" snackbar. The edit
- *   dialog deletes the old schedule and recreates it (EditChildScheduleDialog),
- *   so this exercises that delete+recreate path end-to-end.
+ *   dialog atomically replaces the existing schedule (EditChildScheduleDialog),
+ *   so this exercises the update path end-to-end.
  * - Adding an absence through the "Afwezigheid toevoegen" dialog (AddAbsenceDialog)
  *   and seeing it listed (AbsenceList, default "Toekomst" view).
  * - Deleting an absence via the row delete action + confirmation dialog
@@ -83,7 +83,10 @@ test.describe("child planning tab — extras", () => {
           `/scheduling/v1/schedules?childId=${childId}`,
         );
         for (const schedule of schedules) {
-          if (schedule.id) await attempt(() => api.delete(`/scheduling/v1/schedules/${schedule.id}`));
+          if (schedule.id)
+            await attempt(() =>
+              api.delete(`/scheduling/v1/schedules/${schedule.id}`),
+            );
         }
       });
       await attempt(async () => {
@@ -91,7 +94,10 @@ test.describe("child planning tab — extras", () => {
           `/scheduling/v1/children/${childId}/absences`,
         );
         for (const absence of absences) {
-          if (absence.id) await attempt(() => api.delete(`/scheduling/v1/absences/${absence.id}`));
+          if (absence.id)
+            await attempt(() =>
+              api.delete(`/scheduling/v1/absences/${absence.id}`),
+            );
         }
       });
       await attempt(async () => {
@@ -132,12 +138,15 @@ test.describe("child planning tab — extras", () => {
 
     // The existing rule is pre-filled and complete, so only the start date is
     // changed; the submit button stays enabled (1/1 rules complete).
-    await fillMuiDateField(dialog.getByRole("group", { name: /Startdatum/ }), SCHEDULE_START_EDITED_NL);
+    await fillMuiDateField(
+      dialog.getByRole("group", { name: /Startdatum/ }),
+      SCHEDULE_START_EDITED_NL,
+    );
     await dialog.getByRole("button", { name: /Planning bijwerken/ }).click();
 
     await expect(page.getByText("Planning succesvol bijgewerkt")).toBeVisible();
     await expect(dialog).not.toBeVisible();
-    // The (recreated) schedule still renders with its time slot and group.
+    // The updated schedule still renders with its time slot and group.
     await expect(page.getByText("Planningsperiode")).toBeVisible();
     await expect(page.getByText("08:30-13:00")).toBeVisible();
     await expect(page.getByText(groupName)).toBeVisible();
@@ -179,15 +188,26 @@ test.describe("child planning tab — extras", () => {
     // Scope to the absence card carrying our unique reason (other absences may
     // be present from the add test). Several nested Papers contain the reason
     // (the section wrapper and the row); .last() is the innermost — the row.
-    const absenceRow = page.locator(".MuiPaper-root").filter({ hasText: reason }).last();
+    const absenceRow = page
+      .locator(".MuiPaper-root")
+      .filter({ hasText: reason })
+      .last();
     await expect(absenceRow).toBeVisible();
-    await absenceRow.getByRole("button", { name: "Verwijder afwezigheid" }).click();
+    await absenceRow
+      .getByRole("button", { name: "Verwijder afwezigheid" })
+      .click();
 
     const confirmDialog = page.getByRole("dialog");
-    await expect(confirmDialog.getByText("Verwijder afwezigheid")).toBeVisible();
-    await confirmDialog.getByRole("button", { name: "Verwijderen", exact: true }).click();
+    await expect(
+      confirmDialog.getByText("Verwijder afwezigheid"),
+    ).toBeVisible();
+    await confirmDialog
+      .getByRole("button", { name: "Verwijderen", exact: true })
+      .click();
 
-    await expect(page.getByText("Afwezigheid is succesvol verwijderd")).toBeVisible();
+    await expect(
+      page.getByText("Afwezigheid is succesvol verwijderd"),
+    ).toBeVisible();
     await expect(page.getByText(reason)).toBeHidden();
   });
 });

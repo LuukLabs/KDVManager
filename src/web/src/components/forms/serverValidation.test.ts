@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "@api/errors/types";
-import { applyServerValidationErrors, getServerValidationErrors } from "./serverValidation";
+import {
+  applyServerValidationErrors,
+  getServerValidationErrors,
+  getServerValidationMessage,
+} from "./serverValidation";
 
 const validationErrors = [
   { property: "GivenName", code: "NotEmpty", title: "Given name is required" },
@@ -40,6 +44,31 @@ describe("getServerValidationErrors", () => {
     expect(getServerValidationErrors(new Error("boom"))).toEqual([]);
     expect(getServerValidationErrors(undefined)).toEqual([]);
     expect(getServerValidationErrors(null)).toEqual([]);
+  });
+});
+
+describe("getServerValidationMessage", () => {
+  it("keeps collection-level validation errors visible and de-duplicates titles", () => {
+    const error = validationApiError([
+      {
+        property: "ScheduleRules",
+        code: "PredicateValidator",
+        title: "A schedule cannot contain duplicate rules.",
+      },
+      {
+        property: "ScheduleRules",
+        code: "PredicateValidator",
+        title: "A schedule cannot contain duplicate rules.",
+      },
+    ]);
+
+    expect(getServerValidationMessage(error, (title) => `Translated: ${title}`)).toBe(
+      "Translated: A schedule cannot contain duplicate rules.",
+    );
+  });
+
+  it("returns null for failures without server validation titles", () => {
+    expect(getServerValidationMessage(new Error("boom"))).toBeNull();
   });
 });
 
@@ -93,6 +122,24 @@ describe("applyServerValidationErrors", () => {
     expect(setError).toHaveBeenCalledWith("phoneNumbers.1.number", {
       type: "server",
       message: "Invalid phone number",
+    });
+  });
+
+  it("translates field-level validation titles before displaying them", () => {
+    const setError = vi.fn();
+    const error = validationApiError([
+      { property: "StartDate", code: "Unique", title: "Duplicate start date" },
+    ]);
+
+    expect(
+      applyServerValidationErrors(error, setError, {
+        fields: ["startDate"],
+        translateTitle: (title) => `Translated: ${title}`,
+      }),
+    ).toBe(true);
+    expect(setError).toHaveBeenCalledWith("startDate", {
+      type: "server",
+      message: "Translated: Duplicate start date",
     });
   });
 

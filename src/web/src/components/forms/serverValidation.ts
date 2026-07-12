@@ -35,6 +35,21 @@ export const getServerValidationErrors = (error: unknown): ServerValidationError
   return Array.isArray(errors) ? errors.filter(isServerValidationError) : [];
 };
 
+/**
+ * Builds a form-level message from all validation titles returned by the API.
+ * This keeps command- and collection-level errors visible even when there is
+ * no concrete input that can render them (for example a duplicate schedule
+ * rule reported against `scheduleRules`).
+ */
+export const getServerValidationMessage = (
+  error: unknown,
+  translate: (title: string) => string = (title) => title,
+): string | null => {
+  const titles = getServerValidationErrors(error).map(({ title }) => translate(title));
+  const uniqueTitles = [...new Set(titles)];
+  return uniqueTitles.length > 0 ? uniqueTitles.join(" ") : null;
+};
+
 /* eslint-disable i18next/no-literal-string -- path syntax tokens, not user-facing text */
 /**
  * Replicates System.Text.Json's camelCase naming policy: a leading run of
@@ -73,6 +88,8 @@ type ApplyServerValidationErrorsOptions = {
    * feedback still fires. Forms that render every command field can omit it.
    */
   fields?: string[];
+  /** Translates the API-provided title before displaying it below a field. */
+  translateTitle?: (title: string) => string;
 };
 
 /**
@@ -85,11 +102,14 @@ type ApplyServerValidationErrorsOptions = {
 export const applyServerValidationErrors = <TFieldValues extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<TFieldValues>,
-  { fields }: ApplyServerValidationErrorsOptions = {},
+  { fields, translateTitle = (title) => title }: ApplyServerValidationErrorsOptions = {},
 ): boolean => {
   const fieldErrors = getServerValidationErrors(error)
     .filter(({ property }) => property)
-    .map(({ property, title }) => ({ path: toFieldPath(property), title }))
+    .map(({ property, title }) => ({
+      path: toFieldPath(property),
+      title: translateTitle(title),
+    }))
     .filter(
       ({ path }) =>
         !fields || fields.some((field) => path === field || path.startsWith(`${field}.`)),

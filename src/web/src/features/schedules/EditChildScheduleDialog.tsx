@@ -1,5 +1,12 @@
 import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
-import { Form, FormDatePicker, useMutationErrorHandler } from "@components/forms";
+import {
+  Form,
+  FormDatePicker,
+  FormErrorAlert,
+  applyServerValidationErrors,
+  getServerValidationMessage,
+  saveFailedMessage,
+} from "@components/forms";
 import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -70,6 +77,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [editingRule, setEditingRule] = useState<number | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     // Fetch groups and timeslots from API
     const { data: groupsData } = useListGroups(undefined, {});
@@ -123,6 +131,7 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
     }, [modal, reset]);
 
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
+      setSubmitError(null);
       const scheduleRules = data.scheduleRules ?? [];
 
       if (!data.startDate) {
@@ -163,7 +172,18 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
       reset();
     }, [queryClient, childId, modal, enqueueSnackbar, t, reset]);
 
-    const onMutateError = useMutationErrorHandler({ setError });
+    const onMutateError = useCallback(
+      (error: unknown) => {
+        applyServerValidationErrors(error, setError, {
+          fields: ["startDate"],
+          translateTitle: (title) => t(title, title),
+        });
+        setSubmitError(
+          getServerValidationMessage(error, (title) => t(title, title)) ?? saveFailedMessage(t),
+        );
+      },
+      [setError, t],
+    );
 
     // Define the weekdays as in AddChildScheduleDialogV2
     const weekdays = [
@@ -913,6 +933,11 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
             </Box>
           </Form>
         </DialogContent>
+        <FormErrorAlert
+          message={submitError}
+          onClose={() => setSubmitError(null)}
+          sx={{ mx: 3, mt: 2 }}
+        />
         <DialogActions
           sx={{
             p: 3,

@@ -152,11 +152,14 @@ export const EditChildScheduleDialog = NiceModal.create<EditChildScheduleDialogP
     };
 
     const onMutateSuccess = useCallback(() => {
+      // Enqueue before unmounting this NiceModal. The snackbar provider is
+      // outside the dialog, but removing the dialog first made the feedback
+      // unreliable in the production build.
+      enqueueSnackbar(t("Schedule updated successfully"), { variant: "success" });
       void queryClient.invalidateQueries({
         queryKey: getGetChildSchedulesQueryKey({ childId: childId }),
       });
       modal.remove();
-      enqueueSnackbar(t("Schedule updated successfully"), { variant: "success" });
       reset();
     }, [queryClient, childId, modal, enqueueSnackbar, t, reset]);
 

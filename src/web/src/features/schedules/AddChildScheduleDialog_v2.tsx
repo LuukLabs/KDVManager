@@ -877,6 +877,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
                     },
                   }}
                   transform={{
+                    input: (value) => (value ? dayjs(value as string) : null),
                     output: (value) => (value ? value.format("YYYY-MM-DD") : null),
                   }}
                 />

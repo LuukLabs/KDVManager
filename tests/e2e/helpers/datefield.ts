@@ -14,4 +14,7 @@ import type { Locator } from "@playwright/test";
 export async function fillMuiDateField(group: Locator, date: string): Promise<void> {
   await group.getByRole("spinbutton").first().click();
   await group.page().keyboard.type(date.replace(/\D/g, ""));
+  // MUI commits section-based keyboard input on blur. Moving focus preserves
+  // the typed date before the test continues with another control.
+  await group.getByRole("spinbutton").first().press("Tab");
 }

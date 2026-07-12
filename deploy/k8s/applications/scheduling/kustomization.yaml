@@ -14,7 +14,7 @@ labels:
 images:
 - name: ghcr.io/luuklabs/kdvmanager/scheduling.api
   newName: ghcr.io/luuklabs/kdvmanager/scheduling.api
-  newTag: linux-e8f60cb
+  newTag: linux-a3f57d0
 - name: ghcr.io/luuklabs/kdvmanager/scheduling.migrator
   newName: ghcr.io/luuklabs/kdvmanager/scheduling.migrator
-  newTag: linux-e8f60cb
+  newTag: linux-a3f57d0

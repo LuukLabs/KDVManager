@@ -92,6 +92,12 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
         // replacement first so the following timeline query sees the new state.
         _dbContext.ScheduleRules.RemoveRange(schedule.ScheduleRules);
         schedule.ScheduleRules = replacementRules;
+
+        // The rules have application-assigned IDs. Explicitly marking them as
+        // added keeps EF from inferring a modification from their non-default
+        // key, which in turn lets the tenancy change tracker stamp them with
+        // the current tenant.
+        _dbContext.ScheduleRules.AddRange(replacementRules);
         await _dbContext.SaveChangesAsync();
 
         var schedules = await _dbContext.Schedules

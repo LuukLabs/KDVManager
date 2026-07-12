@@ -2,7 +2,9 @@ import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import {
   Form,
   FormDatePicker,
+  FormErrorAlert,
   applyServerValidationErrors,
+  getServerValidationMessage,
   saveFailedMessage,
 } from "@components/forms";
 import Button from "@mui/material/Button";
@@ -69,6 +71,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [editingRule, setEditingRule] = useState<number | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     // Fetch groups and timeslots from API
     const { data: groupsData } = useListGroups(undefined, {});
@@ -118,6 +121,7 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
     }, [modal, reset]);
 
     const onSubmit: SubmitHandler<AddScheduleCommand> = async (data) => {
+      setSubmitError(null);
       const scheduleRules = data.scheduleRules ?? [];
 
       if (!data.startDate) {
@@ -160,13 +164,15 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
 
     const onMutateError = useCallback(
       (error: unknown) => {
-        if (applyServerValidationErrors(error, setError)) {
-          enqueueSnackbar(t("Please check the form for errors"), { variant: "error" });
-        } else {
-          enqueueSnackbar(saveFailedMessage(t), { variant: "error" });
-        }
+        applyServerValidationErrors(error, setError, {
+          fields: ["startDate"],
+          translateTitle: (title) => t(title, title),
+        });
+        setSubmitError(
+          getServerValidationMessage(error, (title) => t(title, title)) ?? saveFailedMessage(t),
+        );
       },
-      [setError, enqueueSnackbar, t],
+      [setError, t],
     );
 
     const weekdays = [
@@ -1030,6 +1036,11 @@ export const AddChildScheduleDialogV2 = NiceModal.create<AddChildScheduleDialogP
             </Box>
           </Form>
         </DialogContent>
+        <FormErrorAlert
+          message={submitError}
+          onClose={() => setSubmitError(null)}
+          sx={{ mx: 3, mt: 2 }}
+        />
         {/* Mobile Floating Action Button */}
         {isMobile && getTotalRules() > 0 && (
           <Fade in={editingRule === null}>

@@ -12,5 +12,6 @@ export { useFormSubmit, useMutationErrorHandler, saveFailedMessage } from "./use
 export {
   applyServerValidationErrors,
   getServerValidationErrors,
+  getServerValidationMessage,
   type ServerValidationError,
 } from "./serverValidation";

@@ -267,6 +267,45 @@ test.describe("child planning tab", () => {
     await dialog.getByRole("button", { name: "Annuleren" }).click();
   });
 
+  test("shows backend validation errors and allows a corrected retry", async ({
+    page,
+  }) => {
+    await gotoApp(page, `/children/${childCId}/planning`);
+    await page.getByRole("button", { name: "Planning toevoegen" }).click();
+
+    const dialog = page.getByRole("dialog");
+    await fillMuiDateField(
+      dialog.getByRole("group", { name: /Startdatum/ }),
+      SCHEDULE_START_NL,
+    );
+
+    for (let ruleIndex = 0; ruleIndex < 2; ruleIndex += 1) {
+      await dialog.getByRole("button", { name: "Regel toevoegen" }).click();
+      await dialog.getByRole("radio", { name: /Ma/ }).click();
+      await dialog.getByRole("radio", { name: timeSlotName }).click();
+      await dialog.getByRole("radio", { name: groupName }).click();
+      await dialog.getByRole("button", { name: "Gereed" }).click();
+    }
+
+    await dialog.getByRole("button", { name: /Planning aanmaken/ }).click();
+
+    const alert = dialog.getByRole("alert");
+    await expect(alert).toContainText(
+      "Dezelfde combinatie van dag, tijdslot en groep mag maar één keer in een planning voorkomen.",
+    );
+    await expect(alert).toBeInViewport();
+
+    const removeRuleButtons = dialog.getByRole("button", {
+      name: "Regel verwijderen",
+    });
+    await expect(removeRuleButtons).toHaveCount(2);
+    await removeRuleButtons.nth(1).click();
+    await dialog.getByRole("button", { name: /Planning aanmaken/ }).click();
+
+    await expect(page.getByText("Planning succesvol toegevoegd")).toBeVisible();
+    await expect(dialog).not.toBeVisible();
+  });
+
   test("add an end mark via the dialog", async ({ page }) => {
     await gotoApp(page, `/children/${childBId}/planning`);
 

@@ -37,17 +37,18 @@ jobs:
         docker buildx bake \
           -f docker-compose.yml -f docker-compose.e2e.yml \
           --load \
-          $(for s in web crm-api crm-migrator scheduling-api scheduling-migrator; do
+          $(for s in web crm-api crm-migrator scheduling-api scheduling-migrator tenantmanagement-api tenantmanagement-migrator; do
               echo "--set $s.cache-from=type=gha,scope=e2e-$s --set $s.cache-to=type=gha,scope=e2e-$s,mode=max"
             done) \
-          web crm-api crm-migrator scheduling-api scheduling-migrator
+          web crm-api crm-migrator scheduling-api scheduling-migrator tenantmanagement-api tenantmanagement-migrator
 
     - name: Start stack
       working-directory: ./src
       run: |
         docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d \
           mock-auth envoy postgres rabbitmq web \
-          crm-migrator crm-api scheduling-migrator scheduling-api
+          crm-migrator crm-api scheduling-migrator scheduling-api \
+          tenantmanagement-migrator tenantmanagement-api
 
     - uses: pnpm/action-setup@v6.0.9
       with:

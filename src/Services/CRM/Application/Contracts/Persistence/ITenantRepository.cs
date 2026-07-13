@@ -10,5 +10,5 @@ public interface ITenantRepository
     Task<Tenant?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>Creates or updates the local trial read model for the tenant.</summary>
-    Task UpsertTrialAsync(Guid id, DateTime trialStartDate, CancellationToken cancellationToken = default);
+    Task UpsertTrialAsync(Guid id, DateTime trialStartDate, bool isSubscribed, CancellationToken cancellationToken = default);
 }

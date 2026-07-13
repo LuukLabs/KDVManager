@@ -13,7 +13,9 @@ import TrialExpiredScreen from "./TrialExpiredScreen";
 const TrialGuard: React.FC<PropsWithChildren> = ({ children }) => {
   const { data: trial } = useTrialStatus();
 
-  if (trial?.isExpired) {
+  // isSubscribed is a belt-and-braces check: the backend already reports a
+  // subscribed tenant as never expired.
+  if (trial?.isExpired && !trial.isSubscribed) {
     return <TrialExpiredScreen />;
   }
 

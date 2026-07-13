@@ -1,5 +1,6 @@
 using KDVManager.Services.TenantManagement.Application.Features.Admin;
 using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.ExtendTrial;
+using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.SetSubscription;
 using KDVManager.Services.TenantManagement.Application.Features.Admin.Queries.ListTenants;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,8 +41,26 @@ public static class AdminEndpoints
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status404NotFound)
         .RequireAuthorization(AuthorizationPolicies.PlatformAdmin);
+
+        // Convert a tenant to a subscription (trial → real) or revert it to trial.
+        endpoints.MapPut("/v1/admin/tenants/{tenantId:guid}/subscription", async (
+            Guid tenantId,
+            [FromBody] SetSubscriptionRequest request,
+            [FromServices] SetSubscriptionCommandHandler handler) =>
+        {
+            var result = await handler.Handle(new SetSubscriptionCommand { TenantId = tenantId, Subscribed = request.Subscribed });
+            return result is null ? Results.NotFound() : Results.Ok(result);
+        })
+        .WithName("AdminSetTenantSubscription")
+        .WithTags("admin")
+        .Produces<AdminTenantVM>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .RequireAuthorization(AuthorizationPolicies.PlatformAdmin);
     }
 
     /// <summary>Request body for extending a tenant's trial.</summary>
     public record ExtendTrialRequest(int Days);
+
+    /// <summary>Request body for converting a tenant to/from a subscription.</summary>
+    public record SetSubscriptionRequest(bool Subscribed);
 }

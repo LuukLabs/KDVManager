@@ -33,6 +33,9 @@ public class TrialStatusService : ITrialStatusService
         if (tenant is null)
             return new TrialStatus { IsExpired = false, DaysRemaining = TrialStatus.TrialDurationDays };
 
+        if (tenant.SubscriptionStatus == Domain.Enums.SubscriptionStatus.Active)
+            return TrialStatus.Subscribed(tenant.TrialStartDate);
+
         return TrialStatus.FromStartDate(tenant.TrialStartDate);
     }
 }

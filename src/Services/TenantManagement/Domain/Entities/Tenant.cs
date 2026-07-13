@@ -18,6 +18,12 @@ namespace KDVManager.Services.TenantManagement.Domain.Entities
         /// <summary>UTC moment the trial started (when the tenant was provisioned).</summary>
         public DateTime TrialStartDate { get; set; }
 
+        /// <summary>
+        /// Commercial state; <see cref="Enums.SubscriptionStatus.Active"/> tenants
+        /// are exempt from trial expiry.
+        /// </summary>
+        public Enums.SubscriptionStatus SubscriptionStatus { get; set; }
+
         /// <summary>UTC moment the tenant record was created.</summary>
         public DateTime CreatedAt { get; set; }
     }

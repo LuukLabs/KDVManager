@@ -558,5 +558,9 @@
   "No tenants yet.": "Nog geen tenants.",
   "Extend {{days}} days": "Verleng {{days}} dagen",
   "trial.adminDaysLeft_one": "Nog {{count}} dag",
-  "trial.adminDaysLeft_other": "Nog {{count}} dagen"
+  "trial.adminDaysLeft_other": "Nog {{count}} dagen",
+  "Subscribed": "Geabonneerd",
+  "Convert to subscribed": "Omzetten naar abonnement",
+  "Revert to trial": "Terugzetten naar proefperiode",
+  "Changing the subscription failed. Please try again.": "Het wijzigen van het abonnement is mislukt. Probeer het opnieuw."
 }

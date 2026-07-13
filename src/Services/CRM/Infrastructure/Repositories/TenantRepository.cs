@@ -21,7 +21,7 @@ public class TenantRepository : ITenantRepository
         return await _dbContext.Tenants.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
-    public async Task UpsertTrialAsync(Guid id, DateTime trialStartDate, CancellationToken cancellationToken = default)
+    public async Task UpsertTrialAsync(Guid id, DateTime trialStartDate, bool isSubscribed, CancellationToken cancellationToken = default)
     {
         // Npgsql requires UTC for "timestamp with time zone"; the value may arrive
         // with a non-UTC Kind after transport deserialization.
@@ -35,11 +35,12 @@ public class TenantRepository : ITenantRepository
         var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
         if (tenant is null)
         {
-            _dbContext.Tenants.Add(new Tenant { Id = id, TrialStartDate = trialStartUtc });
+            _dbContext.Tenants.Add(new Tenant { Id = id, TrialStartDate = trialStartUtc, IsSubscribed = isSubscribed });
         }
         else
         {
             tenant.TrialStartDate = trialStartUtc;
+            tenant.IsSubscribed = isSubscribed;
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);

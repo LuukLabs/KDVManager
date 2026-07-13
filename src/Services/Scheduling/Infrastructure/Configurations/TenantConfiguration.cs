@@ -18,5 +18,8 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.Property(t => t.TrialStartDate)
             .IsRequired();
+
+        builder.Property(t => t.IsSubscribed)
+            .IsRequired();
     }
 }

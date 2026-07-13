@@ -1,29 +1,28 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using KDVManager.Services.TenantManagement.Application.Common;
 using KDVManager.Services.TenantManagement.Application.Contracts.Persistence;
+using KDVManager.Services.TenantManagement.Domain.Enums;
 using KDVManager.Shared.Contracts.Events;
 using KDVManager.Shared.Contracts.Tenancy;
-using KDVManager.Shared.Contracts.Trial;
 using MassTransit;
 
-namespace KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.ExtendTrial;
+namespace KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.SetSubscription;
 
 /// <summary>
-/// Extends a tenant's trial by moving its (single source of truth) TrialStartDate
-/// forward so the derived trial end lands <see cref="ExtendTrialCommand.Days"/> days
-/// after the current end — or after now when already expired. Publishes
-/// <see cref="TenantTrialChangedEvent"/> so the CRM/Scheduling read models sync and
-/// their local 402 enforcement lifts without manual intervention.
+/// Converts a tenant to a subscription (or back to trial). A subscribed tenant is
+/// exempt from trial expiry everywhere: the change is published via
+/// <see cref="TenantTrialChangedEvent"/> so the CRM/Scheduling read models — and
+/// with them their local 402 enforcement — follow automatically. Reverting to
+/// trial re-applies the regular expiry rules to the unchanged trial dates.
 /// </summary>
-public class ExtendTrialCommandHandler
+public class SetSubscriptionCommandHandler
 {
     private readonly ITenantRepository _tenantRepository;
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly ITenancyContextAccessor _tenancyContextAccessor;
 
-    public ExtendTrialCommandHandler(
+    public SetSubscriptionCommandHandler(
         ITenantRepository tenantRepository,
         IPublishEndpoint publishEndpoint,
         ITenancyContextAccessor tenancyContextAccessor)
@@ -34,19 +33,13 @@ public class ExtendTrialCommandHandler
     }
 
     /// <summary>Returns the updated tenant, or null when it does not exist.</summary>
-    public async Task<AdminTenantVM?> Handle(ExtendTrialCommand command, CancellationToken cancellationToken = default)
+    public async Task<AdminTenantVM?> Handle(SetSubscriptionCommand command, CancellationToken cancellationToken = default)
     {
         var tenant = await _tenantRepository.GetByIdAsync(command.TenantId, cancellationToken);
         if (tenant is null)
             return null;
 
-        var now = DateTime.UtcNow;
-        var currentEnd = TrialStatus.FromStartDate(tenant.TrialStartDate, now).TrialEndDate;
-        var newEnd = (currentEnd > now ? currentEnd : now).AddDays(command.Days);
-
-        // The trial end is always TrialStartDate + TrialDurationDays, so extending
-        // means moving the start date forward to produce the desired end.
-        tenant.TrialStartDate = newEnd.AddDays(-TrialStatus.TrialDurationDays);
+        tenant.SubscriptionStatus = command.Subscribed ? SubscriptionStatus.Active : SubscriptionStatus.Trial;
         await _tenantRepository.UpdateAsync(tenant, cancellationToken);
 
         // Publish under the *target* tenant's ambient context so the publish filter
@@ -57,7 +50,7 @@ public class ExtendTrialCommandHandler
             new TenantTrialChangedEvent
             {
                 TrialStartDate = tenant.TrialStartDate,
-                IsSubscribed = tenant.SubscriptionStatus == Domain.Enums.SubscriptionStatus.Active,
+                IsSubscribed = command.Subscribed,
             },
             cancellationToken);
 

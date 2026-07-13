@@ -13,4 +13,10 @@ public class Tenant
 
     /// <summary>UTC moment the trial started.</summary>
     public DateTime TrialStartDate { get; set; }
+
+    /// <summary>
+    /// True when the tenant has converted to a subscription and is exempt from
+    /// trial expiry.
+    /// </summary>
+    public bool IsSubscribed { get; set; }
 }

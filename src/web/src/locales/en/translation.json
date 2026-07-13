@@ -558,5 +558,9 @@
   "No tenants yet.": "No tenants yet.",
   "Extend {{days}} days": "Extend {{days}} days",
   "trial.adminDaysLeft_one": "{{count}} day left",
-  "trial.adminDaysLeft_other": "{{count}} days left"
+  "trial.adminDaysLeft_other": "{{count}} days left",
+  "Subscribed": "Subscribed",
+  "Convert to subscribed": "Convert to subscribed",
+  "Revert to trial": "Revert to trial",
+  "Changing the subscription failed. Please try again.": "Changing the subscription failed. Please try again."
 }

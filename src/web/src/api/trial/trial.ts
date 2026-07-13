@@ -11,6 +11,8 @@ export type TrialStatus = {
   trialEndDate: string;
   daysRemaining: number;
   isExpired: boolean;
+  /** True when the tenant has converted to a subscription (never expires). */
+  isSubscribed: boolean;
 };
 
 export const trialStatusQueryKey = ["trial-status"] as const;

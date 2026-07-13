@@ -9,12 +9,13 @@ type TrialBannerProps = {
 /**
  * Slim banner shown across the app while a tenant is on their 30-day trial,
  * counting down the days remaining. Switches to a warning tone in the final
- * week. Renders nothing once the trial has expired (the lock screen takes over).
+ * week. Renders nothing once the trial has expired (the lock screen takes over)
+ * or when the tenant has converted to a subscription.
  */
 const TrialBanner: React.FC<TrialBannerProps> = ({ trial }) => {
   const { t } = useTranslation();
 
-  if (trial.isExpired) return null;
+  if (trial.isExpired || trial.isSubscribed) return null;
 
   const severity = trial.daysRemaining <= 7 ? "warning" : "info";
 

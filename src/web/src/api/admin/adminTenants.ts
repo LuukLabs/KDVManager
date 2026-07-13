@@ -14,6 +14,8 @@ export type AdminTenant = {
   trialEndDate: string;
   daysRemaining: number;
   isExpired: boolean;
+  /** True when the tenant has converted to a subscription (never expires). */
+  isSubscribed: boolean;
 };
 
 export const adminTenantsQueryKey = ["admin-tenants"] as const;
@@ -39,4 +41,21 @@ export const extendTenantTrial = (
     method: "POST",
     headers: { "content-type": "application/json", ...(options?.headers ?? {}) },
     body: JSON.stringify({ days }),
+  });
+
+/**
+ * Converts a tenant to a subscription (`subscribed: true` — exempt from trial
+ * expiry) or reverts it to trial (`false` — the regular expiry rules re-apply
+ * to the unchanged trial dates). Returns the updated tenant.
+ */
+export const setTenantSubscription = (
+  tenantId: string,
+  subscribed: boolean,
+  options?: RequestInit,
+): Promise<AdminTenant> =>
+  executeFetch<AdminTenant>(`/tenantmanagement/v1/admin/tenants/${tenantId}/subscription`, {
+    ...options,
+    method: "PUT",
+    headers: { "content-type": "application/json", ...(options?.headers ?? {}) },
+    body: JSON.stringify({ subscribed }),
   });

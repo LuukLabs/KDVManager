@@ -40,6 +40,7 @@ public class TenantRegisteredEventConsumer : IConsumer<TenantRegisteredEvent>
         await _tenantRepository.UpsertTrialAsync(
             tenantId,
             context.Message.TrialStartDate,
+            isSubscribed: false,
             context.CancellationToken);
     }
 }

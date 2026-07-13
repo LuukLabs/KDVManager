@@ -12,4 +12,7 @@ namespace KDVManager.Shared.Contracts.Events;
 public class TenantTrialChangedEvent
 {
     public DateTime TrialStartDate { get; set; }
+
+    /// <summary>True when the tenant has converted to a (paid) subscription.</summary>
+    public bool IsSubscribed { get; set; }
 }

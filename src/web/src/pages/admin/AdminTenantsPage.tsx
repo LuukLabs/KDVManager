@@ -15,10 +15,13 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import MoreTimeIcon from "@mui/icons-material/MoreTime";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import UndoIcon from "@mui/icons-material/Undo";
 import {
   adminTenantsQueryKey,
   extendTenantTrial,
   listAdminTenants,
+  setTenantSubscription,
   type AdminTenant,
 } from "@api/admin/adminTenants";
 
@@ -43,6 +46,16 @@ export function Component() {
       await queryClient.invalidateQueries({ queryKey: adminTenantsQueryKey });
     },
   });
+
+  const subscription = useMutation({
+    mutationFn: ({ tenantId, subscribed }: { tenantId: string; subscribed: boolean }) =>
+      setTenantSubscription(tenantId, subscribed),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: adminTenantsQueryKey });
+    },
+  });
+
+  const mutating = extend.isPending || subscription.isPending;
 
   const formatDate = (value: string) => dayjs(value).locale(i18n.language).format("MMMM D, YYYY");
 
@@ -73,6 +86,10 @@ export function Component() {
         <Alert severity="error">{t("Extending the trial failed. Please try again.")}</Alert>
       ) : null}
 
+      {subscription.isError ? (
+        <Alert severity="error">{t("Changing the subscription failed. Please try again.")}</Alert>
+      ) : null}
+
       {tenants.data ? (
         <TableContainer component={Paper}>
           <Table size="small" aria-label={t("Tenants")}>
@@ -97,7 +114,9 @@ export function Component() {
                   <TableCell>{formatDate(tenant.createdAt)}</TableCell>
                   <TableCell>{formatDate(tenant.trialEndDate)}</TableCell>
                   <TableCell>
-                    {tenant.isExpired ? (
+                    {tenant.isSubscribed ? (
+                      <Chip size="small" color="primary" label={t("Subscribed")} />
+                    ) : tenant.isExpired ? (
                       <Chip size="small" color="error" label={t("Expired")} />
                     ) : (
                       <Chip
@@ -108,14 +127,39 @@ export function Component() {
                     )}
                   </TableCell>
                   <TableCell align="right">
-                    <Button
-                      size="small"
-                      startIcon={<MoreTimeIcon />}
-                      disabled={extend.isPending}
-                      onClick={() => extend.mutate(tenant.id)}
-                    >
-                      {t("Extend {{days}} days", { days: EXTEND_DAYS })}
-                    </Button>
+                    {tenant.isSubscribed ? (
+                      <Button
+                        size="small"
+                        startIcon={<UndoIcon />}
+                        disabled={mutating}
+                        onClick={() =>
+                          subscription.mutate({ tenantId: tenant.id, subscribed: false })
+                        }
+                      >
+                        {t("Revert to trial")}
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          size="small"
+                          startIcon={<MoreTimeIcon />}
+                          disabled={mutating}
+                          onClick={() => extend.mutate(tenant.id)}
+                        >
+                          {t("Extend {{days}} days", { days: EXTEND_DAYS })}
+                        </Button>
+                        <Button
+                          size="small"
+                          startIcon={<WorkspacePremiumIcon />}
+                          disabled={mutating}
+                          onClick={() =>
+                            subscription.mutate({ tenantId: tenant.id, subscribed: true })
+                          }
+                        >
+                          {t("Convert to subscribed")}
+                        </Button>
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

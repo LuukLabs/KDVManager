@@ -24,6 +24,12 @@ public class TrialStatus
     public bool IsExpired { get; init; }
 
     /// <summary>
+    /// True when the tenant has converted to a (paid) subscription. A subscribed
+    /// tenant is never expired regardless of its trial dates.
+    /// </summary>
+    public bool IsSubscribed { get; init; }
+
+    /// <summary>
     /// Builds a <see cref="TrialStatus"/> from the trial start date, computing the
     /// derived fields relative to <paramref name="nowUtc"/> (defaults to now).
     /// </summary>
@@ -43,6 +49,23 @@ public class TrialStatus
             TrialEndDate = end,
             DaysRemaining = remaining,
             IsExpired = now >= end,
+        };
+    }
+
+    /// <summary>
+    /// Builds the status for a subscribed tenant: the trial dates are kept for
+    /// reference, but the status never expires.
+    /// </summary>
+    public static TrialStatus Subscribed(DateTime trialStartDateUtc, DateTime? nowUtc = null)
+    {
+        var trial = FromStartDate(trialStartDateUtc, nowUtc);
+        return new TrialStatus
+        {
+            TrialStartDate = trial.TrialStartDate,
+            TrialEndDate = trial.TrialEndDate,
+            DaysRemaining = trial.DaysRemaining,
+            IsExpired = false,
+            IsSubscribed = true,
         };
     }
 }

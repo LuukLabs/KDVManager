@@ -4,7 +4,9 @@ using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using KDVManager.Shared.Contracts.Tenancy;
 using KDVManager.Shared.Infrastructure.Http;
+using KDVManager.Services.TenantManagement.Api;
 using KDVManager.Services.TenantManagement.Api.Services;
 using KDVManager.Services.TenantManagement.Application.Contracts.Identity;
 
@@ -86,7 +88,13 @@ public static class ConfigureServices
                         options.Audience = configuration["Auth0:Audience"];
                         options.RequireHttpsMetadata = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
                     });
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            // Cross-tenant platform administrator; the claim is minted by the Auth0
+            // post-login Action from app_metadata.platform_admin (see deploy/auth0).
+            options.AddPolicy(AuthorizationPolicies.PlatformAdmin, policy =>
+                policy.RequireClaim(TenancyClaimTypes.PlatformAdmin, "true"));
+        });
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();

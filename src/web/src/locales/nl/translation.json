@@ -546,5 +546,17 @@
   "Single user Creation": "Enkele gebruiker aanmaken",
   "auth.warnings.audienceMissing": "Auth0-audience is niet ingesteld, standaard wordt gebruikt: ",
   "trial.daysLeft_one": "Je hebt nog {{count}} dag in je gratis proefperiode.",
-  "trial.daysLeft_other": "Je hebt nog {{count}} dagen in je gratis proefperiode."
+  "trial.daysLeft_other": "Je hebt nog {{count}} dagen in je gratis proefperiode.",
+  "Platform administration": "Platformbeheer",
+  "All tenants on the platform and their trial status.": "Alle tenants op het platform en hun proefperiodestatus.",
+  "Failed to load tenants.": "Tenants laden mislukt.",
+  "Extending the trial failed. Please try again.": "Het verlengen van de proefperiode is mislukt. Probeer het opnieuw.",
+  "Tenants": "Tenants",
+  "Organization": "Organisatie",
+  "Created": "Aangemaakt",
+  "Trial ends": "Proefperiode eindigt",
+  "No tenants yet.": "Nog geen tenants.",
+  "Extend {{days}} days": "Verleng {{days}} dagen",
+  "trial.adminDaysLeft_one": "Nog {{count}} dag",
+  "trial.adminDaysLeft_other": "Nog {{count}} dagen"
 }

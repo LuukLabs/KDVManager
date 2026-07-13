@@ -49,6 +49,7 @@ public static class ConfigureServices
             x.AddConsumer<ChildDeletedEventConsumer>();
             x.AddConsumer<ChildUpdatedEventConsumer>();
             x.AddConsumer<TenantRegisteredEventConsumer>();
+            x.AddConsumer<TenantTrialChangedEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {

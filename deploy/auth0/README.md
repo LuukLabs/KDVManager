@@ -57,3 +57,28 @@ real tenants already exist (their id was previously injected by Auth0 directly):
    `Membership` (id = the user's `sub`) in the TenantManagement database.
 2. Set `app_metadata.tenant_id` on each Auth0 user to that id.
 3. Verify the Action injects the claim on next login.
+
+## 4. Platform administrators (superadmin)
+
+Platform admins can manage **all** tenants (list them, extend trials) via the
+`/tenantmanagement/v1/admin/*` endpoints and the `/admin` page in the web app.
+Authorization is claim-based; there is no separate login or user store.
+
+To make a user a platform admin:
+
+1. Auth0 Dashboard → User Management → Users → pick the user (e.g. yourself).
+2. Edit **app_metadata** and add:
+
+   ```json
+   {
+     "platform_admin": true
+   }
+   ```
+
+3. On the user's next login (or silent token refresh) the post-login Action adds
+   the `https://kdvmanager.nl/admin` claim to the access token, which unlocks the
+   admin endpoints (`PlatformAdmin` authorization policy in TenantManagement) and
+   shows the admin page link in the web app's account menu.
+
+Remove the flag to revoke access. The flag is deliberately **not** writable via
+any application endpoint — only via the Auth0 dashboard / Management API.

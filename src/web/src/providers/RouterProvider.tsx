@@ -11,7 +11,7 @@ import ErrorPage from "@components/ErrorPage";
 import { queryClient } from "@lib/query-client/queryClient";
 import MainLayout from "@components/MainLayout";
 import LoadingAnimation from "@components/LoadingAnimation";
-import { requireAuth, withAuth } from "@lib/auth/auth";
+import { requireAuth, requirePlatformAdmin, withAuth } from "@lib/auth/auth";
 import { Component as CallbackPage } from "@pages/auth/CallbackPage";
 import { Component as LoginPage } from "@pages/auth/LoginPage";
 
@@ -166,6 +166,14 @@ const router = (t: TFunction<"translation">) =>
                   },
                 },
               ],
+            },
+            {
+              path: "admin",
+              loader: requirePlatformAdmin,
+              lazy: () => import("@pages/admin/AdminTenantsPage"),
+              handle: {
+                crumb: () => t("Platform administration"),
+              },
             },
             {
               path: "settings",

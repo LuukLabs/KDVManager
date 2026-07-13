@@ -546,5 +546,17 @@
   "Single user Creation": "Single user Creation",
   "auth.warnings.audienceMissing": "Auth0 audience is not set, using default: ",
   "trial.daysLeft_one": "You have {{count}} day left in your free trial.",
-  "trial.daysLeft_other": "You have {{count}} days left in your free trial."
+  "trial.daysLeft_other": "You have {{count}} days left in your free trial.",
+  "Platform administration": "Platform administration",
+  "All tenants on the platform and their trial status.": "All tenants on the platform and their trial status.",
+  "Failed to load tenants.": "Failed to load tenants.",
+  "Extending the trial failed. Please try again.": "Extending the trial failed. Please try again.",
+  "Tenants": "Tenants",
+  "Organization": "Organization",
+  "Created": "Created",
+  "Trial ends": "Trial ends",
+  "No tenants yet.": "No tenants yet.",
+  "Extend {{days}} days": "Extend {{days}} days",
+  "trial.adminDaysLeft_one": "{{count}} day left",
+  "trial.adminDaysLeft_other": "{{count}} days left"
 }

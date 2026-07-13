@@ -69,7 +69,7 @@ export function Component() {
             autoFocus
             fullWidth
             disabled={mutation.isPending}
-            inputProps={{ maxLength: 200 }}
+            slotProps={{ htmlInput: { maxLength: 200 } }}
           />
           {mutation.isError ? (
             <Alert severity="error">

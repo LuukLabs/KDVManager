@@ -28,7 +28,7 @@ spec:
               memory: 640Mi
             limits:
               cpu: 800m
-              memory: 1280Mi
+              memory: 2Gi
           persistence:
             size: 5Gi
           # Per-query memory caps (ClickHouse user profile settings)
@@ -36,10 +36,11 @@ spec:
             default/max_memory_usage: "300000000"
             default/max_bytes_before_external_group_by: "200000000"
             default/max_bytes_before_external_sort: "200000000"
-          # Server-wide memory caps; max_server_memory_usage replaces the
-          # long-removed max_memory_usage_for_all_queries setting
+          # Keep caches bounded, but let ClickHouse derive its server-wide
+          # memory budget from the container limit. A fixed 600 MB cap is
+          # below ClickHouse's baseline usage after the SigNoz upgrade and
+          # prevents telemetry-store migrations from completing.
           settings:
-            max_server_memory_usage: "600000000"
             uncompressed_cache_size: "0"
             mark_cache_size: "268435456"
 

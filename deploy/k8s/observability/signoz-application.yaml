@@ -12,16 +12,15 @@ spec:
   project: default
   source:
     repoURL: https://charts.signoz.io
-    targetRevision: 0.88.2
+    targetRevision: 0.132.2
     chart: signoz
     helm:
       values: |
         global:
           storageClass: do-block-storage
 
-        # In chart 0.88.2 clickhouse and otelCollector are top-level keys, and
-        # queryService/frontend/alertmanager are merged into the unified
-        # `signoz` component.
+        # clickhouse and otelCollector are top-level chart values. The UI,
+        # API, ruler, and Alertmanager run in the unified `signoz` component.
         clickhouse:
           resources:
             requests:

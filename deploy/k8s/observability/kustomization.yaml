@@ -8,7 +8,6 @@ resources:
   - otel-collector-deployment.yaml
   - otel-collector-service.yaml
   - otel-collector-rbac.yaml
-  - signoz-application.yaml
 
 labels:
 - pairs:

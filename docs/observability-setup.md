@@ -1,6 +1,6 @@
 # Observability Stack
 
-_Last updated: 2026-07-06. For the review that shaped this setup, see [observability-review.md](observability-review.md)._
+_Last updated: 2026-07-14. For the review that shaped this setup, see [observability-review.md](observability-review.md)._
 
 ## Architecture
 
@@ -17,8 +17,10 @@ k8s_cluster + kubeletstats ────────────────┘  
                                               SigNoz UI: https://signoz.kdvmanager.nl
 ```
 
-- **SigNoz** (traces, metrics, logs, dashboards, alerts) — official Helm chart, pinned in
-  `deploy/k8s/observability/signoz-application.yaml`, deployed by ArgoCD into the `signoz` namespace.
+- **SigNoz** (traces, metrics, logs, dashboards, alerts) — official Helm chart `0.132.2`
+  (SigNoz `v0.132.2`), pinned in `deploy/k8s/observability/signoz-application.yaml` and deployed by
+  ArgoCD into the `signoz` namespace. The chart also owns ClickHouse `25.12.5` and the
+  `signoz-telemetrystore-migrator` job that applies schema and background data migrations.
 - **OpenTelemetry Collector** (gateway) — pinned `opentelemetry-collector-contrib` image, deployed from
   `deploy/k8s/observability/` into the `observability` namespace. Receives OTLP from all services,
   Envoy, and the browser; scrapes Envoy's Prometheus stats; collects cluster/kubelet metrics; exports
@@ -92,12 +94,13 @@ points the web build at `http://localhost:5200/telemetry`. Services pick up the 
 | Pod not Ready | `kubectl describe pod` → readiness probe on `/readyz` — failing check names Postgres or the bus |
 | No telemetry arriving | `kubectl logs deploy/otel-collector -n observability`; health `:13133`, pipeline introspection via zpages `:55679`; then SigNoz collector in `signoz` ns |
 | SigNoz down/slow | `kubectl get pods -n signoz`; ClickHouse memory caps are set in the Application values |
+| SigNoz upgrade stuck | `kubectl get job signoz-telemetrystore-migrator -n signoz`; inspect it with `kubectl logs job/signoz-telemetrystore-migrator -n signoz --all-containers` |
 | ArgoCD drift | `kubectl get application signoz -n argocd` (chart) and the kustomize app for `deploy/k8s/observability` |
 
 ## Known gaps / follow-ups
 
-1. **Alerting**: SigNoz alert rules + a notification channel are not yet configured (do this in the
-   SigNoz UI), and there is no external uptime check for kdvmanager.nl itself.
+1. **Alerting**: revalidate the existing rules and email notification channel after the SigNoz
+   upgrade; there is still no external uptime check for kdvmanager.nl itself.
 2. **Retention**: set explicitly in SigNoz (Settings → General); ClickHouse disk is small (5Gi).
 3. **Business metrics**: the per-service meters currently only count errors — domain metrics
    (schedules created, registrations, absences) belong there.

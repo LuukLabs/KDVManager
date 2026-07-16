@@ -562,5 +562,12 @@
   "Subscribed": "Geabonneerd",
   "Convert to subscribed": "Omzetten naar abonnement",
   "Revert to trial": "Terugzetten naar proefperiode",
-  "Changing the subscription failed. Please try again.": "Het wijzigen van het abonnement is mislukt. Probeer het opnieuw."
+  "Changing the subscription failed. Please try again.": "Het wijzigen van het abonnement is mislukt. Probeer het opnieuw.",
+  "Invoice address": "Factuuradres",
+  "Not set": "Niet ingesteld",
+  "Edit tenant": "Tenant bewerken",
+  "Delete tenant": "Tenant verwijderen",
+  "Deleting the tenant failed. Please try again.": "Het verwijderen van de tenant is mislukt. Probeer het opnieuw.",
+  "Saving the tenant failed. Please try again.": "Het opslaan van de tenant is mislukt. Probeer het opnieuw.",
+  "This permanently deletes \"{{name}}\" and its memberships. Other services drop the tenant from their records as well. This cannot be undone.": "Dit verwijdert \"{{name}}\" en de bijbehorende lidmaatschappen definitief. Andere services verwijderen de tenant ook uit hun gegevens. Dit kan niet ongedaan worden gemaakt."
 }

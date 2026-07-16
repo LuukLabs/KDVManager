@@ -20,6 +20,9 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
             .IsRequired()
             .HasMaxLength(200);
 
+        builder.Property(t => t.InvoiceAddress)
+            .HasMaxLength(500);
+
         builder.Property(t => t.TrialStartDate)
             .IsRequired();
 

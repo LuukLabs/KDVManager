@@ -16,4 +16,6 @@ public interface ITenantRepository
     Task AddAsync(Tenant tenant, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(Tenant tenant, CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(Tenant tenant, CancellationToken cancellationToken = default);
 }

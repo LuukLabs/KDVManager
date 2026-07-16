@@ -45,4 +45,14 @@ public class TenantRepository : ITenantRepository
 
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        if (tenant is null)
+            return;
+
+        _dbContext.Tenants.Remove(tenant);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

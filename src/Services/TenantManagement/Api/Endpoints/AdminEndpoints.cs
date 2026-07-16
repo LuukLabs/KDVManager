@@ -1,6 +1,8 @@
 using KDVManager.Services.TenantManagement.Application.Features.Admin;
+using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.DeleteTenant;
 using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.ExtendTrial;
 using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.SetSubscription;
+using KDVManager.Services.TenantManagement.Application.Features.Admin.Commands.UpdateTenant;
 using KDVManager.Services.TenantManagement.Application.Features.Admin.Queries.ListTenants;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +58,48 @@ public static class AdminEndpoints
         .Produces<AdminTenantVM>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
         .RequireAuthorization(AuthorizationPolicies.PlatformAdmin);
+
+        // Change a tenant's organization details (name, invoice address).
+        endpoints.MapPut("/v1/admin/tenants/{tenantId:guid}", async (
+            Guid tenantId,
+            [FromBody] UpdateTenantRequest request,
+            [FromServices] UpdateTenantCommandHandler handler) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.Name))
+                return Results.BadRequest(new { message = "Name is required." });
+            if (request.Name.Trim().Length > 200)
+                return Results.BadRequest(new { message = "Name must be at most 200 characters." });
+            if (request.InvoiceAddress is { Length: > 500 })
+                return Results.BadRequest(new { message = "Invoice address must be at most 500 characters." });
+
+            var result = await handler.Handle(new UpdateTenantCommand
+            {
+                TenantId = tenantId,
+                Name = request.Name,
+                InvoiceAddress = request.InvoiceAddress,
+            });
+            return result is null ? Results.NotFound() : Results.Ok(result);
+        })
+        .WithName("AdminUpdateTenant")
+        .WithTags("admin")
+        .Produces<AdminTenantVM>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status404NotFound)
+        .RequireAuthorization(AuthorizationPolicies.PlatformAdmin);
+
+        // Delete a tenant. Publishes TenantDeletedEvent so read models follow.
+        endpoints.MapDelete("/v1/admin/tenants/{tenantId:guid}", async (
+            Guid tenantId,
+            [FromServices] DeleteTenantCommandHandler handler) =>
+        {
+            var deleted = await handler.Handle(new DeleteTenantCommand { TenantId = tenantId });
+            return deleted ? Results.NoContent() : Results.NotFound();
+        })
+        .WithName("AdminDeleteTenant")
+        .WithTags("admin")
+        .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status404NotFound)
+        .RequireAuthorization(AuthorizationPolicies.PlatformAdmin);
     }
 
     /// <summary>Request body for extending a tenant's trial.</summary>
@@ -63,4 +107,7 @@ public static class AdminEndpoints
 
     /// <summary>Request body for converting a tenant to/from a subscription.</summary>
     public record SetSubscriptionRequest(bool Subscribed);
+
+    /// <summary>Request body for changing a tenant's organization details.</summary>
+    public record UpdateTenantRequest(string Name, string? InvoiceAddress);
 }

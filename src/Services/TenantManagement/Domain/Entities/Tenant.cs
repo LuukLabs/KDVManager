@@ -15,6 +15,9 @@ namespace KDVManager.Services.TenantManagement.Domain.Entities
         /// <summary>Organization display name, supplied during onboarding.</summary>
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>Billing address used on invoices; empty until an admin fills it in.</summary>
+        public string? InvoiceAddress { get; set; }
+
         /// <summary>UTC moment the trial started (when the tenant was provisioned).</summary>
         public DateTime TrialStartDate { get; set; }
 

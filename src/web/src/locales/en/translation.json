@@ -562,5 +562,12 @@
   "Subscribed": "Subscribed",
   "Convert to subscribed": "Convert to subscribed",
   "Revert to trial": "Revert to trial",
-  "Changing the subscription failed. Please try again.": "Changing the subscription failed. Please try again."
+  "Changing the subscription failed. Please try again.": "Changing the subscription failed. Please try again.",
+  "Invoice address": "Invoice address",
+  "Not set": "Not set",
+  "Edit tenant": "Edit tenant",
+  "Delete tenant": "Delete tenant",
+  "Deleting the tenant failed. Please try again.": "Deleting the tenant failed. Please try again.",
+  "Saving the tenant failed. Please try again.": "Saving the tenant failed. Please try again.",
+  "This permanently deletes \"{{name}}\" and its memberships. Other services drop the tenant from their records as well. This cannot be undone.": "This permanently deletes \"{{name}}\" and its memberships. Other services drop the tenant from their records as well. This cannot be undone."
 }

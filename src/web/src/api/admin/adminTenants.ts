@@ -9,6 +9,8 @@ import { executeFetch } from "../mutator/executeFetch";
 export type AdminTenant = {
   id: string;
   name: string;
+  /** Billing address used on invoices; null until an admin fills it in. */
+  invoiceAddress: string | null;
   createdAt: string;
   trialStartDate: string;
   trialEndDate: string;
@@ -58,4 +60,27 @@ export const setTenantSubscription = (
     method: "PUT",
     headers: { "content-type": "application/json", ...(options?.headers ?? {}) },
     body: JSON.stringify({ subscribed }),
+  });
+
+/** Changes a tenant's organization details. Returns the updated tenant. */
+export const updateTenant = (
+  tenantId: string,
+  details: { name: string; invoiceAddress: string | null },
+  options?: RequestInit,
+): Promise<AdminTenant> =>
+  executeFetch<AdminTenant>(`/tenantmanagement/v1/admin/tenants/${tenantId}`, {
+    ...options,
+    method: "PUT",
+    headers: { "content-type": "application/json", ...(options?.headers ?? {}) },
+    body: JSON.stringify(details),
+  });
+
+/**
+ * Deletes a tenant. The backend publishes a tenant-deleted event so other
+ * services drop the tenant from their read models.
+ */
+export const deleteTenant = (tenantId: string, options?: RequestInit): Promise<void> =>
+  executeFetch<void>(`/tenantmanagement/v1/admin/tenants/${tenantId}`, {
+    ...options,
+    method: "DELETE",
   });

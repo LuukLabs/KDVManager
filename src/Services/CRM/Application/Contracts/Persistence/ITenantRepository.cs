@@ -11,4 +11,7 @@ public interface ITenantRepository
 
     /// <summary>Creates or updates the local trial read model for the tenant.</summary>
     Task UpsertTrialAsync(Guid id, DateTime trialStartDate, bool isSubscribed, CancellationToken cancellationToken = default);
+
+    /// <summary>Removes the local tenant read model row, if present.</summary>
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

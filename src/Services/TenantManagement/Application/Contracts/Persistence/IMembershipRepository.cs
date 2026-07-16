@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using KDVManager.Services.TenantManagement.Domain.Entities;
@@ -10,4 +11,7 @@ public interface IMembershipRepository
     Task<Membership?> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default);
 
     Task AddAsync(Membership membership, CancellationToken cancellationToken = default);
+
+    /// <summary>Removes all memberships of the tenant; used when the tenant is deleted.</summary>
+    Task DeleteByTenantIdAsync(Guid tenantId, CancellationToken cancellationToken = default);
 }

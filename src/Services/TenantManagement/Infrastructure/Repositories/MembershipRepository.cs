@@ -1,4 +1,6 @@
+using System;
 using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.TenantManagement.Application.Contracts.Persistence;
 using KDVManager.Services.TenantManagement.Domain.Entities;
@@ -23,6 +25,16 @@ public class MembershipRepository : IMembershipRepository
     public async Task AddAsync(Membership membership, CancellationToken cancellationToken = default)
     {
         _dbContext.Memberships.Add(membership);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteByTenantIdAsync(Guid tenantId, CancellationToken cancellationToken = default)
+    {
+        var memberships = await _dbContext.Memberships
+            .Where(m => m.TenantId == tenantId)
+            .ToListAsync(cancellationToken);
+
+        _dbContext.Memberships.RemoveRange(memberships);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

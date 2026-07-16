@@ -10,6 +10,7 @@ public class AdminTenantVM
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string? InvoiceAddress { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime TrialStartDate { get; set; }
     public DateTime TrialEndDate { get; set; }
@@ -28,6 +29,7 @@ public class AdminTenantVM
         {
             Id = tenant.Id,
             Name = tenant.Name,
+            InvoiceAddress = tenant.InvoiceAddress,
             CreatedAt = tenant.CreatedAt,
             TrialStartDate = trial.TrialStartDate,
             TrialEndDate = trial.TrialEndDate,

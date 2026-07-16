@@ -9,6 +9,7 @@ on:
       - 'src/web/**'
       - 'src/Services/CRM/**'
       - 'src/Services/Scheduling/**'
+      - 'src/Services/Tenants/**'
       - 'src/Shared/**'
       - 'src/docker-compose.yml'
       - '.github/workflows/web.yml'
@@ -16,6 +17,8 @@ on:
       - '.github/workflows/crm-migrator.yml'
       - '.github/workflows/scheduling-api.yml'
       - '.github/workflows/scheduling-migrator.yml'
+      - '.github/workflows/tenants-api.yml'
+      - '.github/workflows/tenants-migrator.yml'
       - '.github/workflows/composite/**'
       - '.github/workflows/deploy-update-images.yml'
 

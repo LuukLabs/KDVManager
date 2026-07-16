@@ -532,5 +532,14 @@
   "{{count}} day(s)_one": "{{count}} dag",
   "{{count}} day(s)_other": "{{count}} dagen",
   "{{count}} years_one": "{{count}} jaar",
-  "{{count}} years_other": "{{count}} jaren"
+  "{{count}} years_other": "{{count}} jaren",
+  "Add tenant": "Tenant toevoegen",
+  "Edit tenant": "Tenant bewerken",
+  "Manage tenants.": "Beheer tenants.",
+  "Tenant added": "Tenant toegevoegd",
+  "Tenant updated": "Tenant bijgewerkt",
+  "Tenants": "Tenants",
+  "To add a tenant, please enter the tenant name here.": "Om een tenant toe te voegen, voer hier de tenantnaam in.",
+  "activate.tenant.ariaLabel": "Activeer {{name}}",
+  "deactivate.tenant.ariaLabel": "Deactiveer {{name}}"
 }

@@ -27,6 +27,8 @@ public static class ConfigureServices
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
         services.AddScoped<IEndMarkRepository, EndMarkRepository>();
         services.AddScoped<IEndMarkSettingsRepository, EndMarkSettingsRepository>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
+        services.AddScoped<KDVManager.Shared.Contracts.Trial.ITrialStatusService, TrialStatusService>();
         services.AddScoped<IScheduleTimelineService, ScheduleTimelineService>();
         services.AddScoped<IEndMarkAutomationService, EndMarkAutomationService>();
         services.AddScoped<IScheduleStatusService, ScheduleStatusService>();
@@ -46,6 +48,8 @@ public static class ConfigureServices
             x.AddConsumer<ChildAddedEventConsumer>();
             x.AddConsumer<ChildDeletedEventConsumer>();
             x.AddConsumer<ChildUpdatedEventConsumer>();
+            x.AddConsumer<TenantRegisteredEventConsumer>();
+            x.AddConsumer<TenantTrialChangedEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {

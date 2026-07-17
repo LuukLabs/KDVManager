@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yml
+- service.yml
+
+labels:
+- pairs:
+    app: platformmanagement-api
+    component: api
+    service: platformmanagement
+
+images:
+- name: ghcr.io/luuklabs/kdvmanager/platformmanagement.api
+  newName: ghcr.io/luuklabs/kdvmanager/platformmanagement.api
+  newTag: linux-main
+- name: ghcr.io/luuklabs/kdvmanager/platformmanagement.migrator
+  newName: ghcr.io/luuklabs/kdvmanager/platformmanagement.migrator
+  newTag: linux-main

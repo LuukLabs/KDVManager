@@ -1,4 +1,3 @@
-using KDVManager.Services.Scheduling.Api.Telemetry;
 using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
@@ -30,7 +29,10 @@ public static class ConfigureServices
         services.AddHttpClient("default")
             .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
 
-        services.AddKdvManagerTelemetry(configuration, "scheduling-api", SchedulingApiMetrics.Meter.Name);
+        var apiMetrics = new ApiMetrics("scheduling-api");
+        services.AddSingleton(apiMetrics);
+
+        services.AddKdvManagerTelemetry(configuration, "scheduling-api", apiMetrics.Meter.Name);
 
         return services;
     }

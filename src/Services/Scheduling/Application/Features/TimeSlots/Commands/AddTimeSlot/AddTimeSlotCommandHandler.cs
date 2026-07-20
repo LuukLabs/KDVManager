@@ -20,7 +20,7 @@ public class AddTimeSlotCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new KDVManager.Shared.Application.Exceptions.ValidationException(validationResult);
 
         var timeSlot = new TimeSlot
         {

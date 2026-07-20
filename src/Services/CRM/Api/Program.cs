@@ -1,5 +1,4 @@
 ﻿using KDVManager.Services.CRM.Api.Endpoints;
-using KDVManager.Services.CRM.Api.Middleware;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Shared.Infrastructure.Middleware;

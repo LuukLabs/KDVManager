@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using KDVManager.Services.CRM.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 
 namespace KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianList

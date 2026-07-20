@@ -28,7 +28,7 @@ public class AddEndMarkCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new KDVManager.Shared.Application.Exceptions.ValidationException(validationResult);
 
         var endMark = new EndMark(request.ChildId, request.EndDate, request.Reason);
         await _repo.AddAsync(endMark);

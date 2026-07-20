@@ -23,14 +23,14 @@ namespace KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateC
             var child = await _childRepository.GetByIdAsync(request.Id);
             if (child == null)
             {
-                throw new Exceptions.NotFoundException(nameof(Child), request.Id);
+                throw new KDVManager.Shared.Application.Exceptions.NotFoundException(nameof(Child), request.Id);
             }
 
             var validator = new UpdateChildCommandValidator();
             var validationResult = await validator.ValidateAsync(request);
 
             if (!validationResult.IsValid)
-                throw new Exceptions.ValidationException(validationResult);
+                throw new KDVManager.Shared.Application.Exceptions.ValidationException(validationResult);
 
             // Store original birthdate to check if it changed
             var originalDateOfBirth = child.DateOfBirth;

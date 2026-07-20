@@ -1,4 +1,3 @@
-using KDVManager.Services.CRM.Api.Telemetry;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
@@ -27,7 +26,10 @@ public static class ConfigureServices
         services.AddHttpClient("default")
             .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
 
-        services.AddKdvManagerTelemetry(configuration, "crm-api", CrmApiMetrics.Meter.Name);
+        var apiMetrics = new ApiMetrics("crm-api");
+        services.AddSingleton(apiMetrics);
+
+        services.AddKdvManagerTelemetry(configuration, "crm-api", apiMetrics.Meter.Name);
 
         return services;
     }

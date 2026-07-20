@@ -5,6 +5,7 @@ using KDVManager.Services.Scheduling.Application.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
+using KDVManager.Shared.Infrastructure.Messaging;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Services.Scheduling.Infrastructure.Services;
 using KDVManager.Services.Scheduling.Application.Services;
@@ -41,21 +42,11 @@ public static class ConfigureServices
 
     public static IServiceCollection AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddMassTransit(x =>
+        services.AddKdvManagerMassTransit(configuration, x =>
         {
             x.AddConsumer<ChildAddedEventConsumer>();
             x.AddConsumer<ChildDeletedEventConsumer>();
             x.AddConsumer<ChildUpdatedEventConsumer>();
-
-            x.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host(configuration.GetConnectionString("RabbitMQ"));
-                cfg.ConfigureEndpoints(context);
-
-                cfg.UseConsumeFilter(typeof(MassTransitTenancyConsumeFilter<>), context);
-                cfg.UseSendFilter(typeof(MassTransitTenancySendFilter<>), context);
-                cfg.UsePublishFilter(typeof(MassTransitTenancyPublishFilter<>), context);
-            });
         });
 
         return services;

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using KDVManager.Services.Scheduling.Domain.Interfaces;
+using KDVManager.Shared.Application.Contracts.Pagination;
+
+using KDVManager.Shared.Application.Contracts.Persistence;
 
 namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 

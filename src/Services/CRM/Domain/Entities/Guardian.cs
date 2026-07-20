@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using KDVManager.Services.CRM.Domain.Interfaces;
 using KDVManager.Shared.Domain.Interfaces;
 using KDVManager.Shared.Contracts.Tenancy;
 

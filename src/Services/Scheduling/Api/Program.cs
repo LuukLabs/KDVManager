@@ -1,5 +1,4 @@
-﻿using KDVManager.Services.Scheduling.Api.Middleware;
-using KDVManager.Shared.Infrastructure.Logging;
+﻿using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Middleware;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;

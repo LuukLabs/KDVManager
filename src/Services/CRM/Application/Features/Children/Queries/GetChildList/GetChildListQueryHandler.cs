@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
-using KDVManager.Services.CRM.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Shared.Contracts.Enums;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList;

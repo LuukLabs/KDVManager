@@ -30,7 +30,7 @@ public class AddChildCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new KDVManager.Shared.Application.Exceptions.ValidationException(validationResult);
 
         // Get the next child number for this tenant
         var childNumber = await _childNumberSequenceService.GetNextChildNumberAsync();

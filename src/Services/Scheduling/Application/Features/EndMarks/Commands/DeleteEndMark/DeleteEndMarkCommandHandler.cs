@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
-using KDVManager.Services.Scheduling.Application.Exceptions;
+using KDVManager.Shared.Application.Exceptions;
 using KDVManager.Services.Scheduling.Application.Services;
 using KDVManager.Services.Scheduling.Domain.Entities;
 

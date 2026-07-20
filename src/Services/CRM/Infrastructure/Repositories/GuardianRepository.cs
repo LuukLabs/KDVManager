@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.CRM.Domain.Interfaces;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianList;
 using Microsoft.EntityFrameworkCore;
 

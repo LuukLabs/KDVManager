@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class AbsenceRepository : BaseRepository<Absence>, IAbsenceRepository
+public class AbsenceRepository : BaseRepository<Absence, ApplicationDbContext>, IAbsenceRepository
 {
     public AbsenceRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class EndMarkRepository : BaseRepository<EndMark>, IEndMarkRepository
+public class EndMarkRepository : BaseRepository<EndMark, ApplicationDbContext>, IEndMarkRepository
 {
     public EndMarkRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 

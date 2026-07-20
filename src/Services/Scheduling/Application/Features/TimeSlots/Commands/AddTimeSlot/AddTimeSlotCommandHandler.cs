@@ -20,7 +20,7 @@ public class AddTimeSlotCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new ValidationException(validationResult);
 
         var timeSlot = new TimeSlot
         {
@@ -35,4 +35,3 @@ public class AddTimeSlotCommandHandler
         return timeSlot.Id;
     }
 }
-

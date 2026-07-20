@@ -1,4 +1,3 @@
-using KDVManager.Services.CRM.Api.Telemetry;
 using KDVManager.Services.CRM.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
@@ -11,6 +10,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        const string serviceName = "crm-api";
+
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         services.AddHttpContextAccessor();
@@ -21,13 +22,14 @@ public static class ConfigureServices
         services.AddKdvManagerOpenApi("KDVManager CRM API");
 
         services.AddKdvManagerAuthentication(configuration);
+        services.AddKdvManagerExceptionHandling(serviceName);
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();
         services.AddHttpClient("default")
             .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
 
-        services.AddKdvManagerTelemetry(configuration, "crm-api", CrmApiMetrics.Meter.Name);
+        services.AddKdvManagerTelemetry(configuration, serviceName, serviceName);
 
         return services;
     }

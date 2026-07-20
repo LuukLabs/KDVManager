@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using KDVManager.Services.Scheduling.Domain.Interfaces;
 using KDVManager.Services.Scheduling.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
+public class ScheduleRepository : BaseRepository<Schedule, ApplicationDbContext>, IScheduleRepository
 {
     public ScheduleRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

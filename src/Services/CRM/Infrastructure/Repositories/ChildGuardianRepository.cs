@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.CRM.Infrastructure.Repositories;
 
-public class ChildGuardianRepository : BaseRepository<ChildGuardian>, IChildGuardianRepository
+public class ChildGuardianRepository : BaseRepository<ChildGuardian, ApplicationDbContext>, IChildGuardianRepository
 {
     public ChildGuardianRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

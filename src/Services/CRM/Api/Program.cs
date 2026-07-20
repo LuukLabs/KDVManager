@@ -1,5 +1,5 @@
 ﻿using KDVManager.Services.CRM.Api.Endpoints;
-using KDVManager.Services.CRM.Api.Middleware;
+using KDVManager.Shared.Infrastructure.Http;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
 using KDVManager.Shared.Infrastructure.Middleware;
@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.UseCustomExceptionHandler();
+app.UseKdvManagerExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -21,7 +21,7 @@ public class GetChildDetailQueryHandler
 
         if (child == null)
         {
-            throw new Exceptions.NotFoundException(nameof(Child), request.Id);
+            throw new NotFoundException(nameof(Child), request.Id);
         }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);

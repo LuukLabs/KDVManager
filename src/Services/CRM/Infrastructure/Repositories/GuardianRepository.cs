@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
 using KDVManager.Services.CRM.Domain.Entities;
-using KDVManager.Services.CRM.Domain.Interfaces;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianList;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.CRM.Infrastructure.Repositories;
 
-public class GuardianRepository : BaseRepository<Guardian>, IGuardianRepository
+public class GuardianRepository : BaseRepository<Guardian, ApplicationDbContext>, IGuardianRepository
 {
     public GuardianRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

@@ -38,7 +38,7 @@ public class AddScheduleCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new ValidationException(validationResult);
 
 
         var schedule = new Schedule

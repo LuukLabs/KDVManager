@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
-using KDVManager.Services.CRM.Application.Exceptions;
 using KDVManager.Services.CRM.Domain.Entities;
 using KDVManager.Shared.Contracts.Events;
 using MassTransit;

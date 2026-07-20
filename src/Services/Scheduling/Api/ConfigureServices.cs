@@ -1,4 +1,3 @@
-using KDVManager.Services.Scheduling.Api.Telemetry;
 using KDVManager.Services.Scheduling.Infrastructure;
 using KDVManager.Shared.Infrastructure.Auth;
 using KDVManager.Shared.Infrastructure.Http;
@@ -11,6 +10,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        const string serviceName = "scheduling-api";
+
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         services.AddHttpContextAccessor();
@@ -24,13 +25,14 @@ public static class ConfigureServices
         services.AddKdvManagerOpenApi("KDVManager Scheduling API");
 
         services.AddKdvManagerAuthentication(configuration);
+        services.AddKdvManagerExceptionHandling(serviceName);
 
         // Outgoing HTTP correlation propagation
         services.AddTransient<CorrelationIdPropagationHandler>();
         services.AddHttpClient("default")
             .AddHttpMessageHandler<CorrelationIdPropagationHandler>();
 
-        services.AddKdvManagerTelemetry(configuration, "scheduling-api", SchedulingApiMetrics.Meter.Name);
+        services.AddKdvManagerTelemetry(configuration, serviceName, serviceName);
 
         return services;
     }

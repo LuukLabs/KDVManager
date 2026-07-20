@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
 

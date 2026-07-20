@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using KDVManager.Shared.Infrastructure.Http;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Absences.Queries.GetAbsencesByChildId;
 using KDVManager.Services.Scheduling.Application.Features.Absences.Commands.AddAbsence;

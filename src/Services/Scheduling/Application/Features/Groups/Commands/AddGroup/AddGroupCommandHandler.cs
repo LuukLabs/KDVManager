@@ -20,7 +20,7 @@ public class AddGroupCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new ValidationException(validationResult);
 
         var group = new Group
         {
@@ -33,4 +33,3 @@ public class AddGroupCommandHandler
         return group.Id;
     }
 }
-

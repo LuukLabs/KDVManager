@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KDVManager.Shared.Application\KDVManager.Shared.Application.csproj" />
     <ProjectReference Include="..\KDVManager.Shared.Contracts\KDVManager.Shared.Contracts.csproj" />       
   </ItemGroup>
 

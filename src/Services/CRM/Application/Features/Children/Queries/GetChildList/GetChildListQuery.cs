@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
-using KDVManager.Services.CRM.Application.Contracts.Pagination;
 
 namespace KDVManager.Services.CRM.Application.Features.Children.Queries.GetChildList
 {

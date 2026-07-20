@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class EndMarkSettingsRepository : BaseRepository<EndMarkSettings>, IEndMarkSettingsRepository
+public class EndMarkSettingsRepository : BaseRepository<EndMarkSettings, ApplicationDbContext>, IEndMarkSettingsRepository
 {
     private readonly ITenancyContextAccessor _tenancyContextAccessor;
 

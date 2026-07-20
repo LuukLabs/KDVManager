@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 using KDVManager.Services.Scheduling.Domain.Entities;
-using KDVManager.Services.Scheduling.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class TimeSlotRepository : BaseRepository<TimeSlot>, ITimeSlotRepository
+public class TimeSlotRepository : BaseRepository<TimeSlot, ApplicationDbContext>, ITimeSlotRepository
 {
     public TimeSlotRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KDVManager.Services.Scheduling.Infrastructure.Repositories;
 
-public class ClosurePeriodRepository : BaseRepository<ClosurePeriod>, IClosurePeriodRepository
+public class ClosurePeriodRepository : BaseRepository<ClosurePeriod, ApplicationDbContext>, IClosurePeriodRepository
 {
     public ClosurePeriodRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

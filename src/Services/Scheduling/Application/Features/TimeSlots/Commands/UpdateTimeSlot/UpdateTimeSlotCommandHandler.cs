@@ -19,12 +19,12 @@ public class UpdateTimeSlotCommandHandler
         var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
-            throw new Exceptions.ValidationException(validationResult);
+            throw new ValidationException(validationResult);
 
         var timeSlot = await _timeSlotRepository.GetByIdAsync(request.Id);
 
         if (timeSlot == null)
-            throw new Exceptions.NotFoundException(nameof(Domain.Entities.TimeSlot), request.Id);
+            throw new NotFoundException(nameof(Domain.Entities.TimeSlot), request.Id);
 
         timeSlot.Name = request.Name;
         timeSlot.StartTime = request.StartTime;

@@ -16,10 +16,10 @@ public class DeleteTimeSlotCommandHandler
     public async Task Handle(DeleteTimeSlotCommand request)
     {
         if (!await _timeSlotRepository.ExistsAsync(request.Id))
-            throw new Exceptions.NotFoundException(nameof(Domain.Entities.TimeSlot), request.Id);
+            throw new NotFoundException(nameof(Domain.Entities.TimeSlot), request.Id);
 
         if (await _timeSlotRepository.IsInUseAsync(request.Id))
-            throw new Exceptions.ConflictException(nameof(Domain.Entities.TimeSlot), request.Id);
+            throw new ConflictException(nameof(Domain.Entities.TimeSlot), request.Id);
 
         var entity = await _timeSlotRepository.GetByIdAsync(request.Id);
         await _timeSlotRepository.DeleteAsync(entity);

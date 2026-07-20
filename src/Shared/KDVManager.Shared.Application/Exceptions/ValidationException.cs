@@ -3,7 +3,7 @@ using KDVManager.Shared.Application.Contracts.Validation;
 
 namespace KDVManager.Shared.Application.Exceptions;
 
-public class ValidationException : ApplicationException
+public class ValidationException : Exception
 {
     public List<ValidationError> ValidationErrors { get; set; } = new List<ValidationError>();
 

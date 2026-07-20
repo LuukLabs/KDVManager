@@ -1,19 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using KDVManager.Shared.Application.Contracts.Validation;
 using ValidationException = KDVManager.Shared.Application.Exceptions.ValidationException;
 
 namespace KDVManager.Shared.Infrastructure.Http;
-
-public class ValidationError
-{
-    [Required]
-    public required string Property { get; set; }
-
-    [Required]
-    public required string Code { get; set; }
-
-    [Required]
-    public required string Title { get; set; }
-}
 
 public class UnprocessableEntityResponse
 {

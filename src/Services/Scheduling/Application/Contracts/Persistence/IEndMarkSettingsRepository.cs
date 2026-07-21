@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Domain.Entities;
 
+using KDVManager.Shared.Application.Contracts.Persistence;
+
 namespace KDVManager.Services.Scheduling.Application.Contracts.Persistence;
 
 public interface IEndMarkSettingsRepository : IAsyncRepository<EndMarkSettings>

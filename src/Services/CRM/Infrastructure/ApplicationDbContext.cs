@@ -1,18 +1,14 @@
-﻿using KDVManager.Services.CRM.Domain.Entities;
+using KDVManager.Services.CRM.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Threading;
 using KDVManager.Shared.Contracts.Tenancy;
-using KDVManager.Shared.Infrastructure.Tenancy;
+using KDVManager.Shared.Infrastructure.Persistence;
 
 namespace KDVManager.Services.CRM.Infrastructure;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : TenantDbContext
 {
-    private readonly ITenancyContextAccessor _tenancyContextAccessor;
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenancyContextAccessor tenancyContextAccessor) : base(options, tenancyContextAccessor)
     {
-        _tenancyContextAccessor = tenancyContextAccessor;
     }
 
     public DbSet<Child> Children { get; set; }
@@ -25,12 +21,6 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Child>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
-        modelBuilder.Entity<Guardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
-        modelBuilder.Entity<ChildGuardian>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
-        modelBuilder.Entity<ChildNumberSequence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
-        modelBuilder.Entity<ChildActivityInterval>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
-        // PhoneNumbers owned; query filter handled via Guardian
 
         modelBuilder.Entity<ChildGuardian>()
             .HasOne<Child>()
@@ -58,18 +48,6 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        modelBuilder.ApplyTenantIndexes();
-    }
-
-    public override int SaveChanges(bool acceptAllChangesOnSuccess)
-    {
-        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
-        return base.SaveChanges(acceptAllChangesOnSuccess);
-    }
-
-    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-    {
-        ChangeTracker.EnforceTenancy(_tenancyContextAccessor);
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        ApplyTenancy(modelBuilder);
     }
 }

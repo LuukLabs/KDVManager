@@ -1,7 +1,8 @@
 ﻿using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.AddGroup;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
+using KDVManager.Shared.Infrastructure.Http;
 using Microsoft.AspNetCore.Mvc;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Groups.Commands.DeleteGroup;
 

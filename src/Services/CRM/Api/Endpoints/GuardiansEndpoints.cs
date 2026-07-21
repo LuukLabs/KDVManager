@@ -7,7 +7,7 @@ using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardian
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianDetail;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetChildGuardians;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren;
-using KDVManager.Services.CRM.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Services.CRM.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

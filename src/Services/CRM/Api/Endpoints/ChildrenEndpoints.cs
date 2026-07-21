@@ -7,7 +7,8 @@ using KDVManager.Services.CRM.Application.Features.Children.Queries.GetPhoneList
 using KDVManager.Services.CRM.Application.Features.Children.Queries.GetNewsletterRecipients;
 using KDVManager.Services.CRM.Application.Features.Children.Commands.UpdateChild;
 using Microsoft.AspNetCore.Mvc;
-using KDVManager.Services.CRM.Application.Contracts.Pagination;
+using KDVManager.Shared.Infrastructure.Http;
+using KDVManager.Shared.Application.Contracts.Pagination;
 
 public static class ChildrenEndpoints
 {

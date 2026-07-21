@@ -1,6 +1,7 @@
 ﻿using KDVManager.Services.Scheduling.Application.Features.Groups.Queries.ListGroups;
+using KDVManager.Shared.Infrastructure.Http;
 using Microsoft.AspNetCore.Mvc;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Schedules.Commands.AddSchedule;

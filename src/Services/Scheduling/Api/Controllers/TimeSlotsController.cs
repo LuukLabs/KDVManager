@@ -2,8 +2,9 @@
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.UpdateTimeSlot;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Commands.DeleteTimeSlot;
 using KDVManager.Services.Scheduling.Application.Features.TimeSlots.Queries.ListTimeSlots;
+using KDVManager.Shared.Infrastructure.Http;
 using Microsoft.AspNetCore.Mvc;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using System.Net;
 
 namespace KDVManager.Services.Scheduling.Api.Controllers;

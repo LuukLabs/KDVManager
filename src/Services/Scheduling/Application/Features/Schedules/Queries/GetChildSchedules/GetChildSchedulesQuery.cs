@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using KDVManager.Services.Scheduling.Domain;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;
 

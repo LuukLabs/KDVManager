@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KDVManager.Services.Scheduling.Application.Contracts.Persistence;
-using KDVManager.Services.Scheduling.Application.Contracts.Pagination;
+using KDVManager.Shared.Application.Contracts.Pagination;
 using KDVManager.Services.Scheduling.Domain.Entities;
 
 namespace KDVManager.Services.Scheduling.Application.Features.Schedules.Queries.GetChildSchedules;

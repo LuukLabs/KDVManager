@@ -1,3 +1,4 @@
+using KDVManager.Shared.Infrastructure.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using KDVManager.Services.Scheduling.Application.Features.Absences.Queries.GetAbsencesByChildId;

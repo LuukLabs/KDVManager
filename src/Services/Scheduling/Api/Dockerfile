@@ -7,6 +7,7 @@ COPY ["Services/Scheduling/Domain/Domain.csproj", "Services/Scheduling/Domain/"]
 COPY ["Services/Scheduling/Infrastructure/Infrastructure.csproj", "Services/Scheduling/Infrastructure/"]
 
 # Shared projects
+COPY ["Shared/KDVManager.Shared.Application/KDVManager.Shared.Application.csproj", "Shared/KDVManager.Shared.Application/"]
 COPY ["Shared/KDVManager.Shared.Contracts/KDVManager.Shared.Contracts.csproj", "Shared/KDVManager.Shared.Contracts/"]
 COPY ["Shared/KDVManager.Shared.Domain/KDVManager.Shared.Domain.csproj", "Shared/KDVManager.Shared.Domain/"]
 COPY ["Shared/KDVManager.Shared.Infrastructure/KDVManager.Shared.Infrastructure.csproj", "Shared/KDVManager.Shared.Infrastructure/"]
@@ -17,6 +18,9 @@ RUN --mount=type=secret,id=nuget_github_token \
 RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 
 FROM restore AS build
+
+# OpenAPI specs are checked in; generating them at build boots the app and stalls on RabbitMQ
+ENV SkipOpenApiGeneration=true
 
 COPY Services/Scheduling Services/Scheduling
 COPY Shared Shared

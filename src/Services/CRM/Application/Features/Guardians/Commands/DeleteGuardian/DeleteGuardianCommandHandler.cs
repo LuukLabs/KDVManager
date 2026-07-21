@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
-using KDVManager.Services.CRM.Application.Exceptions;
+using KDVManager.Shared.Application.Exceptions;
 
 namespace KDVManager.Services.CRM.Application.Features.Guardians.Commands.DeleteGuardian
 {

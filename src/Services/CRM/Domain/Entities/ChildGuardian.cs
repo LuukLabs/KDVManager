@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json.Serialization;
-using KDVManager.Services.CRM.Domain.Interfaces;
 using KDVManager.Shared.Contracts.Tenancy;
 
 namespace KDVManager.Services.CRM.Domain.Entities

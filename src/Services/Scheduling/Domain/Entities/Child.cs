@@ -1,5 +1,4 @@
 using System;
-using KDVManager.Services.Scheduling.Domain.Interfaces;
 using KDVManager.Shared.Domain.Interfaces;
 using KDVManager.Shared.Contracts.Tenancy;
 

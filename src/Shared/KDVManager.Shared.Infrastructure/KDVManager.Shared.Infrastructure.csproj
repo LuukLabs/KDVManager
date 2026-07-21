@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.5.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <!-- Direct reference to lift the transitive Microsoft.OpenApi above GHSA-v5pm-xwqc-g5wc.

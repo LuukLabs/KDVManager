@@ -19,6 +19,9 @@ RUN dotnet restore "Services/Scheduling/Api/Api.csproj"
 
 FROM restore AS build
 
+# OpenAPI specs are checked in; generating them at build boots the app and stalls on RabbitMQ
+ENV SkipOpenApiGeneration=true
+
 COPY Services/Scheduling Services/Scheduling
 COPY Shared Shared
 

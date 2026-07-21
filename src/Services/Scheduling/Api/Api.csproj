@@ -7,7 +7,10 @@
     <DockerComposeProjectPath>../../../docker-compose.dcproj</DockerComposeProjectPath>
     <UserSecretsId>cf586f86-5563-4c17-80a5-86f93e1a04d5</UserSecretsId>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
+    <!-- Skipped in Docker image builds (SkipOpenApiGeneration=true): the specs are
+         checked in, and generating them boots the app, which stalls retrying RabbitMQ. -->
     <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+    <OpenApiGenerateDocumentsOnBuild Condition="'$(SkipOpenApiGeneration)' == 'true'">false</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/openapi</OpenApiDocumentsDirectory>
   </PropertyGroup>
 

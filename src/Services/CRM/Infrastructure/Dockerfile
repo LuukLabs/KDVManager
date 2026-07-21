@@ -24,6 +24,9 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 
 FROM ef-tool AS build
 
+# OpenAPI specs are checked in; generating them at build boots the app and stalls on RabbitMQ
+ENV SkipOpenApiGeneration=true
+
 COPY Services/CRM Services/CRM
 COPY Shared Shared
 

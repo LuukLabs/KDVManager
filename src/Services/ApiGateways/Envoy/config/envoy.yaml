@@ -79,6 +79,12 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: scheduling-api
+              - name: "platformmanagement"
+                match:
+                  prefix: /platformmanagement/
+                route:
+                  prefix_rewrite: /
+                  cluster: platformmanagement-api
               # Browser telemetry ingest: the web app posts OTLP/HTTP payloads
               # to /telemetry/v1/traces, forwarded to the OTel collector.
               - name: "telemetry"
@@ -143,6 +149,8 @@ static_resources:
                   prefix: /crm/openapi/
               - match:
                   prefix: /scheduling/openapi/
+              - match:
+                  prefix: /platformmanagement/openapi/
               # Telemetry ingest is unauthenticated: browser sessions have no
               # token before login and errors must be reportable regardless.
               - match:
@@ -153,6 +161,10 @@ static_resources:
                   provider_name: auth0_provider
               - match:
                   prefix: /scheduling/
+                requires:
+                  provider_name: auth0_provider
+              - match:
+                  prefix: /platformmanagement/
                 requires:
                   provider_name: auth0_provider
           - name: envoy.filters.http.router
@@ -235,4 +247,17 @@ static_resources:
             address:
               socket_address:
                 address: scheduling-api
+                port_value: 80
+  - name: platformmanagement-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: platformmanagement-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: platformmanagement-api
                 port_value: 80

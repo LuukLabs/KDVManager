@@ -12,10 +12,6 @@ dayjs.extend(localizedFormat);
 export const formatDayHeading = (date: dayjs.Dayjs, locale?: string): string =>
   (locale ? date.locale(locale) : date).format("dddd LL");
 
-/** A date without its weekday: "26 juli 2026". */
-export const formatLongDate = (date: dayjs.Dayjs, locale?: string): string =>
-  (locale ? date.locale(locale) : date).format("LL");
-
 /**
  * Formats a date of birth to DD-MM-YYYY format using dayjs
  * @param dateOfBirth - The date string to format (ISO string or DateOnly)

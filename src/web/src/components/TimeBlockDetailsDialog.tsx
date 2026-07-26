@@ -88,7 +88,7 @@ const AppliedRuleDetails = ({ rule }: { rule: BkrAppliedRule }) => {
         borderRadius: 1,
         border: "1px solid",
         borderColor: "divider",
-        backgroundColor: "grey.50",
+        backgroundColor: "background.default",
       }}
     >
       <Typography
@@ -140,7 +140,6 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 3,
             boxShadow: 3,
           },
         },
@@ -160,7 +159,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
               <AccessTime />
               {timeBlock.timeSlotName}
             </Box>
-            <Typography variant="body2" sx={{ opacity: 0.85, fontFamily: "monospace" }}>
+            <Typography variant="body2" sx={{ opacity: 0.85, fontVariantNumeric: "tabular-nums" }}>
               {formatTime(timeBlock.startTime)} – {formatTime(timeBlock.endTime)}
             </Typography>
           </DialogTitle>
@@ -170,7 +169,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
                   icon={<ChildCare />}
-                  label={`${timeBlock.totalChildren} ${t("children")}`}
+                  label={t("{{count}} children", { count: timeBlock.totalChildren })}
                   color="primary"
                   variant="outlined"
                 />
@@ -178,7 +177,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
                   icon={<SupervisorAccount />}
                   label={
                     timeBlock.requiredProfessionals != null
-                      ? `${timeBlock.requiredProfessionals} ${t("supervisors needed")}`
+                      ? t("{{count}} supervisors needed", { count: timeBlock.requiredProfessionals })
                       : t("Ratio requirement cannot be met")
                   }
                   color={timeBlock.requiredProfessionals != null ? "info" : "error"}
@@ -195,7 +194,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
 
             <Table size="small" sx={{ border: "1px solid", borderColor: "divider" }}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "grey.50" }}>
+                <TableRow sx={{ backgroundColor: "background.default" }}>
                   <TableCell sx={{ fontWeight: 600 }}>{t("Age Group")}</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 600 }}>
                     {t("Count")}
@@ -207,7 +206,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
                   <TableRow
                     key={index}
                     sx={{
-                      "&:hover": { backgroundColor: "grey.50" },
+                      "&:hover": { backgroundColor: "background.default" },
                       "&:last-child td": { border: 0 },
                     }}
                   >
@@ -235,7 +234,7 @@ const TimeBlockDetailsDialog = ({ timeBlock, onClose }: TimeBlockDetailsDialogPr
           </DialogContent>
 
           <DialogActions sx={{ px: 3, pb: 2.5, pt: 0 }}>
-            <Button onClick={onClose} variant="outlined" sx={{ borderRadius: 2 }}>
+            <Button onClick={onClose} variant="outlined">
               {t("Close")}
             </Button>
           </DialogActions>

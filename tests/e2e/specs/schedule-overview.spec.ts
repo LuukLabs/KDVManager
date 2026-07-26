@@ -3,10 +3,10 @@
  *  UC2.1 A scheduled child is shown inside its group column on a scheduled day.
  *  UC2.2 Date navigation: next/previous day buttons change the ?date= URL param by one
  *        day; the "Vandaag" button resets it to today.
- *  UC2.3 A closure period renders the closure indication (chip/banner with the reason,
- *        fallback "Gesloten") on the closed date.
- *  UC2.4 An absence renders the absence indication (warning absent-count chip in the
- *        group's "Dagoverzicht" summary) while the child card stays visible (dimmed).
+ *  UC2.3 A closure period states the reason once for the day (page-level alert, fallback
+ *        "Gesloten"), keeps the roster visible and suppresses the ratio summary.
+ *  UC2.4 An absence is named on the child's own card ("Afgemeld" plus the reason) and
+ *        counted in the group's "Dagoverzicht" summary.
  *
  * Seeding goes through the API helpers; schedule rules use .NET System.DayOfWeek
  * (0 = Sunday .. 6 = Saturday) and cover all seven days so any picked date is scheduled.
@@ -151,18 +151,12 @@ test.describe("schedule overview", () => {
     const start = addDays(todayInAppTimezone(), 30);
     await gotoApp(page, `/schedule?date=${start}`);
 
-    // The next/previous IconButtons have no accessible name, and MUI only emits
-    // icon data-testids in development builds (the dockerized app is a production
-    // build), so locate them inside the desktop header Paper (the one with the
-    // "Planningsoverzicht" page title): its only buttons are "Vandaag" plus the
-    // previous/next chevrons, in that DOM order.
-    const header = page
-      .locator(".MuiPaper-root")
-      .filter({ has: page.getByRole("heading", { name: "Planningsoverzicht" }) });
-    const chevrons = header.getByRole("button").filter({ hasNotText: "Vandaag" });
-    await expect(chevrons).toHaveCount(2, { timeout: 15_000 });
-    const previousDay = chevrons.first();
-    const nextDay = chevrons.last();
+    // The chevrons used to be located by elimination ("every button in the
+    // header that isn't Vandaag"), which broke as soon as the header gained a
+    // date picker. They carry explicit testids now.
+    const previousDay = page.getByTestId("schedule-previous-day");
+    const nextDay = page.getByTestId("schedule-next-day");
+    await expect(nextDay).toBeVisible({ timeout: 15_000 });
 
     await nextDay.click();
     await expect(page).toHaveURL(new RegExp(`[?&]date=${addDays(start, 1)}`));
@@ -177,35 +171,48 @@ test.describe("schedule overview", () => {
     await expect(page).toHaveURL(new RegExp(`[?&]date=${todayInAppTimezone()}`));
   });
 
-  test("shows the closure indication on a closed day", async ({ page }) => {
+  test("states a closure once and keeps the roster readable", async ({ page }, testInfo) => {
     await gotoApp(page, `/schedule?date=${closureDate}`);
 
-    // Header chip and each group column banner show the closure reason
-    // (falling back to "Gesloten" when no reason is set — we seeded a reason).
-    await expect(page.getByText(closureReason).first()).toBeVisible({ timeout: 15_000 });
+    // The reason is stated once for the day, in a page-level alert, rather than
+    // repeated in a banner per group column.
+    const closureAlert = page.getByRole("alert").filter({ hasText: closureReason });
+    await expect(closureAlert).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(closureReason)).toHaveCount(1);
 
-    // Our group column shows the closure banner instead of schedules.
+    // The roster stays: a closure is exactly when you need to know which
+    // parents to phone. It used to be erased, which this asserted.
     const column = groupColumn(page, groupName);
-    await expect(column.getByText(closureReason)).toBeVisible();
-    await expect(column.getByText(childFullName)).toBeHidden();
+    await expect(column.getByText(childFullName)).toBeVisible();
+
+    // ...and the ratio summary is suppressed, because who is *expected* is moot.
+    await expect(column.getByRole("heading", { name: "Dagoverzicht" })).toBeHidden();
+
+    await expectNoWcagViolations(page, testInfo, "schedule-overview-closed");
   });
 
-  test("shows the absence indication for an absent child", async ({ page }) => {
+  test("names an absent child's state on the card, not just by dimming it", async ({
+    page,
+  }, testInfo) => {
     await gotoApp(page, `/schedule?date=${absenceDate}`);
 
     const column = groupColumn(page, groupName);
-    // The absent child is still listed (dimmed) in the column...
     await expect(column.getByText(childFullName)).toBeVisible({ timeout: 15_000 });
-    // ...and the group's daily summary ("Dagoverzicht" card, GroupSummary.tsx)
-    // shows the warning absent-count chip. MUI icon data-testids are stripped in
-    // production builds, so target the chip by its stable MUI warning-color class;
-    // the absent chip is the only warning Chip the summary renders, labeled with
-    // the absent count (exactly 1 for our uniquely named child).
+
+    // The card itself says "Afgemeld" and carries the reason, so the state is
+    // legible without comparing opacities, and reaches a screen reader.
+    const card = column
+      .locator(".MuiCard-root")
+      .filter({ has: page.getByText(childFullName) });
+    await expect(card.getByText("Afgemeld")).toBeVisible();
+    await expect(card.getByText(/Ziek/i)).toBeVisible();
+
+    // The group summary counts it too, now labelled rather than a bare integer.
     const summary = column
       .locator(".MuiCard-root")
       .filter({ has: page.getByRole("heading", { name: "Dagoverzicht" }) });
-    const absentChip = summary.locator(".MuiChip-colorWarning");
-    await expect(absentChip).toBeVisible();
-    await expect(absentChip).toHaveText("1");
+    await expect(summary.getByText("1 afgemeld")).toBeVisible();
+
+    await expectNoWcagViolations(page, testInfo, "schedule-overview-absent");
   });
 });

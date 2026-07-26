@@ -75,6 +75,9 @@ public class GetDailyOverviewQueryHandler
                             {
                                 ScheduleId = s.ScheduleId,
                                 ChildId = s.ChildId,
+                                ChildFullName = s.ChildFullName,
+                                GroupId = s.GroupId,
+                                TimeSlotId = s.TimeSlotId,
                                 TimeSlotName = s.TimeSlotName,
                                 StartTime = s.StartTime,
                                 EndTime = s.EndTime,

@@ -12,7 +12,11 @@ import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 import dayjs from "dayjs";
 import { useForm, useWatch } from "react-hook-form";
-import { useAddAbsence } from "@api/scheduling/endpoints/absences/absences";
+import {
+  getGetAbsencesByChildIdQueryKey,
+  useAddAbsence,
+} from "@api/scheduling/endpoints/absences/absences";
+import { allDayBoardFilters } from "@features/attendance/dayBoardKeys";
 import { useQueryClient } from "@tanstack/react-query";
 
 type AddAbsenceDialogProps = {
@@ -85,7 +89,10 @@ export const AddAbsenceDialog = NiceModal.create<AddAbsenceDialogProps>(({ child
     modal.remove();
     reset();
     setMultiDay(false);
-    queryClient.invalidateQueries();
+    // Was a bare invalidateQueries() — the whole cache, including children,
+    // guardians and settings, none of which an absence touches.
+    queryClient.invalidateQueries({ queryKey: getGetAbsencesByChildIdQueryKey(childId) });
+    for (const filters of allDayBoardFilters()) queryClient.invalidateQueries(filters);
   };
 
   const onMutateError = useMutationErrorHandler({ setError });

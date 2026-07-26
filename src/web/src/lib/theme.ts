@@ -32,6 +32,27 @@ const categoricalColors = [
   "#455A64", // Blue Grey
 ];
 
+// One colour per state of a child's day on the planning board. Kept out of
+// `palette.success/warning/error` on purpose: those carry MUI's own meaning
+// (and are used decoratively elsewhere), whereas these are a closed set that
+// has to stay legible side by side down a column. Terracotta for "afgemeld"
+// because absence is a planning fact, not a fault; green reserved for the one
+// state that means a child is actually in the building.
+const statusColors = {
+  /** Verwacht — planned, nothing observed yet. */
+  expected: "#5B6B74",
+  /** Afgemeld — an absence covers this date. */
+  reportedAbsent: "#8C3D22",
+  /** Aangekomen — checked in. */
+  arrived: "#2E7D32",
+  /** Opgehaald — checked out. */
+  departed: "#0B5750",
+  /** Niet gekomen — planned end passed with no registration. */
+  noShow: "#B26A00",
+  /** Gesloten — a closure period covers this date. */
+  closed: "#8B989E",
+};
+
 // MUI's theme augmentation pattern requires `interface` — declaration
 // merging (unlike `type`) is how these fields get added to Theme/ThemeOptions.
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
@@ -41,12 +62,14 @@ declare module "@mui/material/styles" {
       categorical: string[];
       /** Fallback for an entity with no assigned category (e.g. no group). */
       unassigned: string;
+      status: typeof statusColors;
     };
   }
   interface ThemeOptions {
     customColors?: {
       categorical?: string[];
       unassigned?: string;
+      status?: typeof statusColors;
     };
   }
 }
@@ -56,6 +79,7 @@ export const theme = createTheme({
   customColors: {
     categorical: categoricalColors,
     unassigned: "#757575",
+    status: statusColors,
   },
   palette: {
     contrastThreshold: 4.5,

@@ -7,7 +7,7 @@ import {
   CardContent,
   IconButton,
   Divider,
-  CircularProgress,
+  Skeleton,
   Alert,
   useTheme,
 } from "@mui/material";
@@ -61,35 +61,10 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
 
   if (isLoading) {
     return (
-      <Card
-        sx={{
-          mb: 2,
-          borderRadius: 2,
-          boxShadow: 2,
-          border: "1px solid",
-          borderColor: alpha(theme.palette.primary.main, 0.16),
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
-        }}
-      >
-        <CardContent
-          sx={{
-            p: { xs: 1.5, sm: 2 },
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 120,
-          }}
-        >
-          <CircularProgress size={24} />
-          <Typography
-            variant="body2"
-            sx={{
-              color: "text.secondary",
-              ml: 2,
-            }}
-          >
-            {t("Loading summary...")}
-          </Typography>
+      <Card variant="outlined" sx={{ mb: 1.5, borderRadius: 2 }}>
+        <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+          <Skeleton variant="text" width="40%" />
+          <Skeleton variant="rounded" animation="wave" height={28} sx={{ mt: 1 }} />
         </CardContent>
       </Card>
     );
@@ -98,13 +73,8 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
   if (error) {
     return (
       <Card
-        sx={{
-          mb: 2,
-          borderRadius: 2,
-          boxShadow: 2,
-          border: "1px solid",
-          borderColor: alpha(theme.palette.error.main, 0.24),
-        }}
+        variant="outlined"
+        sx={{ mb: 1.5, borderRadius: 2, borderColor: alpha(theme.palette.error.main, 0.4) }}
       >
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Alert severity="error" sx={{ border: "none", boxShadow: "none" }}>
@@ -117,40 +87,23 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
 
   if (!summary || summary.timeBlocks.length === 0) {
     return (
-      <Card
-        sx={{
-          mb: 2,
-          borderRadius: 2,
-          boxShadow: 2,
-          border: "1px solid",
-          borderColor: "grey.200",
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
-        }}
-      >
+      <Card variant="outlined" sx={{ mb: 1.5, borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: 700,
-              color: "primary.main",
-              textAlign: "center",
-              mb: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-          >
-            <Schedule />
-            {t("Daily Summary")}
-          </Typography>
-          <Typography
-            variant="body2"
+            component="h3"
+            variant="subtitle2"
             sx={{
               color: "text.secondary",
-              textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              gap: 0.75,
+              mb: 0.5,
             }}
           >
+            <Schedule fontSize="small" />
+            {t("Daily Summary")}
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {t("No children scheduled for this day")}
           </Typography>
         </CardContent>
@@ -160,66 +113,58 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
 
   return (
     <Card
-      sx={{
-        mb: 2,
-        borderRadius: 2,
-        boxShadow: 2,
-        border: "1px solid",
-        borderColor: alpha(theme.palette.primary.main, 0.16),
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${theme.palette.background.paper} 100%)`,
-      }}
+      variant="outlined"
+      sx={{ mb: 1.5, borderRadius: 2 }}
     >
       <CardContent sx={{ p: { xs: 1.5, sm: 2 }, "&:last-child": { pb: { xs: 1.5, sm: 2 } } }}>
         {/* Header Section */}
         <Box sx={{ mb: 2 }}>
           <Typography
-            variant="subtitle1"
+            component="h3"
+            variant="subtitle2"
             sx={{
-              fontWeight: 700,
-              color: "primary.main",
-              textAlign: "center",
-              mb: 1,
+              color: "text.secondary",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
+              gap: 0.75,
+              mb: 1,
             }}
           >
-            <Schedule />
+            <Schedule fontSize="small" />
             {t("Daily Summary")}
           </Typography>
 
           {/* Summary Stats */}
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", gap: 0.75, mb: 1.5, flexWrap: "wrap" }}>
             <Chip
               icon={<ChildCare />}
-              label={`${summary.numberOfChildren} ${t("children")}`}
+              label={t("{{count}} children", { count: summary.numberOfChildren })}
               size="small"
               color="primary"
               variant="outlined"
-              sx={{ fontWeight: 600 }}
             />
             {absentCount > 0 && (
               <Chip
                 icon={<PersonOff />}
-                label={absentCount}
+                label={t("{{count}} reported absent", { count: absentCount })}
                 size="small"
                 variant="outlined"
-                color="warning"
-                sx={{ fontWeight: 600 }}
+                sx={{
+                  color: theme.customColors.status.reportedAbsent,
+                  borderColor: alpha(theme.customColors.status.reportedAbsent, 0.5),
+                }}
               />
             )}
             <Chip
               icon={<SupervisorAccount />}
               label={
                 summary.requiredProfessionals != null
-                  ? `${summary.requiredProfessionals} ${t("supervisors")}`
+                  ? t("{{count}} supervisors", { count: summary.requiredProfessionals })
                   : t("Ratio requirement cannot be met")
               }
               size="small"
               color={summary.requiredProfessionals != null ? "secondary" : "error"}
               variant="outlined"
-              sx={{ fontWeight: 600 }}
             />
           </Box>
 
@@ -237,14 +182,13 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                 justifyContent: "space-between",
                 p: 1,
                 borderRadius: 1,
-                backgroundColor: "rgba(25, 118, 210, 0.04)",
+                backgroundColor: alpha(theme.palette.primary.main, 0.04),
                 border: "1px solid",
-                borderColor: "rgba(25, 118, 210, 0.12)",
+                borderColor: alpha(theme.palette.primary.main, 0.12),
                 transition: "all 0.2s ease-in-out",
                 "&:hover": {
-                  backgroundColor: "rgba(25, 118, 210, 0.08)",
+                  backgroundColor: alpha(theme.palette.primary.main, 0.08),
                   borderColor: "primary.main",
-                  transform: "translateX(2px)",
                 },
               }}
             >
@@ -255,8 +199,7 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                     variant="body2"
                     sx={{
                       fontWeight: 600,
-                      fontSize: { xs: "0.8rem", sm: "0.875rem" },
-                      fontFamily: "monospace",
+                      fontSize: "0.875rem",
                     }}
                   >
                     {block.timeSlotName}
@@ -268,8 +211,8 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                         display: "flex",
                         alignItems: "center",
                         gap: 0.5,
-                        color: "success.main",
-                        fontWeight: 500,
+                        color: "text.primary",
+                        fontWeight: 600,
                       }}
                     >
                       <People sx={{ fontSize: 12 }} />
@@ -281,8 +224,8 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
                         display: "flex",
                         alignItems: "center",
                         gap: 0.5,
-                        color: block.requiredProfessionals != null ? "warning.main" : "error.main",
-                        fontWeight: 500,
+                        color: block.requiredProfessionals != null ? "text.secondary" : "error.main",
+                        fontWeight: 600,
                       }}
                     >
                       <SupervisorAccount sx={{ fontSize: 12 }} />
@@ -293,10 +236,12 @@ const GroupSummary = ({ groupId, selectedDate, absentCount = 0 }: GroupSummaryPr
               </Box>
 
               <IconButton
-                size="small"
                 onClick={() => handleOpenDetails(block)}
                 aria-label={t("View details")}
                 sx={{
+                  width: 40,
+                  height: 40,
+                  flexShrink: 0,
                   backgroundColor: alpha(theme.palette.primary.main, 0.08),
                   border: "1px solid",
                   borderColor: alpha(theme.palette.primary.main, 0.24),

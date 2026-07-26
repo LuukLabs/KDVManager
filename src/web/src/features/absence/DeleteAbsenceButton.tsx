@@ -8,6 +8,7 @@ import {
   getGetAbsencesByChildIdQueryKey,
   useDeleteAbsence,
 } from "@api/scheduling/endpoints/absences/absences";
+import { allDayBoardFilters } from "@features/attendance/dayBoardKeys";
 
 type DeleteAbsenceButton = {
   id: string;
@@ -21,6 +22,10 @@ export const DeleteAbsenceButton: React.FC<DeleteAbsenceButton> = ({ id, childId
 
   const handleSuccess = () => {
     queryClient.invalidateQueries({ queryKey: getGetAbsencesByChildIdQueryKey(childId) });
+    // The planning board derives "afgemeld" from absences, so dropping one has
+    // to refresh the board too — otherwise the child stays marked absent there
+    // until a hard refresh, and the group's ratio count stays wrong with it.
+    for (const filters of allDayBoardFilters()) queryClient.invalidateQueries(filters);
   };
 
   const config = {

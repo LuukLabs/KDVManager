@@ -8,6 +8,7 @@ public class ScheduleByDateVM
     public Guid ScheduleId { get; set; }
     public Guid ChildId { get; set; }
     public string? ChildFullName { get; set; }
+    public Guid TimeSlotId { get; set; }
     public string TimeSlotName { get; set; } = string.Empty;
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }

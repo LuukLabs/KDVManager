@@ -1,206 +1,102 @@
-import { Box, Paper, Typography, CircularProgress, useTheme, useMediaQuery } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { useId, type ReactNode } from "react";
+import { Box, Paper, Typography, Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { type Dayjs } from "dayjs";
-import { useGetSchedulesByDate } from "@api/scheduling/endpoints/schedules/schedules";
 import ChildCard from "./ChildCard";
 import GroupSummary from "./GroupSummary";
-import { useTranslation } from "react-i18next";
-import { Groups as GroupsIcon, EventBusy as EventBusyIcon } from "@mui/icons-material";
-
-type Group = {
-  id: string;
-  name: string;
-};
+import type { DagdeelRow, GroupBoard } from "@features/attendance/types";
 
 type GroupColumnProps = {
-  group: Group;
+  board: GroupBoard;
   selectedDate: Dayjs;
-  absentChildIds?: string[];
   isClosed?: boolean;
-  closureReason?: string | null;
+  isLoading?: boolean;
+  /**
+   * Renders per-row controls into each card's action slot. Unused today, which
+   * is what keeps the board read-only; a presence control arrives through here.
+   */
+  renderRowActions?: (row: DagdeelRow) => ReactNode;
 };
 
+const RosterSkeleton = () => (
+  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    {[0, 1, 2, 3].map((i) => (
+      <Skeleton key={i} variant="rounded" animation="wave" height={54} />
+    ))}
+  </Box>
+);
+
 const GroupColumn = ({
-  group,
+  board,
   selectedDate,
-  absentChildIds = [],
   isClosed = false,
-  closureReason,
+  isLoading = false,
+  renderRowActions,
 }: GroupColumnProps) => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { data: schedules, isLoading } = useGetSchedulesByDate({
-    date: selectedDate.format("YYYY-MM-DD"),
-    groupId: group.id,
-  });
-
-  // Sorting is now handled in the backend (GetSchedulesByDateQueryHandler)
-  // Order: dateOfBirth asc (nulls last), name, childId
-  const backendSorted = schedules ?? [];
-  const present = backendSorted.filter((s) => !absentChildIds.includes(s.childId ?? ""));
-  const absent = backendSorted.filter((s) => absentChildIds.includes(s.childId ?? ""));
+  const headingId = useId();
 
   return (
     <Paper
+      variant="outlined"
+      component="section"
+      aria-labelledby={headingId}
       sx={{
-        p: { xs: 2, md: 3 },
-        height: "fit-content",
-        minHeight: { xs: 200, md: 250 },
+        p: 1.5,
+        borderRadius: 2,
         display: "flex",
         flexDirection: "column",
-        border: "1px solid",
-        borderColor: "divider",
-        borderRadius: 2,
-        boxShadow: 1,
-        transition: "all 0.2s ease-in-out",
-        "&:hover": {
-          boxShadow: 3,
-        },
+        minHeight: 0,
+        maxHeight: "100%",
       }}
     >
-      {/* Group Header */}
+      {/* Sticky so the group name survives scrolling to child fifteen. */}
       <Box
         sx={{
-          mb: 2,
-          pb: 1.5,
-          borderBottom: "2px solid",
-          borderColor: "primary.main",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          backgroundColor: "background.paper",
+          pb: 1,
+          mb: 1,
+          borderBottom: "1px solid",
+          borderColor: "divider",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
-          <Typography
-            variant={isMobile ? "h6" : "h5"}
-            sx={{
-              fontWeight: 700,
-              color: "primary.main",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <GroupsIcon />
-            {group.name}
-          </Typography>
-        </Box>
-        <Typography
-          variant="body2"
-          sx={{
-            color: "text.secondary",
-            fontSize: { xs: "0.8rem", md: "0.875rem" },
-          }}
-        >
-          {selectedDate.format("dddd, MMMM D")}
+        <Typography id={headingId} component="h2" variant="h6" sx={{ color: "text.primary" }}>
+          {board.groupName}
         </Typography>
       </Box>
-      {/* Group Summary (hidden on closed days) */}
-      {!isClosed && (
-        <GroupSummary groupId={group.id} selectedDate={selectedDate} absentCount={absent.length} />
-      )}
-      {isClosed && (
-        <Box
-          sx={{
-            mt: 1,
-            mb: 2,
-            p: 1,
-            border: "1px solid",
-            borderColor: "warning.light",
-            background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.12)} 0%, ${theme.palette.background.paper} 100%)`,
-            borderRadius: 1.5,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <EventBusyIcon sx={{ color: "warning.main" }} />
-          <Typography variant="caption" sx={{ fontWeight: 600, color: "warning.main" }}>
-            {closureReason ?? t("Closed")}
-          </Typography>
-        </Box>
-      )}
-      {/* Content hidden entirely when closed */}
-      {isClosed ? null : isLoading ? (
-        <Box
-          sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 4, flex: 1 }}
-        >
-          <Box sx={{ textAlign: "center" }}>
-            <CircularProgress size={32} sx={{ mb: 2 }} />
-            <Typography
-              variant="body2"
-              sx={{
-                color: "text.secondary",
-              }}
-            >
-              {t("Loading schedules...")}
-            </Typography>
-          </Box>
-        </Box>
-      ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          {(present.length > 0 || absent.length > 0) && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, md: 1.25 } }}>
-              {present.map((schedule) => (
-                <ChildCard
-                  key={schedule.scheduleId}
-                  childId={schedule.childId ?? ""}
-                  schedule={schedule}
-                />
-              ))}
-              {absent.length > 0 && present.length > 0 && (
-                <Box sx={{ borderTop: "1px dashed", borderColor: "divider", my: 0.5 }} />
-              )}
-              {absent.map((schedule) => (
-                <Box key={schedule.scheduleId} sx={{ opacity: 0.5 }}>
-                  <ChildCard childId={schedule.childId ?? ""} schedule={schedule} />
-                </Box>
-              ))}
-            </Box>
-          )}
 
-          {present.length === 0 && absent.length === 0 && (
-            <Box
-              sx={{
-                textAlign: "center",
-                py: { xs: 3, md: 4 },
-                px: 2,
-                backgroundColor: "grey.50",
-                borderRadius: 2,
-                border: "2px dashed",
-                borderColor: "grey.300",
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box>
-                <EventBusyIcon
-                  sx={{ fontSize: { xs: 40, md: 48 }, color: "text.secondary", mb: 1 }}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "text.secondary",
-                    mb: 1,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t("No schedules for this date")}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                    fontSize: { xs: "0.8rem", md: "0.875rem" },
-                  }}
-                >
-                  {t("Children will appear here when scheduled")}
-                </Typography>
-              </Box>
-            </Box>
-          )}
-        </Box>
+      {/* The BKR summary is about who is expected, which a closure makes moot. */}
+      {!isClosed && (
+        <GroupSummary
+          groupId={board.groupId}
+          selectedDate={selectedDate}
+          absentCount={board.countsByStatus.reportedAbsent}
+        />
       )}
+
+      <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+        {isLoading ? (
+          <RosterSkeleton />
+        ) : board.rows.length > 0 ? (
+          <Box
+            component="ul"
+            sx={{ listStyle: "none", m: 0, p: 0, display: "flex", flexDirection: "column", gap: 1 }}
+          >
+            {board.rows.map((row) => (
+              <Box component="li" key={row.key}>
+                <ChildCard row={row} actions={renderRowActions?.(row)} />
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Typography variant="body2" sx={{ color: "text.secondary", py: 1 }}>
+            {t("No schedules for this date")}
+          </Typography>
+        )}
+      </Box>
     </Paper>
   );
 };

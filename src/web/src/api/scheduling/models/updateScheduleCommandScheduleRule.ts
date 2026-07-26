@@ -6,7 +6,7 @@
  */
 import type { DayOfWeek } from "./dayOfWeek";
 
-export type AddScheduleCommandScheduleRule = {
+export type UpdateScheduleCommandScheduleRule = {
   day?: DayOfWeek;
   timeSlotId?: string;
   groupId?: string;

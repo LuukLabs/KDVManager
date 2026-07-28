@@ -32,7 +32,7 @@ FROM build AS build-migrator
 
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --project ./Infrastructure --startup-project ./Api
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.9 AS migrator-runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.10 AS migrator-runtime
 
 COPY --from=build-migrator /src/Services/Scheduling/efbundle .
 

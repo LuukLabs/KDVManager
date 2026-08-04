@@ -39,7 +39,7 @@ EXPOSE 8000
 CMD [ "pnpm", "start" ]
 
 # Run stage
-FROM nginx:1.31.2-alpine
+FROM nginx:1.31.3-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 

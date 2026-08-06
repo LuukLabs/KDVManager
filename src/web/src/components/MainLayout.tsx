@@ -1,11 +1,17 @@
 import MainNavbar from "./MainNavbar";
+import TenantGuard from "./TenantGuard";
+import TrialGuard from "./TrialGuard";
 import { Outlet } from "react-router-dom";
 
 function MainLayout() {
   return (
-    <MainNavbar>
-      <Outlet />
-    </MainNavbar>
+    <TenantGuard>
+      <TrialGuard>
+        <MainNavbar>
+          <Outlet />
+        </MainNavbar>
+      </TrialGuard>
+    </TenantGuard>
   );
 }
 

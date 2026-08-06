@@ -75,6 +75,23 @@ services:
     depends_on:
       - postgres
 
+  platformmanagement-api:
+    image: ${REGISTRY:-kdvmanager}/platformmanagement.api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PlatformManagement/Api/Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  platformmanagement-migrator:
+    image: ${REGISTRY:-kdvmanager}/platformmanagement.migrator:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PlatformManagement/Infrastructure/Dockerfile
+    depends_on:
+      - postgres
+
   otel-collector:
     image: otel/opentelemetry-collector-contrib
     volumes:

@@ -33,7 +33,7 @@
     "notistack": "^3.0.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-hook-form": "^7.83.0",
+    "react-hook-form": "^7.85.0",
     "react-i18next": "^17.0.8",
     "react-router-dom": "7.18.2",
     "web-vitals": "^6.0.1"

@@ -6,6 +6,7 @@ namespace: kdvmanager-prod
 resources:
 - crm/
 - scheduling/
+- tenants/
 - web/
 
 labels:

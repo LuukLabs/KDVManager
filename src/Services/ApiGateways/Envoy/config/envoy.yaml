@@ -79,6 +79,12 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: scheduling-api
+              - name: "tenants"
+                match:
+                  prefix: /tenants/
+                route:
+                  prefix_rewrite: /
+                  cluster: tenants-api
               # Browser telemetry ingest: the web app posts OTLP/HTTP payloads
               # to /telemetry/v1/traces, forwarded to the OTel collector.
               - name: "telemetry"
@@ -148,11 +154,17 @@ static_resources:
               - match:
                   prefix: /telemetry/
               - match:
+                  prefix: /tenants/openapi/
+              - match:
                   prefix: /crm/
                 requires:
                   provider_name: auth0_provider
               - match:
                   prefix: /scheduling/
+                requires:
+                  provider_name: auth0_provider
+              - match:
+                  prefix: /tenants/
                 requires:
                   provider_name: auth0_provider
           - name: envoy.filters.http.router
@@ -235,4 +247,17 @@ static_resources:
             address:
               socket_address:
                 address: scheduling-api
+                port_value: 80
+  - name: tenants-api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: tenants-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: tenants-api
                 port_value: 80

@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: scheduling-api
 spec:
-  replicas: 1
+  # See crm/deployment.yml: one replica meant every restart was a full outage.
+  replicas: 2
   revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
@@ -20,6 +21,13 @@ spec:
         release: production
     spec:
       serviceAccountName: kdvmanager-sa
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: scheduling-api
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -45,6 +53,8 @@ spec:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
+          # /readyz reaches Postgres over TLS; the 1s default was too short.
+          timeoutSeconds: 5
           failureThreshold: 30
         livenessProbe:
           httpGet:
@@ -52,7 +62,7 @@ spec:
             path: /healthz
           initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
@@ -60,7 +70,7 @@ spec:
             path: /readyz
           initialDelaySeconds: 20
           periodSeconds: 5
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         lifecycle:
           preStop:
@@ -68,13 +78,13 @@ spec:
               # give the app a short chance to drain requests before SIGTERM
               command: ["/bin/sh","-c","sleep 10"]
         resources:
-          # Tuned for very low traffic usage profile
+          # Matches crm-api: 160Mi was close enough to steady state to OOMKill.
           requests:
             cpu: 70m
-            memory: 48Mi
+            memory: 96Mi
           limits:
             cpu: 300m
-            memory: 160Mi
+            memory: 320Mi
         ports:
           - name: http
             containerPort: 8080
@@ -82,6 +92,9 @@ spec:
         env:
           - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
             value: "/tmp/dotnet_bundle_extract"
+          # Workstation GC: see crm/deployment.yml.
+          - name: DOTNET_gcServer
+            value: "0"
           - name: OTEL__ENDPOINT # legacy key supported in code
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: OTEL_EXPORTER_OTLP_ENDPOINT

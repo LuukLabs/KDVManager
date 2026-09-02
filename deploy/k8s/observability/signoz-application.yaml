@@ -45,6 +45,27 @@ spec:
             mark_cache_size: "268435456"
 
         signoz:
+          # Alert notifications use Ziggo SMTP. Credentials stay in the
+          # manually managed signoz-smtp Secret and are never stored in Git.
+          env:
+            signoz_alertmanager_signoz_external__url: https://signoz.kdvmanager.nl
+            SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__SMARTHOST: smtp.ziggo.nl:587
+            SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__FROM:
+              valueFrom:
+                secretKeyRef:
+                  name: signoz-smtp
+                  key: username
+            SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__USERNAME:
+              valueFrom:
+                secretKeyRef:
+                  name: signoz-smtp
+                  key: username
+            SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__AUTH__PASSWORD:
+              valueFrom:
+                secretKeyRef:
+                  name: signoz-smtp
+                  key: password
+            SIGNOZ_ALERTMANAGER_SIGNOZ_GLOBAL_SMTP__REQUIRE__TLS: "true"
           ingress:
             enabled: true
             className: nginx

@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platformmanagement-api
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: platformmanagement-api
+  template:
+    metadata:
+      labels:
+        app: platformmanagement-api
+        release: production
+    spec:
+      serviceAccountName: kdvmanager-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: platformmanagement-pod
+        image: ghcr.io/luuklabs/kdvmanager/platformmanagement.api:linux-main
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+        startupProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 30
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /healthz
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /readyz
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              # give the app a short chance to drain requests before SIGTERM
+              command: ["/bin/sh","-c","sleep 10"]
+        resources:
+          # Tuned for very low traffic; raise if GC pressure or startup delay observed
+          requests:
+            cpu: 70m
+            memory: 48Mi
+          limits:
+            cpu: 300m
+            memory: 160Mi
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        env:
+          - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
+            value: "/tmp/dotnet_bundle_extract"
+          - name: OTEL__ENDPOINT # legacy key supported in code
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://otel-collector.observability.svc.cluster.local:4317"
+          - name: OTEL_SERVICE_NAME
+            value: "platformmanagement-api"
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Production"
+          - name: ASPNETCORE_URLS
+            value: "http://0.0.0.0:8080"
+          - name: POSTGRES_SERVER
+            value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
+          - name: POSTGRES_USER
+            value: "doadmin"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: kdvmanager-postgres-secret
+                key: password
+          - name: POSTGRES_PORT
+            value: "25060"
+          - name: POSTGRES_DATABASE
+            value: "KDVManagerPlatformManagementDB"
+          - name: ConnectionStrings__KDVManagerPlatformManagementConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require; Maximum Pool Size=5; Minimum Pool Size=1; Connection Idle Lifetime=300; Connection Pruning Interval=10"
+          - name: RABBITMQ_DEFAULT_USER
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secret
+                key: RABBITMQ_DEFAULT_USER
+          - name: RABBITMQ_DEFAULT_PASS
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secret
+                key: RABBITMQ_DEFAULT_PASS
+          - name: ConnectionStrings__RabbitMQ
+            value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq.kdvmanager-prod.svc.cluster.local:5672/"
+        volumeMounts:
+        - name: dotnet-bundle-cache
+          mountPath: /tmp/dotnet_bundle_extract
+          readOnly: false
+      initContainers:
+      - name: platformmanagement-migration
+        image: ghcr.io/luuklabs/kdvmanager/platformmanagement.migrator:linux-main
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+        env:
+          - name: POSTGRES_SERVER
+            value: "private-db-kdvmanager-ams3-do-user-13194146-0.l.db.ondigitalocean.com"
+          - name: POSTGRES_USER
+            value: "doadmin"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: kdvmanager-postgres-secret
+                key: password
+          - name: POSTGRES_PORT
+            value: "25060"
+          - name: POSTGRES_DATABASE
+            value: "KDVManagerPlatformManagementDB"
+          - name: ConnectionStrings__KDVManagerPlatformManagementConnectionString
+            value: "Server=$(POSTGRES_SERVER); port=$(POSTGRES_PORT); database=$(POSTGRES_DATABASE); User ID=$(POSTGRES_USER); password=$(POSTGRES_PASSWORD); pooling=true; sslmode=require; Maximum Pool Size=2; Minimum Pool Size=1; Connection Idle Lifetime=300; Connection Pruning Interval=10"
+          - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
+            value: "/tmp/dotnet_bundle_extract"
+        volumeMounts:
+          - name: dotnet-bundle-cache
+            mountPath: /tmp/dotnet_bundle_extract
+            readOnly: false
+      # end initContainers
+      volumes:
+      - name: dotnet-bundle-cache
+        emptyDir: {}

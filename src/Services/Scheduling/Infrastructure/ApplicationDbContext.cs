@@ -23,6 +23,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<ScheduleRule> ScheduleRules { get; set; }
     public DbSet<Child> Children { get; set; }
     public DbSet<Absence> Absences { get; set; }
+    public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
+    public DbSet<AttendanceAuditEntry> AttendanceAuditEntries { get; set; }
     public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
     public DbSet<EndMark> EndMarks { get; set; }
     public DbSet<EndMarkSettings> EndMarkSettings { get; set; }
@@ -36,6 +38,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ScheduleRule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<Schedule>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<Absence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<AttendanceRecord>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<AttendanceAuditEntry>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ClosurePeriod>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMark>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<EndMarkSettings>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
@@ -58,6 +62,19 @@ public class ApplicationDbContext : DbContext
             .HasOne<Child>()
             .WithMany()
             .HasForeignKey(a => a.ChildId);
+
+        modelBuilder.Entity<AttendanceRecord>()
+            .HasOne<Child>()
+            .WithMany()
+            .HasForeignKey(a => a.ChildId);
+
+        modelBuilder.Entity<AttendanceAuditEntry>()
+            .HasOne<AttendanceRecord>()
+            .WithMany()
+            .HasForeignKey(a => a.AttendanceRecordId);
+
+        modelBuilder.Entity<AttendanceRecord>().HasIndex(a => new { a.TenantId, a.ChildId, a.Date }).IsUnique();
+        modelBuilder.Entity<AttendanceAuditEntry>().HasIndex(a => new { a.TenantId, a.AttendanceRecordId, a.OccurredAt });
 
         modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.StartDate);
         modelBuilder.Entity<ClosurePeriod>().HasIndex(cd => cd.EndDate);

@@ -144,6 +144,7 @@ const GroupColumn = ({
                   key={schedule.scheduleId}
                   childId={schedule.childId ?? ""}
                   schedule={schedule}
+                  selectedDate={selectedDate}
                 />
               ))}
               {absent.length > 0 && present.length > 0 && (

@@ -3,7 +3,10 @@ kind: Deployment
 metadata:
   name: crm-api
 spec:
-  replicas: 1
+  # Two replicas so an OOMKill, eviction or node blip no longer takes the whole
+  # API down: with one replica the Service had no endpoints while the pod
+  # restarted and Envoy answered every request with a 503.
+  replicas: 2
   revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
@@ -20,6 +23,15 @@ spec:
         release: production
     spec:
       serviceAccountName: kdvmanager-sa
+      # Keep the two replicas on separate nodes. Without this every pod landed
+      # on the same node, so that node's memory pressure hit both at once.
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: crm-api
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -45,6 +57,9 @@ spec:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
+          # /readyz opens a TLS connection to managed Postgres, which does not
+          # fit in the 1s default this probe was silently using during cold start.
+          timeoutSeconds: 5
           failureThreshold: 30
         livenessProbe:
           httpGet:
@@ -52,7 +67,7 @@ spec:
             path: /healthz
           initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
@@ -60,7 +75,7 @@ spec:
             path: /readyz
           initialDelaySeconds: 20
           periodSeconds: 5
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
         lifecycle:
           preStop:
@@ -68,13 +83,15 @@ spec:
               # give the app a short chance to drain requests before SIGTERM
               command: ["/bin/sh","-c","sleep 10"]
         resources:
-          # Tuned for very low traffic; raise if GC pressure or startup delay observed
+          # The 160Mi ceiling OOMKilled this pod 8 times (exit 137) - its steady
+          # state had crept up to just under the limit. 320Mi leaves real
+          # headroom; Workstation GC (below) keeps the actual footprint down.
           requests:
             cpu: 70m
-            memory: 48Mi
+            memory: 96Mi
           limits:
             cpu: 300m
-            memory: 160Mi
+            memory: 320Mi
         ports:
           - name: http
             containerPort: 8080
@@ -82,6 +99,11 @@ spec:
         env:
           - name: DOTNET_BUNDLE_EXTRACT_BASE_DIR
             value: "/tmp/dotnet_bundle_extract"
+          # The Web SDK defaults to Server GC, which sizes its heaps for
+          # throughput and holds far more memory than this service needs. At a
+          # 300m CPU limit that trade buys nothing, so use Workstation GC.
+          - name: DOTNET_gcServer
+            value: "0"
           - name: OTEL__ENDPOINT # legacy key supported in code
             value: "http://otel-collector.observability.svc.cluster.local:4317"
           - name: OTEL_EXPORTER_OTLP_ENDPOINT

@@ -71,10 +71,10 @@ spec:
           # Tuned for very low traffic; raise if GC pressure or startup delay observed
           requests:
             cpu: 70m
-            memory: 48Mi
+            memory: 96Mi
           limits:
             cpu: 300m
-            memory: 160Mi
+            memory: 320Mi
         ports:
           - name: http
             containerPort: 8080

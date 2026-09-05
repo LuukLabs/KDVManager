@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using KDVManager.Services.CRM.Application.Features.Guardians.Commands.AddGuardian;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetChildGuardians;
 using KDVManager.Services.CRM.Application.Features.Guardians.Queries.GetGuardianChildren;
+using KDVManager.Services.CRM.Application.Features.Waitlist;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -42,6 +43,9 @@ public static class ConfigureServices
         services.AddScoped<GetGuardianDetailQueryHandler>();
         services.AddScoped<LinkGuardianToChildCommandHandler>();
         services.AddScoped<UnlinkGuardianFromChildCommandHandler>();
+        services.AddScoped<CreateWaitlistEntryCommandHandler>();
+        services.AddScoped<GetWaitlistEntriesQueryHandler>();
+        services.AddScoped<UpdateWaitlistEntryStatusCommandHandler>();
 
 
         return services;

@@ -40,6 +40,7 @@ app.MapHealthChecks("/readyz").AllowAnonymous();
 // Map minimal API endpoints
 app.MapChildrenEndpoints();
 app.MapGuardiansEndpoints();
+app.MapWaitlistEndpoints();
 // app.MapPeopleEndpoints();
 
 app.Run();

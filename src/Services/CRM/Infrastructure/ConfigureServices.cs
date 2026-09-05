@@ -23,6 +23,7 @@ public static class ConfigureServices
         services.AddScoped<IGuardianRepository, GuardianRepository>();
         services.AddScoped<IChildGuardianRepository, ChildGuardianRepository>();
         services.AddScoped<IChildActivityIntervalRepository, ChildActivityIntervalRepository>();
+        services.AddScoped<IWaitlistEntryRepository, WaitlistEntryRepository>();
         services.AddScoped<IChildNumberSequenceService, ChildNumberSequenceService>();
 
         services.AddTenancy();
@@ -50,4 +51,3 @@ public static class ConfigureServices
         return services;
     }
 }
-

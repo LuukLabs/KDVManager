@@ -602,6 +602,111 @@
           }
         }
       }
+    },
+    "/v1/waitlist": {
+      "get": {
+        "tags": [
+          "waitlist"
+        ],
+        "operationId": "ListWaitlistEntries",
+        "parameters": [
+          {
+            "name": "includeClosed",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WaitlistEntryVM"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "waitlist"
+        ],
+        "operationId": "CreateWaitlistEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWaitlistEntryCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/waitlist/{id}/status": {
+      "put": {
+        "tags": [
+          "waitlist"
+        ],
+        "operationId": "UpdateWaitlistEntryStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWaitlistEntryStatusCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -839,6 +944,75 @@
           "Active",
           "Upcoming"
         ]
+      },
+      "CreateWaitlistEntryCommand": {
+        "required": [
+          "givenName",
+          "familyName",
+          "dateOfBirth",
+          "desiredStartDate",
+          "contactName",
+          "contactEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "givenName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "familyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "dateOfBirth": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "desiredStartDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "contactName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contactEmail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contactPhone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "requestedDays": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
       },
       "GuardianChildVM": {
         "required": [
@@ -1296,6 +1470,14 @@
           }
         }
       },
+      "UpdateWaitlistEntryStatusCommand": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/WaitlistEntryStatus"
+          }
+        }
+      },
       "ValidationError": {
         "required": [
           "property",
@@ -1314,6 +1496,78 @@
             "type": "string"
           }
         }
+      },
+      "WaitlistEntryStatus": {
+        "enum": [
+          "Waiting",
+          "Offered",
+          "Placed",
+          "Withdrawn"
+        ]
+      },
+      "WaitlistEntryVM": {
+        "required": [
+          "givenName",
+          "familyName",
+          "fullName",
+          "contactName",
+          "contactEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "desiredStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "contactEmail": {
+            "type": "string"
+          },
+          "contactPhone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "requestedDays": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "registeredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WaitlistEntryStatus"
+          }
+        }
       }
     }
   },
@@ -1323,6 +1577,9 @@
     },
     {
       "name": "guardians"
+    },
+    {
+      "name": "waitlist"
     }
   ]
 }

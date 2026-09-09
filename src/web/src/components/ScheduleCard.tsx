@@ -172,7 +172,12 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({ schedule, onEdit }) 
             {schedule.scheduleRules.length > 0 ? (
               <>
                 <Chip
-                  label={t("{{count}} schedule time slots", {
+                  // One rule per day per time slot, so the rule count is a count
+                  // of dagdelen — not of time slots. Labelling it "tijdsloten"
+                  // reported "3 tijdsloten" for three days in a single slot, and
+                  // contradicted the "3 dagdelen" the editor shows for the very
+                  // same planning.
+                  label={t("{{count}} day parts", {
                     count: schedule.scheduleRules.length,
                   })}
                   size="small"

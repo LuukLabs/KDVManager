@@ -28,6 +28,7 @@ const MainNavbar: React.FC<MainNavbarProps> = ({ children }: MainNavbarProps) =>
   const navigationItems = [
     { key: "schedule", label: t("Schedule Overview"), path: "/schedule" },
     { key: "children", label: t("Children"), path: "/children" },
+    { key: "waitlist", label: t("Waitlist"), path: "/waitlist" },
     { key: "guardians", label: t("Guardians"), path: "/guardians" },
   ];
 

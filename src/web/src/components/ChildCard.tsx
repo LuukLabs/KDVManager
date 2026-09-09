@@ -17,13 +17,16 @@ import type { ScheduleByDateVM } from "@api/scheduling/models/scheduleByDateVM";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { type Dayjs } from "dayjs";
+import { AttendanceActions } from "../features/attendance/AttendanceActions";
 
 type ChildCardProps = {
   childId: string;
   schedule: ScheduleByDateVM;
+  selectedDate?: Dayjs;
 };
 
-const ChildCard = ({ childId, schedule }: ChildCardProps) => {
+const ChildCard = ({ childId, schedule, selectedDate }: ChildCardProps) => {
   const { data: childDetails, isLoading: isLoadingChild } = useGetChildById(childId);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -147,6 +150,7 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
                       : t("N/A")}
                   </Typography>
                 </Box>
+                {selectedDate && <AttendanceActions childId={childId} date={selectedDate} />}
               </Box>
 
               {/* Right section - Schedule Info */}

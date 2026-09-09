@@ -1,4 +1,5 @@
 import { getAuthToken } from "@lib/auth/auth";
+import { dispatchTrialExpired } from "@lib/trial/trialEvents";
 import { buildApiError } from "../errors/classify";
 import { BASE_URL } from "../constants";
 
@@ -55,6 +56,8 @@ export const executeFetchPaginated = async <T>(url: string, options: RequestInit
   }
 
   if (!response.ok) {
+    // The trial has expired: notify the app so the lock screen can take over.
+    if (response.status === 402) dispatchTrialExpired();
     throw buildApiError({ status: response.status, body: parsed, rawBody });
   }
 

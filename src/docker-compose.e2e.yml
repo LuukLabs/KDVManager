@@ -1,7 +1,8 @@
 # E2E test overrides. Use together with the base compose file (NOT the dev override):
 #
 #   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build \
-#     envoy mock-auth web crm-api crm-migrator scheduling-api scheduling-migrator
+#     envoy mock-auth web crm-api crm-migrator scheduling-api scheduling-migrator \
+#     tenantmanagement-api tenantmanagement-migrator
 #
 # Differences from dev:
 #  - mock-auth replaces Auth0 (no external dependency, no secrets, auto-login)
@@ -107,6 +108,35 @@ services:
       postgres:
         condition: service_healthy
       scheduling-migrator:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+      mock-auth:
+        condition: service_started
+
+  tenantmanagement-migrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerTenantManagementConnectionString=Server=postgres; port=5432; database=KDVManagerTenantManagementDB; User ID=sammy; password=shark; pooling=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # No Auth0 management credentials: the no-op identity provisioner is used, so
+  # provisioning works without writing app_metadata anywhere (the mock token
+  # already carries the tenant claim).
+  tenantmanagement-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerTenantManagementConnectionString=Server=postgres; port=5432; database=KDVManagerTenantManagementDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - Auth0__Authority=http://mock-auth:5300
+      - Auth0__Audience=https://api.kdvmanager.nl/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tenantmanagement-migrator:
         condition: service_completed_successfully
       rabbitmq:
         condition: service_started

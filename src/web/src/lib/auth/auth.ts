@@ -98,6 +98,71 @@ export const getAuthToken = async (): Promise<string | null> => {
   }
 };
 
+// The access-token claim the backend resolves tenancy from.
+export const TENANT_CLAIM = "https://kdvmanager.nl/tenant";
+
+// Marks a cross-tenant platform administrator; minted by the Auth0 post-login
+// Action from app_metadata.platform_admin (see deploy/auth0/README.md).
+export const ADMIN_CLAIM = "https://kdvmanager.nl/admin";
+
+// Decodes the payload of the current access token, or null when there is no
+// token / it cannot be parsed. Purely a UX aid — authorization is enforced
+// server-side; a tampered token buys nothing beyond a differently-rendered UI.
+const getTokenPayload = async (): Promise<Record<string, unknown> | null> => {
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  /* eslint-disable i18next/no-literal-string -- technical JWT (base64url) parsing, not user-facing text */
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+
+  try {
+    const json = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+    return JSON.parse(
+      decodeURIComponent(
+        json
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      ),
+    ) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+  /* eslint-enable i18next/no-literal-string */
+};
+
+// Reads the tenant id from the current access token, or null when absent. Used to
+// decide whether onboarding is needed without a backend round-trip — a token that
+// already carries the tenant claim means the user has a tenant.
+export const getTenantIdFromToken = async (): Promise<string | null> => {
+  const payload = await getTokenPayload();
+  return (payload?.[TENANT_CLAIM] as string | undefined) ?? null;
+};
+
+// Whether the current access token marks the user as a platform admin. Only
+// gates UI (admin page link / route); the backend enforces the claim itself.
+export const getIsPlatformAdminFromToken = async (): Promise<boolean> => {
+  const payload = await getTokenPayload();
+  return payload?.[ADMIN_CLAIM] === true;
+};
+
+// Forces a brand-new access token (bypassing the cache) so freshly-changed
+// claims — e.g. the tenant claim set right after onboarding — are picked up.
+export const refreshAuthToken = async (): Promise<string | null> => {
+  if (!auth0Client) return null;
+
+  try {
+    return await auth0Client.getAccessTokenSilently({
+      authorizationParams: { audience: authConfig.audience },
+      cacheMode: "off",
+    });
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    return null;
+  }
+};
+
 /** Auth loader for protected routes. */
 export const requireAuth: LoaderFunction = async ({ request }) => {
   const client = await waitForAuth0Client();
@@ -105,6 +170,21 @@ export const requireAuth: LoaderFunction = async ({ request }) => {
   if (!client?.isAuthenticated) {
     const url = new URL(request.url);
     throw redirect(loginPath(url.pathname + url.search));
+  }
+
+  return null;
+};
+
+/**
+ * Loader for platform-admin routes: authenticated AND carrying the admin claim.
+ * Non-admins are sent to the default route (the claim is a UX gate only; the
+ * backend independently authorizes every admin API call).
+ */
+export const requirePlatformAdmin: LoaderFunction = async (args) => {
+  await requireAuth(args);
+
+  if (!(await getIsPlatformAdminFromToken())) {
+    throw redirect(DEFAULT_AUTHENTICATED_ROUTE);
   }
 
   return null;

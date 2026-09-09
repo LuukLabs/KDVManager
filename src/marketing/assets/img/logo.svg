@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" role="img" aria-label="KDVManager">
+  <title>KDVManager</title>
+  <rect width="64" height="64" rx="15" fill="#0F766E"/>
+  <rect x="13" y="30" width="9" height="21" rx="4.5" fill="#FBFAF9"/>
+  <rect x="27.5" y="18" width="9" height="33" rx="4.5" fill="#EBA92B"/>
+  <rect x="42" y="25" width="9" height="26" rx="4.5" fill="#FBFAF9"/>
+  <!-- Woordmerk. Voor print/derden: zet dit om naar outlines. -->
+  <text x="80" y="42" font-family="'Familjen Grotesk','Helvetica Neue',Arial,sans-serif" font-size="27" letter-spacing="-0.6" fill="#10231F">
+    <tspan font-weight="700">KDV</tspan><tspan font-weight="500" fill="#08403B">Manager</tspan>
+  </text>
+</svg>

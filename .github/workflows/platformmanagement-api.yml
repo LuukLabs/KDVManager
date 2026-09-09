@@ -1,0 +1,65 @@
+name: platformmanagement-api
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - src/Services/PlatformManagement/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/platformmanagement-api.yml
+
+  pull_request:
+    branches:
+    - main
+
+    paths:
+    - src/Services/PlatformManagement/**
+    - src/Shared/**
+    - src/docker-compose.yml
+    - .github/workflows/composite/**
+    - .github/workflows/platformmanagement-api.yml
+env:
+  REGISTRY: ghcr.io
+  SERVICE: platformmanagement-api
+  IMAGE: platformmanagement.api
+
+jobs:
+
+  BuildContainersForPR_Linux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7.0.0
+
+    - uses: ./.github/workflows/composite/build
+      with:
+        service: ${{ env.SERVICE }}
+        registry_endpoint: ${{ vars.REGISTRY_ENDPOINT }}
+
+  BuildLinux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    if: ${{ github.event_name != 'pull_request' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7.0.0
+
+    - uses: ./.github/workflows/composite/build-push
+      with:
+        service: ${{ env.SERVICE }}
+        registry_host: ${{ env.REGISTRY }}
+        registry_endpoint: ${{ vars.REGISTRY_ENDPOINT }}
+        image_name: ${{ env.IMAGE }}
+        registry_username: ${{ github.actor }}
+        registry_password: ${{ secrets.GITHUB_TOKEN }}

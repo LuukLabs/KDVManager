@@ -3,7 +3,9 @@ kind: Deployment
 metadata:
   name: envoy
 spec:
-  replicas: 1
+  # The gateway was a single pod, so every Envoy restart (8 so far) took the
+  # whole API down. Two replicas keep the edge up through a restart or drain.
+  replicas: 2
   revisionHistoryLimit: 1
   strategy:
     type: RollingUpdate
@@ -23,6 +25,13 @@ spec:
         prometheus.io/path: "/stats/prometheus"
     spec:
       serviceAccountName: kdvmanager-sa
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: envoy
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -56,8 +65,12 @@ spec:
             port: 8001
           initialDelaySeconds: 15
           periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          # Envoy sits at ~6MB of a 192Mi limit, so its restarts came from the
+          # admin probe timing out under node CPU contention - not from Envoy
+          # being unhealthy. Restarting the gateway made that worse, so this is
+          # deliberately slow to declare death (60s of failures, not 9s).
+          timeoutSeconds: 5
+          failureThreshold: 6
         readinessProbe:
           httpGet:
             path: /ready

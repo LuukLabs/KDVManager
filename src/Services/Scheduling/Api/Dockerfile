@@ -36,7 +36,7 @@ RUN dotnet publish "Api/Api.csproj" -c Release -o /app/publish \
     --no-build \
     /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.11 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.12 AS runtime
 
 EXPOSE 80
 EXPOSE 443

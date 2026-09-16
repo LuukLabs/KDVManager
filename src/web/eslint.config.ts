@@ -20,6 +20,13 @@ const config = tseslint.config([
     plugins: {
       react,
     },
+    // eslint-plugin-react warns on every run without this once one of its rules
+    // is enabled. It is pinned rather than "detect" because eslint-plugin-react
+    // 7.37's version detection crashes on ESLint 10; keep it in step with the
+    // react dependency in package.json.
+    settings: {
+      react: { version: "19.2" },
+    },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -44,6 +51,11 @@ const config = tseslint.config([
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "no-restricted-imports": ["error", { patterns: ["@mui/*/*/*"] }],
+      // A component declared inside another component's render body gets a new
+      // identity every render, so React unmounts and remounts its subtree and
+      // focus is lost mid-interaction. That is exactly the bug the planning
+      // dialog shipped with; this rule keeps it from coming back.
+      "react/no-unstable-nested-components": "error",
     },
   },
   {

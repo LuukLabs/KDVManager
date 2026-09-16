@@ -17,6 +17,7 @@ import type { ScheduleByDateVM } from "@api/scheduling/models/scheduleByDateVM";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { getCategoricalColor } from "@lib/categoricalColor";
 
 type ChildCardProps = {
   childId: string;
@@ -53,17 +54,8 @@ const ChildCard = ({ childId, schedule }: ChildCardProps) => {
     navigate(`/children/${childId}`);
   };
 
-  const getAvatarColor = () => {
-    // Generate consistent color based on child ID
-    const { categorical } = theme.customColors;
-    let hash = 0;
-    for (let i = 0; i < childId.length; i++) {
-      hash = ((hash << 5) - hash + childId.charCodeAt(i)) & 0xffffffff;
-    }
-    return categorical[Math.abs(hash) % categorical.length];
-  };
-
-  const avatarColor = getAvatarColor();
+  // Consistent color based on child ID (shared hash, see lib/categoricalColor).
+  const avatarColor = getCategoricalColor(childId, theme);
 
   return (
     <Card

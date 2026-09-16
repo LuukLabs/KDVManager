@@ -128,6 +128,26 @@ const router = (t: TFunction<"translation">) =>
               ],
             },
             {
+              path: "waitlist",
+              loader: requireAuth,
+              handle: {
+                crumb: () => t("Waitlist"),
+              },
+              children: [
+                {
+                  index: true,
+                  lazy: () => import("@pages/waitlist/WaitlistPage"),
+                },
+                {
+                  path: "new",
+                  lazy: () => import("@pages/waitlist/NewWaitlistEntryPage"),
+                  handle: {
+                    crumb: () => t("Add waitlist request"),
+                  },
+                },
+              ],
+            },
+            {
               path: "guardians",
               loader: requireAuth,
               handle: {

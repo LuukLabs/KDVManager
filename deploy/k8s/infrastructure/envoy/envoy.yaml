@@ -60,6 +60,12 @@ static_resources:
                   upstream_cluster: "%UPSTREAM_CLUSTER%"
                   request_id: "%REQ(X-REQUEST-ID)%"
                   user_agent: "%REQ(USER-AGENT)%"
+                  # Distinguishes *why* a 5xx happened without reaching for
+                  # /stats: UF/UC = upstream connect failure, UH = no healthy
+                  # upstream, UO = outlier ejection, NR = no route.
+                  response_flags: "%RESPONSE_FLAGS%"
+                  upstream_host: "%UPSTREAM_HOST%"
+                  retry_count: "%REQ(X-ENVOY-ATTEMPT-COUNT)%"
           upgrade_configs:
           - upgrade_type: websocket
           route_config:
@@ -77,6 +83,8 @@ static_resources:
                   allow_headers: content-type,authorization,traceparent,tracestate
                   allow_methods: GET, POST, PUT, HEAD, OPTIONS, DELETE
                   expose_headers: x-Total
+              # Surfaces the attempt number to upstreams and the access log.
+              include_request_attempt_count: true
               routes:
               - name: "crm"
                 match:
@@ -84,12 +92,33 @@ static_resources:
                 route:
                   prefix_rewrite: /
                   cluster: crm-api
+                  # Only retries failures where the request provably never
+                  # reached the app, so this stays safe for non-idempotent
+                  # POST/PUT/DELETE: connect-failure covers connect timeout and
+                  # refused connections (what a restarting or not-yet-ready pod
+                  # produces) and reset-before-request only fires when no bytes
+                  # were sent upstream. Deliberately NOT retrying 5xx or
+                  # gateway-error, which would duplicate writes the app already
+                  # processed. Kept inline rather than a YAML anchor: a dangling
+                  # alias here stops Envoy from booting at all.
+                  retry_policy:
+                    retry_on: connect-failure,refused-stream,reset-before-request
+                    num_retries: 2
+                    retry_back_off:
+                      base_interval: 0.05s
+                      max_interval: 0.5s
               - name: "scheduling"
                 match:
                   prefix: /scheduling/
                 route:
                   prefix_rewrite: /
                   cluster: scheduling-api
+                  retry_policy:
+                    retry_on: connect-failure,refused-stream,reset-before-request
+                    num_retries: 2
+                    retry_back_off:
+                      base_interval: 0.05s
+                      max_interval: 0.5s
               # Browser telemetry ingest: the web app posts OTLP/HTTP payloads
               # to /telemetry/v1/traces, forwarded to the OTel collector.
               - name: "telemetry"
@@ -219,7 +248,9 @@ static_resources:
                 address: otel-collector.observability.svc.cluster.local
                 port_value: 4318
   - name: crm-api
-    connect_timeout: 0.25s
+    # 0.25s was tight enough that a GC pause or CPU-throttled pod could miss the
+    # TCP handshake window and surface as a 503 (UF) to the browser.
+    connect_timeout: 1s
     type: strict_dns
     lb_policy: round_robin
     load_assignment:
@@ -247,7 +278,7 @@ static_resources:
       base_ejection_time: 30s
       max_ejection_percent: 50
   - name: scheduling-api
-    connect_timeout: 0.25s
+    connect_timeout: 1s
     type: strict_dns
     lb_policy: round_robin
     load_assignment:

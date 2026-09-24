@@ -24,6 +24,7 @@ public static class ConfigureServices
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
         services.AddScoped<IAbsenceRepository, AbsenceRepository>();
+        services.AddScoped<IAttendanceRepository, AttendanceRepository>();
         services.AddScoped<IClosurePeriodRepository, ClosurePeriodRepository>();
         services.AddScoped<IEndMarkRepository, EndMarkRepository>();
         services.AddScoped<IEndMarkSettingsRepository, EndMarkSettingsRepository>();

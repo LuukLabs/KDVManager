@@ -11,12 +11,15 @@ on:
       - 'src/Services/Scheduling/**'
       - 'src/Shared/**'
       - 'src/docker-compose.yml'
+      - 'src/Services/TenantManagement/**'
       - '.github/workflows/web.yml'
       - '.github/workflows/crm-api.yml'
       - '.github/workflows/crm-migrator.yml'
       - '.github/workflows/scheduling-api.yml'
       - '.github/workflows/scheduling-migrator.yml'
       - '.github/workflows/composite/**'
+      - '.github/workflows/tenantmanagement-api.yml'
+      - '.github/workflows/tenantmanagement-migrator.yml'
       - '.github/workflows/deploy-update-images.yml'
 
 permissions:

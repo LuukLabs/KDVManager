@@ -26,6 +26,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ClosurePeriod> ClosurePeriods { get; set; }
     public DbSet<EndMark> EndMarks { get; set; }
     public DbSet<EndMarkSettings> EndMarkSettings { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

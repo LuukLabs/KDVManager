@@ -9,12 +9,15 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
+import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
 import Login from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useTranslation } from "react-i18next";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import { useMyTenant } from "@lib/tenant/useMyTenant";
+import { useIsPlatformAdmin } from "@lib/auth/useIsPlatformAdmin";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -28,6 +31,8 @@ export default function AccountMenu() {
   const navigate = useNavigate();
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const { t } = useTranslation();
+  const { data: tenant } = useMyTenant();
+  const isPlatformAdmin = useIsPlatformAdmin();
 
   return (
     <React.Fragment>
@@ -87,6 +92,11 @@ export default function AccountMenu() {
           <Stack>
             <Typography>{user?.name}</Typography>
             <Typography variant="body2">{user?.email}</Typography>
+            {tenant?.name ? (
+              <Typography variant="body2" color="text.secondary">
+                {tenant.name}
+              </Typography>
+            ) : null}
           </Stack>
         </MenuItem>
         <Divider />
@@ -96,6 +106,14 @@ export default function AccountMenu() {
           </ListItemIcon>
           {t("Settings")}
         </MenuItem>
+        {isPlatformAdmin ? (
+          <MenuItem onClick={() => navigate("/admin")}>
+            <ListItemIcon>
+              <AdminPanelSettings fontSize="small" />
+            </ListItemIcon>
+            {t("Platform administration")}
+          </MenuItem>
+        ) : null}
         {isAuthenticated ? (
           <MenuItem
             key="Logout"

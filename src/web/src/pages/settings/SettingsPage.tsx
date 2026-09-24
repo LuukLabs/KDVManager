@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AutoMode from "@mui/icons-material/AutoMode";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 import React from "react";
 
 const SettingsPage = () => {
@@ -34,6 +35,12 @@ const SettingsPage = () => {
       description: t("Configure automatic EndMark creation for children."),
       navigateTo: "/settings/endmark-automation",
       icon: <AutoMode fontSize="large" />,
+    },
+    {
+      title: t("Tenants"),
+      description: t("Manage tenants."),
+      navigateTo: "/settings/tenants",
+      icon: <ApartmentIcon fontSize="large" />,
     },
   ];
 

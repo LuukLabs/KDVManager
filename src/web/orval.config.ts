@@ -70,6 +70,30 @@ const config: ReturnType<typeof defineConfig> = {
       target: "http://localhost:5200/scheduling/openapi/v1.json",
     },
   },
+  tenants: {
+    output: {
+      mode: "tags-split",
+      target: "src/api/tenants/endpoints",
+      schemas: "src/api/tenants/models",
+      client: "react-query",
+      clean: true,
+      prettier: true,
+      indexFiles: false,
+      baseUrl: "/tenants",
+      override: {
+        mutator: mutatorFetch,
+        fetch: {
+          includeHttpResponseReturnType: false,
+        },
+        operations: {
+          ListTenants: queryPaginated,
+        },
+      },
+    },
+    input: {
+      target: "http://localhost:5200/tenants/openapi/v1.json",
+    },
+  },
 };
 
 export default config;

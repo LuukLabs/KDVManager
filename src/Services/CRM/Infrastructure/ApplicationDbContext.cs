@@ -21,6 +21,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ChildNumberSequence> ChildNumberSequences { get; set; }
     public DbSet<ChildActivityInterval> ChildActivityIntervals { get; set; }
     public DbSet<WaitlistEntry> WaitlistEntries { get; set; }
+    public DbSet<WaitlistStatusChange> WaitlistStatusChanges { get; set; }
     // PhoneNumbers owned by Guardian; no separate DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ChildNumberSequence>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<ChildActivityInterval>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         modelBuilder.Entity<WaitlistEntry>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
+        modelBuilder.Entity<WaitlistStatusChange>().HasQueryFilter(a => a.TenantId == _tenancyContextAccessor.Current!.TenantId);
         // PhoneNumbers owned; query filter handled via Guardian
 
         modelBuilder.Entity<ChildGuardian>()

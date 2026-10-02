@@ -17,6 +17,15 @@ public class WaitlistEntryConfiguration : IEntityTypeConfiguration<WaitlistEntry
         builder.Property(entry => entry.Notes).HasMaxLength(1000);
         builder.Property(entry => entry.Status).HasConversion<string>().HasMaxLength(20);
 
+        builder.Property(entry => entry.Location).HasMaxLength(100);
+        builder.Property(entry => entry.CareType).HasConversion<string>().HasMaxLength(20);
+        builder.Property(entry => entry.PreferredGroup).HasMaxLength(100);
+        builder.Property(entry => entry.PriorityReason).HasMaxLength(100);
+        builder.Property(entry => entry.PriorityExplanation).HasMaxLength(1000);
+        builder.Property(entry => entry.Revision).IsConcurrencyToken();
+        builder.HasMany(entry => entry.StatusHistory).WithOne().HasForeignKey(change => change.WaitlistEntryId);
+        builder.HasIndex(entry => new { entry.TenantId, entry.Location, entry.DesiredStartDate });
+
         // This is also the default display order for the active waitlist.
         builder.HasIndex(entry => new { entry.TenantId, entry.Status, entry.RegisteredAt });
     }

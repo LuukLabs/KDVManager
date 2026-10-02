@@ -1,4 +1,4 @@
-# Wachtlijst: eerste release en groeipad
+# Wachtlijst: releases en groeipad
 
 ## Besluit
 
@@ -27,11 +27,20 @@ De markt bevestigt een gefaseerde keten: inschrijving/aanvraag → wachtlijst �
 
 Daarom bevat de MVP wél status, contact, ingangsdatum en dagvoorkeur, maar nog geen schijnprecisie zoals een automatisch volgnummer of plaatsingsadvies. Dat advies kan pas betrouwbaar zijn zodra de vraag aan locatie, groep, leeftijd en daadwerkelijk beschikbare dagen is gekoppeld. Wachtlijsten zijn bovendien een reëel operationeel probleem: in de meting van november 2024 had 77% van de deelnemende dagopvangorganisaties een wachtlijst; de bron waarschuwt terecht dat zo'n aanwezigheid niet hetzelfde is als een individuele wachttijd. Zie [Kinderopvang Werkt, Quickscan november 2024](https://www.kinderopvang-werkt.nl/sites/fcb_kinderopvang/files/2024-12/Quickscan-arbeidsmarktontwikkelingen-kinderopvang-november-2024.pdf).
 
-## Iteratie 2 — Plaatsingsinformatie en handmatige matching
+## Iteratie 2 — Plaatsingsinformatie en handmatige matching (geleverd)
 
-Voeg locatie, opvangvorm, voorkeursgroep, vaste weekdagen en eventueel uren toe als gestructureerde velden. Voeg een configureerbare prioriteitsreden toe (bijvoorbeeld broer/zus of medewerker), plus een toelichting en een auditlog van statuswijzigingen. Bouw filters op gewenste startmaand, locatie en status; toon daarna een **uitlegbare** shortlist, geen automatische plaatsing.
+- Aanvragen kunnen worden geopend en bewerkt zonder verlies van inschrijfdatum of status.
+- Voorkeurslocatie, opvangvorm (`Daycare`/`AfterSchool`), voorkeursgroep, vaste weekdagen (maandag–zondag, dezelfde dagnummering als de planning) en optionele begin-/eindtijd zijn gestructureerd opgeslagen. Locatie en groep zijn voorkeursnamen; capaciteitscontrole en koppeling aan de planning volgen in iteratie 3.
+- Medewerkers bepalen een prioriteit van 0–100. Bij een hogere prioriteit zijn een eigen prioriteitsreden (bijvoorbeeld broer/zus of medewerker) en toelichting verplicht. De reden is vrij configureerbaar per aanvraag, zonder ingebouwde weging van persoonlijke kenmerken.
+- Filters op locatie (hoofdletterongevoelig), gewenste startmaand en status. Een expliciete statusfilter bepaalt ook of gesloten aanvragen getoond worden; zonder statusfilter geldt de historieschakelaar.
+- De shortlist toont eerst `Offered`, daarna `Waiting`, `Placed` en `Withdrawn`. Binnen elke status geldt prioriteit (hoogste eerst), vervolgens inschrijfdatum en ID. Reden en toelichting staan zichtbaar naast de prioriteit.
+- Statuswijzigingen worden samen met de aanvraag opgeslagen met oude/nieuwe status, UTC-tijdstip en het geauthenticeerde gebruikers-ID uit het token. De aanroepende client kan de auteur niet kiezen. Een identieke status veroorzaakt geen extra historisch item.
+- Elke bewerking vraagt de laatst gelezen `revision`; een verouderde revisie levert HTTP 409 op. Het formulier biedt daarna bewust opnieuw laden aan. Gelijktijdige statuswijzigingen leveren geen onjuiste auditregels op.
+- Nieuwe CRM-API: `GET`/`PUT /v1/waitlist/{id}`. Bestaande lijst-/aanmaak-/statusroutes zijn uitgebreid. `PUT /v1/waitlist/{id}/status` vereist nu `status` en `revision`.
+- Migratie behoudt bestaande vrije tekst, registratiedatums en statussen. Oudere aanvragen beginnen met lege weekdagen en prioriteit 0; ontbrekende plaatsingsinformatie kan later worden aangevuld. Historie begint na installatie en wordt niet achteraf verzonnen.
+- Nederlandse en Engelse schermteksten, browsertests en integratietests voor filtering, validatie, tenantisolatie, bewerking, historie en gelijktijdige wijzigingen.
 
-Acceptatiecriteria: een planner kan aanvragen per locatie/startmaand filteren, de gekozen volgorde onderbouwen, en achteraf zien wie een aanbod deed en wanneer.
+Acceptatiecriteria: een planner kan aanvragen per locatie/startmaand filteren, de gekozen volgorde onderbouwen, en achteraf zien wie een aanbod deed en wanneer. Deze iteratie is handmatige matching; zij geeft geen automatische capaciteitstoets of plaatsingsgarantie.
 
 ## Iteratie 3 — Capaciteit en aanbod
 

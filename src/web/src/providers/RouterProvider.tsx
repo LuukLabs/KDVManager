@@ -145,6 +145,11 @@ const router = (t: TFunction<"translation">) =>
                     crumb: () => t("Add waitlist request"),
                   },
                 },
+                {
+                  path: ":id",
+                  lazy: () => import("@pages/waitlist/WaitlistEntryPage"),
+                  handle: { crumb: () => t("Waitlist request") },
+                },
               ],
             },
             {

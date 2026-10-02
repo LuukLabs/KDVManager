@@ -616,6 +616,28 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startMonth",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/WaitlistEntryStatus"
+            }
           }
         ],
         "responses": {
@@ -674,6 +696,88 @@
         }
       }
     },
+    "/v1/waitlist/{id}": {
+      "get": {
+        "tags": [
+          "waitlist"
+        ],
+        "operationId": "GetWaitlistEntry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaitlistEntryVM"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "waitlist"
+        ],
+        "operationId": "UpdateWaitlistEntry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWaitlistEntryCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
     "/v1/waitlist/{id}/status": {
       "put": {
         "tags": [
@@ -704,6 +808,25 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -774,6 +897,13 @@
             "$ref": "#/components/schemas/PhoneNumberType"
           }
         }
+      },
+      "ChildcareType": {
+        "enum": [
+          "Daycare",
+          "AfterSchool",
+          null
+        ]
       },
       "ChildDetailVM": {
         "required": [
@@ -1007,6 +1137,65 @@
             ]
           },
           "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "careType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChildcareType"
+              }
+            ]
+          },
+          "preferredGroup": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "weekdays": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "startTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "endTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priorityReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "priorityExplanation": {
             "type": [
               "null",
               "string"
@@ -1470,11 +1659,165 @@
           }
         }
       },
+      "UpdateWaitlistEntryCommand": {
+        "required": [
+          "revision",
+          "givenName",
+          "familyName",
+          "dateOfBirth",
+          "desiredStartDate",
+          "contactName",
+          "contactEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "givenName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "familyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "dateOfBirth": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "desiredStartDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "contactName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contactEmail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "contactPhone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "requestedDays": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "careType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChildcareType"
+              }
+            ]
+          },
+          "preferredGroup": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "weekdays": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "startTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "endTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priorityReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "priorityExplanation": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "UpdateWaitlistEntryStatusCommand": {
+        "required": [
+          "status",
+          "revision"
+        ],
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/WaitlistEntryStatus"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WaitlistEntryStatus"
+              }
+            ]
+          },
+          "revision": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -1566,6 +1909,96 @@
           },
           "status": {
             "$ref": "#/components/schemas/WaitlistEntryStatus"
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "careType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ChildcareType"
+              }
+            ]
+          },
+          "preferredGroup": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "weekdays": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "startTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "endTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "time"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priorityReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "priorityExplanation": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "revision": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "statusHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WaitlistStatusChangeVM"
+            }
+          }
+        }
+      },
+      "WaitlistStatusChangeVM": {
+        "required": [
+          "changedBy"
+        ],
+        "type": "object",
+        "properties": {
+          "previousStatus": {
+            "$ref": "#/components/schemas/WaitlistEntryStatus"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WaitlistEntryStatus"
+          },
+          "changedBy": {
+            "type": "string"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

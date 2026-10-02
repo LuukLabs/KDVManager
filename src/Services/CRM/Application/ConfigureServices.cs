@@ -46,6 +46,8 @@ public static class ConfigureServices
         services.AddScoped<CreateWaitlistEntryCommandHandler>();
         services.AddScoped<GetWaitlistEntriesQueryHandler>();
         services.AddScoped<UpdateWaitlistEntryStatusCommandHandler>();
+        services.AddScoped<UpdateWaitlistEntryCommandHandler>();
+        services.AddScoped<GetWaitlistEntryQueryHandler>();
 
 
         return services;

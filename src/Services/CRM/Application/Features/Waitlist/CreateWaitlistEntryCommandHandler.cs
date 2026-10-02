@@ -8,26 +8,16 @@ public class CreateWaitlistEntryCommandHandler(IWaitlistEntryRepository waitlist
     public async Task<Guid> Handle(CreateWaitlistEntryCommand request)
     {
         var validationResult = await new CreateWaitlistEntryCommandValidator().ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            throw new Exceptions.ValidationException(validationResult);
-        }
+        if (!validationResult.IsValid) throw new Exceptions.ValidationException(validationResult);
 
-        var entry = await waitlistEntryRepository.AddAsync(new WaitlistEntry
+        var entry = new WaitlistEntry
         {
-            Id = Guid.NewGuid(),
-            GivenName = request.GivenName!,
-            FamilyName = request.FamilyName!,
-            DateOfBirth = request.DateOfBirth!.Value,
-            DesiredStartDate = request.DesiredStartDate!.Value,
-            ContactName = request.ContactName!,
-            ContactEmail = request.ContactEmail!,
-            ContactPhone = request.ContactPhone,
-            RequestedDays = request.RequestedDays,
-            Notes = request.Notes,
+            Id = Guid.NewGuid(), GivenName = request.GivenName!, FamilyName = request.FamilyName!,
+            ContactName = request.ContactName!, ContactEmail = request.ContactEmail!,
             RegisteredAt = DateTimeOffset.UtcNow
-        });
-
+        };
+        WaitlistEntryMapping.Apply(entry, request);
+        await waitlistEntryRepository.AddAsync(entry);
         return entry.Id;
     }
 }

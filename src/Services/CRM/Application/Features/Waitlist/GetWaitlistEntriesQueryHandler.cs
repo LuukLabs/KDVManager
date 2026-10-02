@@ -1,5 +1,5 @@
+using FluentValidation;
 using KDVManager.Services.CRM.Application.Contracts.Persistence;
-using KDVManager.Services.CRM.Domain.Entities;
 
 namespace KDVManager.Services.CRM.Application.Features.Waitlist;
 
@@ -7,24 +7,15 @@ public class GetWaitlistEntriesQueryHandler(IWaitlistEntryRepository waitlistEnt
 {
     public async Task<IReadOnlyList<WaitlistEntryVM>> Handle(GetWaitlistEntriesQuery request)
     {
-        var entries = await waitlistEntryRepository.ListAsync(request.IncludeClosed ?? false);
-        return entries.Select(ToVm).ToList();
+        var validator = new InlineValidator<GetWaitlistEntriesQuery>();
+        validator.RuleFor(query => query.Location).MaximumLength(100);
+        validator.RuleFor(query => query.Status).IsInEnum().When(query => query.Status.HasValue);
+        validator.RuleFor(query => query.StartMonth).Must(date => !date.HasValue || date.Value.Day == 1)
+            .WithMessage("Use the first day of the start month.");
+        var validation = await validator.ValidateAsync(request);
+        if (!validation.IsValid) throw new Exceptions.ValidationException(validation);
+        var entries = await waitlistEntryRepository.ListAsync(request.IncludeClosed ?? false,
+            request.Location?.Trim(), request.StartMonth, request.Status);
+        return entries.Select(WaitlistEntryMapping.ToVm).ToList();
     }
-
-    private static WaitlistEntryVM ToVm(WaitlistEntry entry) => new()
-    {
-        Id = entry.Id,
-        GivenName = entry.GivenName,
-        FamilyName = entry.FamilyName,
-        FullName = $"{entry.GivenName} {entry.FamilyName}",
-        DateOfBirth = entry.DateOfBirth,
-        DesiredStartDate = entry.DesiredStartDate,
-        ContactName = entry.ContactName,
-        ContactEmail = entry.ContactEmail,
-        ContactPhone = entry.ContactPhone,
-        RequestedDays = entry.RequestedDays,
-        Notes = entry.Notes,
-        RegisteredAt = entry.RegisteredAt,
-        Status = entry.Status
-    };
 }

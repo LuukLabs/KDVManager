@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using KDVManager.Shared.Contracts.Enums;
 
 namespace KDVManager.Services.CRM.Application.Features.Waitlist;
 
@@ -25,4 +26,15 @@ public class CreateWaitlistEntryCommand
     public string? ContactPhone { get; init; }
     public string? RequestedDays { get; init; }
     public string? Notes { get; init; }
+    public string? Location { get; init; }
+    public ChildcareType? CareType { get; init; }
+    public string? PreferredGroup { get; init; }
+    /// <summary>Scheduling day numbers: Sunday = 0, Monday = 1, through Saturday = 6.</summary>
+    public int[] Weekdays { get; init; } = [];
+    public TimeOnly? StartTime { get; init; }
+    public TimeOnly? EndTime { get; init; }
+    public int Priority { get; init; }
+    public string? PriorityReason { get; init; }
+    public string? PriorityExplanation { get; init; }
+
 }

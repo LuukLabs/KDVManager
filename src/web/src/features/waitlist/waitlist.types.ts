@@ -1,23 +1,7 @@
-/* eslint-disable i18next/no-literal-string -- Status values are API enum constants. */
+/* eslint-disable i18next/no-literal-string -- Values are API enum constants. */
 export const waitlistStatuses = ["Waiting", "Offered", "Placed", "Withdrawn"] as const;
-
 export type WaitlistEntryStatus = (typeof waitlistStatuses)[number];
-
-export type WaitlistEntry = {
-  id: string;
-  givenName: string;
-  familyName: string;
-  fullName: string;
-  dateOfBirth: string;
-  desiredStartDate: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone?: string | null;
-  requestedDays?: string | null;
-  notes?: string | null;
-  registeredAt: string;
-  status: WaitlistEntryStatus;
-};
+export type ChildcareType = "Daycare" | "AfterSchool";
 
 export type CreateWaitlistEntry = {
   givenName: string;
@@ -26,7 +10,36 @@ export type CreateWaitlistEntry = {
   desiredStartDate: string;
   contactName: string;
   contactEmail: string;
-  contactPhone?: string;
-  requestedDays?: string;
-  notes?: string;
+  contactPhone?: string | null;
+  requestedDays?: string | null;
+  notes?: string | null;
+  location?: string | null;
+  careType?: ChildcareType | null;
+  preferredGroup?: string | null;
+  weekdays: number[];
+  startTime?: string | null;
+  endTime?: string | null;
+  priority: number;
+  priorityReason?: string | null;
+  priorityExplanation?: string | null;
+};
+export type WaitlistStatusChange = {
+  previousStatus: WaitlistEntryStatus;
+  status: WaitlistEntryStatus;
+  changedBy: string;
+  changedAt: string;
+};
+export type WaitlistEntry = CreateWaitlistEntry & {
+  id: string;
+  fullName: string;
+  registeredAt: string;
+  status: WaitlistEntryStatus;
+  revision: string;
+  statusHistory: WaitlistStatusChange[];
+};
+export type WaitlistFilters = {
+  includeClosed: boolean;
+  location: string;
+  startMonth: string;
+  status: WaitlistEntryStatus | "";
 };

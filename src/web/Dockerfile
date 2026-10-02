@@ -1,7 +1,7 @@
 FROM node:26.10.0-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11.0.8
+RUN npm install -g pnpm@12.8.1
 WORKDIR /app
 
 FROM base AS deps

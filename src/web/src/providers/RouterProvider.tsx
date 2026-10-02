@@ -194,6 +194,15 @@ const router = (t: TFunction<"translation">) =>
                   },
                 },
                 {
+                  path: "tenants",
+                  lazy: () => import("@pages/tenants/ListTenantsPage"),
+                  handle: {
+                    crumb: () => {
+                      return t("Tenants");
+                    },
+                  },
+                },
+                {
                   path: "closure-periods",
                   lazy: () => import("@pages/settings/ClosurePeriodsSettingsPage"),
                   handle: {

@@ -75,6 +75,23 @@ services:
     depends_on:
       - postgres
 
+  tenants-api:
+    image: ${REGISTRY:-kdvmanager}/tenants.api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tenants/Api/Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  tenants-migrator:
+    image: ${REGISTRY:-kdvmanager}/tenants.migrator:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tenants/Infrastructure/Dockerfile
+    depends_on:
+      - postgres
+
   otel-collector:
     image: otel/opentelemetry-collector-contrib
     volumes:

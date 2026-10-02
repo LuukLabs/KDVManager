@@ -57,6 +57,7 @@ const accessToken = (clientId) =>
     exp: now() + TOKEN_TTL_SECONDS,
     scope: "openid profile email offline_access",
     "https://kdvmanager.nl/tenant": TENANT_ID,
+    "https://kdvmanager.nl/roles": ["superadmin"],
   });
 
 const idToken = (clientId, nonce) =>

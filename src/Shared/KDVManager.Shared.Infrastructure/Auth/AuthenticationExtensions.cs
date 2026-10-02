@@ -1,3 +1,4 @@
+using KDVManager.Shared.Contracts.Auth;
 using KDVManager.Shared.Contracts.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,41 @@ public static class AuthenticationExtensions
     /// AllowAnonymous.
     /// </summary>
     public static IServiceCollection AddKdvManagerAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuth0JwtBearer(configuration);
+
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim(TenancyClaimTypes.TenantId)
+                .Build();
+        });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures Auth0 JWT bearer authentication with a fallback authorization policy
+    /// requiring the platform super-admin role claim instead of a tenant claim. For
+    /// services (like tenant management) whose callers operate above tenant scope.
+    /// </summary>
+    public static IServiceCollection AddKdvManagerSuperAdminAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuth0JwtBearer(configuration);
+
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim(SuperAdminClaimTypes.Role, SuperAdminClaimTypes.SuperAdminValue)
+                .Build();
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddAuth0JwtBearer(this IServiceCollection services, IConfiguration configuration)
     {
         // Auth0:Authority overrides the Auth0:Domain-derived authority (lets e2e tests point at a local mock issuer)
         string authority = configuration["Auth0:Authority"] ?? $"https://{configuration["Auth0:Domain"]}/";
@@ -57,14 +93,6 @@ public static class AuthenticationExtensions
                     }
                 };
             });
-
-        services.AddAuthorization(options =>
-        {
-            options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireClaim(TenancyClaimTypes.TenantId)
-                .Build();
-        });
 
         return services;
     }

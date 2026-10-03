@@ -26,8 +26,6 @@ rules:
   - namespaces/status
   - nodes
   - nodes/spec
-  - nodes/stats
-  - nodes/proxy
   - pods
   - pods/status
   - replicationcontrollers
@@ -35,6 +33,12 @@ rules:
   - resourcequotas
   - services
   verbs: ["get", "list", "watch"]
+# kubeletstats uses serviceAccount auth directly against /stats/summary on
+# port 10250. Do not grant nodes/proxy: it also permits privileged kubelet
+# operations, including execution in containers.
+- apiGroups: [""]
+  resources: ["nodes/stats"]
+  verbs: ["get"]
 - apiGroups: ["apps"]
   resources:
   - daemonsets
@@ -57,8 +61,6 @@ rules:
   resources:
   - horizontalpodautoscalers
   verbs: ["get", "list", "watch"]
-- nonResourceURLs: ["/metrics", "/metrics/cadvisor"]
-  verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

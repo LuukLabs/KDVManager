@@ -25,6 +25,7 @@ MAPPINGS=(
   "web|ghcr.io/luuklabs/kdvmanager/web|src/web/,.github/workflows/web.yml"
   "crm|ghcr.io/luuklabs/kdvmanager/crm.api,ghcr.io/luuklabs/kdvmanager/crm.migrator|src/Services/CRM/,src/Shared/,.github/workflows/crm-api.yml,.github/workflows/crm-migrator.yml"
   "scheduling|ghcr.io/luuklabs/kdvmanager/scheduling.api,ghcr.io/luuklabs/kdvmanager/scheduling.migrator|src/Services/Scheduling/,src/Shared/,.github/workflows/scheduling-api.yml,.github/workflows/scheduling-migrator.yml"
+  "tenantmanagement|ghcr.io/luuklabs/kdvmanager/tenantmanagement.api,ghcr.io/luuklabs/kdvmanager/tenantmanagement.migrator|src/Services/TenantManagement/,src/Shared/,.github/workflows/tenantmanagement-api.yml,.github/workflows/tenantmanagement-migrator.yml"
 )
 
 # Path prefixes that affect every image build.

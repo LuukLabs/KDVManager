@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Chip, Typography, Paper, useTheme } from "@mui/material";
-import { type Theme } from "@mui/material/styles";
 import { type ChildScheduleListVMScheduleRule } from "@api/scheduling/models/childScheduleListVMScheduleRule";
 import { useTranslation } from "react-i18next";
-import dayjs from "dayjs";
+import { getCategoricalColor } from "@lib/categoricalColor";
+import { formatScheduleTimeRange } from "@features/schedules/scheduleFormUtils";
 
 type WeeklyScheduleGridProps = {
   scheduleRules: ChildScheduleListVMScheduleRule[];
@@ -40,19 +40,6 @@ const DAY_INDEX_MAP_MON = [
   DayOfWeek.Saturday,
   DayOfWeek.Sunday,
 ]; // Monday to Sunday
-
-// Simple hash function so the same group name always maps to the same
-// entry in the theme's categorical color palette.
-const getGroupColor = (groupName: string | null | undefined, theme: Theme): string => {
-  if (!groupName) return theme.customColors.unassigned;
-
-  let hash = 0;
-  for (let i = 0; i < groupName.length; i++) {
-    hash = ((hash << 5) - hash + groupName.charCodeAt(i)) & 0xffffffff;
-  }
-  const { categorical } = theme.customColors;
-  return categorical[Math.abs(hash) % categorical.length];
-};
 
 export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
   scheduleRules,
@@ -149,42 +136,45 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
                   {translatedDayLongNames[dayIdx]}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                        p: 1,
-                        borderRadius: 1,
-                        backgroundColor: getGroupColor(rule.groupName, theme),
-                        color: "white",
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "medium", minWidth: "fit-content" }}
+                  {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => {
+                    const groupColor = getCategoricalColor(rule.groupName, theme);
+                    return (
+                      <Box
+                        key={index}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          p: 1,
+                          borderRadius: 1,
+                          backgroundColor: groupColor,
+                          // Not a literal "white": two categorical hues fail 4.5:1
+                          // against white, so let the theme pick the readable one.
+                          color: theme.palette.getContrastText(groupColor),
+                        }}
                       >
-                        {rule.startTime && rule.endTime
-                          ? `${dayjs(rule.startTime, "HH:mm:ss").format("HH:mm")} - ${dayjs(rule.endTime, "HH:mm:ss").format("HH:mm")}`
-                          : ""}
-                      </Typography>
-                      {rule.groupName && (
                         <Typography
                           variant="body2"
-                          sx={{
-                            opacity: 0.9,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
+                          sx={{ fontWeight: "medium", minWidth: "fit-content" }}
                         >
-                          {rule.groupName}
+                          {formatScheduleTimeRange(rule.startTime, rule.endTime)}
                         </Typography>
-                      )}
-                    </Box>
-                  ))}
+                        {rule.groupName && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              opacity: 0.9,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {rule.groupName}
+                          </Typography>
+                        )}
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Paper>
             );
@@ -219,43 +209,47 @@ export const WeeklyScheduleGrid: React.FC<WeeklyScheduleGridProps> = ({
 
                   {dayRules && (
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-                      {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => (
-                        <Box key={index}>
-                          <Chip
-                            label={`${rule.startTime?.slice(0, 5)}-${rule.endTime?.slice(0, 5)}`}
-                            size="small"
-                            sx={{
-                              fontSize: "0.6rem",
-                              height: 16,
-                              width: "100%",
-                              backgroundColor: getGroupColor(rule.groupName, theme),
-                              color: "white",
-                              "& .MuiChip-label": {
-                                px: 0.5,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              },
-                            }}
-                          />
-                          {rule.groupName && (
-                            <Typography
-                              variant="caption"
+                      {dayRules.map((rule: ChildScheduleListVMScheduleRule, index: number) => {
+                        const groupColor = getCategoricalColor(rule.groupName, theme);
+                        return (
+                          <Box key={index}>
+                            <Chip
+                              label={formatScheduleTimeRange(rule.startTime, rule.endTime)}
+                              size="small"
                               sx={{
-                                fontSize: "0.55rem",
-                                color: "text.secondary",
-                                display: "block",
-                                textAlign: "center",
-                                mt: 0.25,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
+                                fontSize: "0.6rem",
+                                height: 16,
+                                width: "100%",
+                                backgroundColor: groupColor,
+                                // See the mobile branch: never a literal "white".
+                                color: theme.palette.getContrastText(groupColor),
+                                "& .MuiChip-label": {
+                                  px: 0.5,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                },
                               }}
-                            >
-                              {rule.groupName}
-                            </Typography>
-                          )}
-                        </Box>
-                      ))}
+                            />
+                            {rule.groupName && (
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  fontSize: "0.55rem",
+                                  color: "text.secondary",
+                                  display: "block",
+                                  textAlign: "center",
+                                  mt: 0.25,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {rule.groupName}
+                              </Typography>
+                            )}
+                          </Box>
+                        );
+                      })}
                     </Box>
                   )}
                 </Paper>

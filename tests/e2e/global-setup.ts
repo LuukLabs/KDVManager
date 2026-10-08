@@ -41,4 +41,8 @@ export default async function globalSetup(): Promise<void> {
     const res = await fetch(`${API_URL}/scheduling/v1/groups?pageNumber=1&pageSize=1`, authed);
     return res.ok;
   });
+  await waitFor("tenantmanagement-api", async () => {
+    const res = await fetch(`${API_URL}/tenantmanagement/v1/trial-status`, authed);
+    return res.ok;
+  });
 }

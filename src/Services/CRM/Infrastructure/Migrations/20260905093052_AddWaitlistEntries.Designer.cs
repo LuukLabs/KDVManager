@@ -3,6 +3,7 @@ using System;
 using KDVManager.Services.CRM.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,13 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KDVManager.Services.CRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260905093052_AddWaitlistEntries")]
+    partial class AddWaitlistEntries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -188,10 +191,6 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CareType")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
                     b.Property<string>("ContactEmail")
                         .IsRequired()
                         .HasMaxLength(254)
@@ -212,9 +211,6 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.Property<DateOnly>("DesiredStartDate")
                         .HasColumnType("date");
 
-                    b.Property<TimeOnly?>("EndTime")
-                        .HasColumnType("time without time zone");
-
                     b.Property<string>("FamilyName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -225,28 +221,9 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Location")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Notes")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("PreferredGroup")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PriorityExplanation")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("PriorityReason")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("RegisteredAt")
                         .HasColumnType("timestamp with time zone");
@@ -255,13 +232,6 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<Guid>("Revision")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uuid");
-
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("time without time zone");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -270,55 +240,11 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
-                    b.PrimitiveCollection<int[]>("Weekdays")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId", "Location", "DesiredStartDate");
 
                     b.HasIndex("TenantId", "Status", "RegisteredAt");
 
                     b.ToTable("WaitlistEntries");
-                });
-
-            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.WaitlistStatusChange", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("ChangedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ChangedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("PreviousStatus")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("WaitlistEntryId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WaitlistEntryId");
-
-                    b.HasIndex("TenantId", "WaitlistEntryId", "ChangedAt");
-
-                    b.ToTable("WaitlistStatusChanges");
                 });
 
             modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.ChildActivityInterval", b =>
@@ -378,23 +304,9 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.Navigation("PhoneNumbers");
                 });
 
-            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.WaitlistStatusChange", b =>
-                {
-                    b.HasOne("KDVManager.Services.CRM.Domain.Entities.WaitlistEntry", null)
-                        .WithMany("StatusHistory")
-                        .HasForeignKey("WaitlistEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Child", b =>
                 {
                     b.Navigation("ActivityIntervals");
-                });
-
-            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.WaitlistEntry", b =>
-                {
-                    b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
         }

@@ -230,8 +230,8 @@ importers:
         specifier: ^1.11.21
         version: 1.11.21
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^26.4.4
+        version: 26.4.4(typescript@6.0.3)
       i18next-resources-to-backend:
         specifier: ^1.2.3
         version: 1.2.3
@@ -249,7 +249,7 @@ importers:
         version: 7.85.0(react@19.3.0)
       react-i18next:
         specifier: ^17.0.8
-        version: 17.0.8(i18next@26.3.6(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
+        version: 17.0.8(i18next@26.4.4(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
       react-router-dom:
         specifier: 7.18.2
         version: 7.18.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -2984,8 +2984,8 @@ packages:
       typescript:
         optional: true
 
-  i18next@26.3.6:
-    resolution: {integrity: sha512-Bu5Z2nAXgfVyM8xvW3jk9EKRIuX37PudsrBViThNFx7CR7aaYTpP01cxNB/E4c4UUzTDiAZRstEhsRfPOL/8xA==}
+  i18next@26.4.4:
+    resolution: {integrity: sha512-O+rqmQUi54OwAgnZ4SAwO6aRrbXZt36VZXWt6zvq0FpC3vJbH46oQRs6u4Uwm1vf8ZI7UqOXQiJhQVTor7vRiQ==}
     peerDependencies:
       typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
@@ -7338,7 +7338,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  i18next@26.3.6(typescript@6.0.3):
+  i18next@26.4.4(typescript@6.0.3):
     optionalDependencies:
       typescript: 6.0.3
 
@@ -8136,11 +8136,11 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  react-i18next@17.0.8(i18next@26.3.6(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3):
+  react-i18next@17.0.8(i18next@26.4.4(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3):
     dependencies:
       '@babel/runtime': 7.29.7
       html-parse-stringify: 3.0.1
-      i18next: 26.3.6(typescript@6.0.3)
+      i18next: 26.4.4(typescript@6.0.3)
       react: 19.3.0
       use-sync-external-store: 1.6.0(react@19.3.0)
     optionalDependencies:

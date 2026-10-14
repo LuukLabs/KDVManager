@@ -28,7 +28,7 @@
     "@opentelemetry/semantic-conventions": "^1.43.0",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-query-devtools": "^5.101.2",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.23",
     "i18next": "^26.3.6",
     "i18next-resources-to-backend": "^1.2.3",
     "notistack": "^3.0.2",

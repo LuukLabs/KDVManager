@@ -37,7 +37,7 @@
     "react-hook-form": "^7.85.0",
     "react-i18next": "^17.0.16",
     "react-router-dom": "7.18.2",
-    "web-vitals": "^6.1.1"
+    "web-vitals": "^6.2.3"
   },
   "scripts": {
     "api:generate": "orval --clean",

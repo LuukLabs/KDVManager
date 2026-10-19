@@ -52,6 +52,87 @@ namespace Infrastructure.Migrations
                     b.ToTable("Absences");
                 });
 
+            modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.AttendanceAuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ActorSubject")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("AttendanceRecordId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("CheckedInAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("CheckedOutAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("PreviousCheckedInAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("PreviousCheckedOutAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceRecordId");
+
+                    b.HasIndex("TenantId", "AttendanceRecordId", "OccurredAt");
+
+                    b.ToTable("AttendanceAuditEntries");
+                });
+
+            modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.AttendanceRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("CheckedInAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("CheckedOutAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ChildId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBySubject")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChildId");
+
+                    b.HasIndex("TenantId", "ChildId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("AttendanceRecords");
+                });
+
             modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.Child", b =>
                 {
                     b.Property<Guid>("Id")
@@ -273,6 +354,24 @@ namespace Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.Absence", b =>
+                {
+                    b.HasOne("KDVManager.Services.Scheduling.Domain.Entities.Child", null)
+                        .WithMany()
+                        .HasForeignKey("ChildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.AttendanceAuditEntry", b =>
+                {
+                    b.HasOne("KDVManager.Services.Scheduling.Domain.Entities.AttendanceRecord", null)
+                        .WithMany()
+                        .HasForeignKey("AttendanceRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KDVManager.Services.Scheduling.Domain.Entities.AttendanceRecord", b =>
                 {
                     b.HasOne("KDVManager.Services.Scheduling.Domain.Entities.Child", null)
                         .WithMany()

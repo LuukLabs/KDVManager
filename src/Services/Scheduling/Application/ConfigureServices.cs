@@ -30,6 +30,7 @@ using KDVManager.Services.Scheduling.Application.Features.Overview.Queries.GetDa
 using KDVManager.Services.Scheduling.Application.Contracts.Services;
 using KDVManager.Services.Scheduling.Application.Features.EndMarkSettings.Queries.GetEndMarkSettings;
 using KDVManager.Services.Scheduling.Application.Features.EndMarkSettings.Commands.UpdateEndMarkSettings;
+using KDVManager.Services.Scheduling.Application.Features.Attendance.UpsertAttendance;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -67,6 +68,7 @@ public static class ConfigureServices
         services.AddScoped<GetDailyOverviewQueryHandler>();
         services.AddScoped<GetEndMarkSettingsQueryHandler>();
         services.AddScoped<UpdateEndMarkSettingsCommandHandler>();
+        services.AddScoped<UpsertAttendanceCommandHandler>();
 
         return services;
     }

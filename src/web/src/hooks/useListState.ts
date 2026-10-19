@@ -117,8 +117,10 @@ const CHILDREN_STORAGE_KEY = "childrenListState";
 const GUARDIANS_STORAGE_KEY = "guardiansListState";
 const GROUPS_STORAGE_KEY = "groupsListState";
 const TIME_SLOTS_STORAGE_KEY = "timeSlotsListState";
+const TENANTS_STORAGE_KEY = "tenantsListState";
 
 export const useChildrenListState = () => useListState(CHILDREN_STORAGE_KEY);
 export const useGuardiansListState = () => useListState(GUARDIANS_STORAGE_KEY);
 export const useGroupsListState = () => useListState(GROUPS_STORAGE_KEY);
 export const useTimeSlotsListState = () => useListState(TIME_SLOTS_STORAGE_KEY);
+export const useTenantsListState = () => useListState(TENANTS_STORAGE_KEY);

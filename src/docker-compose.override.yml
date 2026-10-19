@@ -80,6 +80,27 @@ services:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
 
+  tenants-migrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerTenantsConnectionString=Server=postgres; port=5432; database=KDVManagerTenantsDB; User ID=sammy; password=shark; pooling=true
+    depends_on:
+      - postgres
+
+  tenants-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=7g3xqiiedLGmDrvAXNy8
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ConnectionStrings__KDVManagerTenantsConnectionString=Server=postgres; port=5432; database=KDVManagerTenantsDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${HOME}/.aspnet/https:/https/
+
 volumes:
   kdvmanager-data: null
   rabbitmq-data: null

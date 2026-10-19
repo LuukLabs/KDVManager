@@ -1,0 +1,37 @@
+using KDVManager.Services.Tenants.Api.Middleware;
+using KDVManager.Shared.Infrastructure.Logging;
+using KDVManager.Shared.Infrastructure.Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+builder.Services.AddMassTransitServices(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration);
+
+// Structured production logging (stdout JSON + OTLP if endpoint present)
+builder.Logging.AddKdvManagerLogging(builder.Configuration, "tenants-api");
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi().AllowAnonymous();
+}
+
+app.UseRouting();
+
+app.UseCustomExceptionHandler();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseMiddleware<CorrelationIdMiddleware>();
+
+app.MapHealthChecks("/healthz").AllowAnonymous();
+
+// Map minimal API endpoints
+app.MapTenantsEndpoints();
+
+app.Run();

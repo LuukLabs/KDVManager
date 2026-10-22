@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { useGetChildSchedules } from "@api/scheduling/endpoints/schedules/schedules";
 import { useListEndMarks } from "@api/scheduling/endpoints/end-marks/end-marks";
+import { type ChildScheduleListVMScheduleRule } from "@api/scheduling/models/childScheduleListVMScheduleRule";
 import { ScheduleCard } from "../../components/ScheduleCard";
 import { EndMarkCard } from "../endmarks/EndMarkCard";
 import dayjs from "dayjs";
@@ -13,16 +14,19 @@ type ChildScheduleTimelineProps = {
   childId: string;
 };
 
+/** What the timeline (and `ScheduleCard`) needs from one stored schedule. */
+type TimelineSchedule = {
+  id: string;
+  startDate: string;
+  endDate: string | null;
+  scheduleRules: ChildScheduleListVMScheduleRule[];
+};
+
 type TimelineItemSchedule = {
   type: "schedule";
   start: string; // start date
   sort: number;
-  schedule: {
-    id: string;
-    startDate: string;
-    endDate: string | null;
-    scheduleRules: any[];
-  };
+  schedule: TimelineSchedule;
 };
 type TimelineItemEndMark = {
   type: "endmark";
@@ -38,14 +42,13 @@ export const ChildScheduleTimeline: React.FC<ChildScheduleTimelineProps> = ({ ch
   const { data: schedules } = useGetChildSchedules({ childId });
   const { data: endMarks } = useListEndMarks({ childId }, {});
 
-  const handleEditSchedule = (schedule: any) => {
+  const handleEditSchedule = (schedule: TimelineSchedule) => {
     void NiceModal.show(EditChildScheduleDialog, {
       childId,
       schedule: {
         id: schedule.id,
         startDate: schedule.startDate,
-        endDate: schedule.endDate,
-        scheduleRules: schedule.scheduleRules ?? [],
+        scheduleRules: schedule.scheduleRules,
       },
     });
   };

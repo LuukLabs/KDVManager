@@ -80,6 +80,23 @@ services:
       - ~/.aspnet/https:/root/.aspnet/https:ro
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
 
+  platformmanagement-migrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__KDVManagerPlatformManagementConnectionString=Server=postgres; port=5432; database=KDVManagerPlatformManagementDB; User ID=sammy; password=shark; pooling=true
+    depends_on:
+      - postgres
+
+  platformmanagement-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__KDVManagerPlatformManagementConnectionString=Server=postgres; port=5432; database=KDVManagerPlatformManagementDB; User ID=sammy; password=shark; pooling=true
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+    ports:
+      - "80"
+      - "443"
+
 volumes:
   kdvmanager-data: null
   rabbitmq-data: null

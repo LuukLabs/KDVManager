@@ -1,0 +1,436 @@
+/* Aanvullingen voor de merkrichtlijnen. De tokens zelf staan in site.css. */
+
+.doc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+}
+
+.doc__toc {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  font-size: 0.9rem;
+}
+
+.doc__toc h2 {
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+}
+
+.doc__toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: toc;
+}
+
+.doc__toc li {
+  counter-increment: toc;
+  border-top: 1px solid var(--board-line);
+}
+
+.doc__toc a {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.doc__toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  color: var(--teal);
+  padding-top: 3px;
+}
+
+.doc__toc a:hover {
+  color: var(--teal-deep);
+}
+
+/* Elke regel is een blok met een vaste opbouw. */
+.rule-block {
+  padding-block: 56px;
+  border-top: 1px solid var(--board-line);
+  scroll-margin-top: 96px;
+}
+
+.rule-block:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.rule-block > h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-bottom: 14px;
+}
+
+.rule-block__intro {
+  color: var(--ink-muted);
+  max-width: 62ch;
+  margin-bottom: 34px;
+}
+
+.rule-block h3 {
+  font-size: 1.02rem;
+  margin: 34px 0 12px;
+}
+
+/* ---------- Kleur ---------- */
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.swatch {
+  border: 1px solid var(--board-line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.swatch__chip {
+  height: 88px;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  font-family: var(--font-data);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+}
+
+.swatch__body {
+  padding: 12px 13px 15px;
+}
+
+.swatch__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.swatch__hex {
+  font-family: var(--font-data);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-top: 3px;
+}
+
+.swatch__use {
+  font-size: 0.84rem;
+  color: var(--ink-muted);
+  margin-top: 9px;
+}
+
+/* ---------- Tabellen ---------- */
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tbl th {
+  text-align: left;
+  font-family: var(--font-data);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 500;
+  padding: 0 14px 10px 0;
+  border-bottom: 1px solid var(--board-line);
+}
+
+.tbl td {
+  padding: 13px 14px 13px 0;
+  border-bottom: 1px solid var(--board-line);
+  vertical-align: top;
+}
+
+.tbl code,
+.mono {
+  font-family: var(--font-data);
+  font-size: 0.78em;
+}
+
+.tbl__pass {
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  border-radius: var(--r-xs);
+  padding: 3px 7px;
+  white-space: nowrap;
+  background: rgba(15, 118, 110, 0.12);
+  color: var(--teal-deep);
+}
+
+.tbl__pass[data-level="AAA"] {
+  background: var(--zon-soft);
+  color: #6b4a05;
+}
+
+/* ---------- Typografie ---------- */
+
+.type-row {
+  border-top: 1px solid var(--board-line);
+  padding: 22px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+
+.type-row__meta {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.type-row__demo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.face {
+  border: 1px solid var(--board-line);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  background: var(--paper);
+  margin-bottom: 14px;
+}
+
+.face__glyphs {
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.face__note {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+
+/* ---------- Logo ---------- */
+
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.logo-cell {
+  border: 1px solid var(--board-line);
+  border-radius: var(--r-md);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 150px;
+}
+
+.logo-cell--dark {
+  background: var(--teal-deep);
+  border-color: var(--teal-deep);
+}
+
+.logo-cell--dark .logo-cell__cap {
+  color: var(--mint);
+}
+
+.logo-cell--dark .brand__name {
+  color: var(--paper);
+}
+
+.logo-cell--dark .brand__name span {
+  color: var(--mint);
+}
+
+.logo-cell--tint {
+  background: var(--board);
+}
+
+.logo-cell__cap {
+  font-family: var(--font-data);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* Vrije ruimte rond het merkteken, gemeten in de hoogte van een staaf. */
+.clearspace {
+  display: inline-block;
+  padding: 22px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(15, 118, 110, 0.08) 0 6px,
+      transparent 6px 12px
+    );
+  border-radius: var(--r-md);
+}
+
+.dont-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.dont {
+  border: 1px solid var(--board-line);
+  border-radius: var(--r-md);
+  padding: 18px;
+  background: var(--paper);
+}
+
+.dont__demo {
+  height: 74px;
+  display: grid;
+  place-items: center;
+  background: var(--board);
+  border-radius: var(--r-sm);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.dont p {
+  font-size: 0.84rem;
+  color: var(--ink-muted);
+}
+
+.dont__x {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: var(--steen-deep);
+  margin-bottom: 5px;
+}
+
+/* ---------- Stem ---------- */
+
+.voice {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.voice__col {
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  border: 1px solid;
+}
+
+.voice__col--do {
+  background: rgba(15, 118, 110, 0.07);
+  border-color: rgba(15, 118, 110, 0.3);
+}
+
+.voice__col--dont {
+  background: var(--steen-soft);
+  border-color: rgba(180, 80, 46, 0.35);
+}
+
+.voice__k {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.voice__col--do .voice__k {
+  color: var(--teal-deep);
+}
+
+.voice__col--dont .voice__k {
+  color: var(--steen-deep);
+}
+
+.voice ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.92rem;
+}
+
+.voice li + li {
+  margin-top: 9px;
+}
+
+/* ---------- Tokens ---------- */
+
+.tokens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.token {
+  border: 1px solid var(--board-line);
+  border-radius: var(--r-md);
+  padding: 15px;
+  background: var(--paper);
+}
+
+.token__box {
+  height: 52px;
+  background: rgba(15, 118, 110, 0.14);
+  border: 1px solid var(--teal);
+  margin-bottom: 11px;
+}
+
+.token__name {
+  font-family: var(--font-data);
+  font-size: 0.66rem;
+  color: var(--ink);
+}
+
+.token__val {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  color: var(--ink-muted);
+  margin-top: 3px;
+}
+
+.callout {
+  border-left: 3px solid var(--zon);
+  background: var(--zon-soft);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 15px 18px;
+  font-size: 0.9rem;
+  color: #5c4104;
+  margin-top: 26px;
+}
+
+.callout strong {
+  color: #4a3403;
+}
+
+@media (min-width: 940px) {
+  .doc {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 64px;
+  }
+
+  .type-row {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 28px;
+  }
+}

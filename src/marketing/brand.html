@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Merkrichtlijnen — KDVManager</title>
+    <meta
+      name="description"
+      content="De merkrichtlijnen van KDVManager: logo, kleur, typografie, stem en UI-tokens, met de contrastwaarden waarop ze getoetst zijn."
+    />
+    <meta name="theme-color" content="#0F766E" />
+    <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <link rel="stylesheet" href="assets/css/brand.css" />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#hoofd">Naar de inhoud</a>
+
+    <header class="site-header">
+      <div class="wrap site-header__inner">
+        <a class="brand" href="index.html" aria-label="KDVManager, naar de homepage">
+          <img src="assets/img/mark.svg" alt="" width="32" height="32" />
+          <span class="brand__name">KDV<span>Manager</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Hoofdnavigatie">
+          <a href="index.html">Website</a>
+          <a href="index.html#demo">Demo</a>
+        </nav>
+        <a class="btn btn--primary btn--sm" href="index.html#demo">Start de demo</a>
+      </div>
+    </header>
+
+    <main id="hoofd">
+      <section class="section">
+        <div class="wrap">
+          <div class="section__head" style="margin-bottom: 40px">
+            <p class="eyebrow">Merkrichtlijnen</p>
+            <h2>Hoe KDVManager eruitziet en klinkt.</h2>
+            <p class="lede">
+              Eén set afspraken voor de website, de applicatie en alles wat we naar buiten sturen.
+              Wie hiervan afwijkt, doet dat bewust en legt uit waarom.
+            </p>
+          </div>
+
+          <div class="doc">
+            <!-- ------------------------------------------------------ TOC -->
+            <nav class="doc__toc" aria-label="Inhoudsopgave">
+              <h2>Inhoud</h2>
+              <ol>
+                <li><a href="#merk">Het merk</a></li>
+                <li><a href="#logo">Logo</a></li>
+                <li><a href="#kleur">Kleur</a></li>
+                <li><a href="#typografie">Typografie</a></li>
+                <li><a href="#stem">Stem en taal</a></li>
+                <li><a href="#ui">UI-tokens</a></li>
+                <li><a href="#toegankelijk">Toegankelijkheid</a></li>
+              </ol>
+            </nav>
+
+            <div>
+              <!-- ================================================== MERK -->
+              <section class="rule-block" id="merk">
+                <h2>Het merk</h2>
+                <p class="rule-block__intro">
+                  KDVManager is administratiesoftware voor kinderdagverblijven. De gebruiker is een
+                  locatiemanager of houder die de dag rond moet krijgen: wie komt er, op welke groep,
+                  en zijn er genoeg begeleiders. Geen enthousiaste consument — een vakmens met een
+                  verantwoordelijkheid.
+                </p>
+
+                <h3>Waar het merk op staat</h3>
+                <table class="tbl">
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%"><strong>Rustig</strong></td>
+                      <td>
+                        De software gaat over kinderen en over regels waar toezicht op staat. Het
+                        ontwerp is kalm en precies, nooit speels of schreeuwerig.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Concreet</strong></td>
+                      <td>
+                        We tonen echte getallen, echte namen, echte roosters. Geen abstracte
+                        illustraties waar een scherm had gekund.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Uitlegbaar</strong></td>
+                      <td>
+                        Elke uitkomst vertelt waarom. "2 begeleiders nodig" staat nooit alleen; er
+                        staat bij welke regel dat bepaalt.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="callout">
+                  <strong>Niet doen:</strong> kinderclipart, kleurpotloodletters, regenboogverlopen
+                  of stockfoto's van lachende peuters. De klant koopt geen kinderopvang — die koopt
+                  overzicht.
+                </div>
+              </section>
+
+              <!-- ================================================== LOGO -->
+              <section class="rule-block" id="logo">
+                <h2>Logo</h2>
+                <p class="rule-block__intro">
+                  Het merkteken is een bord met drie staven: de bezetting per dagdeel. Het is het
+                  dagbord teruggebracht tot z'n kleinste vorm. De gele staaf is het accent en staat
+                  altijd in het midden.
+                </p>
+
+                <div class="logo-grid">
+                  <div class="logo-cell">
+                    <span class="logo-cell__cap">Lockup — standaard</span>
+                    <span class="brand">
+                      <img src="assets/img/mark.svg" alt="Logo KDVManager" width="40" height="40" />
+                      <span class="brand__name" style="font-size: 1.4rem">KDV<span>Manager</span></span>
+                    </span>
+                  </div>
+
+                  <div class="logo-cell logo-cell--dark">
+                    <span class="logo-cell__cap">Op donkere achtergrond</span>
+                    <span class="brand">
+                      <img src="assets/img/mark.svg" alt="" width="40" height="40" />
+                      <span class="brand__name" style="font-size: 1.4rem">KDV<span>Manager</span></span>
+                    </span>
+                  </div>
+
+                  <div class="logo-cell logo-cell--tint">
+                    <span class="logo-cell__cap">Merkteken alleen</span>
+                    <img src="assets/img/mark.svg" alt="Merkteken KDVManager" width="52" height="52" />
+                  </div>
+
+                  <div class="logo-cell">
+                    <span class="logo-cell__cap">Vrije ruimte</span>
+                    <span class="clearspace">
+                      <img src="assets/img/mark.svg" alt="" width="44" height="44" />
+                    </span>
+                  </div>
+                </div>
+
+                <h3>Regels</h3>
+                <table class="tbl">
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%">Kleinste maat</td>
+                      <td>24 px voor het merkteken, 120 px breed voor de lockup.</td>
+                    </tr>
+                    <tr>
+                      <td>Vrije ruimte</td>
+                      <td>
+                        Rondom minimaal de breedte van één staaf (ongeveer 14% van de hoogte van het
+                        merkteken). Het gearceerde vlak hierboven laat dat zien.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Achtergrond</td>
+                      <td>
+                        Papier, bord of teal-diep. Op foto's alleen als er genoeg rustig vlak is;
+                        anders het merkteken in wit.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Bestanden</td>
+                      <td>
+                        <code>assets/img/mark.svg</code> (merkteken) en
+                        <code>assets/img/logo.svg</code> (lockup). Zet het woordmerk om naar outlines
+                        voordat je de lockup naar buiten stuurt — het lettertype wordt niet
+                        meegeleverd.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h3>Wat niet mag</h3>
+                <div class="dont-grid">
+                  <div class="dont">
+                    <div class="dont__demo">
+                      <img src="assets/img/mark.svg" alt="" width="76" height="46" style="width: 76px; height: 46px" />
+                    </div>
+                    <span class="dont__x">✕ Niet uitrekken</span>
+                    <p>Verhoudingen blijven vierkant.</p>
+                  </div>
+                  <div class="dont">
+                    <div class="dont__demo" style="background: #c2185b">
+                      <img src="assets/img/mark.svg" alt="" width="46" height="46" />
+                    </div>
+                    <span class="dont__x">✕ Geen willekeurige kleur</span>
+                    <p>Alleen op merkkleuren of neutraal.</p>
+                  </div>
+                  <div class="dont">
+                    <div class="dont__demo">
+                      <img src="assets/img/mark.svg" alt="" width="46" height="46" style="transform: rotate(14deg)" />
+                    </div>
+                    <span class="dont__x">✕ Niet draaien</span>
+                    <p>Het bord staat recht.</p>
+                  </div>
+                  <div class="dont">
+                    <div class="dont__demo">
+                      <img src="assets/img/mark.svg" alt="" width="46" height="46" style="opacity: 0.28" />
+                    </div>
+                    <span class="dont__x">✕ Niet vervagen</span>
+                    <p>Volle dekking, of helemaal weglaten.</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ================================================= KLEUR -->
+              <section class="rule-block" id="kleur">
+                <h2>Kleur</h2>
+                <p class="rule-block__intro">
+                  Teal draagt het merk, geel is het enige accent en terracotta betekent altijd iets:
+                  aandacht of een grens die bereikt is. Kleur is in dit product informatie — gebruik
+                  hem niet als decoratie.
+                </p>
+
+                <div class="swatches">
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #0f766e; color: #fbfaf9">#0F766E</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Teal</div>
+                      <div class="swatch__hex">--teal</div>
+                      <p class="swatch__use">Primaire acties, links, actieve staat.</p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #08403b; color: #b8e0d6">#08403B</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Teal diep</div>
+                      <div class="swatch__hex">--teal-deep</div>
+                      <p class="swatch__use">Donkere vlakken, koppen op teal, hover.</p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #eba92b; color: #10231f">#EBA92B</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Zon</div>
+                      <div class="swatch__hex">--zon</div>
+                      <p class="swatch__use">
+                        Het accent. Actieve dag, focusrand, vangnetregel. Eén per scherm.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #b4502e; color: #fbfaf9">#B4502E</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Steen</div>
+                      <div class="swatch__hex">--steen</div>
+                      <p class="swatch__use">
+                        Aandacht en grenzen. Op lichte vlakken: <span class="mono">#8C3D22</span>.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #10231f; color: #fbfaf9">#10231F</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Inkt</div>
+                      <div class="swatch__hex">--ink</div>
+                      <p class="swatch__use">Alle lopende tekst en koppen.</p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #fbfaf9; color: #4f625c; border-bottom: 1px solid #cddbd5">#FBFAF9</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Papier</div>
+                      <div class="swatch__hex">--paper</div>
+                      <p class="swatch__use">Achtergrond en kaarten.</p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #e7eeea; color: #4f625c">#E7EEEA</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Bord</div>
+                      <div class="swatch__hex">--board</div>
+                      <p class="swatch__use">Secties die zich moeten onderscheiden, rasterlijnen.</p>
+                    </div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #b8e0d6; color: #08403b">#B8E0D6</div>
+                    <div class="swatch__body">
+                      <div class="swatch__name">Mint</div>
+                      <div class="swatch__hex">--mint</div>
+                      <p class="swatch__use">Alleen tekst op teal-diep.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h3>Getoetste combinaties</h3>
+                <p style="color: var(--ink-muted); font-size: 0.92rem; margin-bottom: 18px">
+                  Waarden zijn berekende contrastverhoudingen. Alles hieronder haalt minimaal AA
+                  (4,5:1) voor lopende tekst.
+                </p>
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Voorgrond</th>
+                      <th>Achtergrond</th>
+                      <th>Ratio</th>
+                      <th>Niveau</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Inkt <span class="mono">#10231F</span></td>
+                      <td>Papier <span class="mono">#FBFAF9</span></td>
+                      <td class="mono">15,71:1</td>
+                      <td><span class="tbl__pass" data-level="AAA">AAA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Inkt <span class="mono">#10231F</span></td>
+                      <td>Bord <span class="mono">#E7EEEA</span></td>
+                      <td class="mono">13,89:1</td>
+                      <td><span class="tbl__pass" data-level="AAA">AAA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Gedempt <span class="mono">#4F625C</span></td>
+                      <td>Papier</td>
+                      <td class="mono">6,23:1</td>
+                      <td><span class="tbl__pass">AA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Teal <span class="mono">#0F766E</span></td>
+                      <td>Papier</td>
+                      <td class="mono">5,25:1</td>
+                      <td><span class="tbl__pass">AA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Papier</td>
+                      <td>Teal <span class="mono">#0F766E</span></td>
+                      <td class="mono">5,25:1</td>
+                      <td><span class="tbl__pass">AA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Mint <span class="mono">#B8E0D6</span></td>
+                      <td>Teal diep <span class="mono">#08403B</span></td>
+                      <td class="mono">8,12:1</td>
+                      <td><span class="tbl__pass" data-level="AAA">AAA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Inkt</td>
+                      <td>Zon <span class="mono">#EBA92B</span></td>
+                      <td class="mono">7,99:1</td>
+                      <td><span class="tbl__pass" data-level="AAA">AAA</span></td>
+                    </tr>
+                    <tr>
+                      <td>Steen diep <span class="mono">#8C3D22</span></td>
+                      <td>Bord</td>
+                      <td class="mono">6,35:1</td>
+                      <td><span class="tbl__pass">AA</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="callout">
+                  <strong>Let op:</strong> steen <span class="mono">#B4502E</span> haalt op bord
+                  maar 4,32:1. Gebruik daar steen diep <span class="mono">#8C3D22</span>.
+                </div>
+
+                <h3>Kleur per groep</h3>
+                <p style="color: var(--ink-muted); font-size: 0.92rem; margin-bottom: 16px">
+                  Groepen, en andere dingen die je uit elkaar moet houden, krijgen een kleur uit deze
+                  vaste reeks. De applicatie hasht het item naar een vaste plek in de rij, zodat een
+                  groep altijd dezelfde kleur houdt. Deze kleuren dragen betekenis en horen niet in
+                  de opmaak van de site thuis.
+                </p>
+                <div class="swatches">
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #1976d2; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#1976D2</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #388e3c; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#388E3C</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #f57c00; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#F57C00</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #7b1fa2; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#7B1FA2</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #c2185b; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#C2185B</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #00796b; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#00796B</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #5d4037; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#5D4037</div></div>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch__chip" style="background: #455a64; height: 56px"></div>
+                    <div class="swatch__body"><div class="swatch__hex">#455A64</div></div>
+                  </div>
+                </div>
+
+                <div class="callout">
+                  <strong>Zet hier geen tekst op.</strong> Blauw
+                  <span class="mono">#1976D2</span> (4,41:1) en groen
+                  <span class="mono">#388E3C</span> (3,98:1) halen met wit noch met inkt de 4,5:1
+                  voor kleine tekst. Gebruik ze als vlak of stip náást een naam — zoals de
+                  groepsstip op het dagbord — nooit als achtergrond van een label.
+                </div>
+              </section>
+
+              <!-- ============================================ TYPOGRAFIE -->
+              <section class="rule-block" id="typografie">
+                <h2>Typografie</h2>
+                <p class="rule-block__intro">
+                  Drie rollen, drie letters. De display-letter zet de toon, de tekstletter draagt het
+                  lezen, en de mono-letter is de stem van de dienstregeling: tijden, ratio's, labels.
+                  Die laatste is wat het merk herkenbaar maakt — gebruik hem consequent voor data.
+                </p>
+
+                <div class="face">
+                  <div class="face__glyphs" style="font-family: var(--font-display); font-weight: 700">
+                    Dagbord &amp; planning
+                  </div>
+                  <p class="face__note">
+                    <strong>Familjen Grotesk</strong> — koppen en het woordmerk. Gewicht 700, letters
+                    strak op elkaar (<span class="mono">-0.025em</span>). Alleen voor kop&shy;niveaus,
+                    nooit voor lopende tekst.
+                  </p>
+                </div>
+
+                <div class="face">
+                  <div class="face__glyphs" style="font-family: var(--font-text); font-weight: 400; font-size: clamp(1.2rem, 2.4vw, 1.6rem)">
+                    Plan een jaar vooruit, zie vandaag in één oogopslag.
+                  </div>
+                  <p class="face__note">
+                    <strong>Instrument Sans</strong> — alle lopende tekst, knoppen en formulieren.
+                    Gewichten 400, 500 en 600.
+                  </p>
+                </div>
+
+                <div class="face">
+                  <div class="face__glyphs" style="font-family: var(--font-data); font-weight: 500; font-size: clamp(0.9rem, 1.8vw, 1.2rem)">
+                    07:30–18:30 · 1:3 1:5 1:6 1:8
+                  </div>
+                  <p class="face__note">
+                    <strong>Martian Mono</strong> — tijden, ratio's, datums, eyebrows en labels.
+                    Klein gezet (0,58–0,72 rem) met ruime letterafstand
+                    (<span class="mono">0.06–0.14em</span>). Nooit voor hele zinnen.
+                  </p>
+                </div>
+
+                <h3>Schaal</h3>
+                <div class="type-row">
+                  <div class="type-row__meta">H1 · display 700 · clamp 2,6–4,6 rem</div>
+                  <div class="type-row__demo" style="font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.025em; line-height: 1.05">
+                    Je hele dagbord
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">H2 · display 700 · clamp 2–3 rem</div>
+                  <div class="type-row__demo" style="font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.025em">
+                    Eén administratie
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">H3 · display 700 · 1,3 rem</div>
+                  <div class="type-row__demo" style="font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.015em">
+                    Wekelijkse planningsregels
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">Lead · tekst 400 · 1,06–1,28 rem</div>
+                  <div class="type-row__demo" style="font-size: 1.15rem; color: var(--ink-muted); line-height: 1.55">
+                    KDVManager houdt kinderen, voogden, groepen en tijdsloten bij.
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">Tekst · 400 · 17 px / 1,6</div>
+                  <div class="type-row__demo">
+                    Een planning is een startdatum plus regels: welke dag, welk tijdslot, welke groep.
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">Eyebrow · mono 500 · 0,66 rem</div>
+                  <div class="type-row__demo">
+                    <span class="eyebrow" style="margin: 0">Kinderopvangadministratie</span>
+                  </div>
+                </div>
+                <div class="type-row">
+                  <div class="type-row__meta">Data · mono 500 · 0,6–0,72 rem</div>
+                  <div class="type-row__demo mono" style="font-size: 0.72rem">
+                    woensdag 11 maart 2026 · 07:30–13:00
+                  </div>
+                </div>
+
+                <div class="callout">
+                  <strong>In de applicatie</strong> staat op dit moment Nunito Sans Variable als
+                  UI-letter (<code>src/web/src/lib/theme.ts</code>). Dat is een bewuste afwijking van
+                  deze richtlijn zolang de app niet is overgezet — de website loopt voorop. Neem
+                  Instrument Sans mee bij de eerstvolgende themawijziging.
+                </div>
+              </section>
+
+              <!-- ================================================== STEM -->
+              <section class="rule-block" id="stem">
+                <h2>Stem en taal</h2>
+                <p class="rule-block__intro">
+                  Nederlands, en we spreken de lezer aan met <em>je</em> — net als de applicatie zelf.
+                  Kort, concreet, in de woorden die op de groep gebruikt worden: kind, voogd, groep,
+                  tijdslot, dagdeel, begeleider.
+                </p>
+
+                <div class="voice">
+                  <div class="voice__col voice__col--do">
+                    <div class="voice__k">Wel</div>
+                    <ul>
+                      <li>"2 begeleiders nodig" — zeg het getal, niet het gevoel.</li>
+                      <li>"Bepaald door het groepsgrootteminimum." — leg de uitkomst uit.</li>
+                      <li>"Kind inplannen" — noem de handeling zoals die heet.</li>
+                      <li>Knop en bevestiging hebben hetzelfde woord: "Opslaan" → "Opgeslagen".</li>
+                      <li>Fouten zeggen wat er mis is én wat je eraan doet.</li>
+                    </ul>
+                  </div>
+                  <div class="voice__col voice__col--dont">
+                    <div class="voice__k">Niet</div>
+                    <ul>
+                      <li>"Moeiteloos je planning stroomlijnen!" — belofte zonder inhoud.</li>
+                      <li>"Oeps, er ging iets mis" — een fout verontschuldigt zich niet.</li>
+                      <li>"Entiteit", "record", "tenant" — systeemtaal in beeld.</li>
+                      <li>Uitroeptekens, hoofdletters ter nadruk, emoji.</li>
+                      <li>U-vorm. Dat past niet bij de rest van het product.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <h3>Woordenlijst</h3>
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Gebruik</th>
+                      <th>Niet</th>
+                      <th>Waarom</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>voogd</td>
+                      <td>ouder, klant</td>
+                      <td>Niet elke voogd is een ouder; dit is de term in de app.</td>
+                    </tr>
+                    <tr>
+                      <td>tijdslot</td>
+                      <td>tijdvak, blok</td>
+                      <td>Eén woord door de hele applicatie heen.</td>
+                    </tr>
+                    <tr>
+                      <td>dagdeel</td>
+                      <td>halve dag</td>
+                      <td>Een dagdeel is ochtend of middag, en dat is niet altijd de helft.</td>
+                    </tr>
+                    <tr>
+                      <td>begeleider</td>
+                      <td>medewerker, pm'er</td>
+                      <td>Sluit aan op de term uit de BKR-berekening.</td>
+                    </tr>
+                    <tr>
+                      <td>planning</td>
+                      <td>rooster, schema</td>
+                      <td>Een planning is startdatum plus wekelijkse regels.</td>
+                    </tr>
+                    <tr>
+                      <td>eindmarkering</td>
+                      <td>uitschrijving</td>
+                      <td>Markeert wanneer de opvang stopt, zonder het dossier te wissen.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- ==================================================== UI -->
+              <section class="rule-block" id="ui">
+                <h2>UI-tokens</h2>
+                <p class="rule-block__intro">
+                  Deze waarden komen overeen met het thema van de applicatie
+                  (<code>src/web/src/lib/theme.ts</code>). Verander ze op één plek, niet per scherm.
+                </p>
+
+                <h3>Hoekradius</h3>
+                <div class="tokens">
+                  <div class="token">
+                    <div class="token__box" style="border-radius: 4px"></div>
+                    <div class="token__name">--r-xs</div>
+                    <div class="token__val">4px · chips, cellen</div>
+                  </div>
+                  <div class="token">
+                    <div class="token__box" style="border-radius: 8px"></div>
+                    <div class="token__name">--r-sm</div>
+                    <div class="token__val">8px · knoppen, velden</div>
+                  </div>
+                  <div class="token">
+                    <div class="token__box" style="border-radius: 12px"></div>
+                    <div class="token__name">--r-md</div>
+                    <div class="token__val">12px · kaarten</div>
+                  </div>
+                  <div class="token">
+                    <div class="token__box" style="border-radius: 16px"></div>
+                    <div class="token__name">--r-lg</div>
+                    <div class="token__val">16px · dialogen, het bord</div>
+                  </div>
+                </div>
+
+                <h3>Knoppen</h3>
+                <div class="btn-row" style="margin-bottom: 14px">
+                  <button class="btn btn--primary" type="button">Primaire actie</button>
+                  <button class="btn btn--ghost" type="button">Secundaire actie</button>
+                  <button class="btn btn--primary btn--sm" type="button">Compact</button>
+                </div>
+                <p style="color: var(--ink-muted); font-size: 0.9rem">
+                  Eén primaire knop per blok. Labels zijn werkwoorden die zeggen wat er gebeurt
+                  ("Demo aanvragen"), niet "Verzenden". Geen schaduw, tekst in zinsvorm.
+                </p>
+
+                <h3>Beweging</h3>
+                <table class="tbl">
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%">Versnelling</td>
+                      <td><code>cubic-bezier(0.2, 0.7, 0.3, 1)</code></td>
+                    </tr>
+                    <tr>
+                      <td>Duur</td>
+                      <td>160–220 ms voor hover, 320 ms voor binnenkomen, 600 ms voor scroll-reveal.</td>
+                    </tr>
+                    <tr>
+                      <td>Waarvoor</td>
+                      <td>
+                        Alleen om een verandering te verklaren: een kaart die verschijnt, een
+                        BKR-uitkomst die verspringt. Nooit als versiering.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Uitzetten</td>
+                      <td>
+                        <code>prefers-reduced-motion: reduce</code> zet alles stil. Inhoud blijft
+                        zichtbaar zonder animatie.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- ========================================== TOEGANKELIJK -->
+              <section class="rule-block" id="toegankelijk">
+                <h2>Toegankelijkheid</h2>
+                <p class="rule-block__intro">
+                  De applicatie wordt automatisch getoetst op WCAG 2.1 A/AA. Deze afspraken gelden
+                  net zo hard voor de website — een ontwerp dat ze niet haalt, is niet af.
+                </p>
+
+                <table class="tbl">
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%">Contrast</td>
+                      <td>
+                        Minimaal 4,5:1 voor tekst, 3:1 voor grote tekst en voor randen van
+                        bedienbare elementen.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Focus</td>
+                      <td>
+                        Altijd zichtbaar: 3 px zon met 2 px afstand. Nooit
+                        <code>outline: none</code> zonder vervanging.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Kleur alleen</td>
+                      <td>
+                        Kleur draagt nooit in z'n eentje de boodschap. De BKR-melding heeft kleur
+                        <em>en</em> een getal <em>en</em> een zin.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Doelgrootte</td>
+                      <td>Minimaal 44 × 44 px voor alles wat je aanraakt.</td>
+                    </tr>
+                    <tr>
+                      <td>Zonder JavaScript</td>
+                      <td>
+                        Alle inhoud blijft leesbaar. Scroll-reveal verbergt alleen iets als JS draait.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Taal</td>
+                      <td>
+                        <code>lang="nl"</code> op elke pagina, zodat schermlezers het goed uitspreken.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="site-footer__top">
+          <a class="brand" href="index.html" aria-label="KDVManager, naar de homepage">
+            <img src="assets/img/mark.svg" alt="" width="32" height="32" />
+            <span class="brand__name">KDV<span>Manager</span></span>
+          </a>
+          <nav aria-label="Footernavigatie">
+            <a href="index.html">Website</a>
+            <a href="index.html#dagbord">Dagbord</a>
+            <a href="index.html#demo">Demo aanvragen</a>
+          </nav>
+        </div>
+        <div class="site-footer__bottom">
+          <span>Merkrichtlijnen KDVManager</span>
+          <span>Wijk bewust af, en leg uit waarom</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+  </body>
+</html>

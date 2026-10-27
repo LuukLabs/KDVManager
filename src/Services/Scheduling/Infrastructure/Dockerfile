@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0.402 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0.403 AS restore
 WORKDIR /src
 COPY ["Services/Scheduling/Api/Api.csproj", "Services/Scheduling/Api/"]
 COPY ["Services/Scheduling/Application/Application.csproj", "Services/Scheduling/Application/"]

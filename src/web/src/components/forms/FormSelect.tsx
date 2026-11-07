@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import {
   Controller,
   useFormContext,
@@ -11,7 +12,13 @@ import { useTranslation } from "react-i18next";
 
 export type FormSelectOption = {
   id: string | number;
-  label: string;
+  /**
+   * Rendered inside the `MenuItem`. `ReactNode` rather than `string` so an
+   * option can carry decoration next to its text — e.g. an `aria-hidden`
+   * group colour dot before the group name. The text itself must still come
+   * from `t()`; keep the accessible name in the node.
+   */
+  label: ReactNode;
   disabled?: boolean;
 };
 
@@ -34,6 +41,7 @@ export const FormSelect = <T extends FieldValues>({
   required,
   rules,
   helperText,
+  onChange,
   ...rest
 }: FormSelectProps<T>) => {
   const { control } = useFormContext<T>();
@@ -53,6 +61,14 @@ export const FormSelect = <T extends FieldValues>({
         <TextField
           {...rest}
           {...field}
+          // Composed rather than overwritten by `field.onChange`, so a caller can
+          // react to a *user-initiated* change. `reset()` and `setValue()` never
+          // fire this, which is what lets a caller tell an edit apart from a
+          // programmatic restore.
+          onChange={(event) => {
+            field.onChange(event);
+            onChange?.(event);
+          }}
           value={field.value ?? ""}
           inputRef={field.ref}
           select

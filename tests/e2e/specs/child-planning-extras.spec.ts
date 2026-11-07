@@ -5,7 +5,10 @@
  * - Editing an existing schedule via the schedule card's edit action (change
  *   the start date, save) → "Planning succesvol bijgewerkt" snackbar. The edit
  *   dialog atomically replaces the existing schedule (EditChildScheduleDialog),
- *   so this exercises the update path end-to-end.
+ *   so this exercises the update path end-to-end. It also covers the edit-mode
+ *   pre-fill: the stored rules load back into planningsregels, submit stays
+ *   disabled until something changes, and the change summary announces the
+ *   full-week replacement.
  * - Adding an absence through the "Afwezigheid toevoegen" dialog (AddAbsenceDialog)
  *   and seeing it listed (AbsenceList, default "Toekomst" view).
  * - Deleting an absence via the row delete action + confirmation dialog
@@ -136,12 +139,26 @@ test.describe("child planning tab — extras", () => {
     const dialog = page.getByRole("dialog");
     await expect(dialog.getByText("Bewerk planning")).toBeVisible();
 
-    // The existing rule is pre-filled and complete, so only the start date is
-    // changed; the submit button stays enabled (1/1 rules complete).
+    // The stored rule is deserialised into a complete planningsregel, so
+    // nothing is missing — but submit is disabled until something actually
+    // changes (`!isDirty` applies in edit mode too).
+    await expect(
+      dialog.getByRole("region", { name: "Planningsregel 1" }),
+    ).toContainText(timeSlotName);
+    await expect(dialog.getByText("Je hebt nog niets gewijzigd.")).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: /Planning bijwerken/ }),
+    ).toBeDisabled();
+
+    // Changing only the start date is enough to enable it, and the summary
+    // spells out that the PUT replaces the whole week.
     await fillMuiDateField(
       dialog.getByRole("group", { name: /Startdatum/ }),
       SCHEDULE_START_EDITED_NL,
     );
+    await expect(
+      dialog.getByText("Je vervangt het hele weekpatroon vanaf"),
+    ).toBeVisible();
     await dialog.getByRole("button", { name: /Planning bijwerken/ }).click();
 
     await expect(page.getByText("Planning succesvol bijgewerkt")).toBeVisible();

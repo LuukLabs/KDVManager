@@ -1,0 +1,87 @@
+# Node-local agent. Runs on every node because container log files and the
+# kubelet stats endpoint are only reachable from the node itself - the
+# previous single-replica Deployment could only ever see one node's worth of
+# either. Forwards everything to the gateway, which owns the export.
+receivers:
+  # Container stdout. This is the only way Envoy's access log reaches a
+  # backend: it is written by envoy.access_loggers.stdout, so it is a log
+  # file on disk and never passes through OTLP.
+  filelog:
+    include:
+      - /var/log/pods/kdvmanager-prod_*/*/*.log
+    exclude:
+      # Never tail our own output. The gateway's debug exporter writes a
+      # summary line per batch to stdout; if that were collected it would be
+      # re-exported, summarised again, and amplify without bound.
+      - /var/log/pods/observability_*/*/*.log
+    # Only new lines, so a restart does not replay the whole ring buffer.
+    start_at: end
+    include_file_path: true
+    retry_on_failure:
+      enabled: true
+    operators:
+      # Unwraps the CRI/containerd envelope and sets k8s.pod.name,
+      # k8s.namespace.name and k8s.container.name from the file path.
+      - type: container
+        id: container-parser
+      # Envoy's access log is a JSON object per line. Lifting it into
+      # attributes makes response_code and response_flags queryable instead
+      # of one opaque string. Plain-text lines from other containers fail
+      # this parse and pass through untouched.
+      - type: json_parser
+        parse_from: body
+        parse_to: attributes
+        on_error: send_quiet
+  # Per-pod and per-container memory. This is what shows a service climbing
+  # toward its limit before the kernel OOM-kills it.
+  kubeletstats:
+    collection_interval: 30s
+    auth_type: serviceAccount
+    endpoint: "https://${env:K8S_NODE_IP}:10250"
+    insecure_skip_verify: true
+    metric_groups:
+      - node
+      - pod
+      - container
+
+processors:
+  memory_limiter:
+    limit_mib: 150
+    spike_limit_mib: 40
+    check_interval: 1s
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+    send_batch_max_size: 1024
+
+exporters:
+  # Straight to the gateway Service. Enrichment and export policy live
+  # there, so this stays a dumb forwarder.
+  otlp/gateway:
+    endpoint: otel-collector.observability.svc.cluster.local:4317
+    tls:
+      insecure: true
+    retry_on_failure:
+      enabled: true
+    sending_queue:
+      enabled: true
+      queue_size: 500
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  telemetry:
+    logs:
+      level: info
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/gateway]
+    metrics:
+      receivers: [kubeletstats]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/gateway]

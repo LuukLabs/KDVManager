@@ -41,7 +41,7 @@ jobs:
       with:
         fetch-depth: 0 
 
-    - uses: pnpm/action-setup@v6.1.0
+    - uses: pnpm/action-setup@v6.1.1
       with:
         version: 12.8.1
 
@@ -73,7 +73,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v7.0.1
 
-    - uses: pnpm/action-setup@v6.1.0
+    - uses: pnpm/action-setup@v6.1.1
       with:
         version: 12.8.1
 

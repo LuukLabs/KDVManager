@@ -1,109 +1,129 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: otel-collector-config
-  namespace: observability
-  labels:
-    app: otel-collector
-    app.kubernetes.io/name: otel-collector
-    app.kubernetes.io/part-of: observability-stack
-    app.kubernetes.io/component: telemetry-collector
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-data:
-  otel-collector-config.yaml: |
-    receivers:
-      otlp:
-        protocols:
-          grpc:
-            endpoint: 0.0.0.0:4317
-          http:
-            endpoint: 0.0.0.0:4318
-      prometheus:
-        config:
-          scrape_configs:
-            # Envoy admin endpoint (port 8001) exposes gateway metrics
-            - job_name: 'envoy'
-              scrape_interval: 30s
-              metrics_path: /stats/prometheus
-              static_configs:
-                - targets: ['envoy.kdvmanager-prod.svc.cluster.local:8001']
-      k8s_cluster:
-        auth_type: serviceAccount
-      kubeletstats:
-        collection_interval: 20s
-        auth_type: serviceAccount
-        endpoint: "https://${env:K8S_NODE_IP}:10250"
-        insecure_skip_verify: true
-        metric_groups:
-          - node
-          - pod
-          - container
-    
-    processors:
-      batch:
-        timeout: 1s
-        send_batch_size: 1024
-      resource:
-        attributes:
-          - key: environment
-            value: production
-            action: upsert
-          - key: cluster
-            value: kdvmanager-prod
-            action: upsert
-      memory_limiter:
-        # Keep headroom below the container memory limit (512Mi) so the limiter engages before the kernel OOM-kills
-        limit_mib: 400
-        spike_limit_mib: 100
-        check_interval: 1s
-      # Enrich OTLP telemetry with pod/namespace attribution from the Kubernetes API
-      k8sattributes:
-        auth_type: serviceAccount
-        passthrough: false
-        extract:
-          metadata:
-            - k8s.namespace.name
-            - k8s.pod.name
-            - k8s.deployment.name
-            - k8s.node.name
-        pod_association:
-          - sources:
-              - from: connection
-      filter/ottl:
-        error_mode: ignore
-        traces:
-          span:
-            - 'attributes["http.route"] == "/healthz"'
-            - 'attributes["http.route"] == "/readyz"'
+# Gateway collector: the single egress point for all telemetry.
+#
+# Everything funnels through here - app OTLP, browser OTLP via Envoy's
+# /telemetry/ route, container logs and node metrics from the DaemonSet
+# agent, Kubernetes events, and Envoy's own stats. To send telemetry to a
+# backend, fill in the `otlp/backend` exporter below and add it to the
+# pipelines; nothing else in the cluster needs to change.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  # Envoy's admin endpoint carries the gateway counters that make a 503
+  # attributable: upstream_cx_connect_fail, upstream_rq_503, health_check.*
+  # and outlier_detection.*.
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'envoy'
+          scrape_interval: 30s
+          metrics_path: /stats/prometheus
+          static_configs:
+            - targets: ['envoy.kdvmanager-prod.svc.cluster.local:8001']
+  # Kubernetes events as logs. This is where OOMKilled, Evicted and
+  # probe-failure records live - they are events, not container output, so
+  # nothing else picks them up.
+  k8sobjects:
+    auth_type: serviceAccount
+    objects:
+      - name: events
+        mode: watch
 
-    exporters:
-      otlp/signoz:
-        endpoint: "signoz-otel-collector.signoz.svc.cluster.local:4317"
-        tls:
-          insecure: true
+processors:
+  # Must stay first so it can shed load before anything else buffers.
+  memory_limiter:
+    limit_mib: 300
+    spike_limit_mib: 75
+    check_interval: 1s
+  k8sattributes:
+    auth_type: serviceAccount
+    passthrough: false
+    extract:
+      metadata:
+        - k8s.namespace.name
+        - k8s.pod.name
+        - k8s.deployment.name
+        - k8s.node.name
+    # Prefer attributes the agent already resolved from the log file path,
+    # and fall back to the peer address for telemetry the apps send
+    # directly. Without the first rule, agent-forwarded logs would all be
+    # attributed to the agent pod itself.
+    pod_association:
+      - sources:
+          - from: resource_attribute
+            name: k8s.pod.name
+      - sources:
+          - from: connection
+  resource:
+    attributes:
+      - key: environment
+        value: production
+        action: upsert
+      - key: cluster
+        value: kdvmanager-prod
+        action: upsert
+  filter/ottl:
+    error_mode: ignore
+    traces:
+      span:
+        - 'attributes["http.route"] == "/healthz"'
+        - 'attributes["http.route"] == "/readyz"'
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+    send_batch_max_size: 1024
 
+exporters:
+  # No backend yet: telemetry is accepted, processed and summarised to this
+  # collector's own stdout so the pipeline is verifiable end to end.
+  # `basic` logs one line per batch rather than every record.
+  debug:
+    verbosity: basic
+  # To start shipping, set OTLP_BACKEND_ENDPOINT and OTLP_BACKEND_AUTH on
+  # the Deployment (see otel-collector-deployment.yaml), uncomment this
+  # block, and add `otlp/backend` to the exporters of each pipeline below.
+  # Works as-is for any OTLP backend - Grafana Cloud, Honeycomb, New Relic,
+  # Dash0, or a future self-hosted store.
+  #
+  # otlp/backend:
+  #   endpoint: ${env:OTLP_BACKEND_ENDPOINT}
+  #   headers:
+  #     authorization: ${env:OTLP_BACKEND_AUTH}
+  #   compression: gzip
+  #   retry_on_failure:
+  #     enabled: true
+  #     initial_interval: 5s
+  #     max_interval: 30s
+  #   sending_queue:
+  #     enabled: true
+  #     queue_size: 1000
 
-    extensions:
-      health_check:
-        endpoint: 0.0.0.0:13133
-      pprof:
-        endpoint: 0.0.0.0:1777
-      zpages:
-        endpoint: 0.0.0.0:55679
-    
-    service:
-      extensions: [health_check, pprof, zpages]
-      pipelines:
-        traces:
-          receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, resource, filter/ottl, batch]
-          exporters: [otlp/signoz]
-        metrics:
-          receivers: [otlp, prometheus, k8s_cluster, kubeletstats]
-          processors: [memory_limiter, k8sattributes, resource, batch]
-          exporters: [otlp/signoz]
-        logs:
-          receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, resource, batch]
-          exporters: [otlp/signoz]
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+  telemetry:
+    logs:
+      level: info
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, k8sattributes, resource, filter/ottl, batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, k8sattributes, resource, batch]
+      exporters: [debug]
+    logs:
+      receivers: [otlp, k8sobjects]
+      processors: [memory_limiter, k8sattributes, resource, batch]
+      exporters: [debug]

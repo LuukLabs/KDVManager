@@ -4,10 +4,24 @@ kind: Kustomization
 namespace: observability
 
 resources:
-  - otel-collector-config.yaml
+  # Gateway: the single egress point. Swap the backend here and nowhere else.
   - otel-collector-deployment.yaml
   - otel-collector-service.yaml
   - otel-collector-rbac.yaml
+  # Node-local agent: container logs (incl. Envoy's access log) and kubelet stats.
+  - otel-agent-daemonset.yaml
+
+# Generated so the ConfigMap name carries a content hash. A plain ConfigMap
+# would be updated in place and the running collectors would keep serving the
+# old config until something happened to restart them; the hash makes the pod
+# template change, so editing a config below actually rolls it out.
+configMapGenerator:
+  - name: otel-collector-config
+    files:
+      - otel-collector-config.yaml
+  - name: otel-agent-config
+    files:
+      - otel-agent-config.yaml
 
 labels:
 - pairs:

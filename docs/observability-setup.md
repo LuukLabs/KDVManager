@@ -87,6 +87,30 @@ points the web build at `http://localhost:5200/telemetry`. Services pick up the 
 
 ## Runbook
 
+The collector's Kubernetes role grants cluster-metadata reads and `get` on
+`nodes/stats` for the direct kubelet `/stats/summary` request. It must not grant
+`nodes/proxy`, which permits privileged kubelet operations. The configured Envoy
+scrape does not need Kubernetes API-server `/metrics` or `/metrics/cadvisor`
+permissions. See the [kubeletstats receiver RBAC requirements](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.155.0/receiver/kubeletstatsreceiver/README.md#role-based-access-control).
+
+After ArgoCD syncs an RBAC change, check effective permissions with an account
+allowed to impersonate the collector service account:
+
+```sh
+# Expected: no (kubectl exits with status 1 for a denial)
+kubectl auth can-i get nodes/proxy --as=system:serviceaccount:observability:otel-collector
+# Expected: yes
+kubectl auth can-i get nodes/stats --as=system:serviceaccount:observability:otel-collector
+# Expected: no
+kubectl auth can-i list nodes/stats --as=system:serviceaccount:observability:otel-collector
+```
+
+If `nodes/proxy` is still allowed, inspect other RoleBindings/ClusterRoleBindings
+for this service account and its groups; Kubernetes permissions are additive.
+Confirm fresh node, pod, and container metrics in SigNoz and check collector logs
+for authorization failures. Do not restore proxy access to work around a failed
+scrape; verify the direct kubelet endpoint and the required subresource instead.
+
 | Symptom | Where to look |
 |---|---|
 | User reports an error | Ask for the `traceId` from the error message/response → SigNoz → Traces → filter by trace ID |

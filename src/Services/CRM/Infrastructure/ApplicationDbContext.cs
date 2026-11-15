@@ -20,6 +20,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ChildGuardian> ChildGuardians { get; set; }
     public DbSet<ChildNumberSequence> ChildNumberSequences { get; set; }
     public DbSet<ChildActivityInterval> ChildActivityIntervals { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
     // PhoneNumbers owned by Guardian; no separate DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

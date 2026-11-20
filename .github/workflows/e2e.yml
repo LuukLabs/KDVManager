@@ -15,7 +15,8 @@ on:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    # Playwright 1.60 supports Ubuntu 24.04 for Chromium dependencies.
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     permissions:
       contents: read

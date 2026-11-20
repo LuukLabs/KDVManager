@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { type DataGridProps, type GridCallbackDetails } from "@mui/x-data-grid";
+import { type DataGridProps } from "@mui/x-data-grid";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
@@ -15,6 +15,8 @@ type MobileCardListProps<T> = {
   /** The same server pagination props the desktop DataGrid receives. */
   pagination: Pick<DataGridProps, "paginationModel" | "onPaginationModelChange">;
 };
+
+type PaginationChangeDetails = Parameters<NonNullable<DataGridProps["onPaginationModelChange"]>>[1];
 
 /**
  * Mobile counterpart of a paginated table: a stack of cards with the same
@@ -57,7 +59,7 @@ export const MobileCardList = <T,>({
               pagination.onPaginationModelChange?.(
                 { page: page - 1, pageSize },
                 // The change is user-initiated, so no grid API details apply.
-                {} as GridCallbackDetails<"pagination">,
+                {} as PaginationChangeDetails,
               )
             }
             color="primary"

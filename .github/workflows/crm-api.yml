@@ -8,6 +8,7 @@ on:
     paths:
     - src/Services/CRM/**
     - src/Shared/**
+    - src/Directory.*.props
     - src/docker-compose.yml
     - .github/workflows/composite/**
     - .github/workflows/crm-api.yml
@@ -19,6 +20,7 @@ on:
     paths:
     - src/Services/CRM/**
     - src/Shared/**
+    - src/Directory.*.props
     - src/docker-compose.yml
     - .github/workflows/composite/**
     - .github/workflows/crm-api.yml

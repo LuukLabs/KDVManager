@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net11.0</TargetFramework>
     <AssemblyName>KDVManager.Services.Scheduling.Application</AssemblyName>
     <RootNamespace>KDVManager.Services.Scheduling.Application</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Contracts\" />
@@ -17,9 +14,9 @@
     <ProjectReference Include="..\..\..\Shared\KDVManager.Shared.Domain\KDVManager.Shared.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BKRCalculator" Version="0.4.0" />
-    <PackageReference Include="FluentValidation" Version="12.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="11.0.0" />
-    <PackageReference Include="MassTransit.Abstractions" Version="8.5.12" />
+    <PackageReference Include="BKRCalculator" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="MassTransit.Abstractions" />
   </ItemGroup>
 </Project>

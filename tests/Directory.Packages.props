@@ -1,0 +1,4 @@
+<Project>
+  <!-- tests/ sits outside src/, so pull in the shared file explicitly. -->
+  <Import Project="$(MSBuildThisFileDirectory)../src/Directory.Packages.props" />
+</Project>

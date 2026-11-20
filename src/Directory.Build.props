@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    Shared MSBuild properties for every project in the solution.
+    Lives in src/ (not the repo root) because the service images are built with src/
+    as the Docker build context. tests/ imports this file.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>

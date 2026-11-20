@@ -1,6 +1,12 @@
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
-import { BatchSpanProcessor, WebTracerProvider } from "@opentelemetry/sdk-trace-web";
+import { context, propagation, trace } from "@opentelemetry/api";
+import {
+  CompositePropagator,
+  W3CBaggagePropagator,
+  W3CTraceContextPropagator,
+} from "@opentelemetry/core";
+import { BatchSpanProcessor, TracerProvider } from "@opentelemetry/sdk-trace";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { ZoneContextManager } from "@opentelemetry/context-zone";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
@@ -70,17 +76,26 @@ export const initTelemetry = (): void => {
 
   const tracesUrl = `${endpoint.replace(/\/+$/, "")}/v1/traces`;
 
-  const provider = new WebTracerProvider({
+  const provider = new TracerProvider({
     resource: resourceFromAttributes({
       [ATTR_SERVICE_NAME]: "web",
       [ATTR_SERVICE_VERSION]: import.meta.env.VITE_APP_VERSION ?? "unknown",
       "deployment.environment": import.meta.env.MODE,
       "session.id": getSessionId(),
     }),
-    spanProcessors: [new BatchSpanProcessor(new OTLPTraceExporter({ url: tracesUrl }))],
+    spanProcessors: [
+      new BatchSpanProcessor({ exporter: new OTLPTraceExporter({ url: tracesUrl }) }),
+    ],
   });
 
-  provider.register({ contextManager: new ZoneContextManager() });
+  // SDK 3.x dropped WebTracerProvider#register(); wire up what it used to do.
+  context.setGlobalContextManager(new ZoneContextManager().enable());
+  propagation.setGlobalPropagator(
+    new CompositePropagator({
+      propagators: [new W3CTraceContextPropagator(), new W3CBaggagePropagator()],
+    }),
+  );
+  trace.setGlobalTracerProvider(provider);
 
   const apiOrigin = toOriginRegExp(BASE_URL);
   registerInstrumentations({

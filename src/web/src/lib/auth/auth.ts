@@ -89,9 +89,11 @@ export const getAuthToken = async (): Promise<string | null> => {
   if (!auth0Client?.isAuthenticated) return null;
 
   try {
-    return await auth0Client.getAccessTokenSilently({
+    // auth0-react >= 2.25 types this as `string | undefined`.
+    const token = await auth0Client.getAccessTokenSilently({
       authorizationParams: { audience: authConfig.audience },
     });
+    return token ?? null;
   } catch (error) {
     console.error("Failed to acquire access token", error);
     return null;

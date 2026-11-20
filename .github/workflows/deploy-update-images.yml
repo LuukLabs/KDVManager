@@ -37,9 +37,18 @@ jobs:
           fetch-depth: 0
 
       - name: Install kustomize
+        env:
+          # Authenticated download avoids the unauthenticated GitHub API rate limit
+          # that the upstream install_kustomize.sh script hits on shared runners.
+          GH_TOKEN: ${{ github.token }}
+          KUSTOMIZE_VERSION: v5.7.1
         run: |
-          curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+          gh release download "kustomize/${KUSTOMIZE_VERSION}" \
+            --repo kubernetes-sigs/kustomize \
+            --pattern "kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+            --output - | tar -xz kustomize
           sudo mv kustomize /usr/local/bin/
+          kustomize version
 
       - name: Seed from existing automation PR branch
         run: |

@@ -19,6 +19,10 @@ updates:
     open-pull-requests-limit: 5
     cooldown:
       default-days: 2
+    groups:
+      github-actions-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "npm"
     directory: "src/web"
@@ -28,13 +32,9 @@ updates:
     cooldown:
       default-days: 2
     groups:
-      react:
-        patterns:
-          - "react"
-          - "react-dom"
-      mui:
-        patterns:
-          - "@mui/*"
+      npm-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "nuget"
     directory: "/"
@@ -46,9 +46,9 @@ updates:
     cooldown:
       default-days: 2
     groups:
-      masstransit:
-        patterns:
-          - "MassTransit*"
+      nuget-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       - dependency-name: "MassTransit*"
         versions: [">= 9.0.0"]
@@ -65,3 +65,7 @@ updates:
     open-pull-requests-limit: 3
     cooldown:
       default-days: 2
+    groups:
+      docker-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

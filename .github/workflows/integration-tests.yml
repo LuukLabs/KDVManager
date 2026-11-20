@@ -8,6 +8,7 @@ on:
     paths:
     - src/Services/**
     - src/Shared/**
+    - src/Directory.*.props
     - tests/integration/**
     - global.json
     - .github/workflows/integration-tests.yml
@@ -19,6 +20,7 @@ on:
     paths:
     - src/Services/**
     - src/Shared/**
+    - src/Directory.*.props
     - tests/integration/**
     - global.json
     - .github/workflows/integration-tests.yml

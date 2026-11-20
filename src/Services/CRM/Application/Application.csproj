@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net11.0</TargetFramework>
     <AssemblyName>KDVManager.Services.CRM.Application</AssemblyName>
     <RootNamespace>KDVManager.Services.CRM.Application</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Contracts\" />
@@ -17,9 +14,9 @@
     <ProjectReference Include="..\..\..\Shared\KDVManager.Shared.Contracts\KDVManager.Shared.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="12.2.0" />
-    <PackageReference Include="MassTransit" Version="8.5.12" />
-    <PackageReference Include="MassTransit.Abstractions" Version="8.5.12" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.12" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="MassTransit.Abstractions" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
   </ItemGroup>
 </Project>

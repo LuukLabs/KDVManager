@@ -45,21 +45,9 @@ spec:
             mark_cache_size: "268435456"
 
         signoz:
+          # Exposed through the Cilium Gateway (deploy/k8s/gateway/), not an Ingress.
           ingress:
-            enabled: true
-            className: nginx
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt-production
-            hosts:
-              - host: signoz.kdvmanager.nl
-                paths:
-                  - path: /
-                    pathType: ImplementationSpecific
-                    port: 8080
-            tls:
-              - secretName: signoz-tls-cert
-                hosts:
-                  - signoz.kdvmanager.nl
+            enabled: false
           # Combined budget of the former queryService + frontend components
           resources:
             requests:

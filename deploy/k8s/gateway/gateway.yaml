@@ -1,0 +1,65 @@
+# Public entry point for the cluster, served by Cilium's Gateway API controller.
+# Replaces the community ingress-nginx controller (retired upstream, affected by
+# the Nov 2026 "nginx2root" CVEs).
+#
+# The DigitalOcean load balancer (and therefore the public IP that DNS at Hostnet
+# points to) was taken over from the old ingress-nginx Service via the
+# load-balancer-id annotation. Do not remove that annotation: without it DOKS
+# provisions a new load balancer with a new IP.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kdvmanager-gateway
+  namespace: kdvmanager-prod
+spec:
+  gatewayClassName: cilium
+  infrastructure:
+    annotations:
+      kubernetes.digitalocean.com/load-balancer-id: "aad160e1-c0f4-45da-a52e-f6f8be37b4d0"
+      service.beta.kubernetes.io/do-loadbalancer-type: "REGIONAL_NETWORK"
+  listeners:
+    # Plain HTTP: only redirects to HTTPS and serves ACME HTTP-01 challenges
+    # (cert-manager creates temporary HTTPRoutes in the Certificate's namespace).
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-app
+      protocol: HTTPS
+      port: 443
+      hostname: app.kdvmanager.nl
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: kdvmanager-nl-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-api
+      protocol: HTTPS
+      port: 443
+      hostname: api.kdvmanager.nl
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: kdvmanager-nl-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-signoz
+      protocol: HTTPS
+      port: 443
+      hostname: signoz.kdvmanager.nl
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: signoz-tls-cert
+            namespace: signoz
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: signoz

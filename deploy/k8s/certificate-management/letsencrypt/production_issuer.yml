@@ -18,5 +18,9 @@ spec:
       name: letsencrypt-production
     solvers:
       - http01:
-          ingress:
-            class: nginx
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: kdvmanager-gateway
+                namespace: kdvmanager-prod
+                kind: Gateway
+                sectionName: http

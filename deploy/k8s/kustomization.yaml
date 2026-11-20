@@ -8,6 +8,7 @@ resources:
 - namespaces/
 - certificate-management/
 - infrastructure/
+- gateway/
 - applications/
 - observability/
 - observability/signoz-application.yaml

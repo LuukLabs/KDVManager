@@ -1,8 +1,8 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:10.0.403 AS dotnet-tools
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100 AS dotnet-tools
 
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0.403 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100 AS restore
 WORKDIR /src
 COPY ["Services/CRM/Api/Api.csproj", "Services/CRM/Api/"]
 COPY ["Services/CRM/Application/Application.csproj", "Services/CRM/Application/"]
@@ -18,7 +18,7 @@ RUN dotnet restore "Services/CRM/Api/Api.csproj"
 
 FROM restore AS ef-tool
 
-RUN dotnet tool install -g dotnet-ef --version 10.0.9
+RUN dotnet tool install -g dotnet-ef --version 11.0.0
 ENV PATH="$PATH:/root/.dotnet/tools"
 
 FROM ef-tool AS build
@@ -32,7 +32,7 @@ FROM build AS build-migrator
 
 RUN dotnet ef migrations bundle --self-contained -r linux-x64 --startup-project "./Api"
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.14 AS migrator-runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:11.0.0 AS migrator-runtime
 
 COPY --from=build-migrator /src/Services/CRM/efbundle .
 

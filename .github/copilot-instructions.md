@@ -5,7 +5,7 @@
 KDVManager is a multi-tenant childcare management platform with a monorepo structure:
 
 - **Frontend**: `src/web/` — React 19 + TypeScript + Vite + MUI 7
-- **Backend services**: `src/Services/CRM/` and `src/Services/Scheduling/` — .NET 10, Clean Architecture
+- **Backend services**: `src/Services/CRM/` and `src/Services/Scheduling/` — .NET 11, Clean Architecture
 - **Shared libraries**: `src/Shared/` — Contracts, Domain, Infrastructure shared across services
 - **Infrastructure**: `deploy/k8s/` — Kustomize manifests, ArgoCD, Envoy gateway
 

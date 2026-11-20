@@ -9,6 +9,7 @@ on:
     - src/Services/**
     - src/Shared/**
     - tests/integration/**
+    - global.json
     - .github/workflows/integration-tests.yml
 
   pull_request:
@@ -19,6 +20,7 @@ on:
     - src/Services/**
     - src/Shared/**
     - tests/integration/**
+    - global.json
     - .github/workflows/integration-tests.yml
 
 permissions:
@@ -36,7 +38,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x
+        global-json-file: global.json
 
     - name: Add GitHub NuGet source
       run: dotnet nuget add source "https://nuget.pkg.github.com/LuukLabs/index.json" --name github --username "${{ github.actor }}" --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text

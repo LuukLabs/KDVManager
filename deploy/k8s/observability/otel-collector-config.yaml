@@ -78,10 +78,9 @@ data:
             - 'attributes["http.route"] == "/readyz"'
 
     exporters:
-      otlp/signoz:
-        endpoint: "signoz-otel-collector.signoz.svc.cluster.local:4317"
-        tls:
-          insecure: true
+      # No backend while SigNoz is gone: accept and drop all telemetry.
+      # Swap in an otlphttp exporter (e.g. Grafana Cloud) when one is chosen.
+      nop: {}
 
 
     extensions:
@@ -98,12 +97,12 @@ data:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, resource, filter/ottl, batch]
-          exporters: [otlp/signoz]
+          exporters: [nop]
         metrics:
           receivers: [otlp, prometheus, k8s_cluster, kubeletstats]
           processors: [memory_limiter, k8sattributes, resource, batch]
-          exporters: [otlp/signoz]
+          exporters: [nop]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, resource, batch]
-          exporters: [otlp/signoz]
+          exporters: [nop]

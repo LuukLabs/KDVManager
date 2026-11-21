@@ -48,18 +48,3 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-signoz
-      protocol: HTTPS
-      port: 443
-      hostname: signoz.kdvmanager.nl
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: signoz-tls-cert
-            namespace: signoz
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              kubernetes.io/metadata.name: signoz

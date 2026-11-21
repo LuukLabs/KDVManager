@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# No namespace transform: resources live in kdvmanager-prod and signoz.
+# No namespace transform: resources set their own namespace (kdvmanager-prod).
 resources:
 - gateway.yaml
 - routes.yaml

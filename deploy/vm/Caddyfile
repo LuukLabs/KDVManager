@@ -1,0 +1,46 @@
+# TLS_MODE=auto   → Caddy gets and renews Let's Encrypt certificates itself
+#                   (needs DNS pointing at this VM; use after cutover).
+# TLS_MODE=manual → uses certs/tls.crt + certs/tls.key (the current production
+#                   certificate copied from the cluster), for testing before
+#                   DNS points here.
+{
+	email {$ACME_EMAIL}
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+(tls_auto) {
+}
+
+(tls_manual) {
+	tls /certs/tls.crt /certs/tls.key
+}
+
+(common) {
+	import tls_{$TLS_MODE}
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		-Server
+		-Via
+	}
+	log {
+		output stdout
+		format json
+	}
+}
+
+app.kdvmanager.nl {
+	import common
+	reverse_proxy web:80
+}
+
+api.kdvmanager.nl {
+	import common
+	request_body {
+		max_size 10MB
+	}
+	reverse_proxy envoy:8080
+}

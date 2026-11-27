@@ -2,6 +2,7 @@
 using KDVManager.Services.CRM.Api.Middleware;
 using KDVManager.Shared.Infrastructure.Logging;
 using KDVManager.Shared.Infrastructure.Tenancy;
+using KDVManager.Shared.Infrastructure.Trial;
 using KDVManager.Shared.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -32,6 +33,7 @@ app.UseAuthorization();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseTenancy();
+app.UseTrialEnforcement();
 
 // Liveness: process-up only; readiness: all registered checks (postgres, MassTransit bus)
 app.MapHealthChecks("/healthz", new HealthCheckOptions { Predicate = _ => false }).AllowAnonymous();

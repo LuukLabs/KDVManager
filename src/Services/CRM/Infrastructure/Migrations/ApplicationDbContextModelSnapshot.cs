@@ -182,6 +182,22 @@ namespace KDVManager.Services.CRM.Infrastructure.Migrations
                     b.ToTable("Guardians");
                 });
 
+            modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsSubscribed")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("TrialStartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants", (string)null);
+                });
+
             modelBuilder.Entity("KDVManager.Services.CRM.Domain.Entities.ChildActivityInterval", b =>
                 {
                     b.HasOne("KDVManager.Services.CRM.Domain.Entities.Child", "Child")
